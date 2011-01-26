@@ -493,5 +493,27 @@ public class MessageS2CPerception extends Message {
 		}
 	}
 
+	@Override
+	public boolean isSkippable() {
+		if ((addedRPObjects != null) && !addedRPObjects.isEmpty()) {
+			return false;
+		}
+		if ((modifiedAddedAttribsRPObjects != null) && !modifiedAddedAttribsRPObjects.isEmpty()) {
+			return false;
+		}
+		if ((modifiedDeletedAttribsRPObjects != null) && !modifiedDeletedAttribsRPObjects.isEmpty()) {
+			return false;
+		}
+		if ((deletedRPObjects != null) && !deletedRPObjects.isEmpty()) {
+			return false;
+		}
+		if ((myRPObjectModifiedAdded != null)) {
+			return false;
+		}
+		if ((myRPObjectModifiedDeleted != null)) {
+			return false;
+		}
+		return true;
+	}
 
 }

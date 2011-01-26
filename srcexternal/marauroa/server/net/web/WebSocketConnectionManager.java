@@ -140,11 +140,13 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 
 	@Override
 	public void send(Object internalChannel, Message msg) {
+		if (msg.isSkippable()) {
+			return;
+		}
 		StringBuilder out = new StringBuilder();
 		out.append("{");
 		msg.writeToJson(out);
 		out.append("}");
-		// TODO: filter message of type MessageS2CPerception that are empty
 		((WebSocketChannel) internalChannel).sendMessage(out.toString());
 	}
 

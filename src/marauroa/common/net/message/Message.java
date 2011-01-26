@@ -249,6 +249,15 @@ public class Message implements Serializable {
 	}
 
 	/**
+	 * may this method be skipped?
+	 *
+	 * @return true, if this method may be skipped; false otherwise.
+	 */
+	public boolean isSkippable() {
+		return false;
+	}
+
+	/**
 	 * reads a message from a map
 	 *
 	 * @param in Map to read from
