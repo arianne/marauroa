@@ -14,6 +14,10 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collection;
+
+import marauroa.common.game.Attributes;
+import marauroa.common.game.DetailLevel;
 
 /**
  * OutputSerializer is used to serialize classes that implement the Serializable
@@ -263,6 +267,32 @@ public class OutputSerializer {
 		// TODO: needs more escaping
 		out.append(value.replace("\"", "\\\""));
 		out.append("\"");
+	}
+
+	/**
+	 * converts a list of objects into a json fragment
+	 *
+	 * @param out output buffer
+	 * @param name trusted name of list (will not be escaped).
+	 * @param collection list of rpobjects
+	 * @param level serialization level
+	 */
+	public static void writeObjectCollectionToJson(StringBuilder out, String name, Collection<? extends Attributes> collection, DetailLevel level) {
+		out.append(",\"");
+		out.append(name);
+		out.append("\":[");
+		boolean first = true;
+		for (Attributes object : collection) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			out.append("{");
+			object.writeToJson(out, level);
+			out.append("}");
+		}
+		out.append("]");
 	}
 
 }

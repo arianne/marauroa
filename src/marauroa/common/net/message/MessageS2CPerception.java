@@ -16,7 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +25,6 @@ import java.util.zip.DeflaterOutputStream;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.Utility;
-import marauroa.common.game.Attributes;
 import marauroa.common.game.DetailLevel;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
@@ -470,16 +468,16 @@ public class MessageS2CPerception extends Message {
 
 		// public
 		if ((addedRPObjects != null) && !addedRPObjects.isEmpty()) {
-			writeObjectCollectionToJson(out, "aO", addedRPObjects, DetailLevel.NORMAL);
+			OutputSerializer.writeObjectCollectionToJson(out, "aO", addedRPObjects, DetailLevel.NORMAL);
 		}
 		if ((modifiedAddedAttribsRPObjects != null) && !modifiedAddedAttribsRPObjects.isEmpty()) {
-			writeObjectCollectionToJson(out, "aA", modifiedAddedAttribsRPObjects, DetailLevel.NORMAL);
+			OutputSerializer.writeObjectCollectionToJson(out, "aA", modifiedAddedAttribsRPObjects, DetailLevel.NORMAL);
 		}
 		if ((modifiedDeletedAttribsRPObjects != null) && !modifiedDeletedAttribsRPObjects.isEmpty()) {
-			writeObjectCollectionToJson(out, "dA", modifiedDeletedAttribsRPObjects, DetailLevel.NORMAL);
+			OutputSerializer.writeObjectCollectionToJson(out, "dA", modifiedDeletedAttribsRPObjects, DetailLevel.NORMAL);
 		}
 		if ((deletedRPObjects != null) && !deletedRPObjects.isEmpty()) {
-			writeObjectCollectionToJson(out, "dO", deletedRPObjects, DetailLevel.NORMAL);
+			OutputSerializer.writeObjectCollectionToJson(out, "dO", deletedRPObjects, DetailLevel.NORMAL);
 		}
 
 		// private
@@ -495,30 +493,5 @@ public class MessageS2CPerception extends Message {
 		}
 	}
 
-	/**
-	 * converts a list of objects into a json fragment
-	 *
-	 * @param out output buffer
-	 * @param name trusted name of list (will not be escaped).
-	 * @param collection list of rpobjects
-	 * @param level serialization level
-	 */
-	private void writeObjectCollectionToJson(StringBuilder out, String name, Collection<? extends Attributes> collection, DetailLevel level) {
-		out.append(",\"");
-		out.append(name);
-		out.append("\":[");
-		boolean first = true;
-		for (Attributes object : collection) {
-			if (first) {
-				first = false;
-			} else {
-				out.append(",");
-			}
-			out.append("{");
-			object.writeToJson(out, level);
-			out.append("}");
-		}
-		out.append("]");
-	}
 
 }
