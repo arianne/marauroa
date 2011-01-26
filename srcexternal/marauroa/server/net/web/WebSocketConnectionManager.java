@@ -27,9 +27,14 @@ import marauroa.common.net.Channel;
 import marauroa.common.net.ConnectionManager;
 import marauroa.common.net.MessageFactory;
 import marauroa.common.net.message.Message;
+import marauroa.server.db.command.DBCommand;
+import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
+import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;
+import marauroa.server.game.messagehandler.SendCharacterListHandler;
+import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.IServerManager;
 
 import org.eclipse.jetty.util.ajax.JSON;
@@ -82,8 +87,13 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 			entry.state = ClientState.LOGIN_COMPLETE;
 			entry.username = webSocketChannel.getUsername();
 			entry.disableTimeout();
-			logger.info("clientid: " + entry.clientid);
 		}
+
+		// greet the client with a character list (which allows the client to learn its clientid)
+		DBCommand command = new LoadAllActiveCharactersCommand(entry.username,
+				new SendCharacterListHandler((INetworkServerManager) serverManager, 0),
+				entry.clientid, channel, 0);
+		DBCommandQueue.get().enqueue(command);
 	}
 
 	/**
@@ -131,7 +141,9 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 	@Override
 	public void send(Object internalChannel, Message msg) {
 		StringBuilder out = new StringBuilder();
+		out.append("{");
 		msg.writeToJson(out);
+		out.append("}");
 		// TODO: filter message of type MessageS2CPerception that are empty
 		((WebSocketChannel) internalChannel).sendMessage(out.toString());
 	}
