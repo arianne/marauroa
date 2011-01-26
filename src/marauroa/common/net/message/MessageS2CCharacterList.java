@@ -17,9 +17,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import marauroa.common.game.DetailLevel;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.Channel;
 import marauroa.common.net.NetConst;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * The CharacterListMessage is sent from server to client to inform client about
@@ -67,7 +69,7 @@ public class MessageS2CCharacterList extends Message {
 		this.characters = new LinkedHashMap<String, RPObject>(characters);
 	}
 
-	
+
 	/**
 	 * This method returns the list of characters that the player owns
 	 *
@@ -100,25 +102,11 @@ public class MessageS2CCharacterList extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
-		super.writeObject(out);
-		out.write(getCharacters());
-		if (super.protocolVersion >= NetConst.FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST) {
-			String[] character = getCharacters();
-			RPObject[] objects = new RPObject[characters.size()];
-			for (int i = 0; i < characters.size(); i++) {
-				objects[i] = this.characters.get(character[i]);
-			}
-			out.write(objects);
-		}
-	}
-
-	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		String[] characters = in.readStringArray();
 		this.characters = new LinkedHashMap<String, RPObject>();
-	
+
 		// read the map or list, depending on protocol version
 		if (super.protocolVersion >= NetConst.FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST) {
 			Object[] objects = in.readObjectArray(RPObject.class);
@@ -134,5 +122,25 @@ public class MessageS2CCharacterList extends Message {
 		if (type != MessageType.S2C_CHARACTERLIST) {
 			throw new IOException();
 		}
+	}
+
+	@Override
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+		super.writeObject(out);
+		out.write(getCharacters());
+		if (super.protocolVersion >= NetConst.FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST) {
+			String[] character = getCharacters();
+			RPObject[] objects = new RPObject[characters.size()];
+			for (int i = 0; i < characters.size(); i++) {
+				objects[i] = this.characters.get(character[i]);
+			}
+			out.write(objects);
+		}
+	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		OutputSerializer.writeObjectCollectionToJson(out, "characters", characters.values(), DetailLevel.NORMAL);
 	}
 }
