@@ -1,0 +1,1 @@
+var marauroa = new function() {}
