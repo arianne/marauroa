@@ -16,7 +16,7 @@ marauroa.messageFactory = new function() {
 	this.t9 = function() {
 		temp = "Character List: ";
 		for (i in this.characters) {
-			temp += this.characters[i].nick;
+			temp += i + ", ";
 		}
 		return temp;
 	}

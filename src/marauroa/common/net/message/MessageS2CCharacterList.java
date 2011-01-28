@@ -141,6 +141,19 @@ public class MessageS2CCharacterList extends Message {
 	@Override
 	public void writeToJson(StringBuilder out) {
 		super.writeToJson(out);
-		OutputSerializer.writeObjectCollectionToJson(out, "characters", characters.values(), DetailLevel.NORMAL);
+		out.append(",\"characters\":{");
+		boolean first = true;
+		for (Map.Entry<String, RPObject> entry : characters.entrySet()) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			OutputSerializer.writeJson(out, entry.getKey());
+			out.append(":{");
+			entry.getValue().writeToJson(out, DetailLevel.NORMAL);
+			out.append("}");
+		}
+		out.append("}");
 	}
 }
