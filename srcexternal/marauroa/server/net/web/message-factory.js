@@ -10,7 +10,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-var messageFactory = new function() {
+marauroa.messageFactory = new function() {
 
 	// Message S2C CharacterList
 	this.t9 = function() {
