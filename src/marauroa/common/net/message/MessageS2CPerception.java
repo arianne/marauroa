@@ -465,6 +465,14 @@ public class MessageS2CPerception extends Message {
 		super.writeToJson(out);
 		out.append(",");
 		OutputSerializer.writeJson(out, "zoneid", zoneid.getID());
+		out.append(",");
+		OutputSerializer.writeJson(out, "sync");
+		out.append(":");
+		if (typePerception == Perception.SYNC) {
+			out.append("true");
+		} else {
+			out.append("false");
+		}
 
 		// public
 		if ((addedRPObjects != null) && !addedRPObjects.isEmpty()) {
