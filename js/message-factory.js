@@ -14,28 +14,35 @@ marauroa.messageFactory = new function() {
 
 	// Message S2C CharacterList
 	this.t9 = function() {
-		temp = "Character List: ";
-		for (i in this.characters) {
-			temp += i + ", ";
-		}
-		return temp;
+		marauroa.clientFramework.onAvailableCharacterDetails(this.characters);
 	}
 
 	// Message S2C ChoooseCharacterACK
 	this.t10 = function() {
-		return "Entering world";
+		marauroa.clientFramework.debug("Entering world");
+	}
+
+	// Message S2C ChoooseCharacterACK
+	this.t10 = function() {
+		marauroa.clientFramework.debug("Character selection rejected");
+		marauroa.clientFramework.onChooseCharacterNack();
 	}
 
 	// Message S2C Perception
 	this.t19 = function() {
-		var temp = "";
-		if (this.aO) {
-			for (i in this.aO) {
-				if (this.aO[i].from) {
-					temp += this.aO[i].from + ": " + this.aO[i].text + "<br>"
-				}
-			}
+		marauroa.clientFramework.onPerception(this);
+	}
+
+	function unknownMessage() {
+		// do nothing
+		debug("Unknown message: " + JSON.stringify(this));
+	}
+
+	function addDispatchMethod(msg) {
+		if (typeof(messageFactory["t" + msg.t]) != "undefined") {
+			msg.dispatch = messageFactory["t" + msg.t];
+		} else {
+			msg.dispatch = messageFacotry.unknownMessage;
 		}
-		return temp;
 	}
 }

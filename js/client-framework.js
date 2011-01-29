@@ -27,7 +27,56 @@ marauroa.clientFramework = new function() {
 	 * @param port server port number
 	 */
 	function connect(host, port) {
-		// TODO: Connect
+		options = {};
+		if (typeof(port) != "undefined") {
+			options.port = port;
+		}
+		this.socket = new io.Socket(host, options);
+		socket.setMessageParser(socket.JSON_MESSAGE, {
+			encode: function(obj) {
+				return JSON.stringify(obj);
+			},
+			decode: function(str) {
+				return JSON.parse(str);
+			}
+		});
+		socket.connect();
+		socket.on('message', function(mtype, obj){
+			if (mtype == socket.JSON_MESSAGE) {
+				onMessage(obj);
+			}
+		});
+		socket.on('connect', onConnect);
+		socket.on('disconnect', onDisonnect);
+	}
+
+	function onConnect(reason, error) {
+		
+	}
+
+	function onDisconnect(reason, error) {
+		
+	}
+
+	function onMessage(msg) {
+		if (debug) {
+			addLine(JSON.stringify(msg));
+		}
+		if (msg.t == 9) {
+			this.clientid = msg.c;
+		}
+		messageFactory.addDispatchMethod(msg);
+		msg.dispatch();
+	}
+
+	function sendMessage(msg) {
+		myMessage = {
+			"c": clientid, 
+			"s": "1",
+		};
+		socket.util.merge(myMessage, msg);
+		// TODO: is JSON.stringify required here?
+		socket.send(JSON.stringify(myMessage));
 	}
 
 	function resync() {
@@ -47,14 +96,14 @@ marauroa.clientFramework = new function() {
 	 * @throws BannedAddressException
 	 */
 	function chooseCharacter(character) {
-		// TODO send MessageC2SChooseCharacter(character);
+		msg = {
+			"t": "1",
+			"character": character
+		};
+		sendMessage(msg);
 	}
 
-	function onChooseCharacterAck() {
-		
-	}
-
-	function onChooseCharacterNAck() {
+	function onChooseCharacterNack() {
 		
 	}
 
@@ -64,8 +113,9 @@ marauroa.clientFramework = new function() {
 	 * @param action
 	 *            the action to send to server.
 	 */
-	function send(action) {
-		// TODO: send new MessageC2SAction(action);
+	function sendAction(action) {
+		action.t = "1";
+		sendMessage(action);
 	}
 
 	/**
@@ -157,8 +207,8 @@ marauroa.clientFramework = new function() {
 	 *
 	 * @return the name of the game that this client implements
 	 */
-	function getGameName() {
-		return "implement clientframework.getGameName()";
+	function onGameNameRequired() {
+		return "implement onGameNameRequired()";
 	}
 
 	/**
@@ -166,7 +216,11 @@ marauroa.clientFramework = new function() {
 	 *
 	 * @return the version number of the game
 	 */
-	function getVersionNumber() {
+	function onVersionNumberRequired() {
 		return "0.0";
+	}
+
+	function debug(msg) {
+		alert(msg);
 	}
 }
