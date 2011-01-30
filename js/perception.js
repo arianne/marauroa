@@ -136,7 +136,7 @@ marauroa.perceptionHandler = {
 
 		// done, tell marauroa.perceptionListener
 		marauroa.perceptionListener.onPerceptionEnd(message.sync, message.s);
-	}
+	},
 
 	/**
 	 * This method applys perceptions addedto the Map<RPObject::ID,RPObject>
@@ -145,15 +145,17 @@ marauroa.perceptionHandler = {
 	 * @param message
 	 *            the perception message
 	 */
-	private void applyPerceptionAddedRPObjects(MessageS2CPerception message) {
+	applyPerceptionAddedRPObjects: function(message) {
 		if (message.aO) {
 			for (i in message.aO) {
 				if (!marauroa.perceptionListener.onAdded(message.aO[i])) {
-					marauroa.currentZone[i] = message.aO[i];
+					o = marauroa.rpobjectFactory.createRPObject(message.aO[i].c);
+					addChanges(o, message.aO[i]);
+					marauroa.currentZone[message.aO[i].a.id] = o;
 				}
 			}
 		}
-	}
+	},
 
 	/**
 	 * This method applys perceptions deleted to the Map<RPObject::ID,RPObject>
@@ -162,15 +164,15 @@ marauroa.perceptionHandler = {
 	 * @param message
 	 *            the perception message
 	 */
-	private void applyPerceptionDeletedRPObjects(MessageS2CPerception message) {
+	applyPerceptionDeletedRPObjects: function(message) {
 		if (message.dO) {
 			for (i in message.dO) {
 				if (!marauroa.perceptionListener.onDeleted(message.dO[i])) {
-					marauroa.currentZone[i] = undefined;
+					delete marauroa.currentZone[i];
 				}
 			}
 		}
-	}
+	},
 
 	/**
 	 * This method applies perceptions modified added and modified deleted to the
@@ -179,15 +181,15 @@ marauroa.perceptionHandler = {
 	 * @param message
 	 *            the perception message
 	 */
-	private void applyPerceptionModifiedRPObjects(MessageS2CPerception message) {
+	applyPerceptionModifiedRPObjects: function(message) {
 
 		// deleted attributes
 		if (message.dA) {
 			for (i in message.dA) {
-				if (typeof(marauroa.currentZone[i.id]) != "undefined") {
-					o = marauroa.currentZone[i.id];
+				if (typeof(marauroa.currentZone[message.dA[i].a.id]) != "undefined") {
+					o = marauroa.currentZone[message.dA[i].a.id];
 					if (!marauroa.perceptionListener.onModifiedDeleted(message.dA[i])) {
-						// TODO apply differences recursively
+						deleteChanges(o, message.dA[i]);
 					}
 				}
 			}
@@ -196,15 +198,15 @@ marauroa.perceptionHandler = {
 		// added attributes
 		if (message.aA) {
 			for (i in message.aA) {
-				if (typeof(marauroa.currentZone[i.id]) != "undefined") {
-					o = marauroa.currentZone[i.id];
-					if (!marauroa.perceptionListener.onModifiedAdded(message.dA[i])) {
-						// TODO apply differences recursively
+				if (typeof(marauroa.currentZone[message.aA[i].a.id]) != "undefined") {
+					o = marauroa.currentZone[message.aA[i].a.id];
+					if (!marauroa.perceptionListener.onModifiedAdded(message.aA[i])) {
+						addChanges(o, message.aA[i]);
 					}
 				}
 			}
 		}
-	}
+	},
 
 	/**
 	 * This method applys perceptions for our RPObject to the Map<RPObject::ID,RPObject>
@@ -213,34 +215,35 @@ marauroa.perceptionHandler = {
 	 * @param message
 	 *            the perception message
 	 */
-	private void applyPerceptionMyRPObject(MessageS2CPerception message) {
+	applyPerceptionMyRPObject: function(message) {
 
 		addMyRPObjectToWorldIfPrivate(added);
 
 		if (!marauroa.perceptionListener.onMyRPObject(message.aM, message.dM)) {
 			if (typeof(message.aM) != "undefined") {
-				id = message.aM.id;
+				id = message.aM.a.id;
 			}
 
 			if (typeof(message.dM) != "undefined") {
-				id = message.dM.id;
+				id = message.dM.a.id;
 			}
 
 			if (typeof(id) == "undefined") {
 				return;
 			}
 
-			object = marauroa.currentZone[id];
-			// TODO: object.applyDifferences(added, deleted);
+			o = marauroa.currentZone[id];
+			deleteChanges(o, message.dM);
+			addChanges(o, message.aM);
 		}
-	}
+	},
 
 	/**
 	 * adds our RPObject to the world in case it was not already added by the public perception.
 	 *
 	 * @param added added changes of my object
 	 */
-	private void addMyRPObjectToWorldIfPrivate(RPObject added) {
+	addMyRPObjectToWorldIfPrivate: function(added) {
 		if (typeof(added) == "undefined") {
 			return;
 		}
@@ -248,7 +251,35 @@ marauroa.perceptionHandler = {
 			return;
 		}
 		if (!marauroa.perceptionListener.onAdded(added)) {
-			marauroa.currentZone[added.id] = added;
+			o = marauroa.rpobjectFactory.createRPObject(added.c);
+			addChanges(o, added);
+			marauroa.currentZone[added.id] = o;
 		}
+	},
+
+	deleteChanges: function(object, diff) {
+		if (typeof(diff) == "undefined") {
+			return;
+		}
+		for (i in diff) {
+			if (i != "id" && i != "zoneid" && i[0] != "_slots" && i[0] != "_links" && i[0] != "_events") {
+				object[i] = undefined;
+			}
+		}
+		// TODO: slots, maps, links
+	},
+
+	addChanges: function(object, diff) {
+		if (typeof(diff) == "undefined") {
+			return;
+		}
+		for (i in diff) {
+			if (i != "id" && i != "zoneid" && i[0] != "_slots" && i[0] != "_links" && i[0] != "_events") {
+				object[i] = diff[i];
+			}
+		}
+		
+		// TODO: slots, maps, links, events
 	}
+
 }
