@@ -141,10 +141,9 @@
 		<copy todir="marauroa-${version}/libs" file="${jython_jar}"/>
 		<copy todir="marauroa-${version}/libs" file="${log4j_jar}"/>
 		<copy todir="marauroa-${version}" file="AUTHORS"/>
-		<copy todir="marauroa-${version}" file="BUGS"/>
-		<copy todir="marauroa-${version}" file="COPYING"/>
+		<copy todir="marauroa-${version}" file="CHANGES.txt"/>
 		<copy todir="marauroa-${version}" file="LICENSE"/>
-		<copy todir="marauroa-${version}" file="README"/>
+		<copy todir="marauroa-${version}" file="README.txt"/>
 		<zip destfile="${dist}/marauroa-${version}.zip" basedir="marauroa-${version}"/>
 		<delete dir="marauroa-${version}"/>
 	</target>
@@ -155,10 +154,9 @@
 			<fileset dir="${docs}"/>
 		</copy>
 		<copy todir="marauroa-${version}" file="AUTHORS"/>
-		<copy todir="marauroa-${version}" file="BUGS"/>
-		<copy todir="marauroa-${version}" file="COPYING"/>
+		<copy todir="marauroa-${version}" file="CHANGES.txt"/>
 		<copy todir="marauroa-${version}" file="LICENSE"/>
-		<copy todir="marauroa-${version}" file="README"/>
+		<copy todir="marauroa-${version}" file="README.txt"/>
 		<zip destfile="${dist}/marauroa-${version}-docs.zip" basedir="marauroa-${version}"/>
 		<delete dir="marauroa-${version}"/>
 	</target>
@@ -184,11 +182,9 @@
 		<copy todir="marauroa-${version}" file="build.xml"/>
 		<copy todir="marauroa-${version}" file="build.ant.properties"/>
 		<copy todir="marauroa-${version}" file="AUTHORS"/>
-		<copy todir="marauroa-${version}" file="BUGS"/>
-		<copy todir="marauroa-${version}" file="COPYING"/>
-		<copy todir="marauroa-${version}" file="HISTORY"/>
+		<copy todir="marauroa-${version}" file="CHANGES.txt"/>
 		<copy todir="marauroa-${version}" file="LICENSE"/>
-		<copy todir="marauroa-${version}" file="README"/>
+		<copy todir="marauroa-${version}" file="README.txt"/>
 
 		<tar destfile="${dist}/marauroa-${version}-src.tar.gz" compression="gzip">
 			<tarfileset dir="marauroa-${version}" prefix="marauroa-${version}">

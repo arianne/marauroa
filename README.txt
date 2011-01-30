@@ -74,6 +74,12 @@ game server or because you are a developer wanting to develop your own game.
 If you don't understand the above it is likely that you are looking for
 http://arianne.sourceforge.net instead.
 
+
+Bugs
+----
+Please refer bugs to http://sourceforge.net/tracker/?group_id=1111&atid=101111
+
+
 Testing
 -------
 In order to test Marauroa with JUnit you need to setup a MySQL database:
@@ -98,5 +104,5 @@ Legal
 -----
 Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2007
 arianne_rpg at users dot sourceforge dot net
-Marauroa(c) is copyright of the Arianne Project, 2006-2010
+Marauroa(c) is copyright of the Arianne Project, 2006-2011
 arianne-general at lists dot sourceforge dot net
