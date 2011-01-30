@@ -1,0 +1,505 @@
+Changelog
+---------
+3.8.6
+- performance optimization in RPObject.getDifference() by drastically reducing the number of list/map instantiations
+
+
+3.8.5
+- fixed an issue on account renaming
+- fixed an issue with special characters in character names
+- zones are now stored asynchronously to the database
+- fixed a co-modification issue in Attributes.clone() and Statistics.clone()
+
+3.8.4
+- fixed "Replacing content to transfer"
+- added configurations parameters allow_account_creation and allow_character_creation
+- added new Result.FAILED_CREATE_ON_MAIN_INSTEAD of account/character if it was disabled
+- fixed bogus error message about accessing available transactions on closing the TransactionPool
+
+3.8.3
+- security fix preventing multiple logins of the same character on MySQL
+- increased visibility of RPSlot.getOwner() to protected
+
+3.8.2
+- always call rewriteSql
+- speed up first connection time on servers with low entropy
+- increased visibility of RPSlot.add(RPObject object, boolean assignId) to protected
+- add method to check the length of a column during database update
+- added new Result.FAILED_OFFLINE of account/character creation to be used when the server is not reachable
+
+3.8.1
+- added new method ClientFrameWork.sendKeepAlive for keeping the connection open more than 10 minutes in the character selection state pre game
+- added new method DBCommandQueue.getOneResult
+- database: added id and status to characters table
+- fixed an issue if a client with version 32 and a client with version 33 are in the same zone
+
+3.8
+- attributes of type map
+- multi protocol version support for client server communication (from version 31 to 40)
+- multi protocol version support for database storage
+- added ability to RPClass.bake() the RPClass to speed up performance.
+- logins are now processed asynchronously to speed up performance
+- only count clients that are in game in the statistics (not the ones waiting to connect or waiting to logout)
+Please see http://stendhalgame.org/wiki/Marauroa_3.8 for details on those features
+
+3.7
+- Note: Make sure that you place the player into the world in RPRuleProcessor.onInit() and not in RPObjectFactory.transform
+- character list now includes the RPObject to provide details if the network protocol version is >= 32
+- improved performance by processing client message outside the PlayerEntryContainer lock
+- added detailed error message if a transaction is accessed from another thread
+
+
+3.6
+- added number of unique ips to statistics in addition to number of players
+- provided an infrastructure for asynchronous database access (not used at all places yet)
+
+
+3.5.1
+- fixed reading of size from the network stream in case it was split over multiple packets
+
+3.5
+- limit number of parallel connections from one ip-address, see http://stendhalgame.org/wiki/index.php/Configuration_file_server.ini#Limits
+- limit account creation per ip-address in a timeframe, see above
+- fixed null values on H2 in account.timedate and gameEvents.timedate
+
+
+3.4
+- added support for the H2 serverless database system in addition to MySQL.
+- added configuration setting max_number_of_players in server.ini
+- added temporary bans stored in the new table accountban
+- fixed error message on inactive accounts claiming the account was banned.
+
+
+3.3
+- games can now check the structure of the database using doesTableExist and doesColumnExist in order to update it automatically
+- RPEvents can now have RPSlots
+- RPObject.getContainer() and RPObject.getContainerBase() continue to return an RPObject, 
+  use the new getContainerOwner() and getContainerOwnerBase() method to get a SlotOwner object
+- properly free transactions in case of exceptions
+- fixed a problem which caused parts of messages to be dropped when the size field was split across two tcp-packets 
+
+
+3.2.1
+- fixed a deadlock when temporarily running out of database connections
+- fixed error message in case the pool runs out of connections (the list contained connections that were kicked because of an exception)
+
+3.2
+- removed dependency on com.sun.*-classes
+- automatically add new columns in existing database tables
+- improved logging
+
+
+3.1
+- always hash the password based on UTF-8 instead of the plattform default encoding on login
+  (on account creation UTF-8 was used, so the first login was not possible if the default
+  encoding was not UTF-8 and the password contained special characters)
+- made method dumpOpenTransactions public so that games can use it for debugging and monitoring
+- moved periodic saving of players out of buildPerceptions so that it gets it on performance profiling index
+- now all tables are created with TYPE=InnoDB
+- improved error messages
+- on serious errors which kill one of the background threads the complete server is now shutt down
+- fixed a NoSuchElementException in TransactionPool.beginWork();
+
+
+3.0
+- splitted JDBCDatabase into several small ...DAO classes
+- added a new package marauroa.server.db for low level database stuff
+- started to work on supporting other database systems beside mysql
+- for help on how to port your application see http://stendhalgame.org/wiki/index.php/Refactoring_Database_Access_in_Marauroa
+- fixed some compiler and javadoc warnings
+
+
+
+2.6.3
+- fixed a NullPointerException in modify() when the zone does not exist (anymore)
+- improved error messages in exception
+
+2.6.2
+- changed zones to ConcurrentHashmap to accomodate the needs of multi threading and changing number of zones
+
+2.6.1
+- fixed a bug in deserialization, that made objects in slots uncontained, provided regression test
+- added checks for same to equals in some RP*
+
+2.6
+- Attributes.clone() and RPSlot.clone() now conform to the contract of Object.clone()
+- Pair implements toString() to help debugging
+- Fixed some compiler warnings
+
+2.5.1
+- Fixed problem on server shutdown
+- Add Attributes.getBool
+
+2.5
+- Added timeout value so players get disconnected after 30 seconds if their connection is lost.
+- Updated protocol version.
+- Fixed problem with player left in game.
+
+2.4
+- RPObjectFactory.transform may return null to not load an object from the database into a zone
+- speed up perception difference calculation by ignoring server only slots
+- Added class ConfigurationParams and added public Configuration constructor to manage
+  more than one configuration file per process.
+
+2.3 Dec 29, 2007
+- Fixed ConcurrentModificationException in database access code
+- Fixed PyhtonRPWorld
+- Fixed 10 minute player autosave
+- Added method MarauroaRPZone.storeToDatabase()
+- JDBCAccess execute now returns the update count if available
+- Fixed a problem which occured in case an object was modified and added to a slot at the same time
+
+2.2 Dec 03, 2007
+- Added close method to IDatabase.
+- Fixed problem when querying for null at Attributes.has
+- Fixed problem when messages were less than 4 bytes.
+- CreateCharacter works now in a similar way to CreateAccount
+- Removed comodification problem.
+
+2.1
+- Fixed problem with bogus network message.
+- Added additional results to enum Result (for account/character creation)
+- Added UnicodeSupportingInputStream and -Reader which automatically detect unicode type (and even support UTF-8Y)
+
+2.0.2 Oct 19, 2007
+- fixed a bug causing RPSlot.addPreservingID() to cause rpobjects with same ids
+- enabled subclasses of JDPCPlayerDatabase to get access to low level methods.
+- moved *.test-subpackages into source path "tests".
+- 256 arrays / strings now may be up to 256 bytes large (it usedto be 128)
+
+2.0.1 Jul 10, 2007
+- Fixed MySQL 4.0 incompatibility.
+- Fixed bug at IRPZone.ID
+- Fixed problem with RPObject.hashCode.
+- Fixed memory leak because of Sun bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6460501
+- Speed up server by several fixes.
+
+2.00 Jul 03, 2007
+- Moved factory to a RPObjectFactory.
+- Added factory_implementation to server.ini
+- Fixed visibility of some methods.
+- Fixed lots of bugs.
+
+1.92 Apr 09, 2007
+- Ported Python server interface to Marauroa 2.0
+- Added flood detection at server side.
+- RPEvents now extends Attributes, so it can have several values associated.
+- Send Connect NACK message for banned IP.
+- Fixed null pointer bugs at NIOServer.
+- Fixed concurrent access bug at Hash class.
+- Fixed javadocs.
+- Added RPLink entity.
+- Removed ClassNotFoundException from Serializer
+- Fixed a problem at getPreviousLogins to return latest logins.
+
+1.91 Mar 13, 2007
+- Fixed bug at database methods for loading, storing and query for a character.
+- Fixed store and load zone database methods.
+- Fixed logout race condition.
+- Fixed network disconnect callback method not being called.
+- Fixed Player being removed twice from internal data structure.
+- Fixed Perception exception at client.
+- Fixed sync flag not correctly set at server.
+- Fixed default RPClass.
+- Fixed server sending messages after connection closed.
+- Fixed a problem with RPEvent.
+- Marauroa can be run as java -jar marauroa.jar
+- Configuration file now defaults to server.ini
+
+1.90 Mar 08, 2007
+- Incompatible with Stendhal 0.5x or Jmapacman games.
+- Added non blocking network server.
+- Removed UDP support.
+- Moved client to work with nio package.
+- Improved efficience of data structure accesses at server.
+- Simplified NetworkServerManager structure.
+- Documented widely everything.
+- Reimplemented Game package to improve efficience.
+- Removed useless exceptions.
+- Allowed to send a template object when creating account, so we can customize player object on creation time.
+- Removed incomplete action concept.
+- Simplified RPScheduler.
+- Simplified Database manager.
+- Moved to object stored as blogs.
+- Added RPEvent structure
+- Simplified RPObject, RPSlot, RPClass and Attributes.
+- Removed many useless exceptions
+- Fixed a bug in attributes definition that made them to be globally defined to all the classes.
+- Added static attributes to RPClass, so you can define them now instead of adding to each object.
+- RPZone stores and load objects now.
+- RPObject can be defined as storable
+- RPObject can be hidden
+- Simplified build script
+- Generated java docs as a new file
+- Split account and character. Now you can have really several characters per account.
+
+1.34.1
+- fixed a bug which prevented disconnection of players on second login if the username mismatched on case
+- disable java built in dns cache (as this required the client to be restarted after server ip change)
+
+1.34
+- new client side method to detect disconnected tcp-streams
+- fixed a problem with may cause logging of game events to fail
+
+1.33
+- moved persistence handling in unsinged webstart from Stendhal to Marauroa
+- Singleton pattern for RPWorld
+
+1.32 Jul 16, 2006
+- Added experimental support of TCP.
+- Fixed a cpu-intensive debug-message while creating zone-based perceptions
+- Improved createaccount method to return information about the cause of the failure.
+
+1.31.1 Mar 24 2006
+- Bug at create account
+
+1.31 Mar 21, 2006
+- Allowed database replacement by games.
+
+1.30 Feb 26, 2006
+- Reworked Perception system.
+- Removed useless method at PlayerEntryContainer.
+- Use less memory.
+
+1.22 Jan 30, 2006
+- Fixed memory leak because incorrectly handled JDBC Connection.
+- Added threaded network client.
+- Fixed messing messages because repeated signature.
+
+1.21 Jan 14, 2006
+- Added game events support
+- Fixed a bug at RPSlot
+- Fixed a bug at NetworkClientManager that made wrong signatures.
+
+1.20 Dec 21, 2005
+- Added capacity to RPSlot
+- Changed serialization form of RPSlot
+- Incompatible with previous releases
+- Added invisible attributes and private attributes
+- Added RPSlot to RPClass definition
+- Added invisible rpslots and private rpslots
+- Changed way of signing messages
+- Changed protocol version.
+- Improved logger output to handle RPClass syntax problems.
+- Allow creation of accounts from within server.
+
+1.12 Oct 26, 2005
+- Fixed ConcurrentModificationException at ariannexp.loop
+- Ported createaccount to Log4J logging system
+
+1.11 Oct 23, 2005
+- Added capacity to slots
+- Fixed a bug at RPSlot.assignValidID that blocked server
+
+1.10 Sep 24, 2005
+- Added log4j as logging platform
+- Fixed isContained, getContainer methods.
+
+1.03 Jul 02, 2005
+- Fixed a bug in RPObject.applyDifferences
+- Fixed a bug at slots
+- Added isContained method to RPObject
+
+1.02 Jun 09, 2005
+- Compressed Server info message so we save bandwidth.
+- Changed statistics from int to long
+- Fixed a bug at JDBCPlayerDatabase.storeRPObject
+
+1.01 Jun 05, 2005
+- Added storable/volatile attributes
+
+1.00 May 30, 2005
+- Fixed a bug at Perception system that shows objects of other zones.
+- Reduced Perception size.
+- Send only hidden attributes on player
+- Fix a bug on a disconnected player that login again
+- Store connected players on server shutdown
+- Updated Python wrapper
+
+0.97 May 20, 2005
+- Added client version check at Server
+- Added has method to RPWorld class
+- Refactored Statistics system
+
+0.96 May 12, 2005
+- Fixed a bug that make clients not to notice of timeout players
+- Improved speed by making conditional logging on NetworkClientManager
+
+0.95 Apr 28, 2005
+- Fixed a bug related to database connection being closed.
+- Fixed an exception at Secure login.
+- Fixed a bug because of Transaction model at MySQL (http://dev.mysql.com/doc/mysql/en/innodb-consistent-read-example.html)
+- Added outOfsync method to ariannexp
+
+0.94 Apr 17, 2005
+- Fixed createaccount to use a parameter based .ini instead of hardcoded configuration file.
+- Fixed cosmetic issues at generateini
+- Fixed exception classes
+- Fixed a bug at JDBCPlayerDatabase that didn't allowed RPObjects to be removed correctly.
+- Added secure login procedure
+
+0.93 Apr 08, 2005
+- Added VERY_LONG_STRING data type
+- PacketValidator will now correctly create the missing SQL tables.
+- Logger allowed and rejected are now set at configuration file
+- Fixed a problem at ariannexp related to ignoring some packets in some conditions.
+- Downgraded to single thread NetworkServerManager because a bug that made it to use 100% CPU usage
+
+0.92 Apr 05, 2005
+- Change nextTurn method for beginTurn and nextTurn
+- Replaced onApprovedActions by onActionAdd for simpler action validation
+
+0.91 Mar 03, 2005
+- Added generateini application
+- Simplified README file
+- Fixed a bug at multizone
+- Fixed a bug to RPWorld that breaks the multizone feature
+- Fixed a bug at NetworkServerManager that blocked the server
+- Fixed a bug at PlayerEntryContainer that happens because of content streaming.
+
+0.90 Feb 19, 2005
+- Major code refactoring
+- Added multizones feature
+- Added content streaming feature
+- Changed package structure
+- Created a new Logging facility
+- Added a client framework: ariannexp
+- Jython is optional
+- Filter banned IP packets
+- Removed games code, now each game package will contain its own server and client code.
+- Updated this README
+
+0.41 Jul 13, 2004
+- Cleaned code
+- Added javadocs comments
+- Fixed a bug at RPZone where modify modified objects not belonging to that zone.
+- Improved mapacman script
+- Added out of sync logic on clients
+- Fixed a bug related to out of sync at server.
+
+0.40 Jul 05, 2004
+- Added score to ghost to count players killed
+- Changed the calling order in RPAImanager
+- Added classes of RPObjects: RPClass
+- Improved the speed feeling on the game by a change on RPServerManager
+- Added per player synchronization
+- Fixed horrible bug at delta^2 perception system
+
+0.36 Jun 04, 2004
+- Database modified to stored hashed passwords
+- Fixed the two turns delay on actions
+- Compressed RPMap message
+- Added command line support for nullClient
+- Improved mapacman support
+- Fixed bug that happens when client exits on timeout
+
+0.35   May 25, 2004
+- Changed RPMap message
+- Client can try to resync using old perceptions
+- Fixed bugs at mapacman_script.py
+- Reused PythonRPRuleProcessor
+- Added command line help to server
+- Removed simplegame
+
+0.34	May 17, 2004
+- Added out of sync message
+- Improved perception creation
+
+0.33 	May 01, 2004
+- Static part of the perception, that one that doesn't change depending of the player is precomputed.
+- Added Python RP rules system.
+- Added mapacman game.
+- Added messages timestamps so that it is more reliable on bad UDP connections.
+- Factorized createaccount method, each application has now to modify a very small part of it.
+- Updated documentation about Marauroa.
+- Added proper shutdown procedure.
+- Fixed the bug that allows players to vote several times.
+- Added RPMap message
+
+0.32 	Apr 21, 2004
+- Fix a bug that happens when an object is added and deleted on the same turn from a slot.
+- Added modification of the network protocol to send our RPObject only when changed
+- Fixed a path related problem with create account
+- Fixed an issue that rejects the creation of database on the first run.
+
+0.31	Apr 14, 2004
+- Added Delta-delta perception so now only diffs between actual and previous object is send.
+- Change attributes name to save even more bandwidth
+
+0.30	Mar 26, 2004
+- Added persistent objects
+- Added transactional database support
+- Fixed zlib compression problem due to incorrect deserialization
+- Send less TOTAL perceptions so it improve bandwidth usage
+- A ton of little bugs/features fixed/added
+
+0.25	Mar	06,	2004
+- Added zlib compression
+- Added Buy item and Buy gladiator
+- Added completely access to our gladiator inventory
+- The rest of Players has their gladiators and items hidden.
+- Fixed a bug that make HP not to be restored if you logout before request fame ends
+
+0.24	Mar 02,	2004
+- Fixed SQL bug that can cause a denial of service on server
+- Fixed bug on Fame to be assigned to winner
+- Fixed correctly the no-winner situation
+- Fixed test cases to correctly pass the PlayerEntryContainer
+
+0.23	Feb 15,	2004
+- Added chat
+- Added statistics
+- Added W3C Events Log format
+- Fixed synchronization bug
+- Fixed a bug that makes arena to not be able to exit from fight state
+
+0.22 	Feb 06, 2004
+- Fixed JDBC problem with accounts
+- Fixed stupid problem on createaccount
+- Combat does end now
+- Fame is added now to winner
+
+0.21 	Jan 31, 2004
+- Fixed security problem at JDBCDatabase
+- Fixed delta perception
+- Add a commandline tool to add new players
+- Improved Gladiators server logic
+
+0.20	Jan 26, 2004
+- Implemented Gladiators
+- Fixed several problems at server
+- API stabilized
+
+0.11	Dic 21, 2003
+- Maraurorized simpleGame
+- Fixed several logical bugs in simpleGame
+- Fixed bugs
+
+0.10 	Dic 16, 2003
+- simpleGame working.
+- sound support
+- First steps of Gladiators
+
+0.04 	Dic 11, 2003
+- Fixed FATAL bug at NetworkServerManager and JMarauroa
+- Added ServerInfo message
+
+0.03	Dic 09, 2003
+- Delta Perception
+- Full RPZone and RuleProcessor
+- Full test cases
+- Multipacket UDP communication protocol
+- Updated documentation
+- Fixed bugs
+
+0.02	Nov 30, 2003
+- Added Perception message
+- Added JDBC Database
+- Added RP Code: Hacked and Slashed
+- Fixed bugs:
+- Fixed Traces output
+
+0.01	Nov 22, 2003
+- Initial release
+- Complete Network Protocol
+- Memory Database
