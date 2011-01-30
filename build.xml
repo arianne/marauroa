@@ -3,7 +3,7 @@
 	<property file="build.ant.properties"/>
 
 	<property name="jarname" value="marauroa-${version}.jar"/>
-	<property name="jarname_client" value="marauroa-client-${version}.jar"/>
+	<property name="jarname_client" value="marauroa-client-only-${version}.jar"/>
 
 	<!-- Clears the instalation -->
 	<target name="clean">
@@ -102,7 +102,7 @@
 	</target>
 
 	<!-- Create jar file for Marauroa -->
-	<target name="jar" depends="compile">
+	<target name="jar-all" depends="compile">
 		<jar jarfile="${build-archive}/${jarname}" basedir="${buildroot}/">
 			<manifest>
 				<attribute name="Main-Class" value="marauroa.server.marauroad"/>
@@ -112,9 +112,11 @@
 	</target>
 
 	<!-- Create jar file for Marauroa -->
-	<target name="jar-client" depends="compile">
+	<target name="jar-client" depends="compile-client">
 		<jar jarfile="${build-archive}/${jarname_client}" basedir="${buildroot_client}/" />
 	</target>
+
+	<target name="jar" depends="jar-all, jar-client" />
 
 	<!-- Prepare the tarball for releases -->
 	<target name="dist_binary" depends="jar">
@@ -134,6 +136,7 @@
 		<copy todir="marauroa-${version}" file="${extras}/marauroad"/>
 		<copy todir="marauroa-${version}" file="${extras}/Makefile"/>
 		<copy todir="marauroa-${version}/libs" file="${build-archive}/${jarname}"/>
+		<copy todir="marauroa-${version}/libs" file="${build-archive}/${jarname_client}"/>
 		<copy todir="marauroa-${version}/libs" file="${connectorJ_jar}"/>
 		<copy todir="marauroa-${version}/libs" file="${h2_jar}"/>
 		<copy todir="marauroa-${version}/libs" file="${jython_jar}"/>
