@@ -109,7 +109,6 @@ public class RPObject extends SlotOwner {
 		clear();
 	}
 
-
 	/**
 	 * Constructor
 	 *
@@ -157,7 +156,6 @@ public class RPObject extends SlotOwner {
 
 		fill(object);
 	}
-
 
 	/**
 	 * Copy constructor
@@ -256,8 +254,8 @@ public class RPObject extends SlotOwner {
 		/*
 		 * We don't use zoneid inside slots.
 		 */
-		if(id.getZoneID()!=null) {
-		  put("zoneid", id.getZoneID());
+		if (id.getZoneID() != null) {
+			put("zoneid", id.getZoneID());
 		}
 	}
 
@@ -395,7 +393,6 @@ public class RPObject extends SlotOwner {
 		}
 	}
 
-
 	/**
 	 * Returns the slot where this object is contained
 	 *
@@ -413,19 +410,19 @@ public class RPObject extends SlotOwner {
 	 * @return RPObject
 	 */
 	public RPObject getFromSlots(int id) {
-		if(isContained()) {
-			if(getInt("id")==id) {
+		if (isContained()) {
+			if (getInt("id") == id) {
 				return this;
 			}
 		}
 
-		RPObject found=null;
+		RPObject found = null;
 
 		for (RPSlot slot : slots) {
-			for(RPObject object: slot) {
-				found=object.getFromSlots(id);
+			for (RPObject object : slot) {
+				found = object.getFromSlots(id);
 
-				if(found!=null) {
+				if (found != null) {
 					return found;
 				}
 			}
@@ -433,7 +430,6 @@ public class RPObject extends SlotOwner {
 
 		return found;
 	}
-
 
 	/**
 	 * This method add the slot to the object
@@ -539,7 +535,7 @@ public class RPObject extends SlotOwner {
 	 * @param object the object to link.
 	 */
 	public void addLink(String name, RPObject object) {
-		if(hasLink(name)) {
+		if (hasLink(name)) {
 			throw new SlotAlreadyAddedException(name);
 		}
 
@@ -556,7 +552,7 @@ public class RPObject extends SlotOwner {
 	 * @param link the link to add.
 	 */
 	public void addLink(RPLink link) {
-		if(hasLink(link.getName())) {
+		if (hasLink(link.getName())) {
 			throw new SlotAlreadyAddedException(link.getName());
 		}
 
@@ -639,10 +635,11 @@ public class RPObject extends SlotOwner {
 			this.addMap(map);
 		}
 		if ((key.equals("id") || key.equals("zoneid"))) {
-			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserved keys that may not be used.");
+			throw new IllegalArgumentException(
+					"\"id\" and \"zoneid\" are reserved keys that may not be used.");
 		}
 		this.maps.get(map).put(key, value);
-		if(!this.addedMaps.contains(map)) {
+		if (!this.addedMaps.contains(map)) {
 			this.addedMaps.add(map);
 		}
 	}
@@ -704,7 +701,7 @@ public class RPObject extends SlotOwner {
 	public String get(String map, String key) {
 		if (!this.maps.containsKey(map)) {
 			Definition def = getRPClass().getDefinition(DefinitionClass.STATIC, map);
-			if(def!=null) {
+			if (def != null) {
 				/*
 				 * It is possible that the attribute itself doesn't exist as static attribute,
 				 * so we should return null instead.
@@ -725,7 +722,7 @@ public class RPObject extends SlotOwner {
 	 */
 	public int getInt(String map, String key) {
 		if (!this.maps.containsKey(map)) {
-			throw new IllegalArgumentException("Map "+ map +" not found");
+			throw new IllegalArgumentException("Map " + map + " not found");
 		}
 		return this.maps.get(map).getInt(key);
 	}
@@ -739,7 +736,7 @@ public class RPObject extends SlotOwner {
 	 */
 	public double getDouble(String map, String key) {
 		if (!this.maps.containsKey(map)) {
-			throw new IllegalArgumentException("Map "+ map +" not found");
+			throw new IllegalArgumentException("Map " + map + " not found");
 		}
 		return this.maps.get(map).getDouble(key);
 	}
@@ -753,7 +750,7 @@ public class RPObject extends SlotOwner {
 	 */
 	public boolean getBoolean(String map, String key) {
 		if (!this.maps.containsKey(map)) {
-			throw new IllegalArgumentException("Map "+ map +" not found");
+			throw new IllegalArgumentException("Map " + map + " not found");
 		}
 		return this.maps.get(map).getBool(key);
 	}
@@ -765,10 +762,10 @@ public class RPObject extends SlotOwner {
 	 * @return a copy of the map or null if no map with the given name is present
 	 */
 	public Map<String, String> getMap(String map) {
-		if(this.maps.containsKey(map)) {
+		if (this.maps.containsKey(map)) {
 			HashMap<String, String> newMap = new HashMap<String, String>();
 			Attributes attr = this.maps.get(map);
-			for(String key : attr) {
+			for (String key : attr) {
 				if ((!key.equals("id") && !key.equals("zoneid"))) {
 					newMap.put(key, attr.get(key));
 				}
@@ -785,7 +782,7 @@ public class RPObject extends SlotOwner {
 	 * @return the RPObject representing the map or null if map not existing
 	 */
 	public Attributes removeMap(String map) {
-		if(maps.containsKey(map)) {
+		if (maps.containsKey(map)) {
 			Attributes attr = maps.get(map);
 			this.deletedMaps.add(map);
 			modified = true;
@@ -800,12 +797,13 @@ public class RPObject extends SlotOwner {
 	 * @param map
 	 */
 	public void addMap(String map) {
-		if(maps.containsKey(map)) {
+		if (maps.containsKey(map)) {
 			throw new SlotAlreadyAddedException(map);
 		}
-		if(getRPClass()!= null) {
-			if(getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map).getType() != Type.MAP) {
-				throw new IllegalArgumentException("The type of the attribute "+map+" is not MAP type.");
+		if (getRPClass() != null) {
+			if (getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map).getType() != Type.MAP) {
+				throw new IllegalArgumentException("The type of the attribute " + map
+						+ " is not MAP type.");
 			}
 		}
 		RPObject newMap = new RPObject();
@@ -824,11 +822,12 @@ public class RPObject extends SlotOwner {
 	 */
 	public String remove(String map, String key) {
 		if ((key.equals("id") || key.equals("zoneid"))) {
-			throw new IllegalArgumentException("\"id\" and \"zoneid\" are reserved keys that may not be used");
+			throw new IllegalArgumentException(
+					"\"id\" and \"zoneid\" are reserved keys that may not be used");
 		}
-		if(maps.containsKey(map)) {
+		if (maps.containsKey(map)) {
 			this.modified = true;
-			if(!this.deletedMaps.contains(map)) {
+			if (!this.deletedMaps.contains(map)) {
 				this.deletedMaps.add(map);
 			}
 			return this.maps.get(map).remove(key);
@@ -912,8 +911,8 @@ public class RPObject extends SlotOwner {
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		try {
 			writeObject(out, DetailLevel.NORMAL);
-		} catch(NullPointerException e) {
-			logger.warn(this,e);
+		} catch (NullPointerException e) {
+			logger.warn(this, e);
 			throw e;
 		}
 	}
@@ -928,7 +927,7 @@ public class RPObject extends SlotOwner {
 	 */
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level)
-	        throws java.io.IOException {
+			throws java.io.IOException {
 		super.writeObject(out, level);
 
 		if (level == DetailLevel.FULL) {
@@ -971,11 +970,12 @@ public class RPObject extends SlotOwner {
 		/*
 		 * we compute the amount of maps before serializing
 		 */
-		if(out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MAP_SUPPORT) {
-			size=0;
+		if (out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MAP_SUPPORT) {
+			size = 0;
 			for (Entry<String, Attributes> entry : maps.entrySet()) {
-				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
-				if(shouldSerialize(def, level)) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE,
+						entry.getKey());
+				if (shouldSerialize(def, level)) {
 					size++;
 				}
 			}
@@ -987,13 +987,13 @@ public class RPObject extends SlotOwner {
 			 */
 			for (String map : maps.keySet()) {
 				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map);
-				if(shouldSerialize(def, level)) {
+				if (shouldSerialize(def, level)) {
 					out.write(map);
 				}
 			}
 			for (String map : maps.keySet()) {
 				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map);
-				if(shouldSerialize(def, level)) {
+				if (shouldSerialize(def, level)) {
 					maps.get(map).writeObject(out, level);
 				}
 			}
@@ -1133,7 +1133,7 @@ public class RPObject extends SlotOwner {
 			link = (RPLink) in.readObject(link);
 			links.add(link);
 		}
-		if(in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MAP_SUPPORT) {
+		if (in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MAP_SUPPORT) {
 			// get the number of maps
 			int numberOfMaps = in.readInt();
 			// get the names of the maps and store them in a list
@@ -1175,13 +1175,13 @@ public class RPObject extends SlotOwner {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj){
+		if (this == obj) {
 			return true;
 		}
 		if (obj instanceof RPObject) {
 			RPObject object = (RPObject) obj;
-			return super.equals(obj) && slots.equals(object.slots) && maps.equals(object.maps) && events.equals(object.events)
-			        && links.equals(object.links);
+			return super.equals(obj) && slots.equals(object.slots) && maps.equals(object.maps)
+					&& events.equals(object.events) && links.equals(object.links);
 		} else {
 			return false;
 		}
@@ -1189,9 +1189,9 @@ public class RPObject extends SlotOwner {
 
 	@Override
 	public int hashCode() {
-		int hash=0;
+		int hash = 0;
 		if (has("id")) {
-			hash=getInt("id");
+			hash = getInt("id");
 		}
 
 		return hash;
@@ -1204,7 +1204,8 @@ public class RPObject extends SlotOwner {
 	 */
 	@Override
 	public boolean isEmpty() {
-		return super.isEmpty() && slots.isEmpty() && events.isEmpty() && links.isEmpty() && maps.isEmpty();
+		return super.isEmpty() && slots.isEmpty() && events.isEmpty() && links.isEmpty()
+				&& maps.isEmpty();
 	}
 
 	/**
@@ -1250,8 +1251,9 @@ public class RPObject extends SlotOwner {
 			RPEvent event = eventsit.next();
 			Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
 
-			if(def==null) {
-				logger.warn("Null Definition for event: "+event.getName()+" of RPClass: "+getRPClass().getName());
+			if (def == null) {
+				logger.warn("Null Definition for event: " + event.getName() + " of RPClass: "
+						+ getRPClass().getName());
 				continue;
 			}
 
@@ -1356,7 +1358,7 @@ public class RPObject extends SlotOwner {
 			/*
 			 * Zone id is optional when the object is contained.
 			 */
-			if(attr.has("zoneid")) {
+			if (attr.has("zoneid")) {
 				this.zoneid = attr.get("zoneid");
 			}
 		}
@@ -1372,7 +1374,7 @@ public class RPObject extends SlotOwner {
 			/*
 			 * Zone id is optional when the object is contained.
 			 */
-			if(attr.has("zoneid")) {
+			if (attr.has("zoneid")) {
 				this.zoneid = attr.get("zoneid");
 			}
 		}
@@ -1451,7 +1453,7 @@ public class RPObject extends SlotOwner {
 
 		clearEvents();
 
-		if(modified) {
+		if (modified) {
 			modified = false;
 		}
 	}
@@ -1531,7 +1533,7 @@ public class RPObject extends SlotOwner {
 	 * @param object RPObject to copy the added maps from
 	 */
 	public void setAddedMaps(RPObject object) {
-		for(String map : object.addedMaps) {
+		for (String map : object.addedMaps) {
 			addMap(map);
 		}
 	}
@@ -1542,7 +1544,7 @@ public class RPObject extends SlotOwner {
 	 * @param object RPObject to copy the deleted maps from
 	 */
 	public void setDeletedMaps(RPObject object) {
-		for(String map : object.deletedMaps) {
+		for (String map : object.deletedMaps) {
 			addMap(map);
 		}
 	}
@@ -1623,7 +1625,8 @@ public class RPObject extends SlotOwner {
 			for (RPSlot slot : slots) {
 
 				// ignore all slots that are server only
-				Definition def = this.getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
+				Definition def = this.getRPClass().getDefinition(DefinitionClass.RPSLOT,
+						slot.getName());
 				if (def.isHidden()) {
 					continue;
 				}
@@ -1737,41 +1740,38 @@ public class RPObject extends SlotOwner {
 		 * We now get the diffs for the maps
 		 */
 		for (Entry<String, Attributes> entry : maps.entrySet()) {
-			Attributes addedMapChanges = new Attributes(RPClass.getBaseRPObjectDefault(), false);
-			Attributes deletedMapChanges = new Attributes(RPClass.getBaseRPObjectDefault(), false);
-			addedMapChanges.setAddedAttributes(entry.getValue());
-			deletedMapChanges.setDeletedAttributes(entry.getValue());
-			if(!addedMapChanges.isEmpty()) {
-				for(String attribute : addedMapChanges) {
-					if (!attribute.equals("id") && !attribute.equals("zoneid")) {
-						addedChanges.put(entry.getKey(), attribute, addedMapChanges.get(attribute));
+			synchronized (entry.getValue().added) {
+				for (Map.Entry<String, String> ent : entry.getValue().added.entrySet()) {
+					if (!ent.getKey().equals("id") && !ent.getKey().equals("zoneid")) {
+						addedChanges.put(entry.getKey(), ent.getKey(), ent.getValue());
 					}
 				}
 			}
-			if(!deletedMapChanges.isEmpty()) {
-				for(String attribute : deletedMapChanges) {
-					if (!attribute.equals("id") && !attribute.equals("zoneid")) {
-						deletedChanges.put(entry.getKey(), attribute, deletedMapChanges.get(attribute));
+
+			synchronized (entry.getValue().deleted) {
+				for (Map.Entry<String, String> ent : entry.getValue().deleted.entrySet()) {
+					if (!ent.getKey().equals("id") && !ent.getKey().equals("zoneid")) {
+						deletedChanges.put(entry.getKey(), ent.getKey(), ent.getValue());
 					}
 				}
 			}
 		}
 
-
+		/*
 		/*
 		 * If the diff objects are not empty, we make sure they have the id.
 		 */
-		if(!addedChanges.isEmpty()) {
-			addedChanges.put("id",get("id"));
-			if(has("zoneid")) {
-				addedChanges.put("zoneid",get("zoneid"));
+		if (!addedChanges.isEmpty()) {
+			addedChanges.put("id", get("id"));
+			if (has("zoneid")) {
+				addedChanges.put("zoneid", get("zoneid"));
 			}
 		}
 
-		if(!deletedChanges.isEmpty()) {
-			deletedChanges.put("id",get("id"));
-			if(has("zoneid")) {
-				deletedChanges.put("zoneid",get("zoneid"));
+		if (!deletedChanges.isEmpty()) {
+			deletedChanges.put("id", get("id"));
+			if (has("zoneid")) {
+				deletedChanges.put("zoneid", get("zoneid"));
 			}
 		}
 	}
@@ -1872,7 +1872,7 @@ public class RPObject extends SlotOwner {
 			 * we apply the added changes for the maps
 			 */
 			for (Entry<String, Attributes> entry : addedChanges.maps.entrySet()) {
-				if(!maps.containsKey(entry.getKey())) {
+				if (!maps.containsKey(entry.getKey())) {
 					// entry.getValue is an RPObject for compatibility with the network
 					// protocol, so copy it into an attributes object
 					Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());

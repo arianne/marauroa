@@ -276,7 +276,7 @@ public class marauroad extends Thread {
 
 		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
 		System.out.println("Running on version " + VERSION);
-		System.out.println("(C) 1999-2010 Miguel Angel Blanch Lardin and the Arianne project");
+		System.out.println("(C) 1999-2011 Miguel Angel Blanch Lardin and the Arianne project");
 		System.out.println();
 		System.out.println("This program is free software; you can redistribute it and/or modify");
 		System.out.println("it under the terms of the GNU General Public License as published by");
@@ -368,6 +368,9 @@ public class marauroad extends Thread {
 		}
 
 		try {
+			if (Configuration.getConfiguration().get("n") == null) {
+				throw new Exception("Missing RSA key pair in server.ini; run marauroa.tools.GenerateKeys");
+			}
 			RSAKey key = new RSAKey(new BigInteger(Configuration.getConfiguration().get("n")),
 					new BigInteger(Configuration.getConfiguration().get("d")), new BigInteger(
 							Configuration.getConfiguration().get("e")));

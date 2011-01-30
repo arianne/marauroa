@@ -57,10 +57,10 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	private RPClass rpClass;
 
 	/** This is for Delta algorithm: added attributes */
-	private Map<String, String> added;
+	Map<String, String> added;
 
 	/** This is for Delta algorithm: deleted attributes */
-	private Map<String, String> deleted;
+	Map<String, String> deleted;
 
 	/**
 	 * This method fills this object with data from the attributes object passed
