@@ -288,7 +288,7 @@ public abstract class SlotOwner extends Attributes {
 		}
 
 		boolean first = true;
-		out.append(",\"_slots\":{");
+		out.append(",\"s\":{");
 		for (RPSlot slot : slots) {
 			if (slot.isEmpty()) {
 				continue;

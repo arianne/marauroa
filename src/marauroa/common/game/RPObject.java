@@ -1035,20 +1035,29 @@ public class RPObject extends SlotOwner {
 		super.writeToJson(out, level);
 
 		// now we write the maps
-		for (Map.Entry<String, Attributes> entry : maps.entrySet()) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
-			if (shouldSerialize(def, level)) {
-				out.append(",");
-				OutputSerializer.writeJson(out, entry.getKey());
-				out.append(":{");
-				entry.getValue().writeToJson(out, level);
-				out.append("}");
+		if (!maps.isEmpty()) {
+			out.append(",\"m\":{");
+			boolean first = true;
+			for (Map.Entry<String, Attributes> entry : maps.entrySet()) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
+				if (shouldSerialize(def, level)) {
+					if (first) {
+						first = false;
+					} else {
+						out.append(",");
+					}
+					OutputSerializer.writeJson(out, entry.getKey());
+					out.append(":{");
+					entry.getValue().writeToJson(out, level);
+					out.append("}");
+				}
 			}
+			out.append("}");
 		}
 
 		// Now write links.
 		if (!links.isEmpty()) {
-			out.append(",\"_links\":{");
+			out.append(",\"l\":{");
 			boolean first = true;
 			for (RPLink link : links) {
 				Definition def = getRPClass().getDefinition(DefinitionClass.RPLINK, link.getName());
@@ -1069,7 +1078,7 @@ public class RPObject extends SlotOwner {
 
 		// Now write events
 		if (!events.isEmpty()) {
-			out.append(",\"_events\":[");
+			out.append(",\"e\":[");
 			boolean first = true;
 			for (RPEvent event : events) {
 				Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());

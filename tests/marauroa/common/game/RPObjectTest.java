@@ -379,6 +379,6 @@ public class RPObjectTest {
 		slot.add(child);
 		StringBuilder out = new StringBuilder();
 		rpobject.writeToJson(out, DetailLevel.NORMAL);
-		assertThat(out.toString(), equalTo("\"_rpclass\":\"\",\"mykey\":\"myvalue\",\"_slots\":{\"myslot\":[{\"_rpclass\":\"\",\"id\":\"0\"},{\"_rpclass\":\"\",\"id\":\"1\",\"mychildkey\":\"mychildvalue\"}]}"));
+		assertThat(out.toString(), equalTo("\"c\":\"\",\"a\":{\"mykey\":\"myvalue\"},\"s\":{\"myslot\":[{\"c\":\"\",\"a\":{\"id\":\"0\"}},{\"c\":\"\",\"a\":{\"id\":\"1\",\"mychildkey\":\"mychildvalue\"}}]}"));
 	}
 }

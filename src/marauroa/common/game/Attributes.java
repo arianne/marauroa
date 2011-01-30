@@ -586,18 +586,24 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *			  the level of Detail
 	 */
 	public void writeToJson(StringBuilder out, DetailLevel level) {
-		OutputSerializer.writeJson(out, "_rpclass", rpClass.getName());
-
+		OutputSerializer.writeJson(out, "c", rpClass.getName());
+		out.append(",\"a\":{");
 		synchronized(content) {
+			boolean first = true;
 			for (Map.Entry<String, String> entry : content.entrySet()) {
 				String key = entry.getKey();
 				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
 				if (shouldSerialize(def, level)) {
-					out.append(",");
+					if (first) {
+						first = false;
+					} else {
+						out.append(",");
+					}
 					OutputSerializer.writeJson(out, key, entry.getValue());
 				}
 			}
 		}
+		out.append("}");
 	}
 
 
