@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="libs/jetty-websocket-7.2.2.v20101205.jar"/>
 	<classpathentry kind="lib" path="libs/servlet-api-3.0.jar"/>
 	<classpathentry kind="lib" path="libs/h2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/socketio-java"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
