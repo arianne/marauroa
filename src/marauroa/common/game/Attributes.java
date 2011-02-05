@@ -45,7 +45,7 @@ import marauroa.common.game.Definition.DefinitionClass;
  */
 public class Attributes implements marauroa.common.net.Serializable, Iterable<String>, Cloneable {
 	private static Logger logger = Log4J.getLogger(Attributes.class);
-	
+
 	/** We are interested in clearing added and deleted only if they have changed. */
 	private boolean modified;
 
@@ -56,10 +56,10 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	private RPClass rpClass;
 
 	/** This is for Delta algorithm: added attributes */
-	private Map<String, String> added;
+	Map<String, String> added;
 
 	/** This is for Delta algorithm: deleted attributes */
-	private Map<String, String> deleted;
+	Map<String, String> deleted;
 
 	/**
 	 * This method fills this object with data from the attributes object passed
@@ -75,10 +75,10 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 		content.clear();
 		content.putAll(attr.content);
-		
+
 		added.clear();
 		added.putAll(attr.added);
-		
+
 		deleted.clear();
 		deleted.putAll(attr.deleted);
 
@@ -92,11 +92,23 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *			  class that this attribute belongs too.
 	 */
 	public Attributes(RPClass rpclass) {
+		this(rpclass, true);
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param rpclass class that this attribute belongs too.
+	 * @param deltaRecording support delta recording
+	 */
+	Attributes(RPClass rpclass, boolean deltaRecording) {
 		rpClass = rpclass;
 
 		content = Collections.synchronizedMap(new HashMap<String, String>());
-		added = Collections.synchronizedMap(new HashMap<String, String>());
-		deleted = Collections.synchronizedMap(new HashMap<String, String>());
+		if (deltaRecording) {
+			added = Collections.synchronizedMap(new HashMap<String, String>());
+			deleted = Collections.synchronizedMap(new HashMap<String, String>());
+		}
 		modified = false;
 	}
 
@@ -133,7 +145,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	public void setRPClass(String rpclass) {
 		rpClass = RPClass.getRPClass(rpclass);
-		
+
 		if(rpClass==null) {
 			throw new SyntaxException("Missing RPClass: "+rpclass);
 		}
@@ -187,8 +199,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 */
 	public boolean has(String attribute) {
 		if (!content.containsKey(attribute)) {
-			if (rpClass == null || attribute==null)
+			if (rpClass == null || attribute==null) {
 				return false;
+			}
 
 			Definition def = rpClass.getDefinition(DefinitionClass.STATIC, attribute);
 			return (def != null && def.getValue() != null);
@@ -210,9 +223,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 		/* This is for Delta-delta feature */
 		added.put(attribute, value);
-		
+
 		modified=true;
-		
+
 		if(value==null) {
 			throw new IllegalArgumentException(attribute + " is null");
 		}
@@ -306,7 +319,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			Definition def = rpClass.getDefinition(DefinitionClass.STATIC, attribute);
 			if(def!=null) {
 				/*
-				 * It is possible that the attribute itself doesn't exist as static attribute, 
+				 * It is possible that the attribute itself doesn't exist as static attribute,
 				 * so we should return null instead.
 				 */
 				return def.getValue();
@@ -347,7 +360,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 		return Boolean.parseBoolean(val);
 	}
-	
+
 	/**
 	 * This methods return the value of an attribute
 	 *
@@ -393,13 +406,13 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		 * This is for Delta^2 feature, as if it is empty it fails. It must
 		 * be 0 because if attribute is a number it would fail on the
 		 * serialization.
-		 * 
+		 *
 		 * We can not ignore the change even if it had been added the same turn,
-		 * because then if the attribute had a value before modifying it, the 
+		 * because then if the attribute had a value before modifying it, the
 		 * client would get no notice about it being removed.
 		 */
 		deleted.put(attribute, "0");
-		
+
 		modified=true;
 
 		return content.remove(attribute);
@@ -481,7 +494,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		return result;
 	}
 
-	/** 
+	/**
 	 * returns an iterator over the attribute names
 	 *
 	 * @return Iterator
@@ -513,7 +526,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param level
 	 *			  the level of Detail
 	 * @throws IOException
-	 *			  in case of an IO error		
+	 *			  in case of an IO error
 	 */
 	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level)
 			throws IOException {
@@ -542,19 +555,19 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		synchronized(content) {
 			for (Map.Entry<String, String> entry : content.entrySet()) {
 				String key = entry.getKey();
-	
+
 				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
-	
+
 				if (shouldSerialize(def, level)) {
 					boolean serializeKeyText = (level == DetailLevel.FULL) || (def.getCode() == -1);
-	
+
 					if (serializeKeyText) {
 						out.write((short) -1);
 						out.write(def.getName());
 					} else {
 						out.write(def.getCode());
 					}
-	
+
 					def.serialize(entry.getValue(), out);
 				}
 			}
@@ -594,8 +607,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		if (level == DetailLevel.FULL && !def.isStorable()){
 			return false;
 		}
-		
-		return (level == DetailLevel.PRIVATE && !def.isHidden()) 
+
+		return (level == DetailLevel.PRIVATE && !def.isHidden())
 				|| (def.isVisible())
 				|| (level == DetailLevel.FULL);
 	}
@@ -641,7 +654,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 
 	/**
 	 * Removes all the visible attributes
-	 * @param sync keep the structure intact, by not removing empty slots and links.
+	 *
+	 * @param sync ignored
 	 */
 	public void clearVisible(boolean sync) {
 		synchronized(content) {
@@ -649,18 +663,18 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			Iterator<Map.Entry<String, String>> it = content.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry<String, String> entry = it.next();
-	
+
 				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
-	
+
 				// TODO handle Null Definition for attribute
 				if(def==null) {
 					logger.warn("Null Definition for attribute: "+entry.getKey()+" of RPClass: "+rpClass.getName());
 					continue;
 				}
-				
+
 				if (def.isVisible() && !entry.getKey().equals("id")) {
 					it.remove();
-	
+
 					modified=true;
 					deleted.remove(entry.getKey());
 					added.remove(entry.getKey());
@@ -673,9 +687,6 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * Reset the Delta^2 information of the attribute.
 	 */
 	public void resetAddedAndDeletedAttributes() {
-		/*
-		 * We should clear added and deleted if they have been deleted. 
-		 */
 		if (modified) {
 			added.clear();
 			deleted.clear();
@@ -692,17 +703,17 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	public void setAddedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;
 
-		int i = 0;
+		boolean addedSomething = false;
 		/* Copy each of the added attributes to this object. */
 		synchronized(attr.added) {
 			for (Map.Entry<String, String> entry : attr.added.entrySet()) {
-				++i;
+				addedSomething = true;
 				content.put(entry.getKey(), entry.getValue());
 			}
 		}
 
 		/* If we have added any attributes, we set the object id */
-		if (i > 0) {
+		if (addedSomething) {
 			content.put("id", attr.get("id"));
 			/* Object stored at slots don't have now the zoneid attribute. */
 			if (attr.has("zoneid")) {
@@ -720,21 +731,45 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	public void setDeletedAttributes(Attributes attr) {
 		rpClass = attr.rpClass;
 
-		int i = 0;
+		boolean deletedSomething = false;
 		synchronized(attr.deleted) {
-			/* Copy each of the deleted attributes to this object. */
+			// Copy each of the deleted attributes to this object.
 			for (Map.Entry<String, String> entry : attr.deleted.entrySet()) {
-				++i;
+				deletedSomething = true;
 				content.put(entry.getKey(), entry.getValue());
 			}
 		}
 
-		/* If we have added any attributes, we set the object id */
-		if (i > 0) {
+		// If we have added any attributes, we set the object id
+		if (deletedSomething) {
 			content.put("id", attr.get("id"));
-			/* Object stored at slots don't have now the zoneid attribute. */
+			// Object stored at slots don't have now the zoneid attribute.
 			if (attr.has("zoneid")) {
 				content.put("zoneid", attr.get("zoneid"));
+			}
+		}
+	}
+
+	/**
+	 * applies the added and deleted changes from the paramters to the current objects
+	 *
+	 * @param addedChanges attributes added or modified
+	 * @param deletedChanges attributes deleted
+	 */
+	public void applyDifferences(Attributes addedChanges, Attributes deletedChanges) {
+		// We remove attributes stored in deleted Changes. Except they are id or zoneid
+		if (deletedChanges != null) {
+			for (String attrib : deletedChanges) {
+				if (!attrib.equals("id") && !attrib.equals("zoneid")) {
+					remove(attrib);
+				}
+			}
+		}
+
+		// We add the attributes contained at added changes.
+		if (addedChanges != null) {
+			for (String attrib : addedChanges) {
+				put(attrib, addedChanges.get(attrib));
 			}
 		}
 	}

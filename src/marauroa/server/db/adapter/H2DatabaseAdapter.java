@@ -29,7 +29,7 @@ import marauroa.server.db.DatabaseConnectionException;
  * @author hendrik
  */
 public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
-    private static Logger logger = Log4J.getLogger(MySQLDatabaseAdapter.class);
+	private static Logger logger = Log4J.getLogger(MySQLDatabaseAdapter.class);
 
 	/**
 	 * creates a new H2Adapter
@@ -51,20 +51,24 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	}
 
 	@Override
-    protected Connection createConnection(Properties connInfo) throws DatabaseConnectionException {
-	    Connection con = super.createConnection(connInfo);
+	protected Connection createConnection(Properties connInfo) throws DatabaseConnectionException {
+		Connection con = super.createConnection(connInfo);
 		DatabaseMetaData meta;
-        try {
-	        meta = con.getMetaData();
+		try {
+			meta = con.getMetaData();
 			String name = meta.getDatabaseProductName();
-		    if (name.toLowerCase(Locale.ENGLISH).indexOf("h2") < 0) {
-		    	logger.warn("Using H2DatabaseAdapter to connect to " + name);
-		    }
-        } catch (SQLException e) {
-	        logger.error(e, e);
-        }
-	    return con;
-    }
+			if (name.toLowerCase(Locale.ENGLISH).indexOf("h2") < 0) {
+				logger.warn("Using H2DatabaseAdapter to connect to " + name);
+			}
+			if (connInfo.getProperty("jdbc_url", "").toLowerCase(Locale.ENGLISH).indexOf(";mode=") > -1) {
+				logger.warn("The configuration parameter jdbc_url configures H2 for compatibility mode. This is likely to cause trouble.");
+			}
+		} catch (SQLException e) {
+			logger.error(e, e);
+		}
+		return con;
+	}
+
 	/**
 	 * rewrites ALTER TABLE statements to remove the "COLUMNS (" part
 	 *
@@ -80,7 +84,8 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 			if (posColumn > -1) {
 				int posBracket = mySql.indexOf("(", posColumn);
 				int posClose = mySql.lastIndexOf(")");
-				mySql = mySql.substring(0, posColumn + 1) + mySql.substring(posBracket + 1, posClose) + ";";
+				mySql = mySql.substring(0, posColumn + 1)
+						+ mySql.substring(posBracket + 1, posClose) + ";";
 				mySql = mySql.replace(", PRIMARY KEY(id)", "");
 			}
 		}
@@ -99,7 +104,8 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	@Override
 	public boolean doesColumnExist(String table, String column) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet result = meta.getColumns(null, null, table.toUpperCase(), column.toUpperCase(Locale.ENGLISH));
+		ResultSet result = meta.getColumns(null, null, table.toUpperCase(),
+				column.toUpperCase(Locale.ENGLISH));
 		boolean res = result.next();
 		result.close();
 		return res;
@@ -108,11 +114,12 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	@Override
 	public int getColumnLength(String table, String column) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet result = meta.getColumns(null, null, table.toUpperCase(Locale.ENGLISH), column.toUpperCase(Locale.ENGLISH));
+		ResultSet result = meta.getColumns(null, null, table.toUpperCase(Locale.ENGLISH),
+				column.toUpperCase(Locale.ENGLISH));
 		if (result.next()) {
 			return result.getInt("COLUMN_SIZE");
 		}
-		return -1; 
+		return -1;
 	}
-	
+
 }

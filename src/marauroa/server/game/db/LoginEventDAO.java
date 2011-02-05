@@ -50,7 +50,7 @@ public class LoginEventDAO {
 	 * @param transaction DBTransaction
 	 * @param username username
 	 * @param source ip-address
-	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @param correctLogin true, if the login was successful; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
 	@Deprecated
@@ -65,7 +65,7 @@ public class LoginEventDAO {
 	 * @param username username
 	 * @param source ip-address
 	 * @param seed seed
-	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @param correctLogin true, if the login was successful; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
 	@Deprecated
@@ -81,7 +81,7 @@ public class LoginEventDAO {
 	 * @param source ip-address
 	 * @param service name of service
 	 * @param seed seed
-	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @param correctLogin true, if the login was successful; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
 	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, String service, String seed, boolean correctLogin) throws SQLException {
@@ -102,9 +102,10 @@ public class LoginEventDAO {
 				params.put("service", service);
 			}
 			if (seed == null) {
-				seed = "";
+			    params.put("seed", "");
+			} else {
+			    params.put("seed", seed);
 			}
-			params.put("seed", seed);
 			transaction.execute(query, params);
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + username + "\"", e);
@@ -282,7 +283,7 @@ public class LoginEventDAO {
 	 * @param transaction DBTransaction
 	 * @param playerId accountId
 	 * @param service name of service, may be <code>null</code> for all
-	 * @return last succesful login event
+	 * @return last successful login event
 	 * @throws SQLException in case of an database error
 	 */
 	public LoginEvent getLastSuccessfulLoginEvent(DBTransaction transaction, int playerId, String service) throws SQLException {
@@ -412,7 +413,7 @@ public class LoginEventDAO {
 	 *
 	 * @param username username
 	 * @param source ip-address
-	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @param correctLogin true, if the login was successful; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
 	@Deprecated
@@ -432,7 +433,7 @@ public class LoginEventDAO {
 	 * @param seed a seed to log
 	 * @param username username
 	 * @param source ip-address
-	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @param correctLogin true, if the login was successful; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
 	@Deprecated
@@ -452,7 +453,7 @@ public class LoginEventDAO {
 	 * @param source ip-address
 	 * @param service name of service
 	 * @param seed seed
-	 * @param correctLogin true, if the login was succesful; false otherwise
+	 * @param correctLogin true, if the login was successful; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
 	public void addLoginEvent(String username, InetAddress source, String service, String seed, boolean correctLogin) throws SQLException {
