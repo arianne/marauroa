@@ -128,7 +128,7 @@ public class TransactionPool {
 	}
 
 	/**
-	 * commits this transaction and frees it reservation
+	 * commits this transaction and frees its reservation
 	 *
 	 * @param dbtransaction transaction
 	 * @throws SQLException in case of an database error
@@ -167,7 +167,7 @@ public class TransactionPool {
 			if (dbtransactions.contains(dbtransaction)) {
 				freeDBTransactions.add(dbtransaction);
 			} else {
-				logger.error("Unbekannter DBTransaction " + dbtransaction + " nicht freigegeben.", new Throwable());
+				logger.error("Unknown DBTransaction " + dbtransaction + " was not freed.", new Throwable());
 			}
 			wait.notifyAll();
 		}
@@ -183,7 +183,7 @@ public class TransactionPool {
 	}
 
 	/**
-	 * Kicks all transaction which where started in the current thread
+	 * Kicks all transactions which were started in the current thread
 	 */
 	public void kickHangingTransactionsOfThisThread() {
 		Set<DBTransaction> set = threadTransactions.get();
