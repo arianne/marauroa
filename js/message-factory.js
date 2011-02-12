@@ -22,7 +22,7 @@ marauroa.messageFactory = new function() {
 		marauroa.clientFramework.debug("Entering world");
 	}
 
-	// Message S2C ChoooseCharacterACK
+	// Message S2C ChoooseCharacterNACK
 	this.t10 = function() {
 		marauroa.clientFramework.debug("Character selection rejected");
 		marauroa.clientFramework.onChooseCharacterNack();
