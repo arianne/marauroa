@@ -51,16 +51,16 @@ marauroa.clientFramework = new function() {
 	}
 
 	function onConnect(reason, error) {
-		
+		marauroa.log.debug("onConnect: " + reason + " error: " + error);
 	}
 
 	function onDisconnect(reason, error) {
-		
+		marauroa.log.debug("onDisconnect: " + reason + " error: " + error);
 	}
 
 	function onMessage(msg) {
 		if (debug) {
-			addLine(JSON.stringify(msg));
+			marauroa.log.debug(JSON.stringify(msg));
 		}
 		if (msg.t == 9) {
 			this.clientid = msg.c;
@@ -104,7 +104,7 @@ marauroa.clientFramework = new function() {
 	}
 
 	function onChooseCharacterNack() {
-		
+		marauroa.log.error("Server rejected your character.");
 	}
 
 	/**
@@ -114,8 +114,11 @@ marauroa.clientFramework = new function() {
 	 *            the action to send to server.
 	 */
 	function sendAction(action) {
-		action.t = "1";
-		sendMessage(action);
+		msg = {
+			"t": "0",
+			"a": action
+		};
+		sendMessage(msg);
 	}
 
 	/**
@@ -130,14 +133,19 @@ marauroa.clientFramework = new function() {
 	 * @throws BannedAddressException
 	 */
 	function logout() {
-		// TODO: send  MessageC2SLogout();
+		msg = {
+				"t": "5",
+				"a": action
+			};
+		sendMessage(msg);
 	}
 	
 	function onLogoutOutAck() {
-		
+		marauroa.log.debug("Server accepted logout request");
 	}
+
 	function onLogoutOutNack() {
-		
+		marauroa.log.debug("Server rejected logout request");
 	}
 
 	/**
@@ -164,6 +172,7 @@ marauroa.clientFramework = new function() {
 	 *            the perception message itself.
 	 */
 	function onPerception(perceptionMessage) {
+		marauroa.perceptionHandler.apply(perceptionMessage);
 	}
 
 	/**
@@ -179,6 +188,7 @@ marauroa.clientFramework = new function() {
 	 * @return the list of approved and rejected items.
 	 */
 	function onTransferREQ(items) {
+		marauroa.log.debug("onTransferREQ: " + items);
 	}
 
 	/**
@@ -188,6 +198,7 @@ marauroa.clientFramework = new function() {
 	 *            the transfered items.
 	 */
 	function onTransfer(items) {
+		marauroa.log.debug("onTransfer: " + items);
 	}
 
 
@@ -198,9 +209,8 @@ marauroa.clientFramework = new function() {
 	 *            the characters we have available at this account.
 	 */
 	function onAvailableCharacterDetails(characters) {
+		marauroa.log.debug("onAvailableCharacterDetails: " + characters);
 	}
-	
-	
 
 	/**
 	 * Returns the name of the game that this client implements
@@ -218,9 +228,5 @@ marauroa.clientFramework = new function() {
 	 */
 	function onVersionNumberRequired() {
 		return "0.0";
-	}
-
-	function debug(msg) {
-		alert(msg);
 	}
 }
