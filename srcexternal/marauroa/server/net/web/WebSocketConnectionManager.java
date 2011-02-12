@@ -12,6 +12,9 @@
  ***************************************************************************/
 package marauroa.server.net.web;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Collections;
@@ -19,10 +22,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
+import marauroa.common.io.UnicodeSupportingInputStreamReader;
 import marauroa.common.net.Channel;
 import marauroa.common.net.ConnectionManager;
 import marauroa.common.net.MessageFactory;
@@ -67,10 +74,75 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 	@Override
 	protected SocketIOInbound doSocketIOConnect(HttpServletRequest request, String[] protocols) {
 		try {
-			return new WebSocketChannel(this, request.getRemoteAddr(), (String) request.getSession().getAttribute("marauroa_authenticated_username"));
+			return new WebSocketChannel(this, request.getRemoteAddr(), extractUsernameFromSession(request));
 		} catch (UnknownHostException e) {
 			logger.error(e, e);
 		}
+		return null;
+	}
+
+	/**
+	 * extracts the username from the session, supporting both java and php sessions
+	 *
+	 * @param request HttpServletRequest
+	 * @return username
+	 */
+	private String extractUsernameFromSession(HttpServletRequest request) {
+
+		// first try java session
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			String username = (String) request.getSession().getAttribute("marauroa_authenticated_username");
+			if (username != null) {
+				return username;
+			}
+		}
+
+		// try php session
+		for (Cookie cookie : request.getCookies()) {
+			if (!cookie.getName().equals("PHPSESSID")) {
+				continue;
+			}
+
+			String sessionid = cookie.getValue();
+			if (!sessionid.matches("[A-Za-z0-9]")) {
+				logger.warn("Invalid PHPSESSID=" + sessionid);
+				continue;
+			}
+
+			BufferedReader br = null;
+			try {
+				String prefix = Configuration.getConfiguration().get("php_session_file_prefix", "/var/lib/php5/sess_");
+				String filename = prefix + sessionid;
+				if (new File(filename).canRead()) {
+					br = new BufferedReader(new UnicodeSupportingInputStreamReader(new FileInputStream(filename)));
+					String line;
+					while ((line = br.readLine()) != null) {
+						if (!line.startsWith("marauroa_authenticated_username|")) {
+							continue;
+						}
+
+						int pos1 = line.indexOf("\"");
+						int pos2 = line.lastIndexOf("\"");
+						if (pos1 > -1 && pos2 > -1) {
+							return line.substring(pos1 + 1, pos2);
+						}
+					}
+				}
+			} catch (IOException e) {
+				logger.error(e, e);
+			} finally {
+				if (br != null) {
+					try {
+						br.close();
+					} catch (IOException e) {
+						logger.error(e, e);
+					}
+				}
+			}
+
+		}
+
 		return null;
 	}
 
