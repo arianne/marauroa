@@ -1,6 +1,6 @@
 /* $Id: DBTransaction.java,v 1.27 2010/10/08 18:11:33 nhnb Exp $ */
 /***************************************************************************
- *                   (C) Copyright 2003-2009 - Marauroa                    *
+ *                   (C) Copyright 2003-2011 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -75,7 +75,7 @@ public class DBTransaction {
 	}
 
 	/**
-	 * trys to commits this transaction, in case the commit fails, a rollback is executed.
+	 * tries to commits this transaction, in case the commit fails, a rollback is executed.
 	 *
 	 * @throws SQLException in case of an database error
 	 */
@@ -111,7 +111,7 @@ public class DBTransaction {
      *
      * @param sql SQL-String
      * @param params replacement parameters
-     * @return SQL-String with substitued parameters
+     * @return SQL-String with substituted parameters
      * @throws SQLException in case of an sql injection attack
      */
     public String subst(String sql, Map<String, ?> params) throws SQLException {
@@ -126,7 +126,7 @@ public class DBTransaction {
             String token = st.nextToken();
             if (lastToken.equals("[")) {
 
-                // Variablen ersetzen
+                // replace variables
                 Object temp = params.get(token);
                 if (temp != null) {
                     token = temp.toString();
@@ -134,7 +134,7 @@ public class DBTransaction {
                     token = "";
                 }
 
-                // SQL-Injection abfangen
+                // intercept SQL-Injection
                 if (secondLastToken.equals("(")) {
                     if (!token.matches(RE_INT_LIST)) {
                         throw new SQLException("Illegal argument: \"" + token + "\" is not an integer list"); 
@@ -160,7 +160,7 @@ public class DBTransaction {
     }
 
     /**
-     * executes an SQL statement with parameter substituion
+     * executes an SQL statement with parameter substitution
      *
      * @param query   SQL statement
      * @param params  parameter values
@@ -174,7 +174,7 @@ public class DBTransaction {
 	}	
 
     /**
-     * executes an SQL statement with parameter substituion
+     * executes an SQL statement with parameter substitution
      *
      * @param query   SQL statement
      * @param params  parameter values
@@ -220,7 +220,7 @@ public class DBTransaction {
 	/**
 	 * gets the id of the last insert. Note: The table and idcolumn parameters
 	 * <b>must</b> match the last insert statement. This is because on some
-	 * database systems a SELECT IDENTITY is performaned and on other database
+	 * database systems a SELECT IDENTITY is performed and on other database
 	 * systems a SELECT curval(table_idcolumn_seq). 
 	 *  
 	 * @param table  name of table on which the last insert was done
@@ -249,7 +249,7 @@ public class DBTransaction {
 
 
 	/**
-	 * checkes whether the specified table exists
+	 * checks whether the specified table exists
 	 *
 	 * @param table name of table
 	 * @return true, if the table exists, false otherwise
