@@ -18,7 +18,7 @@
  * @author miguel, hendrik
  *
  */
-marauroa.clientFramework = new function() {
+marauroa.clientFramework = {
 
 	/**
 	 * connect to the server
@@ -26,7 +26,7 @@ marauroa.clientFramework = new function() {
 	 * @param host server host name
 	 * @param port server port number
 	 */
-	function connect(host, port) {
+	connect: function(host, port) {
 		options = {};
 		if (typeof(port) != "undefined") {
 			options.port = port;
@@ -48,17 +48,17 @@ marauroa.clientFramework = new function() {
 		});
 		socket.on('connect', onConnect);
 		socket.on('disconnect', onDisonnect);
-	}
+	},
 
-	function onConnect(reason, error) {
+	onConnect: function(reason, error) {
 		marauroa.log.debug("onConnect: " + reason + " error: " + error);
-	}
+	},
 
-	function onDisconnect(reason, error) {
+	onDisconnect: function(reason, error) {
 		marauroa.log.debug("onDisconnect: " + reason + " error: " + error);
-	}
+	},
 
-	function onMessage(msg) {
+	onMessage: function(msg) {
 		if (debug) {
 			marauroa.log.debug(JSON.stringify(msg));
 		}
@@ -67,9 +67,9 @@ marauroa.clientFramework = new function() {
 		}
 		messageFactory.addDispatchMethod(msg);
 		msg.dispatch();
-	}
+	},
 
-	function sendMessage(msg) {
+	sendMessage: function(msg) {
 		myMessage = {
 			"c": clientid, 
 			"s": "1"
@@ -77,11 +77,11 @@ marauroa.clientFramework = new function() {
 		socket.util.merge(myMessage, msg);
 		// TODO: is JSON.stringify required here?
 		socket.send(JSON.stringify(myMessage));
-	}
+	},
 
-	function resync() {
+	resync: function() {
 		// TODO: send MessageC2SOutOfSync
-	}
+	},
 
 	/**
 	 * After login allows you to choose a character to play
@@ -95,17 +95,17 @@ marauroa.clientFramework = new function() {
 	 *             if timeout happens while waiting for the message.
 	 * @throws BannedAddressException
 	 */
-	function chooseCharacter(character) {
+	chooseCharacter: function(character) {
 		msg = {
 			"t": "1",
 			"character": character
 		};
 		sendMessage(msg);
-	}
+	},
 
-	function onChooseCharacterNack() {
+	onChooseCharacterNack: function() {
 		marauroa.log.error("Server rejected your character.");
-	}
+	},
 
 	/**
 	 * Sends a RPAction to server
@@ -113,13 +113,13 @@ marauroa.clientFramework = new function() {
 	 * @param action
 	 *            the action to send to server.
 	 */
-	function sendAction(action) {
+	sendAction: function(action) {
 		msg = {
 			"t": "0",
 			"a": action
 		};
 		sendMessage(msg);
-	}
+	},
 
 	/**
 	 * Request logout of server
@@ -132,37 +132,37 @@ marauroa.clientFramework = new function() {
 	 *             if timeout happens while waiting for the message.
 	 * @throws BannedAddressException
 	 */
-	function logout() {
+	logout: function() {
 		msg = {
 				"t": "5",
 				"a": action
 			};
 		sendMessage(msg);
-	}
+	},
 	
-	function onLogoutOutAck() {
+	onLogoutOutAck: function() {
 		marauroa.log.debug("Server accepted logout request");
-	}
+	},
 
-	function onLogoutOutNack() {
+	onLogoutOutNack: function() {
 		marauroa.log.debug("Server rejected logout request");
-	}
+	},
 
 	/**
 	 * Disconnect the socket and finish the network communications.
 	 */
-	function close() {
-		// TODO: close websocket
-	}
+	close: function() {
+		socket.close();
+	},
 
 	/**
 	 * Are we connected to the server?
 	 *
 	 * @return true unless it is sure that we are disconnected
 	 */
-	function getConnectionState() {
+	getConnectionState: function() {
 		// TODO: return netMan.getConnectionState();
-	}
+	},
 
 	/**
 	 * It is called when a perception arrives so you can choose how to apply the
@@ -171,9 +171,9 @@ marauroa.clientFramework = new function() {
 	 * @param message
 	 *            the perception message itself.
 	 */
-	function onPerception(perceptionMessage) {
+	onPerception: function(perceptionMessage) {
 		marauroa.perceptionHandler.apply(perceptionMessage);
-	}
+	},
 
 	/**
 	 * is called before a content transfer is started.
@@ -187,9 +187,9 @@ marauroa.clientFramework = new function() {
 	 *            in this list by default all items.ack attributes are set to false;
 	 * @return the list of approved and rejected items.
 	 */
-	function onTransferREQ(items) {
+	onTransferREQ: function(items) {
 		marauroa.log.debug("onTransferREQ: " + items);
-	}
+	},
 
 	/**
 	 * It is called when we get a transfer of content
@@ -197,9 +197,9 @@ marauroa.clientFramework = new function() {
 	 * @param items
 	 *            the transfered items.
 	 */
-	function onTransfer(items) {
+	onTransfer: function(items) {
 		marauroa.log.debug("onTransfer: " + items);
-	}
+	},
 
 
 	/**
@@ -208,25 +208,25 @@ marauroa.clientFramework = new function() {
 	 * @param characters
 	 *            the characters we have available at this account.
 	 */
-	function onAvailableCharacterDetails(characters) {
+	onAvailableCharacterDetails: function(characters) {
 		marauroa.log.debug("onAvailableCharacterDetails: " + characters);
-	}
+	},
 
 	/**
 	 * Returns the name of the game that this client implements
 	 *
 	 * @return the name of the game that this client implements
 	 */
-	function onGameNameRequired() {
+	onGameNameRequired: function() {
 		return "implement onGameNameRequired()";
-	}
+	},
 
 	/**
 	 * Returns the version number of the game
 	 *
 	 * @return the version number of the game
 	 */
-	function onVersionNumberRequired() {
+	onVersionNumberRequired: function() {
 		return "0.0";
 	}
 }
