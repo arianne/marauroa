@@ -8,6 +8,8 @@ marauroa.rpobjectFactory = {
 	},
 
 	_default: function() {
-		
+		this.onEvent(e) {
+			marauroa.log.debug("Event: " + e);
+		}
 	}
 }
