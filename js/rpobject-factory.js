@@ -1,6 +1,6 @@
 marauroa.rpobjectFactory = {
 	createRPObject: function(rpclass) {
-		ctr = _default;
+		var ctor = this._default;
 		if (typeof(this[rpclass]) != "undefined") {
 			ctor = this[rpclass];
 		}

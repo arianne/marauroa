@@ -27,11 +27,11 @@ marauroa.clientFramework = {
 	 * @param port server port number
 	 */
 	connect: function(host, port) {
-		options = {};
-		if (typeof(port) != "undefined") {
+		var options = {};
+		if (typeof(port) != "undefined" && port != null) {
 			options.port = port;
 		}
-		this.socket = new io.Socket(host, options);
+		var socket = new io.Socket(host, options);
 		socket.setMessageParser(socket.JSON_MESSAGE, {
 			encode: function(obj) {
 				return JSON.stringify(obj);
@@ -41,13 +41,15 @@ marauroa.clientFramework = {
 			}
 		});
 		socket.connect();
+		var temp = this;
 		socket.on('message', function(mtype, obj){
 			if (mtype == socket.JSON_MESSAGE) {
-				onMessage(obj);
+				temp.onMessage(obj);
 			}
 		});
-		socket.on('connect', onConnect);
-		socket.on('disconnect', onDisonnect);
+		socket.on('connect', this.onConnect);
+		socket.on('disconnect', this.onDisonnect);
+		this.socket = socket;
 	},
 
 	onConnect: function(reason, error) {
@@ -59,24 +61,22 @@ marauroa.clientFramework = {
 	},
 
 	onMessage: function(msg) {
-		if (debug) {
-			marauroa.log.debug(JSON.stringify(msg));
-		}
+		marauroa.log.debug(JSON.stringify(msg));
 		if (msg.t == 9) {
 			this.clientid = msg.c;
 		}
-		messageFactory.addDispatchMethod(msg);
+		marauroa.messageFactory.addDispatchMethod(msg);
 		msg.dispatch();
 	},
 
 	sendMessage: function(msg) {
 		myMessage = {
-			"c": clientid, 
+			"c": this.clientid, 
 			"s": "1"
 		};
-		socket.util.merge(myMessage, msg);
+		io.util.merge(myMessage, msg);
 		// TODO: is JSON.stringify required here?
-		socket.send(JSON.stringify(myMessage));
+		this.socket.send(JSON.stringify(myMessage));
 	},
 
 	resync: function() {
@@ -96,11 +96,11 @@ marauroa.clientFramework = {
 	 * @throws BannedAddressException
 	 */
 	chooseCharacter: function(character) {
-		msg = {
+		var msg = {
 			"t": "1",
 			"character": character
 		};
-		sendMessage(msg);
+		this.sendMessage(msg);
 	},
 
 	onChooseCharacterNack: function() {
@@ -114,11 +114,11 @@ marauroa.clientFramework = {
 	 *            the action to send to server.
 	 */
 	sendAction: function(action) {
-		msg = {
+		var msg = {
 			"t": "0",
 			"a": action
 		};
-		sendMessage(msg);
+		this.sendMessage(msg);
 	},
 
 	/**
@@ -133,11 +133,11 @@ marauroa.clientFramework = {
 	 * @throws BannedAddressException
 	 */
 	logout: function() {
-		msg = {
+		var msg = {
 				"t": "5",
 				"a": action
 			};
-		sendMessage(msg);
+		this.sendMessage(msg);
 	},
 	
 	onLogoutOutAck: function() {
@@ -152,7 +152,7 @@ marauroa.clientFramework = {
 	 * Disconnect the socket and finish the network communications.
 	 */
 	close: function() {
-		socket.close();
+		this.socket.close();
 	},
 
 	/**

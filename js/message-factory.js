@@ -19,12 +19,12 @@ marauroa.messageFactory = new function() {
 
 	// Message S2C ChoooseCharacterACK
 	this.t10 = function() {
-		marauroa.clientFramework.debug("Entering world");
+		marauroa.log.debug("Entering world");
 	}
 
 	// Message S2C ChoooseCharacterNACK
-	this.t10 = function() {
-		marauroa.clientFramework.debug("Character selection rejected");
+	this.t11 = function() {
+		marauroa.log.debug("Character selection rejected");
 		marauroa.clientFramework.onChooseCharacterNack();
 	}
 
@@ -35,14 +35,14 @@ marauroa.messageFactory = new function() {
 
 	function unknownMessage() {
 		// do nothing
-		debug("Unknown message: " + JSON.stringify(this));
+		marauroa.log.debug("Unknown message: " + JSON.stringify(this));
 	}
 
-	function addDispatchMethod(msg) {
-		if (typeof(messageFactory["t" + msg.t]) != "undefined") {
-			msg.dispatch = messageFactory["t" + msg.t];
+	this.addDispatchMethod = function(msg) {
+		if (typeof(marauroa.messageFactory["t" + msg.t]) != "undefined") {
+			msg.dispatch = marauroa.messageFactory["t" + msg.t];
 		} else {
-			msg.dispatch = messageFacotry.unknownMessage;
+			msg.dispatch = marauroa.messageFacotry.unknownMessage;
 		}
 	}
 }
