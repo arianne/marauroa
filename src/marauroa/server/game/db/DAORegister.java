@@ -83,7 +83,7 @@ public class DAORegister {
 	public <T> T get(Class<T> clazz) {
 		T res = (T) register.get(clazz);
 		if (res == null) {
-			throw new IllegalArgumentException("No DOA registered for class " + clazz);
+			throw new IllegalArgumentException("No DAO registered for class " + clazz);
 		}
 		return res;
 	}

@@ -111,6 +111,26 @@ public class RPObject extends SlotOwner {
 	/**
 	 * Constructor
 	 *
+	 * @param rpclass of this object
+	 */
+	public RPObject(RPClass rpclass) {
+		super(rpclass);
+		clear();
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param rpclass of this object
+	 */
+	public RPObject(String rpclass) {
+		super(RPClass.getRPClass(rpclass));
+		clear();
+	}
+
+	/**
+	 * Constructor
+	 *
 	 * @param initialize initialize attributes
 	 */
 	RPObject(boolean initialize) {
