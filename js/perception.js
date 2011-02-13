@@ -261,25 +261,122 @@ marauroa.perceptionHandler = {
 		if (typeof(diff) == "undefined") {
 			return;
 		}
-		for (i in diff) {
-			if (i != "id" && i != "zoneid" && i[0] != "_slots" && i[0] != "_links" && i[0] != "_events") {
-				object[i] = undefined;
+
+		// delete attributes
+		if (typeof(diff.a) != "undefined") {
+			for (i in diff.a) {
+				if (obj.hasOwnProperty(i) && i != "id" && i != "zoneid") {
+					delete object[i];
+				}
 			}
 		}
-		// TODO: slots, maps, links
+
+		// delete slots and/or their content
+		if (typeof(diff.s) != "undefined") {
+			for (i in diff.s) {
+				if (!diff.s.hasOwnProperty(i)) {
+					continue;
+				} 
+				if (isEmpty(diff.s[i])) {
+					delete object[diff.s[i]];
+				} else {
+					for (j in diff.s[i]) {
+						if (diff.s[i].hasOwnProperty(j)) {
+							delete object[i][diff.s[i][j].id];
+						}
+					}
+				}
+			}
+		}
+
+		// delete maps and/or their content
+		if (typeof(diff.m) != "undefined") {
+			for (i in diff.m) {
+				if (!diff.m.hasOwnProperty(i)) {
+					continue;
+				} 
+				if (isEmpty(diff.m[i])) {
+					delete object[diff.m[i]];
+				} else {
+					for (j in diff.m[i]) {
+						if (diff.m[i].hasOwnProperty(j)) {
+							delete object[i][diff.m[i][j]];
+						}
+					}
+				}
+			}
+		}
+		// TODO: links
+	},
+
+	isEmpty: function(obj) {
+		for (i in obj) {
+			if (obj.hasOwnProperty(i)) {
+				return false;
+			}
+		}
+		return true;
 	},
 
 	addChanges: function(object, diff) {
 		if (typeof(diff) == "undefined") {
 			return;
 		}
-		for (i in diff) {
-			if (i != "id" && i != "zoneid" && i[0] != "_slots" && i[0] != "_links" && i[0] != "_events") {
-				object[i] = diff[i];
+
+		// attributes
+		for (i in diff.a) {
+			if (i != "id" && i != "zoneid") {
+				if (diff.a.hasOwnProperty(i)) {
+					object[i] = diff.a[i];
+				}
 			}
 		}
-		
-		// TODO: slots, maps, links, events
+
+		// maps
+		if (typeof(diff.m) != "undefined") {
+			for (i in diff.m) {
+				if (diff.m.hasOwnProperty(i)) {
+					if (typeof(object[i]) == "undefined") {
+						object[i] = {};
+					}
+					for (j in diff.m[i]) {
+						if (diff.m[i].hasOwnProperty(j)) {
+							object[i][j] = diff.m[i][j];
+						}
+					}
+				} 
+			}
+		}
+
+		// slots
+		if (typeof(diff.s) != "undefined") {
+			for (i in diff.s) {
+				if (diff.s.hasOwnProperty(i)) {
+					if (typeof(object[i]) == "undefined") {
+						object[i] = {};
+					}
+					for (j in diff.s[i]) {
+						if (diff.s[i].hasOwnProperty(j)) {
+							if (typeof(object[i][diff.m[i][j].id]) == "undefined") {
+								diff.m[i][j].id = {};
+							}
+							addChanges(diff.m[i][j].id, diff.m[i][j])
+						}
+					}
+				} 
+			}
+		}
+
+		// events
+		if (typeof(diff.e) != "undefined" && typeof(object.onEvent) != "undefined") {
+			for (i in diff.e) {
+				if (diff.e.hasOwnProperty(i)) {
+					object.onEvent(diff.e[i]);
+				} 
+			}
+		}
+
+		// TODO: links
 	}
 
 }
