@@ -69,6 +69,7 @@ public class WebSocketServer {
 		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_DOMAIN_KEY, host);
 		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_PORTS_KEY, "" + port);
 		context.addServlet(holder, "/socket.io/*");
+		context.addServlet(new ServletHolder(new WebServletForStaticContent()), "/*");
 
 		server.setHandler(context);
 		server.start();
