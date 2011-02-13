@@ -115,43 +115,43 @@ marauroa.perceptionHandler = {
 	/**
 	 * Apply a perception.
 	 * 
-	 * @param message
-	 *            the perception message
+	 * @param msg
+	 *            the perception msg
 	 */
-	apply: function(perceptionmessage) {
-		marauroa.perceptionListener.onPerceptionBegin(message.sync, message.s);
+	apply: function(msg) {
+		marauroa.perceptionListener.onPerceptionBegin(msg.sync, msg.s);
 
 		// clean world on login/zone change
-		if (message.sync) {
+		if (msg.sync) {
 			if (!marauroa.perceptionListener.onClear()) {
 				marauroa.currentZone.clear();
 			}
 		}
 
 		// apply perception
-		applyPerceptionAddedRPObjects(message);
-		applyPerceptionModifiedRPObjects(message);
-		applyPerceptionDeletedRPObjects(message);
-		applyPerceptionMyRPObject(message);
+		applyPerceptionAddedRPObjects(msg);
+		applyPerceptionModifiedRPObjects(msg);
+		applyPerceptionDeletedRPObjects(msg);
+		applyPerceptionMyRPObject(msg);
 
 		// done, tell marauroa.perceptionListener
-		marauroa.perceptionListener.onPerceptionEnd(message.sync, message.s);
+		marauroa.perceptionListener.onPerceptionEnd(msg.sync, msg.s);
 	},
 
 	/**
 	 * This method applys perceptions addedto the Map<RPObject::ID,RPObject>
 	 * passed as argument. It clears the map if this is a sync perception
 	 * 
-	 * @param message
+	 * @param msg
 	 *            the perception message
 	 */
-	applyPerceptionAddedRPObjects: function(message) {
-		if (message.aO) {
-			for (i in message.aO) {
-				if (!marauroa.perceptionListener.onAdded(message.aO[i])) {
-					o = marauroa.rpobjectFactory.createRPObject(message.aO[i].c);
-					addChanges(o, message.aO[i]);
-					marauroa.currentZone[message.aO[i].a.id] = o;
+	applyPerceptionAddedRPObjects: function(msg) {
+		if (msg.aO) {
+			for (i in msg.aO) {
+				if (!marauroa.perceptionListener.onAdded(msg.aO[i])) {
+					o = marauroa.rpobjectFactory.createRPObject(msg.aO[i].c);
+					addChanges(o, msg.aO[i]);
+					marauroa.currentZone[msg.aO[i].a.id] = o;
 				}
 			}
 		}
@@ -161,13 +161,13 @@ marauroa.perceptionHandler = {
 	 * This method applys perceptions deleted to the Map<RPObject::ID,RPObject>
 	 * passed as argument.
 	 * 
-	 * @param message
+	 * @param msg
 	 *            the perception message
 	 */
-	applyPerceptionDeletedRPObjects: function(message) {
-		if (message.dO) {
-			for (i in message.dO) {
-				if (!marauroa.perceptionListener.onDeleted(message.dO[i])) {
+	applyPerceptionDeletedRPObjects: function(msg) {
+		if (msg.dO) {
+			for (i in msg.dO) {
+				if (!marauroa.perceptionListener.onDeleted(msg.dO[i])) {
 					delete marauroa.currentZone[i];
 				}
 			}
@@ -178,30 +178,30 @@ marauroa.perceptionHandler = {
 	 * This method applies perceptions modified added and modified deleted to the
 	 * Map<RPObject.ID,RPObject> passed as argument.
 	 * 
-	 * @param message
+	 * @param msg
 	 *            the perception message
 	 */
-	applyPerceptionModifiedRPObjects: function(message) {
+	applyPerceptionModifiedRPObjects: function(msg) {
 
 		// deleted attributes
-		if (message.dA) {
-			for (i in message.dA) {
-				if (typeof(marauroa.currentZone[message.dA[i].a.id]) != "undefined") {
-					o = marauroa.currentZone[message.dA[i].a.id];
-					if (!marauroa.perceptionListener.onModifiedDeleted(message.dA[i])) {
-						deleteChanges(o, message.dA[i]);
+		if (msg.dA) {
+			for (i in msg.dA) {
+				if (typeof(marauroa.currentZone[msg.dA[i].a.id]) != "undefined") {
+					o = marauroa.currentZone[msg.dA[i].a.id];
+					if (!marauroa.perceptionListener.onModifiedDeleted(msg.dA[i])) {
+						deleteChanges(o, msg.dA[i]);
 					}
 				}
 			}
 		}
 
 		// added attributes
-		if (message.aA) {
-			for (i in message.aA) {
-				if (typeof(marauroa.currentZone[message.aA[i].a.id]) != "undefined") {
-					o = marauroa.currentZone[message.aA[i].a.id];
-					if (!marauroa.perceptionListener.onModifiedAdded(message.aA[i])) {
-						addChanges(o, message.aA[i]);
+		if (msg.aA) {
+			for (i in msg.aA) {
+				if (typeof(marauroa.currentZone[msg.aA[i].a.id]) != "undefined") {
+					o = marauroa.currentZone[msg.aA[i].a.id];
+					if (!marauroa.perceptionListener.onModifiedAdded(msg.aA[i])) {
+						addChanges(o, msg.aA[i]);
 					}
 				}
 			}
@@ -212,20 +212,20 @@ marauroa.perceptionHandler = {
 	 * This method applys perceptions for our RPObject to the Map<RPObject::ID,RPObject>
 	 * passed as argument.
 	 * 
-	 * @param message
+	 * @param msg
 	 *            the perception message
 	 */
-	applyPerceptionMyRPObject: function(message) {
+	applyPerceptionMyRPObject: function(msg) {
 
 		addMyRPObjectToWorldIfPrivate(added);
 
-		if (!marauroa.perceptionListener.onMyRPObject(message.aM, message.dM)) {
-			if (typeof(message.aM) != "undefined") {
-				id = message.aM.a.id;
+		if (!marauroa.perceptionListener.onMyRPObject(msg.aM, msg.dM)) {
+			if (typeof(msg.aM) != "undefined") {
+				id = msg.aM.a.id;
 			}
 
-			if (typeof(message.dM) != "undefined") {
-				id = message.dM.a.id;
+			if (typeof(msg.dM) != "undefined") {
+				id = msg.dM.a.id;
 			}
 
 			if (typeof(id) == "undefined") {
@@ -233,8 +233,8 @@ marauroa.perceptionHandler = {
 			}
 
 			o = marauroa.currentZone[id];
-			deleteChanges(o, message.dM);
-			addChanges(o, message.aM);
+			deleteChanges(o, msg.dM);
+			addChanges(o, msg.aM);
 		}
 	},
 

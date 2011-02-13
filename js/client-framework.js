@@ -72,7 +72,7 @@ marauroa.clientFramework = new function() {
 	function sendMessage(msg) {
 		myMessage = {
 			"c": clientid, 
-			"s": "1",
+			"s": "1"
 		};
 		socket.util.merge(myMessage, msg);
 		// TODO: is JSON.stringify required here?
