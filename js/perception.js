@@ -373,10 +373,10 @@ marauroa.perceptionHandler = {
 					}
 					for (var j in diff.s[i]) {
 						if (diff.s[i].hasOwnProperty(j)) {
-							if (typeof(object[i][diff.m[i][j].id]) == "undefined") {
-								diff.m[i][j].id = {};
+							if (typeof(object[i][diff.s[i][j].id]) == "undefined") {
+								diff.s[i][j].a.id = {};
 							}
-							this.addChanges(diff.m[i][j].id, diff.m[i][j])
+							this.addChanges(diff.s[i][j].a.id, diff.s[i][j])
 						}
 					}
 				} 

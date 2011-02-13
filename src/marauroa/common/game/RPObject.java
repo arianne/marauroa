@@ -1111,10 +1111,9 @@ public class RPObject extends SlotOwner {
 					out.append("{");
 					event.writeToJson(out, level);
 					out.append("}");
-					}
-				out.append("]");
+				}
 			}
-			out.append("}");
+			out.append("]");
 		}
 	}
 

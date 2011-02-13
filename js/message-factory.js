@@ -33,7 +33,8 @@ marauroa.messageFactory = new function() {
 		marauroa.clientFramework.onPerception(this);
 	}
 
-	function unknownMessage() {
+	// handle unexpected unknown messages
+	this.unknownMessage = function() {
 		// do nothing
 		marauroa.log.debug("Unknown message: " + JSON.stringify(this));
 	}
@@ -42,7 +43,7 @@ marauroa.messageFactory = new function() {
 		if (typeof(marauroa.messageFactory["t" + msg.t]) != "undefined") {
 			msg.dispatch = marauroa.messageFactory["t" + msg.t];
 		} else {
-			msg.dispatch = marauroa.messageFacotry.unknownMessage;
+			msg.dispatch = marauroa.messageFactory.unknownMessage;
 		}
 	}
 }
