@@ -9,7 +9,7 @@ marauroa.rpobjectFactory = {
 
 	_default: function() {
 		this.onEvent = function(e) {
-			marauroa.log.debug("Event: " + e);
+			marauroa.log.debug("Event: " + JSON.stringify(e));
 		}
 	}
 }
