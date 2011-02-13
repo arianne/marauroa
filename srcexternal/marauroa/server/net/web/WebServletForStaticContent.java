@@ -68,9 +68,11 @@ public class WebServletForStaticContent extends HttpServlet {
 			}
 			os = response.getOutputStream();
 			byte[] buffer = new byte[8192];
-			int count = 0;
-			while ((count = is.read(buffer)) > 0) {
+			int count = is.read(buffer);
+
+			while (count > -1) {
 				os.write(buffer, 0, count);
+				count = is.read(buffer);
 			}
 		} finally {
 			if (is != null) {
