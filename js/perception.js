@@ -295,7 +295,7 @@ marauroa.perceptionHandler = {
 				if (!diff.s.hasOwnProperty(i)) {
 					continue;
 				} 
-				if (isEmpty(diff.s[i])) {
+				if (marauroa.util.isEmpty(diff.s[i])) {
 					delete object[diff.s[i]];
 				} else {
 					for (var j in diff.s[i]) {
@@ -313,7 +313,7 @@ marauroa.perceptionHandler = {
 				if (!diff.m.hasOwnProperty(i)) {
 					continue;
 				} 
-				if (isEmpty(diff.m[i])) {
+				if (marauroa.util.isEmpty(diff.m[i])) {
 					delete object[diff.m[i]];
 				} else {
 					for (var j in diff.m[i]) {
@@ -325,15 +325,6 @@ marauroa.perceptionHandler = {
 			}
 		}
 		// TODO: links
-	},
-
-	isEmpty: function(obj) {
-		for (var i in obj) {
-			if (obj.hasOwnProperty(i)) {
-				return false;
-			}
-		}
-		return true;
 	},
 
 	addChanges: function(object, diff) {
