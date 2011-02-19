@@ -74,7 +74,7 @@ marauroa.clientFramework = {
 	},
 
 	sendMessage: function(msg) {
-		myMessage = {
+		var myMessage = {
 			"c": this.clientid, 
 			"s": "1"
 		};
