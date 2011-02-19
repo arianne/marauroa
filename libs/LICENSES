@@ -3,4 +3,4 @@ mysql-connector.jar: GPL (license-gpl.txt)
 jython.jar: license-jython.txt
 jetty-*.jar: Eclipse License (license-eclipse-1.0.html)
 servlet-api.jar: 
-socket.io:
+socket.io: license-mit.txt
