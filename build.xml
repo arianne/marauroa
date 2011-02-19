@@ -21,15 +21,8 @@
 		<mkdir dir="${docs}" />
 	</target>
 
-	<!-- Copy important files to the build folder. -->
-	<target name="installation" depends="init">
-		<copy todir="${buildroot}/marauroa/server/" file="${src}/marauroa/server/marauroa_init.sql"/>
-		<copy todir="${buildroot}/marauroa/server/" file="${src}/marauroa/server/marauroa_drop.sql"/>
-		<copy todir="${buildroot}/marauroa/server" file="${src}/marauroa/server/log4j.properties"/>
-	</target>
-
 	<!-- Compiles the project -->
-	<target name="compile" depends="installation">
+	<target name="compile" depends="init">
 		<!-- Exclude python support if jython.jar is not present -->
 		<condition property="exclude.python" value="**/python/*.*">
 			<not>
@@ -61,6 +54,13 @@
 				<pathelement path="${jython_jar}"/>
 			</classpath>
 		</javac>
+
+		<copy todir="${buildroot}/marauroa/server/">
+			<fileset dir="${src}/marauroa/server">
+				<include name="*.sql"/>
+				<include name="*.properties"/>
+			</fileset>
+		</copy>
 	</target>
 
 

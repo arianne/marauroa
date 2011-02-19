@@ -102,7 +102,7 @@ Please see http://stendhalgame.org/wiki/Marauroa_3.8 for details on those featur
 
 
 3.0
-- splitted JDBCDatabase into several small ...DAO classes
+- split JDBCDatabase into several small ...DAO classes
 - added a new package marauroa.server.db for low level database stuff
 - started to work on supporting other database systems beside mysql
 - for help on how to port your application see http://stendhalgame.org/wiki/index.php/Refactoring_Database_Access_in_Marauroa
@@ -115,7 +115,7 @@ Please see http://stendhalgame.org/wiki/Marauroa_3.8 for details on those featur
 - improved error messages in exception
 
 2.6.2
-- changed zones to ConcurrentHashmap to accomodate the needs of multi threading and changing number of zones
+- changed zones to ConcurrentHashmap to accommodate the needs of multi threading and changing number of zones
 
 2.6.1
 - fixed a bug in deserialization, that made objects in slots uncontained, provided regression test
@@ -147,7 +147,7 @@ Please see http://stendhalgame.org/wiki/Marauroa_3.8 for details on those featur
 - Fixed 10 minute player autosave
 - Added method MarauroaRPZone.storeToDatabase()
 - JDBCAccess execute now returns the update count if available
-- Fixed a problem which occured in case an object was modified and added to a slot at the same time
+- Fixed a problem which occurred in case an object was modified and added to a slot at the same time
 
 2.2 Dec 03, 2007
 - Added close method to IDatabase.
@@ -165,7 +165,7 @@ Please see http://stendhalgame.org/wiki/Marauroa_3.8 for details on those featur
 - fixed a bug causing RPSlot.addPreservingID() to cause rpobjects with same ids
 - enabled subclasses of JDPCPlayerDatabase to get access to low level methods.
 - moved *.test-subpackages into source path "tests".
-- 256 arrays / strings now may be up to 256 bytes large (it usedto be 128)
+- 256 arrays / strings now may be up to 256 bytes large (it used to be 128)
 
 2.0.1 Jul 10, 2007
 - Fixed MySQL 4.0 incompatibility.
@@ -211,10 +211,10 @@ Please see http://stendhalgame.org/wiki/Marauroa_3.8 for details on those featur
 - Added non blocking network server.
 - Removed UDP support.
 - Moved client to work with nio package.
-- Improved efficience of data structure accesses at server.
+- Improved efficiency of data structure access at server.
 - Simplified NetworkServerManager structure.
 - Documented widely everything.
-- Reimplemented Game package to improve efficience.
+- Reimplemented Game package to improve efficiency.
 - Removed useless exceptions.
 - Allowed to send a template object when creating account, so we can customize player object on creation time.
 - Removed incomplete action concept.
@@ -242,7 +242,7 @@ Please see http://stendhalgame.org/wiki/Marauroa_3.8 for details on those featur
 - fixed a problem with may cause logging of game events to fail
 
 1.33
-- moved persistence handling in unsinged webstart from Stendhal to Marauroa
+- moved persistence handling in unsigned webstart from Stendhal to Marauroa
 - Singleton pattern for RPWorld
 
 1.32 Jul 16, 2006

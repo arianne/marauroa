@@ -54,8 +54,7 @@ public class RPEvent extends SlotOwner {
 	 * @param name name of this RPEvent
 	 */
 	public RPEvent(String name) {
-		super(RPClass.getBaseRPObjectDefault());
-		setRPClass(name);
+		super(RPClass.getRPClass(name));
 		this.name = name;
 		this.slots = new LinkedList<RPSlot>();
 	}
