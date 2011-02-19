@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import marauroa.common.Configuration;
+
 /**
  * a servlet for static content
  *
@@ -46,10 +48,10 @@ public class WebServletForStaticContent extends HttpServlet {
 			response.setCharacterEncoding("application/octet-stream");
 		}
 
-
-		request.getSession().setAttribute("marauroa_authenticated_username", "hendrikus");
-
-
+		Configuration conf = Configuration.getConfiguration();
+		if (conf.has("debug_fake_web_username")) {
+			request.getSession().setAttribute("marauroa_authenticated_username", conf.get("debug_fake_web_username"));
+		}
 
 		sendFile(response, filename);
 	}
