@@ -97,7 +97,7 @@ public class PlayerEntry {
 		 *            the client hash
 		 * @param serverNonce
 		 *            the server random bigint
-		 * @param address client ip address 
+		 * @param address client ip address
 		 */
 		public SecuredLoginInfo(RSAKey key, byte[] clientNonceHash, byte[] serverNonce, InetAddress address) {
 			this.key = key;
@@ -186,9 +186,9 @@ public class PlayerEntry {
 			boolean res = true;
 			try {
 				LoginEventDAO loginEventDAO = DAORegister.get().get(LoginEventDAO.class);
-				res = loginEventDAO.isAccountBlocked(transaction, username) 
+				res = loginEventDAO.isAccountBlocked(transaction, username)
 					|| loginEventDAO.isAddressBlocked(transaction, address.getHostAddress());
-				
+
 				TransactionPool.get().commit(transaction);
 			} catch (SQLException e) {
 				TransactionPool.get().rollback(transaction);
@@ -262,17 +262,17 @@ public class PlayerEntry {
 
 	/** The object of the player */
 	public RPObject object;
-	
+
 	/**
 	 * We need to control if player is active because sometimes server changes its IP
 	 * and we are not able to realize about this at server side, so all the clients are left there
 	 * until the TCP stack determine a timeout that can be a long time.
 	 */
 	public long activityTimestamp;
-	
+
 	/**
 	 * We define how many milliseconds has to be elapsed until we consider a player has timeout.
-	 */	
+	 */
 	private static final long TIMEOUT_IN_GAME_MILLISECONDS = 30 * 1000;
 
 	/**
@@ -280,7 +280,7 @@ public class PlayerEntry {
 	 * there is no keep-alive yet.
 	 */
 	private static final long TIMEOUT_PRE_GAME_MILLISECONDS = 10 * 60 * 1000;
-	
+
 	/**
 	 * A counter to detect dropped packets or bad order at client side. We
 	 * enumerate each perception so client can know in which order it is
@@ -300,6 +300,9 @@ public class PlayerEntry {
 
 	/** grant a longer timeout during login */
 	private boolean gotKeepAliveInGameState = false;
+
+	/** the number of characters owned by this account */
+	public int characterCounter;
 
 	/**
 	 * Constructor
@@ -323,7 +326,7 @@ public class PlayerEntry {
 		 */
 		requestedSync = true;
 		contentToTransfer = Collections.synchronizedList(new LinkedList<TransferContent>());
-		
+
 		creationTime = System.currentTimeMillis();
 		activityTimestamp=creationTime;
 	}
@@ -336,12 +339,12 @@ public class PlayerEntry {
 	public InetAddress getAddress() {
 		return channel.socket().getInetAddress();
 	}
-	
+
 	/**
 	 * Returns true when nothing has been received from client in TIMEOUT_SECONDS.
 	 * Note that client sends confirmations to perceptions, so this mean that client is
 	 * for whatever reason not working.
-	 * 
+	 *
 	 * @return  true when nothing has been received from client in TIMEOUT_SECONDS.
 	 */
 	public boolean isTimeout() {
@@ -355,7 +358,7 @@ public class PlayerEntry {
 			return (System.currentTimeMillis()-activityTimestamp)>TIMEOUT_PRE_GAME_MILLISECONDS;
 		}
 	}
-	
+
 	/**
 	 * Refresh player timeout timestamp.
 	 * This method is invoked when a new message arrives from client.
@@ -459,7 +462,7 @@ public class PlayerEntry {
 	public void ban() throws SQLException {
 		DAORegister.get().get(AccountDAO.class).setAccountStatus(username, "banned");
 	}
-	
+
 	/**
 	 * sets the RPObject for this entry.
 	 *
