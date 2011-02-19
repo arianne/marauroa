@@ -65,8 +65,12 @@ marauroa.clientFramework = {
 		if (msg.t == 9) {
 			this.clientid = msg.c;
 		}
-		marauroa.messageFactory.addDispatchMethod(msg);
-		msg.dispatch();
+		if (typeof(msg) == "string") {
+			marauroa.log.error("JSON error on message: " + msg);
+		} else {
+			marauroa.messageFactory.addDispatchMethod(msg);
+			msg.dispatch();
+		}
 	},
 
 	sendMessage: function(msg) {
