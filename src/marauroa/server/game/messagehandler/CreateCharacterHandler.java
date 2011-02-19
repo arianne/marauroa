@@ -55,11 +55,10 @@ class CreateCharacterHandler extends MessageHandler {
 
 			if (message instanceof MessageC2SCreateCharacter) {
 				MessageC2SCreateCharacter msg = (MessageC2SCreateCharacter) message;
-				
-			
+
 				RPObject template = msg.getTemplate();
 				String character = msg.getCharacter();
-			
+
 				PlayerEntry entry = playerContainer.get(clientid);
 				String address = msg.getAddress().getHostAddress();
 
@@ -68,19 +67,31 @@ class CreateCharacterHandler extends MessageHandler {
 					logger.warn("invalid create character event (client unknown, not logged in or wrong ip-address)");
 					return;
 				}
+				int maxNumberOfCharacters = Configuration.getConfiguration().getInt("limit_characters_per_account", Integer.MAX_VALUE);
+				if (entry.characterCounter >= maxNumberOfCharacters) {
+					Result result = Result.FAILED_TOO_MANY;
+					MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(channel, result);
+					msgCreateCharacterNACK.setClientID(clientid);
+					msgCreateCharacterNACK.setProtocolVersion(protocolVersion);
+					netMan.sendMessage(msgCreateCharacterNACK);
+					return;
+				}
+
 				createCharacter(entry.username, character, template, clientid, address, channel,
-	                    protocolVersion, true);
+						protocolVersion, true);
 
 			} else {
 				MessageP2SCreateCharacter msg = (MessageP2SCreateCharacter) message;
-				
+
 				RPObject template = msg.getTemplate();
 				String character = msg.getCharacter();
 				String address = msg.getForwardedFor();
 
-				if ((msg.getCredentials() != null) && (msg.getCredentials().equals(Configuration.getConfiguration().get("proxy_credentials")))) {
-					createCharacter(msg.getUsername(), character, template, clientid, address, channel,
-	                    protocolVersion, false);
+				if ((msg.getCredentials() != null)
+						&& (msg.getCredentials().equals(Configuration.getConfiguration().get(
+								"proxy_credentials")))) {
+					createCharacter(msg.getUsername(), character, template, clientid, address,
+							channel, protocolVersion, false);
 				} else {
 					logger.warn("Invalid credentials for proxy method.");
 				}
@@ -98,42 +109,41 @@ class CreateCharacterHandler extends MessageHandler {
 	     * will also return a result of the character that we must forward to
 	     * player.
 	     */
-	    CharacterResult val = rpMan.createCharacter(username, character, 
+	    CharacterResult val = rpMan.createCharacter(username, character,
 	    		template, address);
 	    Result result = val.getResult();
 
-	    if (result == Result.OK_CREATED) {
-	    	/*
-	    	 * If the character is created notify player and send him a
-	    	 * Character list message.
-	    	 */
-	    	logger.debug("Character (" + character + ") created for account "
-	    	        + username);
-	    	MessageS2CCreateCharacterACK msgCreateCharacterACK = new MessageS2CCreateCharacterACK(
-	    			channel, val.getCharacter(), val.getTemplate());
-	    	msgCreateCharacterACK.setClientID(clientid);
-	    	msgCreateCharacterACK.setProtocolVersion(protocolVersion);
-	    	netMan.sendMessage(msgCreateCharacterACK);
+		if (result == Result.OK_CREATED) {
+			/*
+			 * If the character is created notify player and send him a
+			 * Character list message.
+			 */
+			logger.debug("Character (" + character + ") created for account " + username);
+			MessageS2CCreateCharacterACK msgCreateCharacterACK = new MessageS2CCreateCharacterACK(
+					channel, val.getCharacter(), val.getTemplate());
+			msgCreateCharacterACK.setClientID(clientid);
+			msgCreateCharacterACK.setProtocolVersion(protocolVersion);
+			netMan.sendMessage(msgCreateCharacterACK);
 
-	    	/*
-	    	 * Build player character list and send it to client
-	    	 */
-	    	if (sendListOfCharacters) {
-	    		DBCommand command = new LoadAllActiveCharactersCommand(username,
-	    				new SendCharacterListHandler(netMan, protocolVersion), 
-	    				clientid, channel, protocolVersion);
-	    		DBCommandQueue.get().enqueue(command);
-	    	}
-	    } else {
-	    	/*
-	    	 * It also may fail to create the character. Explain the reasons
-	    	 * to player.
-	    	 */
-	    	MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(
-	    			channel, result);
-	    	msgCreateCharacterNACK.setClientID(clientid);
-	    	msgCreateCharacterNACK.setProtocolVersion(protocolVersion);
-	    	netMan.sendMessage(msgCreateCharacterNACK);
-	    }
-    }
+			/*
+			 * Build player character list and send it to client
+			 */
+			if (sendListOfCharacters) {
+				DBCommand command = new LoadAllActiveCharactersCommand(username,
+						new SendCharacterListHandler(netMan, protocolVersion), clientid, channel,
+						protocolVersion);
+				DBCommandQueue.get().enqueue(command);
+			}
+		} else {
+			/*
+			 * It also may fail to create the character. Explain the reasons
+			 * to player.
+			 */
+			MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(
+					channel, result);
+			msgCreateCharacterNACK.setClientID(clientid);
+			msgCreateCharacterNACK.setProtocolVersion(protocolVersion);
+			netMan.sendMessage(msgCreateCharacterNACK);
+		}
+	}
 }

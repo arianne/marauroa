@@ -45,6 +45,12 @@ public class WebServletForStaticContent extends HttpServlet {
 		} else {
 			response.setCharacterEncoding("application/octet-stream");
 		}
+
+
+		request.getSession().setAttribute("marauroa_authenticated_username", "hendrikus");
+
+
+
 		sendFile(response, filename);
 	}
 

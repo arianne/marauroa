@@ -112,6 +112,9 @@ public class PlayerEntry {
 	/** grant a longer timeout during login */
 	private boolean gotKeepAliveInGameState = false;
 
+	/** the number of characters owned by this account */
+	public int characterCounter;
+
 	/** should this player entry time out? set to false if another timeout mechanism is in place */
 	private boolean checkTimeout = true;
 

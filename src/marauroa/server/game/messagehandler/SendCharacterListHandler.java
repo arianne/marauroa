@@ -17,6 +17,8 @@ import java.util.Map;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.Channel;
 import marauroa.common.net.message.MessageS2CCharacterList;
+import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.INetworkServerManager;
@@ -29,8 +31,8 @@ import marauroa.server.net.INetworkServerManager;
 public class SendCharacterListHandler implements DelayedEventHandler {
 
 	/** We need network server manager to be able to send messages */
-	private INetworkServerManager netMan;
-	private int protocolVersion;
+	private final INetworkServerManager netMan;
+	private final int protocolVersion;
 
 	/**
 	 * creates a new SendCharacterListhHandler
@@ -49,12 +51,15 @@ public class SendCharacterListHandler implements DelayedEventHandler {
 	 * @param rpMan ignored
 	 * @param data LoadAllCharactersCommand
 	 */
+	@Override
 	public void handleDelayedEvent(RPServerManager rpMan, Object data) {
 		LoadAllActiveCharactersCommand cmd = (LoadAllActiveCharactersCommand) data;
 		Map<String, RPObject> characters = cmd.getCharacters();
 		int clientid = cmd.getClientid();
 		Channel channel = cmd.getChannel();
-		
+		PlayerEntry entry = PlayerEntryContainer.getContainer().get(channel);
+		entry.characterCounter = characters.keySet().size();
+
 		MessageS2CCharacterList msg = new MessageS2CCharacterList(channel, characters);
 		msg.setProtocolVersion(protocolVersion);
 		msg.setClientID(clientid);

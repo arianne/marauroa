@@ -18,5 +18,8 @@
 	<classpathentry kind="lib" path="libs/servlet-api-3.0.jar"/>
 	<classpathentry kind="lib" path="libs/h2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/socketio-java"/>
+	<classpathentry kind="lib" path="libs/jetty-http-7.1.6.v20100715.jar"/>
+	<classpathentry kind="lib" path="libs/jetty-security-7.1.6.v20100715.jar"/>
+	<classpathentry kind="lib" path="libs/jetty-servlet-7.1.6.v20100715.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
