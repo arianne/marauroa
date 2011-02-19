@@ -59,6 +59,7 @@ public class WebSocketServer {
 			SelectChannelConnector connector = new SelectChannelConnector();
 			connector.setHost(host);
 			connector.setPort(port);
+			connector.setForwarded(Boolean.parseBoolean(conf.get("http_forwarded", "false")));
 			server.addConnector(connector);
 		}
 
@@ -67,7 +68,7 @@ public class WebSocketServer {
 				(IServerManager) marauroad.getMarauroa().getNetMan()));
 		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_SERVER_HOST_KEY, host);
 		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_DOMAIN_KEY, host);
-		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_PORTS_KEY, "" + port);
+		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_PORTS_KEY, "" + conf.getInt("flash_port", port));
 		context.addServlet(holder, "/socket.io/*");
 		context.addServlet(new ServletHolder(new WebServletForStaticContent()), "/*");
 
