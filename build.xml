@@ -54,6 +54,13 @@
 				<pathelement path="${jython_jar}"/>
 			</classpath>
 		</javac>
+		<javac srcdir="srcexternal" source="1.5" target="1.5" destdir="${buildroot}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}">
+			<classpath>
+				<fileset dir="libs">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
 
 		<copy todir="${buildroot}/marauroa/server/">
 			<fileset dir="${src}/marauroa/server">
