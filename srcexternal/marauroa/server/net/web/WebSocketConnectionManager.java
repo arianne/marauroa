@@ -34,6 +34,8 @@ import marauroa.common.net.Channel;
 import marauroa.common.net.ConnectionManager;
 import marauroa.common.net.MessageFactory;
 import marauroa.common.net.message.Message;
+import marauroa.common.net.message.MessageS2CLoginNACK;
+import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
 import marauroa.server.db.command.DBCommand;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.container.ClientState;
@@ -122,12 +124,16 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 							continue;
 						}
 
+						logger.info("phpsession-entry: " + line);
 						int pos1 = line.indexOf("\"");
 						int pos2 = line.lastIndexOf("\"");
 						if (pos1 > -1 && pos2 > -1) {
+							logger.info("php session username: " + line.substring(pos1 + 1, pos2));
 							return line.substring(pos1 + 1, pos2);
 						}
 					}
+				} else {
+					logger.warn("Cannot read php session file: " + filename);
 				}
 			} catch (IOException e) {
 				logger.error(e, e);
@@ -159,13 +165,17 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 			entry.state = ClientState.LOGIN_COMPLETE;
 			entry.username = webSocketChannel.getUsername();
 			entry.disableTimeout();
+
+			// greet the client with a character list (which allows the client to learn its clientid)
+			DBCommand command = new LoadAllActiveCharactersCommand(entry.username,
+					new SendCharacterListHandler((INetworkServerManager) serverManager, 0),
+					entry.clientid, channel, 0);
+			DBCommandQueue.get().enqueue(command);
+		} else {
+			Message msg = new MessageS2CLoginNACK(channel, Reasons.SEED_WRONG);
+			send(webSocketChannel, msg);
 		}
 
-		// greet the client with a character list (which allows the client to learn its clientid)
-		DBCommand command = new LoadAllActiveCharactersCommand(entry.username,
-				new SendCharacterListHandler((INetworkServerManager) serverManager, 0),
-				entry.clientid, channel, 0);
-		DBCommandQueue.get().enqueue(command);
 	}
 
 	/**

@@ -57,7 +57,6 @@ public class WebSocketChannel implements SocketIOInbound {
 
 	@Override
 	public void onConnect(SocketIOOutbound outbound) {
-		// TODO: if username == null, send message and disconnect
 		this.outboundSocket = outbound;
 		webSocketServerManager.onConnect(this);
 	}
