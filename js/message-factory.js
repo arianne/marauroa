@@ -12,6 +12,11 @@
  ***************************************************************************/
 marauroa.messageFactory = new function() {
 
+	// Message S2C Login NACK
+	this.t14 = function() {
+		marauroa.clientFramework.onLoginFailed(this.reason, this.text);
+	}
+
 	// Message S2C CharacterList
 	this.t9 = function() {
 		marauroa.clientFramework.onAvailableCharacterDetails(this.characters);

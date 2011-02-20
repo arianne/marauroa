@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import marauroa.common.net.Channel;
 import marauroa.common.net.NetConst;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the client that the server has reject its login Message
@@ -27,18 +28,18 @@ import marauroa.common.net.NetConst;
 public class MessageS2CLoginNACK extends Message {
 
 	public enum Reasons {
-		USERNAME_WRONG, 
+		USERNAME_WRONG,
 		/** @since will be replaced by TOO_MANY_TRIES_USERNAME and TOO_MANY_TRIES_IP in the future */
-		TOO_MANY_TRIES, 
-		USERNAME_BANNED, 
-		SERVER_IS_FULL, 
-		GAME_MISMATCH, 
-		PROTOCOL_MISMATCH, 
+		TOO_MANY_TRIES,
+		USERNAME_BANNED,
+		SERVER_IS_FULL,
+		GAME_MISMATCH,
+		PROTOCOL_MISMATCH,
 		INVALID_NONCE,
 		/** @since 3.0 */
 		USERNAME_INACTIVE,
 		/** @since 3.0 */
-		TOO_MANY_TRIES_USERNAME, 
+		TOO_MANY_TRIES_USERNAME,
 		/** @since 3.0 */
 		TOO_MANY_TRIES_IP,
 		/** @since 3.7 */
@@ -132,4 +133,14 @@ public class MessageS2CLoginNACK extends Message {
 			throw new IOException();
 		}
 	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"reason\":\"");
+		out.append(reason.name());
+		out.append("\",\"text\":");
+		OutputSerializer.writeJson(out, text[reason.ordinal()]);
+	}
+
 }

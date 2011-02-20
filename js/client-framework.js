@@ -64,6 +64,10 @@ marauroa.clientFramework = {
 		marauroa.log.debug("onDisconnect: " + reason + " error: " + error);
 	},
 
+	onLoginFailed: function(reason, text) {
+		marauroa.log.error("Login failed with reason " + reason + ": " + text);
+	},
+
 	onMessage: function(msg) {
 		marauroa.log.debug(JSON.stringify(msg));
 		if (msg.t == 9) {
