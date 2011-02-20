@@ -105,7 +105,7 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 			}
 
 			String sessionid = cookie.getValue();
-			if (!sessionid.matches("[A-Za-z0-9]")) {
+			if (!sessionid.matches("[A-Za-z0-9]+")) {
 				logger.warn("Invalid PHPSESSID=" + sessionid);
 				continue;
 			}
