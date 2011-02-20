@@ -28,7 +28,7 @@ marauroa.clientFramework = {
 	 */
 	connect: function(host, port) {
 		var options = {};
-		if (window.location.indexOf("https://") == 0) {
+		if (window.location.protocol == "https:") {
 			options.port = 443;
 			options.secure = true;
 		}
