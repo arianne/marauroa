@@ -28,6 +28,10 @@ marauroa.clientFramework = {
 	 */
 	connect: function(host, port) {
 		var options = {};
+		if (window.location.indexOf("https://") == 0) {
+			options.port = 443;
+			options.secure = true;
+		}
 		if (typeof(port) != "undefined" && port != null) {
 			options.port = port;
 		}
