@@ -100,6 +100,11 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 			}
 		}
 
+		// Jetty returns null instead of an empty list if there is no cookie header.
+		if (request.getCookies() == null) {
+			return null;
+		}
+
 		// try php session
 		for (Cookie cookie : request.getCookies()) {
 			if (!cookie.getName().equals("PHPSESSID")) {
