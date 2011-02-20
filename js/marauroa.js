@@ -2,7 +2,7 @@ var marauroa = new function() {}
 
 marauroa.log = {};
 
-if (console) {
+if (typeof(console) != "undefined") {
 	marauroa.log.debug = function () { console.debug.apply(console, arguments); };
 	marauroa.log.info = function () { console.info.apply(console, arguments); };
 	marauroa.log.warn = function () { console.warn.apply(console, arguments); };
