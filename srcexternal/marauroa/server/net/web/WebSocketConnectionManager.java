@@ -125,13 +125,14 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 					br = new BufferedReader(new UnicodeSupportingInputStreamReader(new FileInputStream(filename)));
 					String line;
 					while ((line = br.readLine()) != null) {
-						if (!line.startsWith("marauroa_authenticated_username|")) {
+						int pos1 = line.indexOf("marauroa_authenticated_username|s:");
+						if (pos1 < 0) {
 							continue;
 						}
 
 						logger.info("phpsession-entry: " + line);
-						int pos1 = line.indexOf("\"");
-						int pos2 = line.lastIndexOf("\"");
+						pos1 = line.indexOf("\"", pos1);
+						int pos2 = line.indexOf("\"", pos1 + 2);
 						if (pos1 > -1 && pos2 > -1) {
 							logger.info("php session username: " + line.substring(pos1 + 1, pos2));
 							return line.substring(pos1 + 1, pos2);
