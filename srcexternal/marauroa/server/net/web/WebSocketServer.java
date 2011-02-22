@@ -46,7 +46,7 @@ public class WebSocketServer {
 
 	private static void startWebSocketServer() throws Exception {
 		Configuration conf = Configuration.getConfiguration();
-		if (!conf.has("http_port") && conf.has("ajp_port")) {
+		if (!conf.has("http_port")) {
 			return;
 		}
 
@@ -69,6 +69,7 @@ public class WebSocketServer {
 		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_SERVER_HOST_KEY, host);
 		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_DOMAIN_KEY, host);
 		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_PORTS_KEY, "" + conf.getInt("flash_port", port));
+		holder.setInitParameter("bufferSize", conf.get("http_buffer_size", "1000000"));
 		context.addServlet(holder, "/socket.io/*");
 		context.addServlet(new ServletHolder(new WebServletForStaticContent()), "/*");
 
