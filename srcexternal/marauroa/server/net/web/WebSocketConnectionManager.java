@@ -130,11 +130,11 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 							continue;
 						}
 
-						logger.info("phpsession-entry: " + line);
+						// logger.debug("phpsession-entry: " + line);
 						pos1 = line.indexOf("\"", pos1);
 						int pos2 = line.indexOf("\"", pos1 + 2);
 						if (pos1 > -1 && pos2 > -1) {
-							logger.info("php session username: " + line.substring(pos1 + 1, pos2));
+							logger.debug("php session username: " + line.substring(pos1 + 1, pos2));
 							return line.substring(pos1 + 1, pos2);
 						}
 					}
