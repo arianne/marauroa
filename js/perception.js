@@ -234,8 +234,6 @@ marauroa.perceptionHandler = {
 	 */
 	applyPerceptionMyRPObject: function(msg) {
 
-		this.addMyRPObjectToWorldIfPrivate(msg.aM);
-
 		if (!marauroa.perceptionListener.onMyRPObject(msg.aM, msg.dM)) {
 			var id = -1;
 			if (typeof(msg.aM) != "undefined") {
@@ -250,6 +248,7 @@ marauroa.perceptionHandler = {
 				return;
 			}
 
+			this.addMyRPObjectToWorldIfPrivate(id, msg.aM);
 			var o = marauroa.currentZone[id];
 			this.deleteChanges(o, msg.dM);
 			this.addChanges(o, msg.aM);
@@ -261,17 +260,18 @@ marauroa.perceptionHandler = {
 	 *
 	 * @param added added changes of my object
 	 */
-	addMyRPObjectToWorldIfPrivate: function(added) {
-		if (typeof(added) == "undefined") {
-			return;
-		}
-		if (typeof(marauroa.currentZone[added.id]) != "undefined") {
+	addMyRPObjectToWorldIfPrivate: function(id, added) {
+		if (typeof(marauroa.currentZone[id]) != "undefined") {
 			return;
 		}
 		if (!marauroa.perceptionListener.onAdded(added)) {
+			if (typeof(added) == "undefined") {
+				marauroa.currentZone[id] = {};
+				return;
+			}
 			var o = marauroa.rpobjectFactory.createRPObject(added.c);
+			marauroa.currentZone[id] = o;
 			this.addChanges(o, added);
-			marauroa.currentZone[added.id] = o;
 		}
 	},
 
