@@ -58,12 +58,16 @@ public class SendCharacterListHandler implements DelayedEventHandler {
 		int clientid = cmd.getClientid();
 		Channel channel = cmd.getChannel();
 		PlayerEntry entry = PlayerEntryContainer.getContainer().get(channel);
-		entry.characterCounter = characters.keySet().size();
 
-		MessageS2CCharacterList msg = new MessageS2CCharacterList(channel, characters);
-		msg.setProtocolVersion(protocolVersion);
-		msg.setClientID(clientid);
-		netMan.sendMessage(msg);
+		// entry is null if the player has timed out during an extremely very long turn overflow
+		if (entry != null) {
+			entry.characterCounter = characters.keySet().size();
+
+			MessageS2CCharacterList msg = new MessageS2CCharacterList(channel, characters);
+			msg.setProtocolVersion(protocolVersion);
+			msg.setClientID(clientid);
+			netMan.sendMessage(msg);
+		}
 	}
 
 }
