@@ -313,12 +313,12 @@ marauroa.perceptionHandler = {
 				if (!diff.m.hasOwnProperty(i)) {
 					continue;
 				} 
-				if (marauroa.util.isEmpty(diff.m[i])) {
+				if (marauroa.util.isEmpty(diff.m[i].a)) {
 					delete object[diff.m[i]];
 				} else {
-					for (var j in diff.m[i]) {
-						if (diff.m[i].hasOwnProperty(j)) {
-							delete object[i][diff.m[i][j]];
+					for (var j in diff.m[i].a) {
+						if (diff.m[i].a.hasOwnProperty(j)) {
+							delete object[i][diff.m[i].a[j]];
 						}
 					}
 				}
@@ -346,9 +346,9 @@ marauroa.perceptionHandler = {
 					if (typeof(object[i]) == "undefined") {
 						object[i] = {};
 					}
-					for (var j in diff.m[i]) {
-						if (diff.m[i].hasOwnProperty(j)) {
-							object[i][j] = diff.m[i][j];
+					for (var j in diff.m[i].a) {
+						if (diff.m[i].a.hasOwnProperty(j)) {
+							object[i][j] = diff.m[i].a[j];
 						}
 					}
 				} 
