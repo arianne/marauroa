@@ -113,7 +113,6 @@ marauroa.currentZone = {
 	clear: function() {
 		for (var i in this) {
 			if (this.hasOwnProperty(i) && typeof(this[i]) != "function") {
-				marauroa.log.debug("deleting: " + i + " " + typeof(this[i]) + ": " + isNaN(i));
 				delete this[i];
 			}
 		}
@@ -300,7 +299,7 @@ marauroa.perceptionHandler = {
 				} else {
 					for (var j in diff.s[i]) {
 						if (diff.s[i].hasOwnProperty(j)) {
-							delete object[i][diff.s[i][j].id];
+							delete object[i][diff.s[i][j].a.id];
 						}
 					}
 				}
@@ -347,7 +346,7 @@ marauroa.perceptionHandler = {
 						object[i] = {};
 					}
 					for (var j in diff.m[i].a) {
-						if (diff.m[i].a.hasOwnProperty(j)) {
+						if (j != "zoneid" && j != "id" && diff.m[i].a.hasOwnProperty(j)) {
 							object[i][j] = diff.m[i].a[j];
 						}
 					}
@@ -359,15 +358,18 @@ marauroa.perceptionHandler = {
 		if (typeof(diff.s) != "undefined") {
 			for (var i in diff.s) {
 				if (diff.s.hasOwnProperty(i)) {
+					// add slot itself, it it does not exist
 					if (typeof(object[i]) == "undefined") {
 						object[i] = {};
 					}
+					// for all slot members
 					for (var j in diff.s[i]) {
 						if (diff.s[i].hasOwnProperty(j)) {
-							if (typeof(object[i][diff.s[i][j].id]) == "undefined") {
-								diff.s[i][j].a.id = {};
+							var id = diff.s[i][j].a.id;
+							if (typeof(object[i][id]) == "undefined") {
+								object[i][id] = {};
 							}
-							this.addChanges(diff.s[i][j].a.id, diff.s[i][j])
+							this.addChanges(object[i][id], diff.s[i][j])
 						}
 					}
 				} 
