@@ -215,7 +215,7 @@ marauroa.perceptionHandler = {
 				if (msg.aA.hasOwnProperty(i)) {
 					if (typeof(marauroa.currentZone[msg.aA[i].a.id]) != "undefined") {
 						var o = marauroa.currentZone[msg.aA[i].a.id];
-						if (!marauroa.perceptionListener.onModifiedAdded(msg.aA[i])) {
+						if (!marauroa.perceptionListener.onModifiedAdded(o, msg.aA[i])) {
 							this.addChanges(o, msg.aA[i]);
 						}
 					}
