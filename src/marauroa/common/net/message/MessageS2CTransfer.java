@@ -99,6 +99,11 @@ public class MessageS2CTransfer extends Message {
 	}
 
 	@Override
+	public void writeToJson(StringBuilder out) {
+		return;
+	}
+
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 

@@ -235,7 +235,9 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 		out.append("{");
 		msg.writeToJson(out);
 		out.append("}");
-		((WebSocketChannel) internalChannel).sendMessage(out.toString());
+		if (out.length() > 2) {
+			((WebSocketChannel) internalChannel).sendMessage(out.toString());
+		}
 	}
 
 	@Override

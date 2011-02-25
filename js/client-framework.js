@@ -147,7 +147,6 @@ marauroa.clientFramework = {
 	logout: function() {
 		var msg = {
 				"t": "5",
-				"a": action
 			};
 		this.sendMessage(msg);
 	},

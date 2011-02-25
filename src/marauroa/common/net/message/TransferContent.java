@@ -13,9 +13,11 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.util.Map;
 
 import marauroa.common.Utility;
+import marauroa.common.net.OutputSerializer;
+
+import org.apache.log4j.Logger;
 
 /**
  * A helper class to transfer content from server to client.
@@ -24,6 +26,7 @@ import marauroa.common.Utility;
  *
  */
 public class TransferContent {
+	private static final Logger logger = Logger.getLogger(TransferContent.class);
 
 	/**
 	 * Name of the content to transfer.
@@ -103,6 +106,21 @@ public class TransferContent {
 	}
 
 	/**
+	 * Write content as a request to client to approve it
+	 *
+	 * @param out
+	 */
+	public void writeREQToJson(StringBuilder out) {
+		out.append("{\"name\":");
+		OutputSerializer.writeJson(out, name);
+		out.append(",\"timestamp\":");
+		OutputSerializer.writeJson(out, Integer.toString(timestamp));
+		out.append(",\"cachable\":");
+		out.append(cacheable ? "true" : "false");
+		out.append("}");
+	}
+
+	/**
 	 * Reads the content transfer request.
 	 * @param in
 	 * @throws IOException
@@ -124,6 +142,15 @@ public class TransferContent {
 	}
 
 	/**
+	 * writes an ACK to JSON
+	 *
+	 * @param out StringBuilder
+	 */
+	public void writeACKToJson(StringBuilder out) {
+		OutputSerializer.writeJson(out, name, ack ? "true" : "false");
+	}
+
+	/**
 	 * Reads the content acceptance from client
 	 * @param in
 	 * @throws IOException
@@ -135,16 +162,21 @@ public class TransferContent {
 
 	/**
 	 * Reads the content acceptance from client
-	 * @param in
-	 * @throws IOException
+	 * @param contentName name of content
+	 * @param accept does the client what this content?
 	 */
-	public void readACKFromMap(Map<String, Object> in) throws IOException {
-		name = (String) in.get("name");
-		ack = Boolean.parseBoolean((String) in.get("ack"));
+	public void readACKFromMap(String contentName, Object accept) {
+		this.name = contentName;
+		if (accept instanceof String) {
+			ack = Boolean.parseBoolean((String) accept);
+		} else if (accept instanceof Boolean) {
+			ack = ((Boolean) accept).booleanValue();
+		}
 	}
 
 	/**
 	 * Write the content data to client
+	 *
 	 * @param out
 	 * @throws IOException
 	 */
