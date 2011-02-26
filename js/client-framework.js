@@ -69,7 +69,7 @@ marauroa.clientFramework = {
 	},
 
 	onMessage: function(msg) {
-		marauroa.log.debug(JSON.stringify(msg));
+		marauroa.log.debug("<--: ", msg);
 		if (msg.t == 9) {
 			this.clientid = msg.c;
 		}
@@ -87,7 +87,7 @@ marauroa.clientFramework = {
 			"s": "1"
 		};
 		io.util.merge(myMessage, msg);
-		// TODO: is JSON.stringify required here?
+		marauroa.log.debug("-->: ", msg);
 		this.socket.send(JSON.stringify(myMessage));
 	},
 
@@ -199,7 +199,7 @@ marauroa.clientFramework = {
 	 * @return the list of approved and rejected items.
 	 */
 	onTransferREQ: function(items) {
-		marauroa.log.debug("onTransferREQ: " + items);
+		marauroa.log.debug("onTransferREQ: ", items);
 	},
 
 	/**
@@ -209,7 +209,7 @@ marauroa.clientFramework = {
 	 *            the transfered items.
 	 */
 	onTransfer: function(items) {
-		marauroa.log.debug("onTransfer: " + items);
+		marauroa.log.debug("onTransfer: ", items);
 	},
 
 
@@ -220,7 +220,7 @@ marauroa.clientFramework = {
 	 *            the characters we have available at this account.
 	 */
 	onAvailableCharacterDetails: function(characters) {
-		marauroa.log.debug("onAvailableCharacterDetails: " + characters);
+		marauroa.log.debug("onAvailableCharacterDetails: ", characters);
 	},
 
 	/**
