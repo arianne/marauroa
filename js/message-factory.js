@@ -47,7 +47,7 @@ marauroa.messageFactory = new function() {
 	this.t22 = function() {
 		marauroa.clientFramework.onTransferREQ(this.contents);
 		var contents = {};
-		for (i in this.contents) {
+		for (var i in this.contents) {
 			if (typeof(this.contents[i].ack) != "undefined" && this.contents[i].ack) {
 				contents[this.contents[i].name] = true;
 			} else {
