@@ -330,6 +330,7 @@ marauroa.perceptionHandler = {
 		if (typeof(diff) == "undefined") {
 			return;
 		}
+		object._rpclass = diff.c;
 
 		// attributes
 		for (var i in diff.a) {
