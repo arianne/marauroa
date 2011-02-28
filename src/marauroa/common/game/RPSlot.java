@@ -390,7 +390,6 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 *
 	 * @return an unmodifiable iterator object the objects.
 	 */
-	@Override
 	public Iterator<RPObject> iterator() {
 		return Collections.unmodifiableList(objects).iterator();
 	}
@@ -434,7 +433,6 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @param out
 	 *            the output serializer
 	 */
-	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
@@ -518,7 +516,6 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/**
 	 * Fills this object with the data that has been serialized.
 	 */
-	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		short code = in.readShort();
 		if (code == -1) {

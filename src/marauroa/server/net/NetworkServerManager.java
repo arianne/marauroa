@@ -26,16 +26,15 @@ import marauroa.common.Log4J;
 import marauroa.common.net.Channel;
 import marauroa.common.net.ConnectionManager;
 import marauroa.common.net.message.Message;
-import marauroa.common.net.message.MessageS2CConnectNACK;
 import marauroa.server.net.nio.NIONetworkConnectionManager;
 import marauroa.server.net.validator.ConnectionValidator;
 
 /**
  * This is the implementation of a worker that sends messages, receives them, ...
  * This class also handles validation of connection and disconnection events
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public final class NetworkServerManager implements IServerManager, INetworkServerManager {
 
@@ -44,23 +43,23 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 	        .getLogger(NetworkServerManager.class);
 
 	/** We store the server for sending stuff. */
-	private List<ConnectionManager> connectionManagers;
+	private final List<ConnectionManager> connectionManagers;
 
 	/** A List of Message objects: List<Message> */
-	private BlockingQueue<Message> messages;
+	private final BlockingQueue<Message> messages;
 
 	/** checks if the ip-address is banned */
-	private ConnectionValidator connectionValidator;
+	private final ConnectionValidator connectionValidator;
 
 	/** A list of the listeners to the onDisconnect event. */
-	private List<IDisconnectedListener> listeners;
+	private final List<IDisconnectedListener> listeners;
 
-	/** A mapping from internal channels to Channels */ 
-	private Map<Object, Channel> channels;
+	/** A mapping from internal channels to Channels */
+	private final Map<Object, Channel> channels;
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @throws IOException
 	 *             if there any exception when starting the socket server.
 	 */
@@ -80,8 +79,6 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 		connectionManagers.add(nio);
 	}
 
-
-	@Override
 	public void start() {
 		// do nothing
 	}
@@ -89,7 +86,7 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 	/**
 	 * Associate this object with a server. This model a master-slave approach
 	 * for managing network messages.
-	 * 
+	 *
 	 * @param server
 	 *            the master server.
 	 */
@@ -125,7 +122,7 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 
 	/**
 	 * This method blocks until a message is available
-	 * 
+	 *
 	 * @return a Message
 	 */
 	public Message getMessage() {
@@ -141,7 +138,7 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 	/**
 	 * This method add a message to be delivered to the client the message is
 	 * pointed to.
-	 * 
+	 *
 	 * @param msg
 	 *            the message to be delivered.
 	 */
@@ -157,7 +154,7 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 
 	/**
 	 * This method disconnect a socket.
-	 * 
+	 *
 	 * @param channel
 	 *            the socket channel to close
 	 */
@@ -174,7 +171,7 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 	 * Returns a instance of the connection validator
 	 * {@link ConnectionValidator} so that other layers can manipulate it for
 	 * banning IP.
-	 * 
+	 *
 	 * @return the Connection validator instance
 	 */
 	public ConnectionValidator getValidator() {
@@ -183,7 +180,7 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 
 	/**
 	 * Register a listener for disconnection events.
-	 * 
+	 *
 	 * @param listener
 	 *            a listener for disconnection events.
 	 */
@@ -221,7 +218,7 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 
 	/**
 	 * Removes stored parts of message for this channel at the decoder.
-	 * 
+	 *
 	 * @param internalChannel
 	 *            the channel to clear
 	 */

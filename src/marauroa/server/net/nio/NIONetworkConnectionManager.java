@@ -38,9 +38,9 @@ import marauroa.server.net.flood.IFloodCheck;
 /**
  * This is the implementation of a worker that sends messages, receives them, ...
  * This class also handles validation of connection and disconnection events
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public final class NIONetworkConnectionManager extends Thread implements IWorker, ConnectionManager {
 
@@ -58,26 +58,26 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 	private boolean isFinished;
 
 	/** Statistics */
-	private Statistics stats;
+	private final Statistics stats;
 
 	/** Checks if a connection is flooding the server */
-	private FloodValidator floodValidator;
+	private final FloodValidator floodValidator;
 
 	/** We queue here the data events. */
-	private BlockingQueue<DataEvent> queue;
+	private final BlockingQueue<DataEvent> queue;
 
 	/** encoder is in charge of getting a Message and creating a stream of bytes. */
-	private Encoder encoder;
+	private final Encoder encoder;
 
 	/** decoder takes a stream of bytes and create a message */
-	private Decoder decoder;
+	private final Decoder decoder;
 
 	/** the central server manager */
-	private IServerManager serverManager;
+	private final IServerManager serverManager;
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @throws IOException
 	 *             if there any exception when starting the socket server.
 	 */
@@ -111,7 +111,7 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 	/**
 	 * Associate this object with a server. This model a master-slave approach
 	 * for managing network messages.
-	 * 
+	 *
 	 * @param server
 	 *            the master server.
 	 */
@@ -169,7 +169,7 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 
 	/**
 	 * This method is called when new data is received on server from channel.
-	 * 
+	 *
 	 * @param server
 	 *            the master server
 	 * @param channel
@@ -181,10 +181,10 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 	 */
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count) {
 		logger.debug("Received from channel:"+channel+" "+count+" bytes");
-		
+
 		stats.add("Bytes recv", count);
 		stats.add("Message recv", 1);
-		
+
 		/*
 		 * We check the connection in case it is trying to flood server.
 		 */
@@ -199,7 +199,7 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 			 * If it is not flooding, just queue the message.
 			 */
 			logger.debug("queueing message");
-			
+
 			byte[] dataCopy = new byte[count];
 			System.arraycopy(data, 0, dataCopy, 0, count);
 			try {
@@ -214,11 +214,10 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 	/**
 	 * This method add a message to be delivered to the client the message is
 	 * pointed to.
-	 * 
+	 *
 	 * @param msg
 	 *            the message to be delivered.
 	 */
-	@Override
 	public void send(Object internalChannel, Message msg) {
 		try {
 			if (logger.isDebugEnabled()) {
@@ -227,10 +226,10 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 			}
 
 			byte[] data = encoder.encode(msg);
-			
+
 			stats.add("Bytes send", data.length);
 			stats.add("Message send", 1);
-			
+
 			server.send((SocketChannel) internalChannel, data);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -243,12 +242,10 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 
 	/**
 	 * This method disconnect a socket.
-	 * 
+	 *
 	 * @param channel
 	 *            the socket channel to close
 	 */
-
-	@Override
 	public void close(Object channel) {
 		try {
 			server.close((SocketChannel) channel);
@@ -299,7 +296,7 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 
 	/**
 	 * Removes stored parts of message for this channel at the decoder.
-	 * 
+	 *
 	 * @param channel
 	 *            the channel to clear
 	 */

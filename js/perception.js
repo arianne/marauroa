@@ -335,7 +335,10 @@ marauroa.perceptionHandler = {
 		// attributes
 		for (var i in diff.a) {
 			if (diff.a.hasOwnProperty(i)) {
-				object[i] = diff.a[i];
+				if (typeof(object.set) == "undefined") {
+					marauroa.log.error(object, diff.a);
+				}
+				object.set(i, diff.a[i]);
 			}
 		}
 

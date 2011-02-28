@@ -51,7 +51,6 @@ public class SendCharacterListHandler implements DelayedEventHandler {
 	 * @param rpMan ignored
 	 * @param data LoadAllCharactersCommand
 	 */
-	@Override
 	public void handleDelayedEvent(RPServerManager rpMan, Object data) {
 		LoadAllActiveCharactersCommand cmd = (LoadAllActiveCharactersCommand) data;
 		Map<String, RPObject> characters = cmd.getCharacters();

@@ -204,7 +204,6 @@ public class Message implements Serializable {
 	 * @exception IOException
 	 *                if the serializations fails
 	 */
-	@Override
 	public void writeObject(OutputSerializer out) throws IOException {
 		out.write((byte)protocolVersion);
 		out.write((byte) type.ordinal());
@@ -235,7 +234,6 @@ public class Message implements Serializable {
 	 * @exception IOException
 	 *                if the serializations fails
 	 */
-	@Override
 	public void readObject(InputSerializer in) throws IOException {
 		int protocolVersion = in.readByte();
 		if (protocolVersion < NetConst.NETWORK_PROTOCOL_VERSION_MIN
