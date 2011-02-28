@@ -336,9 +336,11 @@ marauroa.perceptionHandler = {
 		for (var i in diff.a) {
 			if (diff.a.hasOwnProperty(i)) {
 				if (typeof(object.set) == "undefined") {
-					marauroa.log.error(object, diff.a);
+					marauroa.log.warn("Object missing set(key, value)-function", object, diff.a);
+					object[i] = diff.a[i]
+				} else {
+					object.set(i, diff.a[i]);
 				}
-				object.set(i, diff.a[i]);
 			}
 		}
 
@@ -371,7 +373,7 @@ marauroa.perceptionHandler = {
 						if (diff.s[i].hasOwnProperty(j)) {
 							var id = diff.s[i][j].a.id;
 							if (typeof(object[i][id]) == "undefined") {
-								object[i][id] = {};
+								object[i][id] = marauroa.rpobjectFactory.createRPObject(diff.s[i][j].c);
 							}
 							this.addChanges(object[i][id], diff.s[i][j])
 						}
