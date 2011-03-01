@@ -38,6 +38,29 @@ marauroa.messageFactory = new function() {
 		marauroa.clientFramework.onPerception(this);
 	}
 
+	// Message S2C Transfer
+	this.t21 = function() {
+		alert(this);
+	}
+
+	// Message S2C TransferREQ
+	this.t22 = function() {
+		marauroa.clientFramework.onTransferREQ(this.contents);
+		var contents = {};
+		for (var i in this.contents) {
+			if (typeof(this.contents[i].ack) != "undefined" && this.contents[i].ack) {
+				contents[this.contents[i].name] = true;
+			} else {
+				contents[this.contents[i].name] = false;
+			}
+		}
+		var msg = {
+			"t": "7",
+			"contents": contents
+		}
+		marauroa.clientFramework.sendMessage(msg);
+	}
+
 	// handle unexpected unknown messages
 	this.unknownMessage = function() {
 		// do nothing

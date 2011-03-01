@@ -100,10 +100,10 @@ public class MessageC2STransferACK extends Message {
 		super.readFromMap(in);
 
 		contents = new LinkedList<TransferContent>();
-		Map<String, Map<String, Object>> contentsMap = (Map<String, Map<String, Object>>) in.get("contents");
-		for (Map<String, Object> contentMap : contentsMap.values()) {
+		Map<String, Object> contentsMap = (Map<String, Object>) in.get("contents");
+		for (Map.Entry<String, Object> entry : contentsMap.entrySet()) {
 			TransferContent content = new TransferContent();
-			content.readACKFromMap(contentMap);
+			content.readACKFromMap(entry.getKey(), entry.getValue());
 			contents.add(content);
 		}
 
@@ -111,4 +111,21 @@ public class MessageC2STransferACK extends Message {
 			throw new IOException();
 		}
 	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"contents\":{");
+		boolean first = true;
+		for (TransferContent content : contents) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			content.writeACKToJson(out);
+		}
+		out.append("}");
+	}
+
 }

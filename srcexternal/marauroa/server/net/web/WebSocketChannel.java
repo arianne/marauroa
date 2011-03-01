@@ -22,7 +22,7 @@ import com.glines.socketio.server.SocketIOInbound;
 
 /**
  * a websocket channel which identifies a connection to a webclient.
- *
+
  * @author hendrik
  */
 public class WebSocketChannel implements SocketIOInbound {
@@ -50,23 +50,19 @@ public class WebSocketChannel implements SocketIOInbound {
 	// SocketIOInbound
 	//
 
-	@Override
 	public String getProtocol() {
 		return null;
 	}
 
-	@Override
 	public void onConnect(SocketIOOutbound outbound) {
 		this.outboundSocket = outbound;
 		webSocketServerManager.onConnect(this);
 	}
 
-	@Override
 	public void onDisconnect(DisconnectReason reason, String errorMessage) {
 		webSocketServerManager.onDisconnect(this);
 	}
 
-	@Override
 	public void onMessage(int messageType, String message) {
 		webSocketServerManager.onMessage(this, messageType, message);
 	}

@@ -113,7 +113,6 @@ marauroa.currentZone = {
 	clear: function() {
 		for (var i in this) {
 			if (this.hasOwnProperty(i) && typeof(this[i]) != "function") {
-				marauroa.log.debug("deleting: " + i + " " + typeof(this[i]) + ": " + isNaN(i));
 				delete this[i];
 			}
 		}
@@ -216,7 +215,7 @@ marauroa.perceptionHandler = {
 				if (msg.aA.hasOwnProperty(i)) {
 					if (typeof(marauroa.currentZone[msg.aA[i].a.id]) != "undefined") {
 						var o = marauroa.currentZone[msg.aA[i].a.id];
-						if (!marauroa.perceptionListener.onModifiedAdded(msg.aA[i])) {
+						if (!marauroa.perceptionListener.onModifiedAdded(o, msg.aA[i])) {
 							this.addChanges(o, msg.aA[i]);
 						}
 					}
@@ -234,8 +233,6 @@ marauroa.perceptionHandler = {
 	 */
 	applyPerceptionMyRPObject: function(msg) {
 
-		this.addMyRPObjectToWorldIfPrivate(msg.aM);
-
 		if (!marauroa.perceptionListener.onMyRPObject(msg.aM, msg.dM)) {
 			var id = -1;
 			if (typeof(msg.aM) != "undefined") {
@@ -250,6 +247,7 @@ marauroa.perceptionHandler = {
 				return;
 			}
 
+			this.addMyRPObjectToWorldIfPrivate(id, msg.aM);
 			var o = marauroa.currentZone[id];
 			this.deleteChanges(o, msg.dM);
 			this.addChanges(o, msg.aM);
@@ -261,17 +259,18 @@ marauroa.perceptionHandler = {
 	 *
 	 * @param added added changes of my object
 	 */
-	addMyRPObjectToWorldIfPrivate: function(added) {
-		if (typeof(added) == "undefined") {
-			return;
-		}
-		if (typeof(marauroa.currentZone[added.id]) != "undefined") {
+	addMyRPObjectToWorldIfPrivate: function(id, added) {
+		if (typeof(marauroa.currentZone[id]) != "undefined") {
 			return;
 		}
 		if (!marauroa.perceptionListener.onAdded(added)) {
+			if (typeof(added) == "undefined") {
+				marauroa.currentZone[id] = {};
+				return;
+			}
 			var o = marauroa.rpobjectFactory.createRPObject(added.c);
+			marauroa.currentZone[id] = o;
 			this.addChanges(o, added);
-			marauroa.currentZone[added.id] = o;
 		}
 	},
 
@@ -298,9 +297,15 @@ marauroa.perceptionHandler = {
 				if (marauroa.util.isEmpty(diff.s[i].a)) {
 					delete object[diff.s[i].a];
 				} else {
+<<<<<<< HEAD
 					for (var j in diff.s[i].a) {
 						if (diff.s[i].a.hasOwnProperty(j)) {
 							delete object[i][diff.s[i].a[j].id];
+=======
+					for (var j in diff.s[i]) {
+						if (diff.s[i].hasOwnProperty(j)) {
+							delete object[i][diff.s[i][j].a.id];
+>>>>>>> 192b043fa938322fef9cb3a92b4510c54001954d
 						}
 					}
 				}
@@ -313,12 +318,12 @@ marauroa.perceptionHandler = {
 				if (!diff.m.hasOwnProperty(i)) {
 					continue;
 				} 
-				if (marauroa.util.isEmpty(diff.m[i])) {
+				if (marauroa.util.isEmpty(diff.m[i].a)) {
 					delete object[diff.m[i]];
 				} else {
-					for (var j in diff.m[i]) {
-						if (diff.m[i].hasOwnProperty(j)) {
-							delete object[i][diff.m[i][j]];
+					for (var j in diff.m[i].a) {
+						if (diff.m[i].a.hasOwnProperty(j)) {
+							delete object[i][diff.m[i].a[j]];
 						}
 					}
 				}
@@ -331,11 +336,17 @@ marauroa.perceptionHandler = {
 		if (typeof(diff) == "undefined") {
 			return;
 		}
+		object._rpclass = diff.c;
 
 		// attributes
 		for (var i in diff.a) {
 			if (diff.a.hasOwnProperty(i)) {
-				object[i] = diff.a[i];
+				if (typeof(object.set) == "undefined") {
+					marauroa.log.warn("Object missing set(key, value)-function", object, diff.a);
+					object[i] = diff.a[i]
+				} else {
+					object.set(i, diff.a[i]);
+				}
 			}
 		}
 
@@ -347,7 +358,11 @@ marauroa.perceptionHandler = {
 						object[i] = {};
 					}
 					for (var j in diff.m[i].a) {
+<<<<<<< HEAD
 						if (diff.m[i].a.hasOwnProperty(j)) {
+=======
+						if (j != "zoneid" && j != "id" && diff.m[i].a.hasOwnProperty(j)) {
+>>>>>>> 192b043fa938322fef9cb3a92b4510c54001954d
 							object[i][j] = diff.m[i].a[j];
 						}
 					}
@@ -359,15 +374,18 @@ marauroa.perceptionHandler = {
 		if (typeof(diff.s) != "undefined") {
 			for (var i in diff.s) {
 				if (diff.s.hasOwnProperty(i)) {
+					// add slot itself, it it does not exist
 					if (typeof(object[i]) == "undefined") {
 						object[i] = {};
 					}
+					// for all slot members
 					for (var j in diff.s[i]) {
 						if (diff.s[i].hasOwnProperty(j)) {
-							if (typeof(object[i][diff.s[i][j].id]) == "undefined") {
-								diff.s[i][j].a.id = {};
+							var id = diff.s[i][j].a.id;
+							if (typeof(object[i][id]) == "undefined") {
+								object[i][id] = marauroa.rpobjectFactory.createRPObject(diff.s[i][j].c);
 							}
-							this.addChanges(diff.s[i][j].a.id, diff.s[i][j])
+							this.addChanges(object[i][id], diff.s[i][j])
 						}
 					}
 				} 

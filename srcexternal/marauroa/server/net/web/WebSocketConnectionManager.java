@@ -215,18 +215,14 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 		}
 	}
 
-	@Override
 	public void finish() {
-		// TODO Auto-generated method stub
-
+		// empty
 	}
 
-	@Override
 	public boolean isFinished() {
 		return true;
 	}
 
-	@Override
 	public void send(Object internalChannel, Message msg) {
 		if (msg.isSkippable()) {
 			return;
@@ -235,10 +231,11 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 		out.append("{");
 		msg.writeToJson(out);
 		out.append("}");
-		((WebSocketChannel) internalChannel).sendMessage(out.toString());
+		if (out.length() > 2) {
+			((WebSocketChannel) internalChannel).sendMessage(out.toString());
+		}
 	}
 
-	@Override
 	public void close(Object internalChannel) {
 		((WebSocketChannel) internalChannel).close();
 	}

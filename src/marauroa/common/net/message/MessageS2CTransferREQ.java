@@ -83,6 +83,22 @@ public class MessageS2CTransferREQ extends Message {
 	}
 
 	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"contents\":[");
+		boolean first = true;
+		for (TransferContent content : contents) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			content.writeREQToJson(out);
+		}
+		out.append("]");
+	}
+
+	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 

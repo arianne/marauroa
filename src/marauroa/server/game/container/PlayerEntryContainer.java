@@ -90,7 +90,6 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 *
 	 * @return the iterator
 	 */
-	@Override
 	public Iterator<PlayerEntry> iterator() {
 		return new LinkedList<PlayerEntry>(clientidMap.values()).iterator();
 	}
