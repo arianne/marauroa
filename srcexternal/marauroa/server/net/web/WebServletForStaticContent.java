@@ -72,6 +72,9 @@ public class WebServletForStaticContent extends HttpServlet {
 		try {
 			is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("js/" + filename);
 			if (is == null) {
+				is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("srcjs/" + filename);
+			}
+			if (is == null) {
 				throw new FileNotFoundException(filename);
 			}
 			os = response.getOutputStream();
