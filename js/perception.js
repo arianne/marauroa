@@ -297,15 +297,9 @@ marauroa.perceptionHandler = {
 				if (marauroa.util.isEmpty(diff.s[i].a)) {
 					delete object[diff.s[i].a];
 				} else {
-<<<<<<< HEAD
-					for (var j in diff.s[i].a) {
-						if (diff.s[i].a.hasOwnProperty(j)) {
-							delete object[i][diff.s[i].a[j].id];
-=======
 					for (var j in diff.s[i]) {
 						if (diff.s[i].hasOwnProperty(j)) {
 							delete object[i][diff.s[i][j].a.id];
->>>>>>> 192b043fa938322fef9cb3a92b4510c54001954d
 						}
 					}
 				}
@@ -358,11 +352,7 @@ marauroa.perceptionHandler = {
 						object[i] = {};
 					}
 					for (var j in diff.m[i].a) {
-<<<<<<< HEAD
-						if (diff.m[i].a.hasOwnProperty(j)) {
-=======
 						if (j != "zoneid" && j != "id" && diff.m[i].a.hasOwnProperty(j)) {
->>>>>>> 192b043fa938322fef9cb3a92b4510c54001954d
 							object[i][j] = diff.m[i].a[j];
 						}
 					}
