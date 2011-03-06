@@ -57,7 +57,11 @@ marauroa.clientFramework = {
 	},
 
 	onConnect: function(reason, error) {
-		marauroa.log.debug("onConnect: " + reason + " error: " + error);
+		if (typeof(error) == "undefined") {
+			marauroa.log.debug("connected");
+		} else {
+			marauroa.log.error("onConnect: " + reason + " error: " + error);
+		}
 	},
 
 	onDisconnect: function(reason, error) {
