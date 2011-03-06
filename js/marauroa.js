@@ -29,5 +29,14 @@ marauroa.util = {
 			return obj[i];
 		}
 		return null;
+	},
+
+	// http://jonathanfine.wordpress.com/2008/09/21/implementing-super-in-javascript/
+	fromProto: function(proto){
+		var f = function(){
+			this.proto = proto;
+		};
+		f.prototype = proto;
+		return new f();
 	}
 }
