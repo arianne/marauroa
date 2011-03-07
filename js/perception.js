@@ -158,7 +158,7 @@ marauroa.perceptionHandler = {
 			for (var i in msg.aO) {
 				if (msg.aO.hasOwnProperty(i)) {
 					if (!marauroa.perceptionListener.onAdded(msg.aO[i])) {
-						var o = marauroa.rpobjectFactory.createRPObject(msg.aO[i].c);
+						var o = marauroa.rpobjectFactory.create(msg.aO[i].c);
 						this.addChanges(o, msg.aO[i]);
 						marauroa.currentZone[msg.aO[i].a.id] = o;
 					}
@@ -268,7 +268,7 @@ marauroa.perceptionHandler = {
 				marauroa.currentZone[id] = {};
 				return;
 			}
-			var o = marauroa.rpobjectFactory.createRPObject(added.c);
+			var o = marauroa.rpobjectFactory.create(added.c);
 			marauroa.currentZone[id] = o;
 			this.addChanges(o, added);
 		}
@@ -373,7 +373,7 @@ marauroa.perceptionHandler = {
 						if (diff.s[i].hasOwnProperty(j)) {
 							var id = diff.s[i][j].a.id;
 							if (typeof(object[i][id]) == "undefined") {
-								object[i][id] = marauroa.rpobjectFactory.createRPObject(diff.s[i][j].c);
+								object[i][id] = marauroa.rpobjectFactory.create(diff.s[i][j].c);
 							}
 							this.addChanges(object[i][id], diff.s[i][j])
 						}
