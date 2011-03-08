@@ -30,6 +30,9 @@ marauroa.rpobjectFactory = new function(){
 	this._default.destroy = function(parent) {
 		// do nothing
 	}
+	this._default.createSlot = function(name) {
+		return marauroa.rpslotFactory.create(name);
+	}
 
 	this.create = function(rpclass) {
 		var ctor = this._default;
@@ -72,11 +75,17 @@ marauroa.rpeventFactory = new function(){
  */
 marauroa.rpslotFactory = new function(){
 	this._default = function() {};
+	this._default.add = function(key, value) {
+		this[key] = value;
+	}
+	this._default.del = function(key) {
+		delete this[key];
+	}
 
-	this.create = function(rpclass) {
+	this.create = function(name) {
 		var ctor = this._default;
-		if (typeof(this[rpclass]) != "undefined") {
-			ctor = this[rpclass];
+		if (typeof(this[name]) != "undefined") {
+			ctor = this[name];
 		}
 		return marauroa.util.fromProto(ctor);
 	}

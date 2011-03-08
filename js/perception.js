@@ -295,14 +295,15 @@ marauroa.perceptionHandler = {
 			for (var i in diff.s) {
 				if (!diff.s.hasOwnProperty(i)) {
 					continue;
-				} 
+				}
+				// delete slot?
 				if (marauroa.util.isEmpty(diff.s[i])) {
-					object.unset(diff.s[i]);
+					object.del(diff.s[i]);
 				} else {
 					// TODO: difference between deleting an object from a slot and an attribute from a contained object
 					for (var j in diff.s[i]) {
 						if (diff.s[i].hasOwnProperty(j)) {
-							object[i].unset(diff.s[i][j].a.id);
+							object[i].del(diff.s[i][j].a.id);
 						}
 					}
 				}
@@ -369,14 +370,14 @@ marauroa.perceptionHandler = {
 				if (diff.s.hasOwnProperty(i)) {
 					// add slot itself, it it does not exist
 					if (typeof(object[i]) == "undefined") {
-						object[i] = {};
+						object[i] = object.createSlot(i);
 					}
 					// for all slot members
 					for (var j in diff.s[i]) {
 						if (diff.s[i].hasOwnProperty(j)) {
 							var id = diff.s[i][j].a.id;
 							if (typeof(object[i][id]) == "undefined") {
-								object[i][id] = marauroa.rpobjectFactory.create(diff.s[i][j].c);
+								object[i].add(id, marauroa.rpobjectFactory.create(diff.s[i][j].c));
 							}
 							this.addChanges(object[i][id], diff.s[i][j])
 						}
