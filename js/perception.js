@@ -235,7 +235,7 @@ marauroa.perceptionHandler = {
 	applyPerceptionMyRPObject: function(msg) {
 
 		if (!marauroa.perceptionListener.onMyRPObject(msg.aM, msg.dM)) {
-			var id = -1;
+			var id;
 			if (typeof(msg.aM) != "undefined") {
 				id = msg.aM.a.id;
 			}
