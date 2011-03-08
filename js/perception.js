@@ -250,6 +250,7 @@ marauroa.perceptionHandler = {
 
 			this.addMyRPObjectToWorldIfPrivate(id, msg.aM);
 			var o = marauroa.currentZone[id];
+			marauroa.me = o;
 			this.deleteChanges(o, msg.dM);
 			this.addChanges(o, msg.aM);
 		}
