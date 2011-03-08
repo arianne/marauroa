@@ -81,6 +81,13 @@ marauroa.rpslotFactory = new function(){
 	this._default.del = function(key) {
 		delete this[key];
 	}
+	this._default.first = function() {
+		for (var i in this) {
+			if (!isNaN(i)) {
+				return this[i];
+			}
+		}
+	}
 
 	this.create = function(name) {
 		var ctor = this._default;
