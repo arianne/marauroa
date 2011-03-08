@@ -179,6 +179,7 @@ marauroa.perceptionHandler = {
 			for (var i in msg.dO) {
 				if (msg.dO.hasOwnProperty(i)) {
 					if (!marauroa.perceptionListener.onDeleted(msg.dO[i])) {
+						marauroa.currentZone[i].destroy(marauroa.currentZone);
 						delete marauroa.currentZone[i];
 					}
 				}
@@ -283,7 +284,7 @@ marauroa.perceptionHandler = {
 		if (typeof(diff.a) != "undefined") {
 			for (var i in diff.a) {
 				if (diff.a.hasOwnProperty(i) && i != "id" && i != "zoneid") {
-					delete object[i];
+					object.unset(i);
 				}
 			}
 		}
@@ -294,12 +295,13 @@ marauroa.perceptionHandler = {
 				if (!diff.s.hasOwnProperty(i)) {
 					continue;
 				} 
-				if (marauroa.util.isEmpty(diff.s[i].a)) {
-					delete object[diff.s[i].a];
+				if (marauroa.util.isEmpty(diff.s[i])) {
+					object.unset(diff.s[i]);
 				} else {
+					// TODO: difference between deleting an object from a slot and an attribute from a contained object
 					for (var j in diff.s[i]) {
 						if (diff.s[i].hasOwnProperty(j)) {
-							delete object[i][diff.s[i][j].a.id];
+							object[i].unset(diff.s[i][j].a.id);
 						}
 					}
 				}
@@ -313,11 +315,11 @@ marauroa.perceptionHandler = {
 					continue;
 				} 
 				if (marauroa.util.isEmpty(diff.m[i].a)) {
-					delete object[diff.m[i]];
+					object.unset(diff.m[i]);
 				} else {
 					for (var j in diff.m[i].a) {
 						if (diff.m[i].a.hasOwnProperty(j)) {
-							delete object[i][diff.m[i].a[j]];
+							object.unsetMapEnty(i, diff.m[i].a[j]);
 						}
 					}
 				}
@@ -353,7 +355,7 @@ marauroa.perceptionHandler = {
 					}
 					for (var j in diff.m[i].a) {
 						if (j != "zoneid" && j != "id" && diff.m[i].a.hasOwnProperty(j)) {
-							object[i][j] = diff.m[i].a[j];
+							object.setMapEntry(i, j, diff.m[i].a[j]);
 						}
 					}
 				} 

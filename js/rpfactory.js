@@ -18,6 +18,18 @@ marauroa.rpobjectFactory = new function(){
 	this._default.set = function(key, value) {
 		this[key] = value;
 	}
+	this._default.setMapEntry = function(map, key, value) {
+		this[map][key] = value;
+	}
+	this._default.unset = function(key) {
+		delete this[key];
+	}
+	this._default.unsetMapEntry = function(map, key) {
+		delete this[map][key];
+	}
+	this._default.destroy = function(parent) {
+		// do nothing
+	}
 
 	this.create = function(rpclass) {
 		var ctor = this._default;
