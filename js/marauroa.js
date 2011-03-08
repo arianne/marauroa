@@ -24,6 +24,15 @@ marauroa.util = {
 		return true;
 	},
 
+	isEmptyExceptId: function(obj) {
+		for (var i in obj) {
+			if (i != "id" && obj.hasOwnProperty(i)) {
+				return false;
+			}
+		}
+		return true;
+	},
+
 	first: function(obj) {
 		for (var i in obj) {
 			return obj[i];
