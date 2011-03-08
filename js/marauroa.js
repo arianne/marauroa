@@ -37,7 +37,6 @@ marauroa.util = {
 		for (var i in obj) {
 			return obj[i];
 		}
-		return null;
 	},
 
 	// http://jonathanfine.wordpress.com/2008/09/21/implementing-super-in-javascript/
