@@ -48,3 +48,7 @@ marauroa.util = {
 		return new f();
 	}
 }
+
+String.prototype.trim = function() {
+	return this.replace(/^\s+|\s+$/g, "");
+};
