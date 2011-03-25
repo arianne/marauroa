@@ -13,7 +13,6 @@
 package marauroa.common.game;
 
 import java.io.IOException;
-import java.util.LinkedList;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.Definition.DefinitionClass;
@@ -56,7 +55,6 @@ public class RPEvent extends SlotOwner {
 	public RPEvent(String name) {
 		super(RPClass.getRPClass(name));
 		this.name = name;
-		this.slots = new LinkedList<RPSlot>();
 	}
 
 	/**

@@ -92,6 +92,9 @@ public class RPObject extends SlotOwner {
 	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
 
+	/** an empty list */
+	private static final List<RPEvent> EMPTY = Collections.unmodifiableList(new ArrayList<RPEvent>());
+
 	/**
 	 * If this variable is true the object is removed from the perception send
 	 * to client.
@@ -135,26 +138,26 @@ public class RPObject extends SlotOwner {
 	 * @param initialize initialize attributes
 	 */
 	RPObject(boolean initialize) {
-		super(RPClass.getBaseRPObjectDefault(), initialize);
+		super(RPClass.getBaseRPObjectDefault());
 		if (initialize) {
 			clear();
 		}
 	}
 
 	private void clear() {
-		slots = new LinkedList<RPSlot>();
-		addedSlots = new LinkedList<String>();
-		deletedSlots = new LinkedList<String>();
+		slots = null;
+		addedSlots = null;
+		deletedSlots = null;
 
-		events = new LinkedList<RPEvent>();
+		events = null;
 
-		links = new LinkedList<RPLink>();
-		addedLinks = new LinkedList<String>();
-		deletedLinks = new LinkedList<String>();
+		links = null;
+		addedLinks = null;
+		deletedLinks = null;
 
-		maps = new HashMap<String, Attributes>();
-		addedMaps = new LinkedList<String>();
-		deletedMaps = new LinkedList<String>();
+		maps = null;
+		addedMaps = null;
+		deletedMaps = null;
 
 		modified = false;
 
@@ -193,52 +196,95 @@ public class RPObject extends SlotOwner {
 		container = object.container;
 		containerSlot = object.containerSlot;
 
-		for (RPEvent event : object.events) {
-			RPEvent added = (RPEvent) event.clone();
-			added.setOwner(this);
-			events.add(added);
-		}
-
-		for (RPLink link : object.links) {
-			RPLink added = (RPLink) link.clone();
-			added.setOwner(this);
-			links.add(added);
-		}
-
-		try {
-			for (Entry<String, Attributes> entry : object.maps.entrySet()) {
-				Attributes toAdd = (Attributes) entry.getValue().clone();
-				maps.put(entry.getKey(), toAdd);
+		if (object.events != null) {
+			if (events == null) {
+				events = new LinkedList<RPEvent>();
 			}
-		} catch (CloneNotSupportedException e) {
-			logger.error(e, e);
+			for (RPEvent event : object.events) {
+				RPEvent temp = (RPEvent) event.clone();
+				temp.setOwner(this);
+				events.add(temp);
+			}
+		}
+
+		if (object.links != null) {
+			if (links == null) {
+				links = new LinkedList<RPLink>();
+			}
+			for (RPLink link : object.links) {
+				RPLink temp = (RPLink) link.clone();
+				temp.setOwner(this);
+				links.add(temp);
+			}
+		}
+
+		if (object.maps != null) {
+			maps = new HashMap<String, Attributes>();
+			try {
+				for (Entry<String, Attributes> entry : object.maps.entrySet()) {
+					Attributes toAdd = (Attributes) entry.getValue().clone();
+					maps.put(entry.getKey(), toAdd);
+				}
+			} catch (CloneNotSupportedException e) {
+				logger.error(e, e);
+			}
 		}
 
 		/*
 		 * Copy also the delta^2 info.
 		 */
-		for (String slot : object.addedSlots) {
-			addedSlots.add(slot);
+		if (object.addedSlots != null) {
+			if (addedSlots == null) {
+				addedSlots = new LinkedList<String>();
+			}
+			for (String slot : object.addedSlots) {
+				addedSlots.add(slot);
+			}
 		}
 
-		for (String slot : object.deletedSlots) {
-			deletedSlots.add(slot);
+		if (object.deletedSlots != null) {
+			if (deletedSlots == null) {
+				deletedSlots = new LinkedList<String>();
+			}
+			for (String slot : object.deletedSlots) {
+				deletedSlots.add(slot);
+			}
 		}
 
-		for (String link : object.addedLinks) {
-			addedLinks.add(link);
+		if (object.addedLinks != null) {
+			if (addedLinks == null) {
+				addedLinks = new LinkedList<String>();
+			}
+			for (String link : object.addedLinks) {
+				addedLinks.add(link);
+			}
 		}
 
-		for (String link : object.deletedLinks) {
-			deletedLinks.add(link);
+		if (object.deletedLinks != null) {
+			if (deletedLinks == null) {
+				deletedLinks = new LinkedList<String>();
+			}
+			for (String link : object.deletedLinks) {
+				deletedLinks.add(link);
+			}
 		}
 
-		for (String entry : object.addedMaps) {
-			addedMaps.add(entry);
+		if (object.addedMaps != null) {
+			if (addedMaps == null) {
+				addedMaps = new LinkedList<String>();
+			}
+			for (String entry : object.addedMaps) {
+				addedMaps.add(entry);
+			}
 		}
 
-		for (String entry : object.deletedMaps) {
-			deletedMaps.add(entry);
+		if (object.deletedMaps != null) {
+			if (deletedMaps == null) {
+				deletedMaps = new LinkedList<String>();
+			}
+			for (String entry : object.deletedMaps) {
+				deletedMaps.add(entry);
+			}
 		}
 	}
 
@@ -437,17 +483,17 @@ public class RPObject extends SlotOwner {
 		}
 
 		RPObject found = null;
+		if (slots != null) {
+			for (RPSlot slot : slots) {
+				for (RPObject object : slot) {
+					found = object.getFromSlots(id);
 
-		for (RPSlot slot : slots) {
-			for (RPObject object : slot) {
-				found = object.getFromSlots(id);
-
-				if (found != null) {
-					return found;
+					if (found != null) {
+						return found;
+					}
 				}
 			}
 		}
-
 		return found;
 	}
 
@@ -464,6 +510,9 @@ public class RPObject extends SlotOwner {
 		super.addSlot(name);
 
 		/** Notify delta^2 about the addition of this slot */
+		if (addedSlots == null) {
+			addedSlots = new LinkedList<String>();
+		}
 		addedSlots.add(name);
 		modified = true;
 	}
@@ -481,6 +530,9 @@ public class RPObject extends SlotOwner {
 		super.addSlot(slot);
 
 		/* Notify delta^2 about the addition of this slot */
+		if (addedSlots == null) {
+			addedSlots = new LinkedList<String>();
+		}
 		addedSlots.add(slot.getName());
 		modified = true;
 	}
@@ -494,12 +546,15 @@ public class RPObject extends SlotOwner {
 	 */
 	@Override
 	public RPSlot removeSlot(String name) {
-		for (Iterator<RPSlot> it = slots.iterator(); it.hasNext();) {
+		for (Iterator<RPSlot> it = slotsIterator(); it.hasNext();) {
 			RPSlot slot = it.next();
 			if (name.equals(slot.getName())) {
 				// BUG: if an slot is added and deleted on the same turn it
 				// shouldn't be mention on deleted.
 				/** Notify delta^2 about the removal of this slot. */
+				if (deletedSlots == null) {
+					deletedSlots = new LinkedList<String>();
+				}
 				deletedSlots.add(name);
 
 				modified = true;
@@ -521,6 +576,9 @@ public class RPObject extends SlotOwner {
 	 */
 	public void addEvent(RPEvent event) {
 		event.setOwner(this);
+		if (events == null) {
+			events = new LinkedList<RPEvent>();
+		}
 		events.add(event);
 	}
 
@@ -528,7 +586,9 @@ public class RPObject extends SlotOwner {
 	 * Empty the list of events. This method is called at the end of each turn.
 	 */
 	public void clearEvents() {
-		events.clear();
+		if (events != null) {
+			events.clear();
+		}
 	}
 
 	/**
@@ -537,6 +597,9 @@ public class RPObject extends SlotOwner {
 	 * @return an iterator over the events
 	 */
 	public Iterator<RPEvent> eventsIterator() {
+		if (events == null) {
+			return EMPTY.iterator();
+		}
 		return events.iterator();
 	}
 
@@ -546,6 +609,9 @@ public class RPObject extends SlotOwner {
 	 * @return a list of the events
 	 */
 	public List<RPEvent> events() {
+		if (events == null) {
+			return EMPTY;
+		}
 		return Collections.unmodifiableList(events);
 	}
 
@@ -561,8 +627,14 @@ public class RPObject extends SlotOwner {
 
 		RPLink link = new RPLink(name, object);
 		link.setOwner(this);
+		if (links == null) {
+			links = new LinkedList<RPLink>();
+		}
 		links.add(link);
 
+		if (addedLinks == null) {
+			addedLinks = new LinkedList<String>();
+		}
 		addedLinks.add(name);
 		modified = true;
 	}
@@ -577,8 +649,14 @@ public class RPObject extends SlotOwner {
 		}
 
 		link.setOwner(this);
+		if (links == null) {
+			links = new LinkedList<RPLink>();
+		}
 		links.add(link);
 
+		if (addedLinks == null) {
+			addedLinks = new LinkedList<String>();
+		}
 		addedLinks.add(link.getName());
 		modified = true;
 	}
@@ -589,6 +667,9 @@ public class RPObject extends SlotOwner {
 	 * @return the link with given name or null if not found.
 	 */
 	public RPLink getLink(String name) {
+		if (links == null) {
+			return null;
+		}
 		for (RPLink link : links) {
 			if (name.equals(link.getName())) {
 				return link;
@@ -627,9 +708,15 @@ public class RPObject extends SlotOwner {
 	 * @return the removed link or null if it was not found.
 	 */
 	public RPLink removeLink(String name) {
+		if (links == null) {
+			return null;
+		}
 		for (Iterator<RPLink> it = links.iterator(); it.hasNext();) {
 			RPLink link = it.next();
 			if (name.equals(link.getName())) {
+				if (deletedLinks == null) {
+					deletedLinks = new LinkedList<String>();
+				}
 				deletedLinks.add(name);
 
 				modified = true;
@@ -651,7 +738,7 @@ public class RPObject extends SlotOwner {
 	 * @param value the value
 	 */
 	public void put(String map, String key, String value) {
-		if (!this.maps.containsKey(map)) {
+		if ((maps == null) || !this.maps.containsKey(map)) {
 			this.addMap(map);
 		}
 		if ((key.equals("id") || key.equals("zoneid"))) {
@@ -659,6 +746,9 @@ public class RPObject extends SlotOwner {
 					"\"id\" and \"zoneid\" are reserved keys that may not be used.");
 		}
 		this.maps.get(map).put(key, value);
+		if (addedMaps == null) {
+			addedMaps = new LinkedList<String>();
+		}
 		if (!this.addedMaps.contains(map)) {
 			this.addedMaps.add(map);
 		}
@@ -705,7 +795,7 @@ public class RPObject extends SlotOwner {
 	 * @return true, if the entry exists; false otherwise
 	 */
 	public boolean has(String map, String key) {
-		if (!this.maps.containsKey(map)) {
+		if ((maps == null) || !this.maps.containsKey(map)) {
 			return false;
 		}
 		return this.maps.get(map).has(key);
@@ -719,7 +809,7 @@ public class RPObject extends SlotOwner {
 	 * @return the value found
 	 */
 	public String get(String map, String key) {
-		if (!this.maps.containsKey(map)) {
+		if ((maps == null) || !this.maps.containsKey(map)) {
 			Definition def = getRPClass().getDefinition(DefinitionClass.STATIC, map);
 			if (def != null) {
 				/*
@@ -741,7 +831,7 @@ public class RPObject extends SlotOwner {
 	 * @return the value found
 	 */
 	public int getInt(String map, String key) {
-		if (!this.maps.containsKey(map)) {
+		if ((maps == null) || !this.maps.containsKey(map)) {
 			throw new IllegalArgumentException("Map " + map + " not found");
 		}
 		return this.maps.get(map).getInt(key);
@@ -755,7 +845,7 @@ public class RPObject extends SlotOwner {
 	 * @return the value found
 	 */
 	public double getDouble(String map, String key) {
-		if (!this.maps.containsKey(map)) {
+		if ((maps == null) || !this.maps.containsKey(map)) {
 			throw new IllegalArgumentException("Map " + map + " not found");
 		}
 		return this.maps.get(map).getDouble(key);
@@ -769,7 +859,7 @@ public class RPObject extends SlotOwner {
 	 * @return the value found
 	 */
 	public boolean getBoolean(String map, String key) {
-		if (!this.maps.containsKey(map)) {
+		if ((maps == null) || !this.maps.containsKey(map)) {
 			throw new IllegalArgumentException("Map " + map + " not found");
 		}
 		return this.maps.get(map).getBool(key);
@@ -782,7 +872,7 @@ public class RPObject extends SlotOwner {
 	 * @return a copy of the map or null if no map with the given name is present
 	 */
 	public Map<String, String> getMap(String map) {
-		if (this.maps.containsKey(map)) {
+		if ((maps != null) && this.maps.containsKey(map)) {
 			HashMap<String, String> newMap = new HashMap<String, String>();
 			Attributes attr = this.maps.get(map);
 			for (String key : attr) {
@@ -802,8 +892,11 @@ public class RPObject extends SlotOwner {
 	 * @return the RPObject representing the map or null if map not existing
 	 */
 	public Attributes removeMap(String map) {
-		if (maps.containsKey(map)) {
+		if ((maps != null) && maps.containsKey(map)) {
 			Attributes attr = maps.get(map);
+			if (deletedMaps == null) {
+				deletedMaps = new LinkedList<String>();
+			}
 			this.deletedMaps.add(map);
 			modified = true;
 			return attr;
@@ -817,6 +910,9 @@ public class RPObject extends SlotOwner {
 	 * @param map
 	 */
 	public void addMap(String map) {
+		if (maps == null) {
+			maps = new HashMap<String, Attributes>();
+		}
 		if (maps.containsKey(map)) {
 			throw new SlotAlreadyAddedException(map);
 		}
@@ -829,6 +925,9 @@ public class RPObject extends SlotOwner {
 		RPObject newMap = new RPObject();
 		newMap.setID(RPObject.INVALID_ID);
 		maps.put(map, newMap);
+		if (addedMaps == null) {
+			addedMaps = new LinkedList<String>();
+		}
 		addedMaps.add(map);
 		modified = true;
 	}
@@ -845,8 +944,11 @@ public class RPObject extends SlotOwner {
 			throw new IllegalArgumentException(
 					"\"id\" and \"zoneid\" are reserved keys that may not be used");
 		}
-		if (maps.containsKey(map)) {
+		if ((maps != null) && maps.containsKey(map)) {
 			this.modified = true;
+			if (deletedMaps == null) {
+				deletedMaps = new LinkedList<String>();
+			}
 			if (!this.deletedMaps.contains(map)) {
 				this.deletedMaps.add(map);
 			}
@@ -861,11 +963,13 @@ public class RPObject extends SlotOwner {
 	 * @return a map with key name of map and value the map itself
 	 */
 	public Map<String, Map<String, String>> maps() {
-		Map<String, Map<String, String>> maps = new HashMap<String, Map<String, String>>();
-		for (String map : this.maps.keySet()) {
-			maps.put(map, getMap(map));
+		Map<String, Map<String, String>> res = new HashMap<String, Map<String, String>>();
+		if (this.maps != null) {
+			for (String map : this.maps.keySet()) {
+				res.put(map, getMap(map));
+			}
 		}
-		return maps;
+		return res;
 	}
 
 	/**
@@ -874,7 +978,7 @@ public class RPObject extends SlotOwner {
 	 * @return true iff this objects has a map with that name
 	 */
 	public boolean hasMap(String map) {
-		return this.maps.containsKey(map);
+		return (maps != null) && this.maps.containsKey(map);
 	}
 
 	/**
@@ -901,22 +1005,27 @@ public class RPObject extends SlotOwner {
 
 		tmp.append(super.toString());
 
-		tmp.append(" with maps");
-		for (Map.Entry<String, Attributes> map : maps.entrySet()) {
-			tmp.append(" " + map.getKey());
-			tmp.append("=[" + map.getValue().toAttributeString() + "]");
+		if (maps != null) {
+			tmp.append(" with maps");
+			for (Map.Entry<String, Attributes> map : maps.entrySet()) {
+				tmp.append(" " + map.getKey());
+				tmp.append("=[" + map.getValue().toAttributeString() + "]");
+			}
 		}
 
-		tmp.append(" and RPLink ");
-		for (RPLink link : links) {
-			tmp.append("[" + link.toString() + "]");
+		if (links != null) {
+			tmp.append(" and RPLink ");
+			for (RPLink link : links) {
+				tmp.append("[" + link.toString() + "]");
+			}
 		}
 
-		tmp.append(" and RPEvents ");
-		for (RPEvent event : events) {
-			tmp.append("[" + event.toString() + "]");
+		if (events != null) {
+			tmp.append(" and RPEvents ");
+			for (RPEvent event : events) {
+				tmp.append("[" + event.toString() + "]");
+			}
 		}
-
 		return tmp.toString();
 	}
 
@@ -969,22 +1078,26 @@ public class RPObject extends SlotOwner {
 		 * hidden or private slots unless detail level is full.
 		 */
 		int size = 0;
-		for (RPLink link : links) {
-			if (shouldSerialize(DefinitionClass.RPLINK, link.getName(), level)) {
-				size++;
+		if (links != null) {
+			for (RPLink link : links) {
+				if (shouldSerialize(DefinitionClass.RPLINK, link.getName(), level)) {
+					size++;
+				}
 			}
-		}
 
-		/*
-		 * Now write it.
-		 */
-		out.write(size);
-		for (RPLink link : links) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.RPLINK, link.getName());
+			/*
+			 * Now write it.
+			 */
+			out.write(size);
+			for (RPLink link : links) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPLINK, link.getName());
 
-			if (shouldSerialize(def, level)) {
-				link.writeObject(out, level);
+				if (shouldSerialize(def, level)) {
+					link.writeObject(out, level);
+				}
 			}
+		} else {
+			out.write(0);
 		}
 
 		/*
@@ -992,30 +1105,34 @@ public class RPObject extends SlotOwner {
 		 */
 		if (out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MAP_SUPPORT) {
 			size = 0;
-			for (Entry<String, Attributes> entry : maps.entrySet()) {
-				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE,
-						entry.getKey());
-				if (shouldSerialize(def, level)) {
-					size++;
+			if (maps != null) {
+				for (Entry<String, Attributes> entry : maps.entrySet()) {
+					Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE,
+							entry.getKey());
+					if (shouldSerialize(def, level)) {
+						size++;
+					}
 				}
-			}
-			out.write(size);
-			/*
-			 * now we write the maps in two steps
-			 * 1. the names of the maps
-			 * 2. the maps
-			 */
-			for (String map : maps.keySet()) {
-				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map);
-				if (shouldSerialize(def, level)) {
-					out.write(map);
+				out.write(size);
+				/*
+				 * now we write the maps in two steps
+				 * 1. the names of the maps
+				 * 2. the maps
+				 */
+				for (String map : maps.keySet()) {
+					Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map);
+					if (shouldSerialize(def, level)) {
+						out.write(map);
+					}
 				}
-			}
-			for (String map : maps.keySet()) {
-				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map);
-				if (shouldSerialize(def, level)) {
-					maps.get(map).writeObject(out, level);
+				for (String map : maps.keySet()) {
+					Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, map);
+					if (shouldSerialize(def, level)) {
+						maps.get(map).writeObject(out, level);
+					}
 				}
+			} else {
+				out.write(0);
 			}
 		}
 		/*
@@ -1023,22 +1140,26 @@ public class RPObject extends SlotOwner {
 		 * serialize hidden or private slots unless detail level is full.
 		 */
 		size = 0;
-		for (RPEvent event : events) {
-			if (shouldSerialize(DefinitionClass.RPEVENT, event.getName(), level)) {
-				size++;
+		if (events != null) {
+			for (RPEvent event : events) {
+				if (shouldSerialize(DefinitionClass.RPEVENT, event.getName(), level)) {
+					size++;
+				}
 			}
-		}
 
-		/*
-		 * Now write it too.
-		 */
-		out.write(size);
-		for (RPEvent event : events) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
+			/*
+			 * Now write it too.
+			 */
+			out.write(size);
+			for (RPEvent event : events) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
 
-			if (shouldSerialize(def, level)) {
-				event.writeObject(out, level);
+				if (shouldSerialize(def, level)) {
+					event.writeObject(out, level);
+				}
 			}
+		} else {
+			out.write(0);
 		}
 	}
 
@@ -1144,14 +1265,17 @@ public class RPObject extends SlotOwner {
 			throw new IOException("Illegal request of an list of " + String.valueOf(size) + " size");
 		}
 
-		links = new LinkedList<RPLink>();
+		if (size > 0) {
+			links = new LinkedList<RPLink>();
 
-		for (int i = 0; i < size; ++i) {
-			RPLink link = new RPLink(null, null);
-			link.setOwner(this);
-			link = (RPLink) in.readObject(link);
-			links.add(link);
+			for (int i = 0; i < size; ++i) {
+				RPLink link = new RPLink(null, null);
+				link.setOwner(this);
+				link = (RPLink) in.readObject(link);
+				links.add(link);
+			}
 		}
+
 		if (in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MAP_SUPPORT) {
 			// get the number of maps
 			int numberOfMaps = in.readInt();
@@ -1164,6 +1288,9 @@ public class RPObject extends SlotOwner {
 			for (int k = 0; k < numberOfMaps; k++) {
 				RPObject rpo = new RPObject();
 				rpo = (RPObject) in.readObject(rpo);
+				if (maps == null) {
+					maps = new HashMap<String, Attributes>();
+				}
 				maps.put(mapNames.get(k), rpo);
 			}
 		}
@@ -1176,13 +1303,16 @@ public class RPObject extends SlotOwner {
 			throw new IOException("Illegal request of an list of " + String.valueOf(size) + " size");
 		}
 
-		events = new LinkedList<RPEvent>();
-
-		for (int i = 0; i < size; ++i) {
-			RPEvent event = new RPEvent();
-			event.setOwner(this);
-			event = (RPEvent) in.readObject(event);
-			events.add(event);
+		if (size > 0) {
+			events = new LinkedList<RPEvent>();
+			for (int i = 0; i < size; ++i) {
+				RPEvent event = new RPEvent();
+				event.setOwner(this);
+				event = (RPEvent) in.readObject(event);
+				events.add(event);
+			}
+		} else {
+			events = null;
 		}
 	}
 
@@ -1199,8 +1329,11 @@ public class RPObject extends SlotOwner {
 		}
 		if (obj instanceof RPObject) {
 			RPObject object = (RPObject) obj;
-			return super.equals(obj) && slots.equals(object.slots) && maps.equals(object.maps)
-					&& events.equals(object.events) && links.equals(object.links);
+			return super.equals(obj)
+					&& ((slots == object.slots) || ((slots != null) && slots.equals(object.slots)))
+					&& ((maps == object.maps) || ((maps != null) && maps.equals(object.maps)))
+					&& ((events == object.events) || ((events != null) && events.equals(object.events)))
+					&& ((links == object.links) || ((links != null) && links.equals(object.links)));
 		} else {
 			return false;
 		}
@@ -1223,8 +1356,11 @@ public class RPObject extends SlotOwner {
 	 */
 	@Override
 	public boolean isEmpty() {
-		return super.isEmpty() && slots.isEmpty() && events.isEmpty() && links.isEmpty()
-				&& maps.isEmpty();
+		return super.isEmpty()
+				&& (slots == null || slots.isEmpty())
+				&& (events == null || events.isEmpty())
+				&& (links == null || links.isEmpty())
+				&& (maps == null || maps.isEmpty());
 	}
 
 	/**
@@ -1235,16 +1371,22 @@ public class RPObject extends SlotOwner {
 		try {
 			int total = super.size();
 
-			total += events.size();
+			if (events != null) {
+				total += events.size();
+			}
 
-			for (RPSlot slot : slots) {
-				for (RPObject object : slot) {
-					total += object.size();
+			if (slots != null) {
+				for (RPSlot slot : slots) {
+					for (RPObject object : slot) {
+						total += object.size();
+					}
 				}
 			}
 
-			for (RPLink link : links) {
-				total += link.getObject().size();
+			if (links != null) {
+				for (RPLink link : links) {
+					total += link.getObject().size();
+				}
 			}
 
 			return total;
@@ -1264,24 +1406,26 @@ public class RPObject extends SlotOwner {
 	public void clearVisible(boolean sync) {
 		super.clearVisible(sync);
 
-		Iterator<RPEvent> eventsit = events.iterator();
-		while (eventsit.hasNext()) {
-			/* Iterate over events and remove all of them that are visible */
-			RPEvent event = eventsit.next();
-			Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
+		if (events != null) {
+			Iterator<RPEvent> itrEvents = events.iterator();
+			while (itrEvents.hasNext()) {
+				/* Iterate over events and remove all of them that are visible */
+				RPEvent event = itrEvents.next();
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
 
-			if (def == null) {
-				logger.warn("Null Definition for event: " + event.getName() + " of RPClass: "
-						+ getRPClass().getName());
-				continue;
-			}
+				if (def == null) {
+					logger.warn("Null Definition for event: " + event.getName() + " of RPClass: "
+							+ getRPClass().getName());
+					continue;
+				}
 
-			if (def.isVisible()) {
-				eventsit.remove();
+				if (def.isVisible()) {
+					itrEvents.remove();
+				}
 			}
 		}
 
-		Iterator<RPSlot> slotit = slots.iterator();
+		Iterator<RPSlot> slotit = slotsIterator();
 		while (slotit.hasNext()) {
 			RPSlot slot = slotit.next();
 
@@ -1293,24 +1437,34 @@ public class RPObject extends SlotOwner {
 			 */
 			if (!sync && slot.size() == 0) {
 				slotit.remove();
-				addedSlots.remove(slot.getName());
-				deletedSlots.remove(slot.getName());
+				if (addedSlots != null) {
+					addedSlots.remove(slot.getName());
+				}
+				if (deletedSlots != null) {
+					deletedSlots.remove(slot.getName());
+				}
 				modified = true;
 			}
 		}
 
-		Iterator<RPLink> linkit = links.iterator();
-		while (linkit.hasNext()) {
-			RPLink link = linkit.next();
+		if (links != null) {
+			Iterator<RPLink> linkit = links.iterator();
+			while (linkit.hasNext()) {
+				RPLink link = linkit.next();
 
-			link.getObject().clearVisible(sync);
+				link.getObject().clearVisible(sync);
 
-			/* If link is empty remove it. */
-			if (link.getObject().isEmpty()) {
-				linkit.remove();
-				addedLinks.remove(link.getName());
-				deletedLinks.remove(link.getName());
-				modified = true;
+				/* If link is empty remove it. */
+				if (link.getObject().isEmpty()) {
+					linkit.remove();
+					if (addedLinks != null) {
+						addedLinks.remove(link.getName());
+					}
+					if (deletedLinks != null) {
+						deletedLinks.remove(link.getName());
+					}
+					modified = true;
+				}
 			}
 		}
 	}
@@ -1481,16 +1635,22 @@ public class RPObject extends SlotOwner {
 	 * Clean delta^2 data in the slots. It is called by Marauroa, don't use :)
 	 */
 	public void resetAddedAndDeletedRPSlot() {
-		for (RPSlot slot : slots) {
-			slot.resetAddedAndDeletedRPObjects();
-			for (RPObject object : slot) {
-				object.resetAddedAndDeleted();
+		if (slots != null) {
+			for (RPSlot slot : slots) {
+				slot.resetAddedAndDeletedRPObjects();
+				for (RPObject object : slot) {
+					object.resetAddedAndDeleted();
+				}
 			}
 		}
 
 		if (modified) {
-			addedSlots.clear();
-			deletedSlots.clear();
+			if (addedSlots != null) {
+				addedSlots.clear();
+			}
+			if (deletedSlots != null) {
+				deletedSlots.clear();
+			}
 		}
 	}
 
@@ -1498,13 +1658,19 @@ public class RPObject extends SlotOwner {
 	 * Clean delta^2 data in the links. It is called by Marauroa, don't use :)
 	 */
 	public void resetAddedAndDeletedRPLink() {
-		for (RPLink link : links) {
-			link.getObject().resetAddedAndDeleted();
+		if (links !=null) {
+			for (RPLink link : links) {
+				link.getObject().resetAddedAndDeleted();
+			}
 		}
 
 		if (modified) {
-			addedLinks.clear();
-			deletedLinks.clear();
+			if (addedLinks != null) {
+				addedLinks.clear();
+			}
+			if (deletedLinks != null) {
+				deletedLinks.clear();
+			}
 		}
 	}
 
@@ -1512,12 +1678,18 @@ public class RPObject extends SlotOwner {
 	 * Clean delta^2 data in the maps. It is called by Marauroa, don't use :)
 	 */
 	public void resetAddedAndDeletedMaps() {
-		for (Attributes map : maps.values()) {
-			map.resetAddedAndDeletedAttributes();
+		if (maps != null) {
+			for (Attributes map : maps.values()) {
+				map.resetAddedAndDeletedAttributes();
+			}
 		}
 
-		addedMaps.clear();
-		deletedMaps.clear();
+		if (addedMaps != null) {
+			addedMaps.clear();
+		}
+		if (deletedMaps != null) {
+			deletedMaps.clear();
+		}
 	}
 
 	/**
@@ -1528,8 +1700,10 @@ public class RPObject extends SlotOwner {
 	 *            the object to fill with added data.
 	 */
 	public void setAddedRPSlot(RPObject object) {
-		for (String slot : object.addedSlots) {
-			addSlot(slot);
+		if (object.addedSlots != null) {
+			for (String slot : object.addedSlots) {
+				addSlot(slot);
+			}
 		}
 	}
 
@@ -1541,8 +1715,10 @@ public class RPObject extends SlotOwner {
 	 *            the object to fill with deleted data.
 	 */
 	public void setDeletedRPSlot(RPObject object) {
-		for (String slot : object.deletedSlots) {
-			addSlot(slot);
+		if (object.deletedSlots != null) {
+			for (String slot : object.deletedSlots) {
+				addSlot(slot);
+			}
 		}
 	}
 
@@ -1552,8 +1728,10 @@ public class RPObject extends SlotOwner {
 	 * @param object RPObject to copy the added maps from
 	 */
 	public void setAddedMaps(RPObject object) {
-		for (String map : object.addedMaps) {
-			addMap(map);
+		if (object.addedMaps != null) {
+			for (String map : object.addedMaps) {
+				addMap(map);
+			}
 		}
 	}
 
@@ -1563,8 +1741,10 @@ public class RPObject extends SlotOwner {
 	 * @param object RPObject to copy the deleted maps from
 	 */
 	public void setDeletedMaps(RPObject object) {
-		for (String map : object.deletedMaps) {
-			addMap(map);
+		if (object.deletedMaps != null) {
+			for (String map : object.deletedMaps) {
+				addMap(map);
+			}
 		}
 	}
 
@@ -1591,39 +1771,56 @@ public class RPObject extends SlotOwner {
 		 * We add to the added object the events that exists.
 		 * Because events are cleared on each turn so they have no delta^2
 		 */
-		for (RPEvent event : events) {
-			addedChanges.events.add(event);
+		if (events != null) {
+			if (addedChanges.events == null) {
+				addedChanges.events = new LinkedList<RPEvent>();
+			}
+			for (RPEvent event : events) {
+				addedChanges.events.add(event);
+			}
 		}
 
 		/*
 		 * We add the added links.
 		 */
-		for (String addedLink : addedLinks) {
-			addedChanges.addLink(addedLink, getLinkedObject(addedLink));
+		if (addedLinks != null) {
+			if (addedChanges.addedLinks == null) {
+				addedChanges.addedLinks = new LinkedList<String>();
+			}
+			for (String addedLink : addedLinks) {
+				addedChanges.addLink(addedLink, getLinkedObject(addedLink));
+			}
 		}
 
 		/*
 		 * We add the deleted links.
 		 */
-		for (String deletedLink : deletedLinks) {
-			deletedChanges.addLink(deletedLink, new RPObject());
+		if (deletedLinks != null) {
+			if (deletedChanges.deletedLinks == null) {
+				deletedChanges.deletedLinks = new LinkedList<String>();
+			}
+			for (String deletedLink : deletedLinks) {
+				deletedChanges.addLink(deletedLink, new RPObject());
+			}
 		}
 
 		/*
 		 * We now get the diffs for the links
 		 */
-		for (RPLink link : links) {
-			RPObject linkadded = new RPObject();
-			RPObject linkdeleted = new RPObject();
+		if (links != null) {
+			for (RPLink link : links) {
+				RPObject linkadded = new RPObject();
+				RPObject linkdeleted = new RPObject();
 
-			link.getObject().getDifferences(linkadded, linkdeleted);
+				link.getObject().getDifferences(linkadded, linkdeleted);
 
-			if (!linkadded.isEmpty()) {
-				addedChanges.addLink(link.getName(), linkadded);
-			}
+				if (!linkadded.isEmpty()) {
+					addedChanges.addLink(link.getName(), linkadded);
+				}
 
-			if (!linkdeleted.isEmpty()) {
-				deletedChanges.addLink(link.getName(), linkdeleted);
+				if (!linkdeleted.isEmpty()) {
+					deletedChanges.addLink(link.getName(), linkdeleted);
+				}
 			}
 		}
 
@@ -1637,7 +1834,7 @@ public class RPObject extends SlotOwner {
 		// because creating RPObjects is relativly expensive
 		RPObject tmpAddedChanges;
 		RPObject tmpDeletedChanges;
-		if (!slots.isEmpty()) {
+		if (slots != null && !slots.isEmpty()) {
 			tmpAddedChanges = new RPObject();
 			tmpDeletedChanges = new RPObject();
 
@@ -1758,26 +1955,28 @@ public class RPObject extends SlotOwner {
 		/*
 		 * We now get the diffs for the maps
 		 */
-		for (Entry<String, Attributes> entry : maps.entrySet()) {
-			synchronized (entry.getValue().added) {
-				for (Map.Entry<String, String> ent : entry.getValue().added.entrySet()) {
-					if (!ent.getKey().equals("id") && !ent.getKey().equals("zoneid")) {
-						addedChanges.put(entry.getKey(), ent.getKey(), ent.getValue());
+		if (maps != null) {
+			for (Entry<String, Attributes> entry : maps.entrySet()) {
+				synchronized (entry.getValue().added) {
+					for (Map.Entry<String, String> ent : entry.getValue().added.entrySet()) {
+						if (!ent.getKey().equals("id") && !ent.getKey().equals("zoneid")) {
+							addedChanges.put(entry.getKey(), ent.getKey(), ent.getValue());
+						}
 					}
 				}
-			}
 
-			synchronized (entry.getValue().deleted) {
-				for (Map.Entry<String, String> ent : entry.getValue().deleted.entrySet()) {
-					if (!ent.getKey().equals("id") && !ent.getKey().equals("zoneid")) {
-						deletedChanges.put(entry.getKey(), ent.getKey(), ent.getValue());
+				synchronized (entry.getValue().deleted) {
+					for (Map.Entry<String, String> ent : entry.getValue().deleted.entrySet()) {
+						if (!ent.getKey().equals("id") && !ent.getKey().equals("zoneid")) {
+							deletedChanges.put(entry.getKey(), ent.getKey(), ent.getValue());
+						}
 					}
 				}
 			}
 		}
 
 		/*
-		/*
+		 * If the diff objects are not empty, we make sure they have the id.
 		 * If the diff objects are not empty, we make sure they have the id.
 		 */
 		if (!addedChanges.isEmpty()) {
@@ -1812,22 +2011,26 @@ public class RPObject extends SlotOwner {
 			/*
 			 * We apply the deleted changes to the object of the link.
 			 */
-			for (RPLink link : deletedChanges.links) {
-				if (link.getObject().isEmpty()) {
-					removeLink(link.getName());
-				} else {
-					getLinkedObject(link.getName()).applyDifferences(null, link.getObject());
+			if (deletedChanges.links != null) {
+				for (RPLink link : deletedChanges.links) {
+					if (link.getObject().isEmpty()) {
+						removeLink(link.getName());
+					} else {
+						getLinkedObject(link.getName()).applyDifferences(null, link.getObject());
+					}
 				}
 			}
 
 			/*
 			 * we apply the deleted changes to each map
 			 */
-			for (Entry<String, Attributes> entry : deletedChanges.maps.entrySet()) {
-				if (entry.getValue().isEmpty()) {
-					removeMap(entry.getKey());
-				} else {
-					maps.get(entry.getKey()).applyDifferences(null, entry.getValue());
+			if (deletedChanges.maps != null && (maps != null)) {
+				for (Entry<String, Attributes> entry : deletedChanges.maps.entrySet()) {
+					if (entry.getValue().isEmpty()) {
+						removeMap(entry.getKey());
+					} else {
+						maps.get(entry.getKey()).applyDifferences(null, entry.getValue());
+					}
 				}
 			}
 
@@ -1835,32 +2038,34 @@ public class RPObject extends SlotOwner {
 			 * Now we move to slots and remove the slot if it is empty on delete
 			 * changes.
 			 */
-			for (RPSlot slot : deletedChanges.slots) {
-				if (slot.size() == 0) {
-					removeSlot(slot.getName());
-				} else {
-					RPSlot changes = getSlot(slot.getName());
+			if (deletedChanges.slots != null) {
+				for (RPSlot slot : deletedChanges.slots) {
+					if (slot.size() == 0) {
+						removeSlot(slot.getName());
+					} else {
+						RPSlot changes = getSlot(slot.getName());
 
-					/*
-					 * For each of the deleted changes, check if they are
-					 * already on the object so they an update and recursively
-					 * apply differences to it. On the other hand if object is
-					 * not present, it means it is a new object so we can add it
-					 * directly.
-					 */
-					for (RPObject del : slot) {
 						/*
-						 * If object to remove has more than one attribute that
-						 * means that we want to remove these attributes. On the
-						 * other hand, if only one attribute is there, that
-						 * means that we want to remove the full object from the
-						 * slot.
+						 * For each of the deleted changes, check if they are
+						 * already on the object so they an update and recursively
+						 * apply differences to it. On the other hand if object is
+						 * not present, it means it is a new object so we can add it
+						 * directly.
 						 */
-						if (del.size() > 1) {
-							RPObject recChanges = changes.get(del.getID());
-							recChanges.applyDifferences(null, del);
-						} else {
-							changes.remove(del.getID());
+						for (RPObject del : slot) {
+							/*
+							 * If object to remove has more than one attribute that
+							 * means that we want to remove these attributes. On the
+							 * other hand, if only one attribute is there, that
+							 * means that we want to remove the full object from the
+							 * slot.
+							 */
+							if (del.size() > 1) {
+								RPObject recChanges = changes.get(del.getID());
+								recChanges.applyDifferences(null, del);
+							} else {
+								changes.remove(del.getID());
+							}
 						}
 					}
 				}
@@ -1872,33 +2077,49 @@ public class RPObject extends SlotOwner {
 			/*
 			 * We add also the events
 			 */
-			for (RPEvent event : addedChanges.events) {
-				events.add(event);
+
+			if (addedChanges.events != null) {
+				if (events == null) {
+					events = new LinkedList<RPEvent>();
+				}
+				for (RPEvent event : addedChanges.events) {
+					events.add(event);
+				}
 			}
 
 			/*
 			 * We apply it for the links.
 			 */
-			for (RPLink link : addedChanges.links) {
-				if (!hasLink(link.getName())) {
-					links.add(link);
-				} else {
-					getLinkedObject(link.getName()).applyDifferences(link.getObject(), null);
+			if (addedChanges.links != null) {
+				if (links == null) {
+					links = new LinkedList<RPLink>();
+				}
+				for (RPLink link : addedChanges.links) {
+					if (!hasLink(link.getName())) {
+						links.add(link);
+					} else {
+						getLinkedObject(link.getName()).applyDifferences(link.getObject(), null);
+					}
 				}
 			}
 
 			/*
 			 * we apply the added changes for the maps
 			 */
-			for (Entry<String, Attributes> entry : addedChanges.maps.entrySet()) {
-				if (!maps.containsKey(entry.getKey())) {
-					// entry.getValue is an RPObject for compatibility with the network
-					// protocol, so copy it into an attributes object
-					Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
-					attr.fill(entry.getValue());
-					maps.put(entry.getKey(), attr);
-				} else {
-					maps.get(entry.getKey()).applyDifferences(entry.getValue(), null);
+			if (addedChanges.maps != null) {
+				for (Entry<String, Attributes> entry : addedChanges.maps.entrySet()) {
+					if (maps == null) {
+						maps = new HashMap<String, Attributes>();
+					}
+					if (!maps.containsKey(entry.getKey())) {
+						// entry.getValue is an RPObject for compatibility with the network
+						// protocol, so copy it into an attributes object
+						Attributes attr = new Attributes(RPClass.getBaseRPObjectDefault());
+						attr.fill(entry.getValue());
+						maps.put(entry.getKey(), attr);
+					} else {
+						maps.get(entry.getKey()).applyDifferences(entry.getValue(), null);
+					}
 				}
 			}
 
@@ -1906,26 +2127,28 @@ public class RPObject extends SlotOwner {
 			 * For each of the added slots we add it and any object that was
 			 * inside.
 			 */
-			for (RPSlot slot : addedChanges.slots) {
-				if (!hasSlot(slot.getName())) {
-					addSlot(slot.getName());
-				}
+			if (addedChanges.slots != null) {
+				for (RPSlot slot : addedChanges.slots) {
+					if (!hasSlot(slot.getName())) {
+						addSlot(slot.getName());
+					}
 
-				RPSlot changes = getSlot(slot.getName());
+					RPSlot changes = getSlot(slot.getName());
 
-				/*
-				 * For each of the added changes, check if they are already on
-				 * the object so they an update and recursively apply
-				 * differences to it. On the other hand if object is not
-				 * present, it means it is a new object so we can add it
-				 * directly.
-				 */
-				for (RPObject ad : slot) {
-					RPObject recChanges = changes.get(ad.getID());
-					if (recChanges != null) {
-						recChanges.applyDifferences(ad, null);
-					} else {
-						changes.add(ad, false);
+					/*
+					 * For each of the added changes, check if they are already on
+					 * the object so they an update and recursively apply
+					 * differences to it. On the other hand if object is not
+					 * present, it means it is a new object so we can add it
+					 * directly.
+					 */
+					for (RPObject ad : slot) {
+						RPObject recChanges = changes.get(ad.getID());
+						if (recChanges != null) {
+							recChanges.applyDifferences(ad, null);
+						} else {
+							changes.add(ad, false);
+						}
 					}
 				}
 			}
