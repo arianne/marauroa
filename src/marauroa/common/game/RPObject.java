@@ -1176,7 +1176,7 @@ public class RPObject extends SlotOwner {
 		super.writeToJson(out, level);
 
 		// now we write the maps
-		if (!maps.isEmpty()) {
+		if (maps != null && !maps.isEmpty()) {
 			out.append(",\"m\":{");
 			boolean first = true;
 			for (Map.Entry<String, Attributes> entry : maps.entrySet()) {
@@ -1197,7 +1197,7 @@ public class RPObject extends SlotOwner {
 		}
 
 		// Now write links.
-		if (!links.isEmpty()) {
+		if (links != null && !links.isEmpty()) {
 			out.append(",\"l\":{");
 			boolean first = true;
 			for (RPLink link : links) {
@@ -1218,7 +1218,7 @@ public class RPObject extends SlotOwner {
 		}
 
 		// Now write events
-		if (!events.isEmpty()) {
+		if (events != null && !events.isEmpty()) {
 			out.append(",\"e\":[");
 			boolean first = true;
 			for (RPEvent event : events) {

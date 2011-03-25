@@ -301,7 +301,7 @@ public abstract class SlotOwner extends Attributes {
 	@Override
 	public void writeToJson(StringBuilder out, DetailLevel level) {
 		super.writeToJson(out, level);
-		if (slots.isEmpty()) {
+		if (slots == null || slots.isEmpty()) {
 			return;
 		}
 
