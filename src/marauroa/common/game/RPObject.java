@@ -91,6 +91,9 @@ public class RPObject extends SlotOwner {
 	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
 
+	/** en empty list */
+	private static final List<RPEvent> EMPTY = Collections.unmodifiableList(new ArrayList<RPEvent>());
+
 	/**
 	 * If this variable is true the object is removed from the perception send
 	 * to client.
@@ -145,7 +148,7 @@ public class RPObject extends SlotOwner {
 		addedSlots = new LinkedList<String>();
 		deletedSlots = new LinkedList<String>();
 
-		events = new LinkedList<RPEvent>();
+		events = null;
 
 		links = new LinkedList<RPLink>();
 		addedLinks = new LinkedList<String>();
@@ -192,10 +195,15 @@ public class RPObject extends SlotOwner {
 		container = object.container;
 		containerSlot = object.containerSlot;
 
-		for (RPEvent event : object.events) {
-			RPEvent temp = (RPEvent) event.clone();
-			temp.setOwner(this);
-			events.add(temp);
+		if (object.events != null) {
+			if (events == null) {
+				events = new LinkedList<RPEvent>();
+			}
+			for (RPEvent event : object.events) {
+				RPEvent temp = (RPEvent) event.clone();
+				temp.setOwner(this);
+				events.add(temp);
+			}
 		}
 
 		for (RPLink link : object.links) {
@@ -533,6 +541,9 @@ public class RPObject extends SlotOwner {
 	 */
 	public void addEvent(RPEvent event) {
 		event.setOwner(this);
+		if (events == null) {
+			events = new LinkedList<RPEvent>();
+		}
 		events.add(event);
 	}
 
@@ -540,7 +551,9 @@ public class RPObject extends SlotOwner {
 	 * Empty the list of events. This method is called at the end of each turn.
 	 */
 	public void clearEvents() {
-		events.clear();
+		if (events != null) {
+			events.clear();
+		}
 	}
 
 	/**
@@ -549,6 +562,9 @@ public class RPObject extends SlotOwner {
 	 * @return an iterator over the events
 	 */
 	public Iterator<RPEvent> eventsIterator() {
+		if (events == null) {
+			return EMPTY.iterator();
+		}
 		return events.iterator();
 	}
 
@@ -558,6 +574,9 @@ public class RPObject extends SlotOwner {
 	 * @return a list of the events
 	 */
 	public List<RPEvent> events() {
+		if (events == null) {
+			return EMPTY;
+		}
 		return Collections.unmodifiableList(events);
 	}
 
@@ -943,11 +962,12 @@ public class RPObject extends SlotOwner {
 			tmp.append("[" + link.toString() + "]");
 		}
 
-		tmp.append(" and RPEvents ");
-		for (RPEvent event : events) {
-			tmp.append("[" + event.toString() + "]");
+		if (events != null) {
+			tmp.append(" and RPEvents ");
+			for (RPEvent event : events) {
+				tmp.append("[" + event.toString() + "]");
+			}
 		}
-
 		return tmp.toString();
 	}
 
@@ -1058,22 +1078,26 @@ public class RPObject extends SlotOwner {
 		 * serialize hidden or private slots unless detail level is full.
 		 */
 		size = 0;
-		for (RPEvent event : events) {
-			if (shouldSerialize(DefinitionClass.RPEVENT, event.getName(), level)) {
-				size++;
+		if (events != null) {
+			for (RPEvent event : events) {
+				if (shouldSerialize(DefinitionClass.RPEVENT, event.getName(), level)) {
+					size++;
+				}
 			}
-		}
 
-		/*
-		 * Now write it too.
-		 */
-		out.write(size);
-		for (RPEvent event : events) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
-
-			if (shouldSerialize(def, level)) {
-				event.writeObject(out, level);
+			/*
+			 * Now write it too.
+			 */
+			out.write(size);
+			for (RPEvent event : events) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
+	
+				if (shouldSerialize(def, level)) {
+					event.writeObject(out, level);
+				}
 			}
+		} else {
+			out.write(0);
 		}
 	}
 
@@ -1139,13 +1163,16 @@ public class RPObject extends SlotOwner {
 			throw new IOException("Illegal request of an list of " + String.valueOf(size) + " size");
 		}
 
-		events = new LinkedList<RPEvent>();
-
-		for (int i = 0; i < size; ++i) {
-			RPEvent event = new RPEvent();
-			event.setOwner(this);
-			event = (RPEvent) in.readObject(event);
-			events.add(event);
+		if (size > 0) {
+			events = new LinkedList<RPEvent>();
+			for (int i = 0; i < size; ++i) {
+				RPEvent event = new RPEvent();
+				event.setOwner(this);
+				event = (RPEvent) in.readObject(event);
+				events.add(event);
+			}
+		} else {
+			events = null;
 		}
 	}
 
@@ -1163,7 +1190,7 @@ public class RPObject extends SlotOwner {
 		if (obj instanceof RPObject) {
 			RPObject object = (RPObject) obj;
 			return super.equals(obj) && slots.equals(object.slots) && (maps == object.maps || ((maps != null) && maps.equals(object.maps)))
-					&& events.equals(object.events) && links.equals(object.links);
+					&& ((events == object.events) || ((events != null) && events.equals(object.events))) && links.equals(object.links);
 		} else {
 			return false;
 		}
@@ -1186,7 +1213,7 @@ public class RPObject extends SlotOwner {
 	 */
 	@Override
 	public boolean isEmpty() {
-		return super.isEmpty() && slots.isEmpty() && events.isEmpty() && links.isEmpty()
+		return super.isEmpty() && slots.isEmpty() && (events == null || events.isEmpty()) && links.isEmpty()
 				&& (maps == null || maps.isEmpty());
 	}
 
@@ -1198,7 +1225,9 @@ public class RPObject extends SlotOwner {
 		try {
 			int total = super.size();
 
-			total += events.size();
+			if (events != null) {
+				total += events.size();
+			}
 
 			for (RPSlot slot : slots) {
 				for (RPObject object : slot) {
@@ -1227,20 +1256,22 @@ public class RPObject extends SlotOwner {
 	public void clearVisible(boolean sync) {
 		super.clearVisible(sync);
 
-		Iterator<RPEvent> eventsit = events.iterator();
-		while (eventsit.hasNext()) {
-			/* Iterate over events and remove all of them that are visible */
-			RPEvent event = eventsit.next();
-			Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
+		if (events != null) {
+			Iterator<RPEvent> itrEvents = events.iterator();
+			while (itrEvents.hasNext()) {
+				/* Iterate over events and remove all of them that are visible */
+				RPEvent event = itrEvents.next();
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
 
-			if (def == null) {
-				logger.warn("Null Definition for event: " + event.getName() + " of RPClass: "
-						+ getRPClass().getName());
-				continue;
-			}
+				if (def == null) {
+					logger.warn("Null Definition for event: " + event.getName() + " of RPClass: "
+							+ getRPClass().getName());
+					continue;
+				}
 
-			if (def.isVisible()) {
-				eventsit.remove();
+				if (def.isVisible()) {
+					itrEvents.remove();
+				}
 			}
 		}
 
@@ -1564,8 +1595,13 @@ public class RPObject extends SlotOwner {
 		 * We add to the added object the events that exists.
 		 * Because events are cleared on each turn so they have no delta^2
 		 */
-		for (RPEvent event : events) {
-			addedChanges.events.add(event);
+		if (events != null) {
+			if (addedChanges.events == null) {
+				addedChanges.events = new LinkedList<RPEvent>();
+			}
+			for (RPEvent event : events) {
+				addedChanges.events.add(event);
+			}
 		}
 
 		/*
@@ -1848,8 +1884,14 @@ public class RPObject extends SlotOwner {
 			/*
 			 * We add also the events
 			 */
-			for (RPEvent event : addedChanges.events) {
-				events.add(event);
+			
+			if (addedChanges.events != null) {
+				if (events == null) {
+					events = new LinkedList<RPEvent>();
+				}
+				for (RPEvent event : addedChanges.events) {
+					events.add(event);
+				}
 			}
 
 			/*
