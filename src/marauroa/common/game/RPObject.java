@@ -151,8 +151,8 @@ public class RPObject extends SlotOwner {
 		events = null;
 
 		links = new LinkedList<RPLink>();
-		addedLinks = new LinkedList<String>();
-		deletedLinks = new LinkedList<String>();
+		addedLinks = null;
+		deletedLinks = null;
 
 		maps = null;
 		addedMaps = null;
@@ -235,12 +235,22 @@ public class RPObject extends SlotOwner {
 			deletedSlots.add(slot);
 		}
 
-		for (String link : object.addedLinks) {
-			addedLinks.add(link);
+		if (object.addedLinks != null) {
+			if (addedLinks == null) {
+				addedLinks = new LinkedList<String>();
+			}
+			for (String link : object.addedLinks) {
+				addedLinks.add(link);
+			}
 		}
 
-		for (String link : object.deletedLinks) {
-			deletedLinks.add(link);
+		if (object.deletedLinks != null) {
+			if (deletedLinks == null) {
+				deletedLinks = new LinkedList<String>();
+			}
+			for (String link : object.deletedLinks) {
+				deletedLinks.add(link);
+			}
 		}
 
 		if (object.addedMaps != null) {
@@ -594,6 +604,9 @@ public class RPObject extends SlotOwner {
 		link.setOwner(this);
 		links.add(link);
 
+		if (addedLinks == null) {
+			addedLinks = new LinkedList<String>();
+		}
 		addedLinks.add(name);
 		modified = true;
 	}
@@ -610,6 +623,9 @@ public class RPObject extends SlotOwner {
 		link.setOwner(this);
 		links.add(link);
 
+		if (addedLinks == null) {
+			addedLinks = new LinkedList<String>();
+		}
 		addedLinks.add(link.getName());
 		modified = true;
 	}
@@ -661,6 +677,9 @@ public class RPObject extends SlotOwner {
 		for (Iterator<RPLink> it = links.iterator(); it.hasNext();) {
 			RPLink link = it.next();
 			if (name.equals(link.getName())) {
+				if (deletedLinks == null) {
+					deletedLinks = new LinkedList<String>();
+				}
 				deletedLinks.add(name);
 
 				modified = true;
@@ -1302,8 +1321,12 @@ public class RPObject extends SlotOwner {
 			/* If link is empty remove it. */
 			if (link.getObject().isEmpty()) {
 				linkit.remove();
-				addedLinks.remove(link.getName());
-				deletedLinks.remove(link.getName());
+				if (addedLinks != null) {
+					addedLinks.remove(link.getName());
+				}
+				if (deletedLinks != null) {
+					deletedLinks.remove(link.getName());
+				}
 				modified = true;
 			}
 		}
@@ -1497,8 +1520,12 @@ public class RPObject extends SlotOwner {
 		}
 
 		if (modified) {
-			addedLinks.clear();
-			deletedLinks.clear();
+			if (addedLinks != null) {
+				addedLinks.clear();
+			}
+			if (deletedLinks != null) {
+				deletedLinks.clear();
+			}
 		}
 	}
 
@@ -1607,15 +1634,25 @@ public class RPObject extends SlotOwner {
 		/*
 		 * We add the added links.
 		 */
-		for (String addedLink : addedLinks) {
-			addedChanges.addLink(addedLink, getLinkedObject(addedLink));
+		if (addedLinks != null) {
+			if (addedChanges.addedLinks == null) {
+				addedChanges.addedLinks = new LinkedList<String>();
+			}
+			for (String addedLink : addedLinks) {
+				addedChanges.addLink(addedLink, getLinkedObject(addedLink));
+			}
 		}
 
 		/*
 		 * We add the deleted links.
 		 */
-		for (String deletedLink : deletedLinks) {
-			deletedChanges.addLink(deletedLink, new RPObject());
+		if (deletedLinks == null) {
+			if (deletedChanges.deletedLinks == null) {
+				deletedChanges.deletedLinks = new LinkedList<String>();
+			}
+			for (String deletedLink : deletedLinks) {
+				deletedChanges.addLink(deletedLink, new RPObject());
+			}
 		}
 
 		/*
