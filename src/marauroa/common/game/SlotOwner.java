@@ -1,6 +1,7 @@
 package marauroa.common.game;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,6 +21,9 @@ public abstract class SlotOwner extends Attributes {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(SlotOwner.class);
 
+	/** an empty list */
+	private static final List<RPSlot> EMPTY = Collections.unmodifiableList(new ArrayList<RPSlot>());
+
 
 	/** a list of slots that this object contains */
 	protected List<RPSlot> slots;
@@ -38,34 +42,23 @@ public abstract class SlotOwner extends Attributes {
 	 */
 	public SlotOwner(RPClass rpclass) {
 		super(rpclass);
-		slots = new LinkedList<RPSlot>();
-	}
-
-	/**
-	 * creates a new SlowOwner
-	 *
-	 * @param rpclass RPClass definition
-	 * @param initialize initialize attributes
-	 */
-	SlotOwner(RPClass rpclass, boolean initialize) {
-		super(rpclass);
-		if (initialize) {
-			slots = new LinkedList<RPSlot>();
-		}
 	}
 
 
 	@Override
 	public Object fill(Attributes attr) {
 		Object res = super.fill(attr);
-		slots = new LinkedList<RPSlot>();
+		slots = null;
 		if (attr instanceof SlotOwner) {
 			SlotOwner slotOwner = (SlotOwner) attr;
 			lastAssignedID = slotOwner.lastAssignedID;
-			for (RPSlot slot : slotOwner.slots) {
-				RPSlot added = (RPSlot) slot.clone();
-				added.setOwner(this);
-				slots.add(added);
+			if (slotOwner.slots != null) {
+				slots = new LinkedList<RPSlot>();
+				for (RPSlot slot : slotOwner.slots) {
+					RPSlot added = (RPSlot) slot.clone();
+					added.setOwner(this);
+					slots.add(added);
+				}
 			}
 		}
 		return res;
@@ -81,6 +74,9 @@ public abstract class SlotOwner extends Attributes {
 	 * @return true if slot exists or false otherwise
 	 */
 	public boolean hasSlot(String name) {
+		if (slots == null) {
+			return false;
+		}
 		for (RPSlot slot : slots) {
 			if (slot.getName().equals(name)) {
 				return true;
@@ -114,6 +110,9 @@ public abstract class SlotOwner extends Attributes {
 
 		/** First we set the slot owner, so that slot can get access to RPClass */
 		slot.setOwner(this);
+		if (slots == null) {
+			slots = new LinkedList<RPSlot>();
+		}
 		slots.add(slot);
 	}
 
@@ -132,6 +131,9 @@ public abstract class SlotOwner extends Attributes {
 
 		/* First we set the slot owner, so that slot can get access to RPClass */
 		slot.setOwner(this);
+		if (slots == null) {
+			slots = new LinkedList<RPSlot>();
+		}
 		slots.add(slot);
 
 		/* Now we make sure everyRPObject inside the added slot gets a proper id */
@@ -157,6 +159,9 @@ public abstract class SlotOwner extends Attributes {
 	 * @return the removed slot if it is found or null if it is not found.
 	 */
 	public RPSlot removeSlot(String name) {
+		if (slots == null) {
+			return null;
+		}
 		for (Iterator<RPSlot> it = slots.iterator(); it.hasNext();) {
 			RPSlot slot = it.next();
 			if (name.equals(slot.getName())) {
@@ -175,6 +180,9 @@ public abstract class SlotOwner extends Attributes {
 	 * @return the slot or null if the slot is not found
 	 */
 	public RPSlot getSlot(String name) {
+		if (slots == null) {
+			return null;
+		}
 		for (RPSlot slot : slots) {
 			if (name.equals(slot.getName())) {
 				return slot;
@@ -190,7 +198,7 @@ public abstract class SlotOwner extends Attributes {
 	 * @return an iterator over the slots
 	 */
 	public Iterator<RPSlot> slotsIterator() {
-		return slots.iterator();
+		return slots().iterator();
 	}
 
 	/**
@@ -199,6 +207,9 @@ public abstract class SlotOwner extends Attributes {
 	 * @return a list of the slots
 	 */
 	public List<RPSlot> slots() {
+		if (slots == null) {
+			return EMPTY;
+		}
 		return Collections.unmodifiableList(slots);
 	}
 
@@ -252,22 +263,26 @@ public abstract class SlotOwner extends Attributes {
 		 * hidden or private slots unless detail level is full.
 		 */
 		int size = 0;
-		for (RPSlot slot : slots) {
-			if (shouldSerialize(DefinitionClass.RPSLOT, slot.getName(), level)) {
-				size++;
+		if (slots != null) {
+			for (RPSlot slot : slots) {
+				if (shouldSerialize(DefinitionClass.RPSLOT, slot.getName(), level)) {
+					size++;
+				}
 			}
-		}
 
-		/*
-		 * Now write it.
-		 */
-		out.write(size);
-		for (RPSlot slot : slots) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
+			/*
+			 * Now write it.
+			 */
+			out.write(size);
+			for (RPSlot slot : slots) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
 
-			if (shouldSerialize(def, level)) {
-				slot.writeObject(out, level);
+				if (shouldSerialize(def, level)) {
+					slot.writeObject(out, level);
+				}
 			}
+		} else {
+			out.write(0);
 		}
 	}
 
@@ -282,13 +297,15 @@ public abstract class SlotOwner extends Attributes {
 			throw new IOException("Illegal request of an list of " + String.valueOf(size) + " size");
 		}
 
-		slots = new LinkedList<RPSlot>();
+		if (size > 0) {
+			slots = new LinkedList<RPSlot>();
 
-		for (int i = 0; i < size; ++i) {
-			RPSlot slot = new RPSlot();
-			slot.setOwner(this);
-			slot = (RPSlot) in.readObject(slot);
-			slots.add(slot);
+			for (int i = 0; i < size; ++i) {
+				RPSlot slot = new RPSlot();
+				slot.setOwner(this);
+				slot = (RPSlot) in.readObject(slot);
+				slots.add(slot);
+			}
 		}
 	}
 
@@ -297,11 +314,12 @@ public abstract class SlotOwner extends Attributes {
 		StringBuffer tmp = new StringBuffer();
 		tmp.append(super.toString());
 
-		tmp.append(" and RPSlots ");
-		for (RPSlot slot : slots) {
-			tmp.append("[" + slot.toString() + "]");
+		if (slots != null) {
+			tmp.append(" and RPSlots ");
+			for (RPSlot slot : slots) {
+				tmp.append("[" + slot.toString() + "]");
+			}
 		}
-
 		return tmp.toString();
 	}
 

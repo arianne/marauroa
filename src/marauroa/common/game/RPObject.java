@@ -91,7 +91,7 @@ public class RPObject extends SlotOwner {
 	/** Defines an invalid object id */
 	public final static ID INVALID_ID = new ID(-1, "");
 
-	/** en empty list */
+	/** an empty list */
 	private static final List<RPEvent> EMPTY = Collections.unmodifiableList(new ArrayList<RPEvent>());
 
 	/**
@@ -137,14 +137,14 @@ public class RPObject extends SlotOwner {
 	 * @param initialize initialize attributes
 	 */
 	RPObject(boolean initialize) {
-		super(RPClass.getBaseRPObjectDefault(), initialize);
+		super(RPClass.getBaseRPObjectDefault());
 		if (initialize) {
 			clear();
 		}
 	}
 
 	private void clear() {
-		slots = new LinkedList<RPSlot>();
+		slots = null;
 		addedSlots = new LinkedList<String>();
 		deletedSlots = new LinkedList<String>();
 
@@ -467,17 +467,17 @@ public class RPObject extends SlotOwner {
 		}
 
 		RPObject found = null;
+		if (slots != null) {
+			for (RPSlot slot : slots) {
+				for (RPObject object : slot) {
+					found = object.getFromSlots(id);
 
-		for (RPSlot slot : slots) {
-			for (RPObject object : slot) {
-				found = object.getFromSlots(id);
-
-				if (found != null) {
-					return found;
+					if (found != null) {
+						return found;
+					}
 				}
 			}
 		}
-
 		return found;
 	}
 
@@ -524,7 +524,7 @@ public class RPObject extends SlotOwner {
 	 */
 	@Override
 	public RPSlot removeSlot(String name) {
-		for (Iterator<RPSlot> it = slots.iterator(); it.hasNext();) {
+		for (Iterator<RPSlot> it = slotsIterator(); it.hasNext();) {
 			RPSlot slot = it.next();
 			if (name.equals(slot.getName())) {
 				// BUG: if an slot is added and deleted on the same turn it
@@ -1110,7 +1110,7 @@ public class RPObject extends SlotOwner {
 			out.write(size);
 			for (RPEvent event : events) {
 				Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
-	
+
 				if (shouldSerialize(def, level)) {
 					event.writeObject(out, level);
 				}
@@ -1208,8 +1208,11 @@ public class RPObject extends SlotOwner {
 		}
 		if (obj instanceof RPObject) {
 			RPObject object = (RPObject) obj;
-			return super.equals(obj) && slots.equals(object.slots) && (maps == object.maps || ((maps != null) && maps.equals(object.maps)))
-					&& ((events == object.events) || ((events != null) && events.equals(object.events))) && links.equals(object.links);
+			return super.equals(obj)
+					&& ((slots == object.slots) || ((slots != null) && slots.equals(object.slots)))
+					&& ((maps == object.maps) || ((maps != null) && maps.equals(object.maps)))
+					&& ((events == object.events) || ((events != null) && events.equals(object.events)))
+					&& links.equals(object.links);
 		} else {
 			return false;
 		}
@@ -1232,7 +1235,10 @@ public class RPObject extends SlotOwner {
 	 */
 	@Override
 	public boolean isEmpty() {
-		return super.isEmpty() && slots.isEmpty() && (events == null || events.isEmpty()) && links.isEmpty()
+		return super.isEmpty()
+				&& (slots == null || slots.isEmpty())
+				&& (events == null || events.isEmpty())
+				&& (links == null || links.isEmpty())
 				&& (maps == null || maps.isEmpty());
 	}
 
@@ -1248,9 +1254,11 @@ public class RPObject extends SlotOwner {
 				total += events.size();
 			}
 
-			for (RPSlot slot : slots) {
-				for (RPObject object : slot) {
-					total += object.size();
+			if (slots != null) {
+				for (RPSlot slot : slots) {
+					for (RPObject object : slot) {
+						total += object.size();
+					}
 				}
 			}
 
@@ -1294,7 +1302,7 @@ public class RPObject extends SlotOwner {
 			}
 		}
 
-		Iterator<RPSlot> slotit = slots.iterator();
+		Iterator<RPSlot> slotit = slotsIterator();
 		while (slotit.hasNext()) {
 			RPSlot slot = slotit.next();
 
@@ -1498,10 +1506,12 @@ public class RPObject extends SlotOwner {
 	 * Clean delta^2 data in the slots. It is called by Marauroa, don't use :)
 	 */
 	public void resetAddedAndDeletedRPSlot() {
-		for (RPSlot slot : slots) {
-			slot.resetAddedAndDeletedRPObjects();
-			for (RPObject object : slot) {
-				object.resetAddedAndDeleted();
+		if (slots != null) {
+			for (RPSlot slot : slots) {
+				slot.resetAddedAndDeletedRPObjects();
+				for (RPObject object : slot) {
+					object.resetAddedAndDeleted();
+				}
 			}
 		}
 
@@ -1683,7 +1693,7 @@ public class RPObject extends SlotOwner {
 		// because creating RPObjects is relativly expensive
 		RPObject tmpAddedChanges;
 		RPObject tmpDeletedChanges;
-		if (!slots.isEmpty()) {
+		if (slots != null && !slots.isEmpty()) {
 			tmpAddedChanges = new RPObject();
 			tmpDeletedChanges = new RPObject();
 
@@ -1884,32 +1894,34 @@ public class RPObject extends SlotOwner {
 			 * Now we move to slots and remove the slot if it is empty on delete
 			 * changes.
 			 */
-			for (RPSlot slot : deletedChanges.slots) {
-				if (slot.size() == 0) {
-					removeSlot(slot.getName());
-				} else {
-					RPSlot changes = getSlot(slot.getName());
+			if (deletedChanges.slots != null) {
+				for (RPSlot slot : deletedChanges.slots) {
+					if (slot.size() == 0) {
+						removeSlot(slot.getName());
+					} else {
+						RPSlot changes = getSlot(slot.getName());
 
-					/*
-					 * For each of the deleted changes, check if they are
-					 * already on the object so they an update and recursively
-					 * apply differences to it. On the other hand if object is
-					 * not present, it means it is a new object so we can add it
-					 * directly.
-					 */
-					for (RPObject del : slot) {
 						/*
-						 * If object to remove has more than one attribute that
-						 * means that we want to remove these attributes. On the
-						 * other hand, if only one attribute is there, that
-						 * means that we want to remove the full object from the
-						 * slot.
+						 * For each of the deleted changes, check if they are
+						 * already on the object so they an update and recursively
+						 * apply differences to it. On the other hand if object is
+						 * not present, it means it is a new object so we can add it
+						 * directly.
 						 */
-						if (del.size() > 1) {
-							RPObject recChanges = changes.get(del.getID());
-							recChanges.applyDifferences(null, del);
-						} else {
-							changes.remove(del.getID());
+						for (RPObject del : slot) {
+							/*
+							 * If object to remove has more than one attribute that
+							 * means that we want to remove these attributes. On the
+							 * other hand, if only one attribute is there, that
+							 * means that we want to remove the full object from the
+							 * slot.
+							 */
+							if (del.size() > 1) {
+								RPObject recChanges = changes.get(del.getID());
+								recChanges.applyDifferences(null, del);
+							} else {
+								changes.remove(del.getID());
+							}
 						}
 					}
 				}
@@ -1921,7 +1933,7 @@ public class RPObject extends SlotOwner {
 			/*
 			 * We add also the events
 			 */
-			
+
 			if (addedChanges.events != null) {
 				if (events == null) {
 					events = new LinkedList<RPEvent>();
@@ -1966,26 +1978,28 @@ public class RPObject extends SlotOwner {
 			 * For each of the added slots we add it and any object that was
 			 * inside.
 			 */
-			for (RPSlot slot : addedChanges.slots) {
-				if (!hasSlot(slot.getName())) {
-					addSlot(slot.getName());
-				}
+			if (addedChanges.slots != null) {
+				for (RPSlot slot : addedChanges.slots) {
+					if (!hasSlot(slot.getName())) {
+						addSlot(slot.getName());
+					}
 
-				RPSlot changes = getSlot(slot.getName());
+					RPSlot changes = getSlot(slot.getName());
 
-				/*
-				 * For each of the added changes, check if they are already on
-				 * the object so they an update and recursively apply
-				 * differences to it. On the other hand if object is not
-				 * present, it means it is a new object so we can add it
-				 * directly.
-				 */
-				for (RPObject ad : slot) {
-					RPObject recChanges = changes.get(ad.getID());
-					if (recChanges != null) {
-						recChanges.applyDifferences(ad, null);
-					} else {
-						changes.add(ad, false);
+					/*
+					 * For each of the added changes, check if they are already on
+					 * the object so they an update and recursively apply
+					 * differences to it. On the other hand if object is not
+					 * present, it means it is a new object so we can add it
+					 * directly.
+					 */
+					for (RPObject ad : slot) {
+						RPObject recChanges = changes.get(ad.getID());
+						if (recChanges != null) {
+							recChanges.applyDifferences(ad, null);
+						} else {
+							changes.add(ad, false);
+						}
 					}
 				}
 			}
