@@ -152,8 +152,8 @@ public class RPObject extends SlotOwner {
 		deletedLinks = new LinkedList<String>();
 
 		maps = null;
-		addedMaps = new LinkedList<String>();
-		deletedMaps = new LinkedList<String>();
+		addedMaps = null;
+		deletedMaps = null;
 
 		modified = false;
 
@@ -235,12 +235,22 @@ public class RPObject extends SlotOwner {
 			deletedLinks.add(link);
 		}
 
-		for (String entry : object.addedMaps) {
-			addedMaps.add(entry);
+		if (object.addedMaps != null) {
+			if (addedMaps == null) {
+				addedMaps = new LinkedList<String>();
+			}
+			for (String entry : object.addedMaps) {
+				addedMaps.add(entry);
+			}
 		}
 
-		for (String entry : object.deletedMaps) {
-			deletedMaps.add(entry);
+		if (object.deletedMaps != null) {
+			if (deletedMaps == null) {
+				deletedMaps = new LinkedList<String>();
+			}
+			for (String entry : object.deletedMaps) {
+				deletedMaps.add(entry);
+			}
 		}
 	}
 
@@ -661,6 +671,9 @@ public class RPObject extends SlotOwner {
 					"\"id\" and \"zoneid\" are reserved keys that may not be used.");
 		}
 		this.maps.get(map).put(key, value);
+		if (addedMaps == null) {
+			addedMaps = new LinkedList<String>();
+		}
 		if (!this.addedMaps.contains(map)) {
 			this.addedMaps.add(map);
 		}
@@ -806,6 +819,9 @@ public class RPObject extends SlotOwner {
 	public Attributes removeMap(String map) {
 		if ((maps != null) && maps.containsKey(map)) {
 			Attributes attr = maps.get(map);
+			if (deletedMaps == null) {
+				deletedMaps = new LinkedList<String>();
+			}
 			this.deletedMaps.add(map);
 			modified = true;
 			return attr;
@@ -834,6 +850,9 @@ public class RPObject extends SlotOwner {
 		RPObject newMap = new RPObject();
 		newMap.setID(RPObject.INVALID_ID);
 		maps.put(map, newMap);
+		if (addedMaps == null) {
+			addedMaps = new LinkedList<String>();
+		}
 		addedMaps.add(map);
 		modified = true;
 	}
@@ -852,6 +871,9 @@ public class RPObject extends SlotOwner {
 		}
 		if ((maps != null) && maps.containsKey(map)) {
 			this.modified = true;
+			if (deletedMaps == null) {
+				deletedMaps = new LinkedList<String>();
+			}
 			if (!this.deletedMaps.contains(map)) {
 				this.deletedMaps.add(map);
 			}
@@ -1459,8 +1481,12 @@ public class RPObject extends SlotOwner {
 			}
 		}
 
-		addedMaps.clear();
-		deletedMaps.clear();
+		if (addedMaps != null) {
+			addedMaps.clear();
+		}
+		if (deletedMaps != null) {
+			deletedMaps.clear();
+		}
 	}
 
 	/**
@@ -1495,8 +1521,10 @@ public class RPObject extends SlotOwner {
 	 * @param object RPObject to copy the added maps from
 	 */
 	public void setAddedMaps(RPObject object) {
-		for (String map : object.addedMaps) {
-			addMap(map);
+		if (object.addedMaps != null) {
+			for (String map : object.addedMaps) {
+				addMap(map);
+			}
 		}
 	}
 
@@ -1506,8 +1534,10 @@ public class RPObject extends SlotOwner {
 	 * @param object RPObject to copy the deleted maps from
 	 */
 	public void setDeletedMaps(RPObject object) {
-		for (String map : object.deletedMaps) {
-			addMap(map);
+		if (object.deletedMaps != null) {
+			for (String map : object.deletedMaps) {
+				addMap(map);
+			}
 		}
 	}
 
