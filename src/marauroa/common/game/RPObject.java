@@ -145,8 +145,8 @@ public class RPObject extends SlotOwner {
 
 	private void clear() {
 		slots = null;
-		addedSlots = new LinkedList<String>();
-		deletedSlots = new LinkedList<String>();
+		addedSlots = null;
+		deletedSlots = null;
 
 		events = null;
 
@@ -227,12 +227,22 @@ public class RPObject extends SlotOwner {
 		/*
 		 * Copy also the delta^2 info.
 		 */
-		for (String slot : object.addedSlots) {
-			addedSlots.add(slot);
+		if (object.addedSlots != null) {
+			if (addedSlots == null) {
+				addedSlots = new LinkedList<String>();
+			}
+			for (String slot : object.addedSlots) {
+				addedSlots.add(slot);
+			}
 		}
 
-		for (String slot : object.deletedSlots) {
-			deletedSlots.add(slot);
+		if (object.deletedSlots != null) {
+			if (deletedSlots == null) {
+				deletedSlots = new LinkedList<String>();
+			}
+			for (String slot : object.deletedSlots) {
+				deletedSlots.add(slot);
+			}
 		}
 
 		if (object.addedLinks != null) {
@@ -494,6 +504,9 @@ public class RPObject extends SlotOwner {
 		super.addSlot(name);
 
 		/** Notify delta^2 about the addition of this slot */
+		if (addedSlots == null) {
+			addedSlots = new LinkedList<String>();
+		}
 		addedSlots.add(name);
 		modified = true;
 	}
@@ -511,6 +524,9 @@ public class RPObject extends SlotOwner {
 		super.addSlot(slot);
 
 		/* Notify delta^2 about the addition of this slot */
+		if (addedSlots == null) {
+			addedSlots = new LinkedList<String>();
+		}
 		addedSlots.add(slot.getName());
 		modified = true;
 	}
@@ -530,6 +546,9 @@ public class RPObject extends SlotOwner {
 				// BUG: if an slot is added and deleted on the same turn it
 				// shouldn't be mention on deleted.
 				/** Notify delta^2 about the removal of this slot. */
+				if (deletedSlots == null) {
+					deletedSlots = new LinkedList<String>();
+				}
 				deletedSlots.add(name);
 
 				modified = true;
@@ -1314,8 +1333,12 @@ public class RPObject extends SlotOwner {
 			 */
 			if (!sync && slot.size() == 0) {
 				slotit.remove();
-				addedSlots.remove(slot.getName());
-				deletedSlots.remove(slot.getName());
+				if (addedSlots != null) {
+					addedSlots.remove(slot.getName());
+				}
+				if (deletedSlots != null) {
+					deletedSlots.remove(slot.getName());
+				}
 				modified = true;
 			}
 		}
@@ -1516,8 +1539,12 @@ public class RPObject extends SlotOwner {
 		}
 
 		if (modified) {
-			addedSlots.clear();
-			deletedSlots.clear();
+			if (addedSlots != null) {
+				addedSlots.clear();
+			}
+			if (deletedSlots != null) {
+				deletedSlots.clear();
+			}
 		}
 	}
 
@@ -1565,8 +1592,10 @@ public class RPObject extends SlotOwner {
 	 *            the object to fill with added data.
 	 */
 	public void setAddedRPSlot(RPObject object) {
-		for (String slot : object.addedSlots) {
-			addSlot(slot);
+		if (object.addedSlots != null) {
+			for (String slot : object.addedSlots) {
+				addSlot(slot);
+			}
 		}
 	}
 
@@ -1578,8 +1607,10 @@ public class RPObject extends SlotOwner {
 	 *            the object to fill with deleted data.
 	 */
 	public void setDeletedRPSlot(RPObject object) {
-		for (String slot : object.deletedSlots) {
-			addSlot(slot);
+		if (object.deletedSlots != null) {
+			for (String slot : object.deletedSlots) {
+				addSlot(slot);
+			}
 		}
 	}
 
