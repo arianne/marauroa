@@ -150,7 +150,7 @@ public class RPObject extends SlotOwner {
 
 		events = null;
 
-		links = new LinkedList<RPLink>();
+		links = null;
 		addedLinks = null;
 		deletedLinks = null;
 
@@ -206,10 +206,15 @@ public class RPObject extends SlotOwner {
 			}
 		}
 
-		for (RPLink link : object.links) {
-			RPLink temp = (RPLink) link.clone();
-			temp.setOwner(this);
-			links.add(temp);
+		if (object.links != null) {
+			if (links == null) {
+				links = new LinkedList<RPLink>();
+			}
+			for (RPLink link : object.links) {
+				RPLink temp = (RPLink) link.clone();
+				temp.setOwner(this);
+				links.add(temp);
+			}
 		}
 
 		if (object.maps != null) {
@@ -621,6 +626,9 @@ public class RPObject extends SlotOwner {
 
 		RPLink link = new RPLink(name, object);
 		link.setOwner(this);
+		if (links == null) {
+			links = new LinkedList<RPLink>();
+		}
 		links.add(link);
 
 		if (addedLinks == null) {
@@ -640,6 +648,9 @@ public class RPObject extends SlotOwner {
 		}
 
 		link.setOwner(this);
+		if (links == null) {
+			links = new LinkedList<RPLink>();
+		}
 		links.add(link);
 
 		if (addedLinks == null) {
@@ -655,6 +666,9 @@ public class RPObject extends SlotOwner {
 	 * @return the link with given name or null if not found.
 	 */
 	public RPLink getLink(String name) {
+		if (links == null) {
+			return null;
+		}
 		for (RPLink link : links) {
 			if (name.equals(link.getName())) {
 				return link;
@@ -693,6 +707,9 @@ public class RPObject extends SlotOwner {
 	 * @return the removed link or null if it was not found.
 	 */
 	public RPLink removeLink(String name) {
+		if (links == null) {
+			return null;
+		}
 		for (Iterator<RPLink> it = links.iterator(); it.hasNext();) {
 			RPLink link = it.next();
 			if (name.equals(link.getName())) {
@@ -995,9 +1012,11 @@ public class RPObject extends SlotOwner {
 			}
 		}
 
-		tmp.append(" and RPLink ");
-		for (RPLink link : links) {
-			tmp.append("[" + link.toString() + "]");
+		if (links != null) {
+			tmp.append(" and RPLink ");
+			for (RPLink link : links) {
+				tmp.append("[" + link.toString() + "]");
+			}
 		}
 
 		if (events != null) {
@@ -1058,22 +1077,26 @@ public class RPObject extends SlotOwner {
 		 * hidden or private slots unless detail level is full.
 		 */
 		int size = 0;
-		for (RPLink link : links) {
-			if (shouldSerialize(DefinitionClass.RPLINK, link.getName(), level)) {
-				size++;
+		if (links != null) {
+			for (RPLink link : links) {
+				if (shouldSerialize(DefinitionClass.RPLINK, link.getName(), level)) {
+					size++;
+				}
 			}
-		}
 
-		/*
-		 * Now write it.
-		 */
-		out.write(size);
-		for (RPLink link : links) {
-			Definition def = getRPClass().getDefinition(DefinitionClass.RPLINK, link.getName());
+			/*
+			 * Now write it.
+			 */
+			out.write(size);
+			for (RPLink link : links) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPLINK, link.getName());
 
-			if (shouldSerialize(def, level)) {
-				link.writeObject(out, level);
+				if (shouldSerialize(def, level)) {
+					link.writeObject(out, level);
+				}
 			}
+		} else {
+			out.write(0);
 		}
 
 		/*
@@ -1166,14 +1189,17 @@ public class RPObject extends SlotOwner {
 			throw new IOException("Illegal request of an list of " + String.valueOf(size) + " size");
 		}
 
-		links = new LinkedList<RPLink>();
+		if (size > 0) {
+			links = new LinkedList<RPLink>();
 
-		for (int i = 0; i < size; ++i) {
-			RPLink link = new RPLink(null, null);
-			link.setOwner(this);
-			link = (RPLink) in.readObject(link);
-			links.add(link);
+			for (int i = 0; i < size; ++i) {
+				RPLink link = new RPLink(null, null);
+				link.setOwner(this);
+				link = (RPLink) in.readObject(link);
+				links.add(link);
+			}
 		}
+
 		if (in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_MAP_SUPPORT) {
 			// get the number of maps
 			int numberOfMaps = in.readInt();
@@ -1231,7 +1257,7 @@ public class RPObject extends SlotOwner {
 					&& ((slots == object.slots) || ((slots != null) && slots.equals(object.slots)))
 					&& ((maps == object.maps) || ((maps != null) && maps.equals(object.maps)))
 					&& ((events == object.events) || ((events != null) && events.equals(object.events)))
-					&& links.equals(object.links);
+					&& ((links == object.links) || ((links != null) && links.equals(object.links)));
 		} else {
 			return false;
 		}
@@ -1281,8 +1307,10 @@ public class RPObject extends SlotOwner {
 				}
 			}
 
-			for (RPLink link : links) {
-				total += link.getObject().size();
+			if (links != null) {
+				for (RPLink link : links) {
+					total += link.getObject().size();
+				}
 			}
 
 			return total;
@@ -1343,22 +1371,24 @@ public class RPObject extends SlotOwner {
 			}
 		}
 
-		Iterator<RPLink> linkit = links.iterator();
-		while (linkit.hasNext()) {
-			RPLink link = linkit.next();
+		if (links != null) {
+			Iterator<RPLink> linkit = links.iterator();
+			while (linkit.hasNext()) {
+				RPLink link = linkit.next();
 
-			link.getObject().clearVisible(sync);
+				link.getObject().clearVisible(sync);
 
-			/* If link is empty remove it. */
-			if (link.getObject().isEmpty()) {
-				linkit.remove();
-				if (addedLinks != null) {
-					addedLinks.remove(link.getName());
+				/* If link is empty remove it. */
+				if (link.getObject().isEmpty()) {
+					linkit.remove();
+					if (addedLinks != null) {
+						addedLinks.remove(link.getName());
+					}
+					if (deletedLinks != null) {
+						deletedLinks.remove(link.getName());
+					}
+					modified = true;
 				}
-				if (deletedLinks != null) {
-					deletedLinks.remove(link.getName());
-				}
-				modified = true;
 			}
 		}
 	}
@@ -1552,8 +1582,10 @@ public class RPObject extends SlotOwner {
 	 * Clean delta^2 data in the links. It is called by Marauroa, don't use :)
 	 */
 	public void resetAddedAndDeletedRPLink() {
-		for (RPLink link : links) {
-			link.getObject().resetAddedAndDeleted();
+		if (links !=null) {
+			for (RPLink link : links) {
+				link.getObject().resetAddedAndDeleted();
+			}
 		}
 
 		if (modified) {
@@ -1699,18 +1731,20 @@ public class RPObject extends SlotOwner {
 		/*
 		 * We now get the diffs for the links
 		 */
-		for (RPLink link : links) {
-			RPObject linkadded = new RPObject();
-			RPObject linkdeleted = new RPObject();
+		if (links != null) {
+			for (RPLink link : links) {
+				RPObject linkadded = new RPObject();
+				RPObject linkdeleted = new RPObject();
 
-			link.getObject().getDifferences(linkadded, linkdeleted);
+				link.getObject().getDifferences(linkadded, linkdeleted);
 
-			if (!linkadded.isEmpty()) {
-				addedChanges.addLink(link.getName(), linkadded);
-			}
+				if (!linkadded.isEmpty()) {
+					addedChanges.addLink(link.getName(), linkadded);
+				}
 
-			if (!linkdeleted.isEmpty()) {
-				deletedChanges.addLink(link.getName(), linkdeleted);
+				if (!linkdeleted.isEmpty()) {
+					deletedChanges.addLink(link.getName(), linkdeleted);
+				}
 			}
 		}
 
@@ -1900,11 +1934,13 @@ public class RPObject extends SlotOwner {
 			/*
 			 * We apply the deleted changes to the object of the link.
 			 */
-			for (RPLink link : deletedChanges.links) {
-				if (link.getObject().isEmpty()) {
-					removeLink(link.getName());
-				} else {
-					getLinkedObject(link.getName()).applyDifferences(null, link.getObject());
+			if (deletedChanges.links != null) {
+				for (RPLink link : deletedChanges.links) {
+					if (link.getObject().isEmpty()) {
+						removeLink(link.getName());
+					} else {
+						getLinkedObject(link.getName()).applyDifferences(null, link.getObject());
+					}
 				}
 			}
 
@@ -1977,11 +2013,16 @@ public class RPObject extends SlotOwner {
 			/*
 			 * We apply it for the links.
 			 */
-			for (RPLink link : addedChanges.links) {
-				if (!hasLink(link.getName())) {
-					links.add(link);
-				} else {
-					getLinkedObject(link.getName()).applyDifferences(link.getObject(), null);
+			if (addedChanges.links != null) {
+				if (links == null) {
+					links = new LinkedList<RPLink>();
+				}
+				for (RPLink link : addedChanges.links) {
+					if (!hasLink(link.getName())) {
+						links.add(link);
+					} else {
+						getLinkedObject(link.getName()).applyDifferences(link.getObject(), null);
+					}
 				}
 			}
 
