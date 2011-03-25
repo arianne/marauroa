@@ -186,7 +186,7 @@ public class MarauroaRPZone implements IRPZone {
 				perception.added(object);
 			}
 		} catch (Exception e) {
-			throw new RPObjectInvalidException(e.getMessage());
+			throw new RPObjectInvalidException(e);
 		}
 	}
 
