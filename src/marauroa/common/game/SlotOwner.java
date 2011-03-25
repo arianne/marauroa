@@ -198,7 +198,10 @@ public abstract class SlotOwner extends Attributes {
 	 * @return an iterator over the slots
 	 */
 	public Iterator<RPSlot> slotsIterator() {
-		return slots().iterator();
+		if (slots == null) {
+			return EMPTY.iterator();
+		}
+		return slots.iterator();
 	}
 
 	/**

@@ -1719,7 +1719,7 @@ public class RPObject extends SlotOwner {
 		/*
 		 * We add the deleted links.
 		 */
-		if (deletedLinks == null) {
+		if (deletedLinks != null) {
 			if (deletedChanges.deletedLinks == null) {
 				deletedChanges.deletedLinks = new LinkedList<String>();
 			}
