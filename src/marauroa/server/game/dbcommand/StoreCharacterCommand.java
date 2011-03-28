@@ -28,13 +28,13 @@ import marauroa.server.game.db.DAORegister;
  */
 public class StoreCharacterCommand extends AbstractDBCommand {
 
-	private String username;
-	private String character;
-	private RPObject frozenObject;
+	private final String username;
+	private final String character;
+	private final RPObject frozenObject;
 
 	/**
 	 * Asynchronously stores a character's progress
-	 * 
+	 *
 	 * @param username  username
 	 * @param character charactername
 	 * @param object    character object
@@ -42,7 +42,8 @@ public class StoreCharacterCommand extends AbstractDBCommand {
 	public StoreCharacterCommand(String username, String character, RPObject object) {
 		this.username = username;
 		this.character = character;
-		this.frozenObject = (RPObject) object.clone();
+		this.frozenObject = new RPObject();
+		this.frozenObject.fill(object);
 	}
 
 	@Override

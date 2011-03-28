@@ -177,7 +177,7 @@ public class RPServerManager extends Thread {
 		ruleProcessor.setContext(this);
 	}
 
-	
+
 	/**
 	 * This method returns the actual turn number.
 	 *
@@ -338,7 +338,7 @@ public class RPServerManager extends Thread {
 		return perception;
 	}
 
-	private void sendPlayerPerception(PlayerEntry entry, Perception perception, RPObject object) {
+	private void sendPlayerPerception(PlayerEntry entry, Perception perception, RPObject playerObject) {
 		if (perception == null) {
 			/** Until player enters game perception is null */
 			return;
@@ -356,10 +356,11 @@ public class RPServerManager extends Thread {
 		 * the owner, because visible attributes are already stored in the
 		 * perception.
 		 */
-		RPObject copy = (RPObject) object.clone();
+		RPObject copy = new RPObject();
+		copy.fill(playerObject);
 
 		if (perception.type == Perception.SYNC) {
-			if (!object.isHidden()) {
+			if (!playerObject.isHidden()) {
 				copy.clearVisible(true);
 			}
 			messages2cPerception.setMyRPObject(copy, null);
@@ -369,7 +370,7 @@ public class RPServerManager extends Thread {
 
 			try {
 				copy.getDifferences(added, deleted);
-				if (!object.isHidden()) {
+				if (!playerObject.isHidden()) {
 					added.clearVisible(false);
 					deleted.clearVisible(false);
 				}
@@ -383,7 +384,7 @@ public class RPServerManager extends Thread {
 				}
 			} catch (Exception e) {
 				logger.error("Error getting object differences", e);
-				logger.error(object);
+				logger.error(playerObject);
 				logger.error(copy);
 				added = null;
 				deleted = null;
@@ -439,7 +440,7 @@ public class RPServerManager extends Thread {
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
 		scheduler.clearRPActions(object);
 		contentsToTransfer.remove(object);
-		
+
 		return ruleProcessor.onExit(object);
 	}
 
@@ -462,7 +463,7 @@ public class RPServerManager extends Thread {
 					logger.warn("Entry for player ("+target+") does not exist: " + playerContainer, new Throwable());
 					continue;
 				}
-				
+
 
 				if (content == null) {
 					logger.warn("content is null");
