@@ -42,8 +42,7 @@ public class StoreCharacterCommand extends AbstractDBCommand {
 	public StoreCharacterCommand(String username, String character, RPObject object) {
 		this.username = username;
 		this.character = character;
-		this.frozenObject = new RPObject();
-		this.frozenObject.fill(object);
+		this.frozenObject = (RPObject) object.clone();
 	}
 
 	@Override
