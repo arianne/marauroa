@@ -2001,7 +2001,6 @@ public class RPObject extends SlotOwner {
 		/*
 		 * If the diff objects are not empty, we make sure they have the id.
 		 */
-		 */
 		if (!addedChanges.isEmpty()) {
 			addedChanges.put("id", get("id"));
 			if (has("zoneid")) {
