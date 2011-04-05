@@ -14,6 +14,7 @@ package marauroa.common.game;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1005,7 +1006,7 @@ public class RPObject extends SlotOwner {
 
 		tmp.append(super.toString());
 
-		if (maps != null) {
+		if ((maps != null) && !maps.isEmpty()) {
 			tmp.append(" with maps");
 			for (Map.Entry<String, Attributes> map : maps.entrySet()) {
 				tmp.append(" " + map.getKey());
@@ -1013,14 +1014,14 @@ public class RPObject extends SlotOwner {
 			}
 		}
 
-		if (links != null) {
+		if ((links != null) && !links.isEmpty()) {
 			tmp.append(" and RPLink ");
 			for (RPLink link : links) {
 				tmp.append("[" + link.toString() + "]");
 			}
 		}
 
-		if (events != null) {
+		if ((events != null) && !events.isEmpty()) {
 			tmp.append(" and RPEvents ");
 			for (RPEvent event : events) {
 				tmp.append("[" + event.toString() + "]");
@@ -1329,14 +1330,36 @@ public class RPObject extends SlotOwner {
 		}
 		if (obj instanceof RPObject) {
 			RPObject object = (RPObject) obj;
-			return super.equals(obj)
-					&& ((slots == object.slots) || ((slots != null) && slots.equals(object.slots)))
-					&& ((maps == object.maps) || ((maps != null) && maps.equals(object.maps)))
-					&& ((events == object.events) || ((events != null) && events.equals(object.events)))
-					&& ((links == object.links) || ((links != null) && links.equals(object.links)));
+			if (! (super.equals(obj)
+					&& (collectionIsEqualTreaingNullAsEmpty(slots, object.slots))
+					&& (collectionIsEqualTreaingNullAsEmpty(events, object.events))
+					&& (collectionIsEqualTreaingNullAsEmpty(links, object.links)))) {
+				return false;
+			}
+			// collectionIsEqualTreaingNullAsEmpty is not type compatible with maps,
+			// so we do the map check here without calling that method
+			if ((maps == null) || maps.isEmpty()) {
+				return (object.maps == null) || object.maps.isEmpty();
+			}
+			return maps.equals(object.maps);
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * compares two collections, empty collections and null collections are treated
+	 * as equal to allow easy working with lazy initialisation.
+	 *
+	 * @param c1 first collection
+	 * @param c2 second collection
+	 * @return true, if they are equal; false otherwise.
+	 */
+	private static boolean collectionIsEqualTreaingNullAsEmpty(Collection<?> c1, Collection<?> c2) {
+		if ((c1 == null) || c1.isEmpty()) {
+			return (c2 == null) || c2.isEmpty();
+		}
+		return c1.equals(c2);
 	}
 
 	@Override
@@ -1977,7 +2000,7 @@ public class RPObject extends SlotOwner {
 
 		/*
 		 * If the diff objects are not empty, we make sure they have the id.
-		 * If the diff objects are not empty, we make sure they have the id.
+		 */
 		 */
 		if (!addedChanges.isEmpty()) {
 			addedChanges.put("id", get("id"));
