@@ -1,8 +1,10 @@
 Changelog
 ---------
 3.8.6
-- performance optimization in RPObject.getDifference() by drastically reducing the number of list/map instantiations
-
+- performance optimization in RPObject.getDifference() by drastically reducing the number of RPobject instantiations
+- performance optimization in RPObject to create internal list/map objects only on demand
+- build script now creates an additional minized jar file for clients: marauroa-client-only.jar
+- improved messages on errors in server.ini
 
 3.8.5
 - fixed an issue on account renaming
