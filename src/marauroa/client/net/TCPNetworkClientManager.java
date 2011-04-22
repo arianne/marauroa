@@ -33,7 +33,7 @@ import marauroa.common.net.message.Message;
 
 /**
  * This is the basic implementation of a TCP network manager.
- * 
+ *
  * @author hendrik
  */
 public final class TCPNetworkClientManager implements INetworkClientManagerInterface {
@@ -52,7 +52,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	private Socket socket;
 
 	/** The TCP/IP address where the server is running. */
-	private InetSocketAddress address;
+	private final InetSocketAddress address;
 
 	/** While keepRunning is true, we keep receiving messages */
 	private boolean keepRunning;
@@ -61,28 +61,28 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	private boolean isfinished;
 
 	/** A instance of the thread that read stuff from network and build messages. */
-	private NetworkClientManagerRead readManager;
+	private final NetworkClientManagerRead readManager;
 
 	/** A instance of the thread that write messages to server. */
-	private NetworkClientManagerWrite writeManager;
+	private final NetworkClientManagerWrite writeManager;
 
 	/**
 	 * List of already processed messages what the client will get using
 	 * getMessage method.
 	 */
-	private BlockingQueue<Message> processedMessages;
+	private final BlockingQueue<Message> processedMessages;
 
 	/**
 	 * An instance to the encoder class that will build a stream of bytes from a
 	 * Message.
 	 */
-	private Encoder encoder;
+	private final Encoder encoder;
 
 	/**
 	 * An instance of the decoder class that will recreate a message from a
 	 * stream of bytes.
 	 */
-	private Decoder decoder;
+	private final Decoder decoder;
 
 	/**
 	 * This is true as long as we are connected to server.
@@ -92,7 +92,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	/**
 	 * Constructor that opens the socket on the marauroa_PORT and start the
 	 * thread to receive new messages from the network.
-	 * 
+	 *
 	 * @param host
 	 *            the host where we connect to.
 	 * @param port
@@ -150,7 +150,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see marauroa.client.net.NetworkClientManagerInterface#finish()
 	 */
 	public void finish() {
@@ -175,7 +175,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see marauroa.client.net.NetworkClientManagerInterface#getAddress()
 	 */
 	public InetSocketAddress getAddress() {
@@ -188,7 +188,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see marauroa.client.net.NetworkClientManagerInterface#getMessage(int)
 	 */
 	public synchronized Message getMessage(int timeout) throws InvalidVersionException {
@@ -209,13 +209,13 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 			return null;
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * gets all messages received so far and removes them from the queue.
-	 * 
-	 * 
+	 *
+	 *
 	 * @return the messages received
 	 */
 	public synchronized Collection<Message> getMessages() {
@@ -223,11 +223,11 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 		 processedMessages.drainTo(col);
 		 return col;
 	}
-	
-	
+
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see marauroa.client.net.NetworkClientManagerInterface#addMessage(marauroa.common.net.Message)
 	 */
 	public void addMessage(Message msg) {
@@ -238,7 +238,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	/**
 	 * Returns true if the connection is "connected" to server or false
 	 * otherwise.
-	 * 
+	 *
 	 * @return true if socket is connected.
 	 */
 	public boolean getConnectionState() {
@@ -271,14 +271,14 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 		/**
 		 * Decode a stream of bytes into a Message.
-		 * 
+		 *
 		 * @param address
 		 *            address the message comes from.
 		 * @param data
 		 *            data that represent the serialized message
 		 * @throws IOException
 		 */
-		private synchronized void storeMessage(InetSocketAddress address, byte[] data)
+		private synchronized void storeMessage(byte[] data)
 		        throws IOException {
 			try {
 				List<Message> messages = decoder.decode(null, data);
@@ -313,7 +313,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 		/**
 		 * Keep reading from TCP stack until the whole Message has been read.
-		 * 
+		 *
 		 * @return a byte stream representing the message or null if client has
 		 *         requested to exit.
 		 * @throws IOException
@@ -396,7 +396,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 						return;
 					}
 
-					storeMessage(address, buffer);
+					storeMessage(buffer);
 				} catch (IOException e) {
 					// TODO: Notify upper layers about connection broken
 					/* Report the exception */
@@ -421,7 +421,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 		/** An output stream that represents the socket. */
 		private OutputStream os = null;
-		
+
 		/**
 		 * Constructor
 		 */
@@ -435,10 +435,10 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 		/**
 		 * Method that execute the writting
-		 * 
+		 *
 		 * @param msg
 		 *            the message to send to server.
-		 * @return true, if the message was sent successfully 
+		 * @return true, if the message was sent successfully
 		 */
 		public synchronized boolean write(Message msg) {
 			try {
