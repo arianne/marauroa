@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.python.modules.synchronize;
-
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.server.db.command.DBCommandQueue;
