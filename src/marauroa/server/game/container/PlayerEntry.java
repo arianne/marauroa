@@ -121,7 +121,7 @@ public class PlayerEntry {
 		 * Add a login event to database each time player login, even if it
 		 * fails.
 		 *
-		 * @param address
+		 * @param addr
 		 *            the IP address that originated the request.
 		 * @param loginResult
 		 *            the result of the login action, where true is login
@@ -129,7 +129,7 @@ public class PlayerEntry {
 		 * @throws SQLException
 		 *             if there is any database problem.
 		 */
-		public void addLoginEvent(InetAddress address, boolean loginResult) throws SQLException {
+		public void addLoginEvent(InetAddress addr, boolean loginResult) throws SQLException {
 			String service = null;
 			try {
 				Configuration conf = Configuration.getConfiguration();
@@ -141,7 +141,7 @@ public class PlayerEntry {
 			} catch (IOException e) {
 				logger.error(e, e);
 			}
-			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, address, service, seed, loginResult);
+			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, addr, service, seed, loginResult);
 		}
 
 		/**
@@ -445,14 +445,14 @@ public class PlayerEntry {
 	 * This method query database to check if the player with username given by
 	 * the entry has a character with the name passed as argument.
 	 *
-	 * @param character
+	 * @param charname
 	 *            The name we are querying for.
 	 * @return true if it is found or false otherwise.
 	 * @throws SQLException
 	 *             If there is a Database exception.
 	 */
-	public boolean hasCharacter(String character) throws SQLException {
-		return DAORegister.get().get(CharacterDAO.class).hasCharacter(username, character);
+	public boolean hasCharacter(String charname) throws SQLException {
+		return DAORegister.get().get(CharacterDAO.class).hasCharacter(username, charname);
 	}
 
 	/**
