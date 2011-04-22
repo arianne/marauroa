@@ -21,12 +21,18 @@ import java.security.SecureRandom;
  * Implementation of a private RSA Key
  *
  * @author quisar
- *
  */
 public class RSAKey extends RSAPublicKey {
 
-	private BigInteger d;
+	private final BigInteger d;
 
+	/**
+	 * creates a new RSAKey object
+	 *
+	 * @param n n
+	 * @param d d
+	 * @param e e
+	 */
 	public RSAKey(BigInteger n, BigInteger d, BigInteger e) {
 		super(n, e);
 		this.d = d;
@@ -44,6 +50,12 @@ public class RSAKey extends RSAPublicKey {
 		out.println("d = " + d);
 	}
 
+	/**
+	 * generates a key pair
+	 *
+	 * @param nbBits size of the key
+	 * @return RSAKey
+	 */
 	public static RSAKey generateKey(int nbBits) {
 		BigInteger p;
 		BigInteger q;
@@ -125,22 +137,50 @@ public class RSAKey extends RSAPublicKey {
 		return new RSAKey(n, d, e);
 	}
 
+	/**
+	 * decodes a BigInteger
+	 *
+	 * @param message BigInteger
+	 * @return decoded BigInteger
+	 */
 	public BigInteger decode(BigInteger message) {
 		return message.modPow(d, n);
 	}
 
+	/**
+	 * decodes a byte array
+	 *
+	 * @param message array to decode
+	 * @return decoded array
+	 */
 	public byte[] decodeByteArray(byte[] message) {
 		return Hash.bigIntToBytes(decode(new BigInteger(message)));
 	}
 
+	/**
+	 * signs a message
+	 *
+	 * @param message message to sign
+	 * @return signed message
+	 */
 	public BigInteger sign(BigInteger message) {
 		return decode(message);
 	}
 
+	/**
+	 * gets the public key
+	 *
+	 * @return public key
+	 */
 	public RSAPublicKey getPublicKey() {
 		return new RSAPublicKey(n, e);
 	}
 
+	/**
+	 * gets d
+	 *
+	 * @return d
+	 */
 	public BigInteger getD() {
 		return d;
 	}
