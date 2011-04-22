@@ -91,8 +91,8 @@ public interface DatabaseAdapter {
 	 * gets the id of the last insert. Note: The table and idcolumn parameters
 	 * <b>must</b> match the last insert statement. This is because on some
 	 * database systems a SELECT IDENTITY is performed and on other database
-	 * systems a SELECT curval(table_idcolumn_seq). 
-	 *  
+	 * systems a SELECT curval(table_idcolumn_seq).
+	 *
 	 * @param table  name of table on which the last insert was done
 	 * @param idcolumn name autoincrement serial column of that table
 	 * @return generated id
@@ -110,9 +110,9 @@ public interface DatabaseAdapter {
 	/**
 	 * Prepares a statement for a batch operation.
 	 *
-     * @param sql   SQL statement
-     * @return PreparedStatement
-     * @throws SQLException in case of an database error 
+	 * @param sql   SQL statement
+	 * @return PreparedStatement
+	 * @throws SQLException in case of an database error
 	 */
 	public PreparedStatement prepareStatement(String sql) throws SQLException;
 
@@ -121,7 +121,7 @@ public interface DatabaseAdapter {
 	 *
 	 * @param table name of table
 	 * @return true, if the table exists, false otherwise
-     * @throws SQLException in case of an database error
+	 * @throws SQLException in case of an database error
 	 */
 	public boolean doesTableExist(String table) throws SQLException;
 
@@ -132,7 +132,7 @@ public interface DatabaseAdapter {
 	 * @param table name of table
 	 * @param column name of column
 	 * @return true, if the column exists, false otherwise
-     * @throws SQLException in case of an database error
+	 * @throws SQLException in case of an database error
 	 */
 	public boolean doesColumnExist(String table, String column) throws SQLException;
 
@@ -141,6 +141,7 @@ public interface DatabaseAdapter {
 	 * @param table name of table
 	 * @param column name of column
 	 * @return the length of the column or -1 if no column with the given name in the given table exists
+	 * @throws SQLException in case of an database error
 	 */
 	public int getColumnLength(String table, String column) throws SQLException;
 }

@@ -270,14 +270,14 @@ public class PlayerEntry {
 	 * This method query database to check if the player with username given by
 	 * the entry has a character with the name passed as argument.
 	 *
-	 * @param character
+	 * @param charname
 	 *            The name we are querying for.
 	 * @return true if it is found or false otherwise.
 	 * @throws SQLException
 	 *             If there is a Database exception.
 	 */
-	public boolean hasCharacter(String character) throws SQLException {
-		return DAORegister.get().get(CharacterDAO.class).hasCharacter(username, character);
+	public boolean hasCharacter(String charname) throws SQLException {
+		return DAORegister.get().get(CharacterDAO.class).hasCharacter(username, charname);
 	}
 
 	/**

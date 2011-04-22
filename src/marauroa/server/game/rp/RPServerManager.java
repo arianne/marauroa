@@ -477,7 +477,7 @@ public class RPServerManager extends Thread {
 							}
 						}
 					}
-					logger.warn("Adding to existing contentToTransfer. old: " + entry.contentToTransfer + " added " + content);
+					logger.warn("Adding to existing contentToTransfer for player " + entry.character + " old: " + entry.contentToTransfer + " added " + content);
 				}
 				entry.contentToTransfer.addAll(content);
 

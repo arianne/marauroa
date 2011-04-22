@@ -22,11 +22,11 @@ import marauroa.server.game.db.DatabaseFactory;
  * This class is a factory to convert RPObjects into real objects for your game.
  * This class is invoked by whatever that load an object into the server:
  * - JDBCDatabase.
- * 
+ *
  * To make it work on your game you need to subclass and implement:
- * 
+ *
  *   static RPObjectFactory getFactory()
- * 
+ *
  * The method will be called through refletions.
  * @author miguel
  *
@@ -40,7 +40,7 @@ public class RPObjectFactory {
 	 * Configuration file.
 	 *
 	 * @return A shared instance of RPObjectFactory
-     * @throws NoFactoryConfException if the factory is not configured correctly 
+     * @throws NoFactoryConfException if the factory is not configured correctly
 	 */
 	public static RPObjectFactory get() throws NoFactoryConfException {
 		try {
@@ -66,19 +66,19 @@ public class RPObjectFactory {
 	 *            complete class name. ie: marauroa.server.game.rp.RPObjectFactory
 	 *
 	 * @return A shared instance of RPObjectFactory
-	 * @throws NoFactoryConfException if the factory is not configured correctly 
+	 * @throws NoFactoryConfException if the factory is not configured correctly
 	 */
 	public static RPObjectFactory get(String factoryName) throws NoFactoryConfException {
 		try {
 	        Class<?> databaseClass = Class.forName(factoryName);
-	        java.lang.reflect.Method singleton = databaseClass.getDeclaredMethod("getFactory");
-	        return (RPObjectFactory) singleton.invoke(null);
+	        java.lang.reflect.Method method = databaseClass.getDeclaredMethod("getFactory");
+	        return (RPObjectFactory) method.invoke(null);
         } catch (Exception e) {
         	logger.error("Can't create factory("+factoryName+")", e);
         	throw new NoFactoryConfException(e);
         }
 	}
-	
+
 	private static RPObjectFactory singleton;
 
 	/**
@@ -87,10 +87,9 @@ public class RPObjectFactory {
 	 * @return RPObjectFactory
 	 */
 	public static RPObjectFactory getFactory() {
-		if(singleton==null) {
-			singleton=new RPObjectFactory();
+		if (singleton == null) {
+			singleton = new RPObjectFactory();
 		}
-		
 		return singleton;
 	}
 
