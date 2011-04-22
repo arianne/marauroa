@@ -25,6 +25,7 @@ public abstract class DBCommandWithCallback extends AbstractDBCommand {
 	private int clientid;
 	private SocketChannel channel;
 	private int protocolVersion;
+	/** a handler that will be informed about the result */
 	protected DelayedEventHandler callback;
 
 	/**
@@ -69,7 +70,7 @@ public abstract class DBCommandWithCallback extends AbstractDBCommand {
 
 	/**
 	 * gets the protocol version
-	 * 
+	 *
 	 * @return protocolVersion
 	 */
 	public int getProtocolVersion() {
