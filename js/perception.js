@@ -133,6 +133,7 @@ marauroa.perceptionHandler = {
 		if (msg.sync) {
 			if (!marauroa.perceptionListener.onClear()) {
 				marauroa.currentZone.clear();
+				marauroa.currentZoneName = msg.zoneid;
 			}
 		}
 
