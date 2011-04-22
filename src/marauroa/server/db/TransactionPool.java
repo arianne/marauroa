@@ -25,13 +25,13 @@ public class TransactionPool {
 	private static Logger logger = Log4J.getLogger(TransactionPool.class);
 	private static TransactionPool dbtransactionPool = null;
 	private AdapterFactory factory = null;
-	private Object wait = new Object();
+	private final Object wait = new Object();
 	private Properties params = new Properties();
 	private int count = 10;
-	private List<DBTransaction> dbtransactions = Collections.synchronizedList(new LinkedList<DBTransaction>());
-	private List<DBTransaction> freeDBTransactions = Collections.synchronizedList(new LinkedList<DBTransaction>());
-	private ThreadLocal<Set<DBTransaction>> threadTransactions = new ThreadLocal<Set<DBTransaction>>();
-	private Map<DBTransaction, Pair<String, StackTraceElement[]>> callers;
+	private final List<DBTransaction> dbtransactions = Collections.synchronizedList(new LinkedList<DBTransaction>());
+	private final List<DBTransaction> freeDBTransactions = Collections.synchronizedList(new LinkedList<DBTransaction>());
+	private final ThreadLocal<Set<DBTransaction>> threadTransactions = new ThreadLocal<Set<DBTransaction>>();
+	private final Map<DBTransaction, Pair<String, StackTraceElement[]>> callers;
 	private boolean closed = false;
 
 	/**
@@ -58,8 +58,8 @@ public class TransactionPool {
 	 *
 	 * @param dbtransactionPool the pool to register globally
 	 */
-	private static void registerGlobal(TransactionPool dbtransactionPool) {
-		TransactionPool.dbtransactionPool = dbtransactionPool;
+	private static void registerGlobal(TransactionPool transactionPool) {
+		TransactionPool.dbtransactionPool = transactionPool;
 	}
 
 	/**
