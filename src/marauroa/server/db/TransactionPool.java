@@ -56,7 +56,7 @@ public class TransactionPool {
 	/**
 	 * registers a TransactionPool as the global one.
 	 *
-	 * @param dbtransactionPool the pool to register globally
+	 * @param transactionPool the pool to register globally
 	 */
 	private static void registerGlobal(TransactionPool transactionPool) {
 		TransactionPool.dbtransactionPool = transactionPool;
