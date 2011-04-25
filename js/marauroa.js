@@ -1,5 +1,10 @@
 var marauroa = new function() {}
 
+marauroa.debug = {
+	messages: false,
+	unknownEvents: true
+}
+
 marauroa.log = {};
 
 if ((typeof(console) != "undefined") && (typeof(console.debug) != "undefined")) {

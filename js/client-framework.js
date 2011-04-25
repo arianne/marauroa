@@ -74,7 +74,9 @@ marauroa.clientFramework = {
 	},
 
 	onMessage: function(msg) {
-		marauroa.log.debug("<--: ", msg);
+		if (marauroa.debug.messages) {
+			marauroa.log.debug("<--: ", msg);
+		}
 		if (msg.t == 9) {
 			this.clientid = msg.c;
 		}
@@ -92,7 +94,9 @@ marauroa.clientFramework = {
 			"s": "1"
 		};
 		io.util.merge(myMessage, msg);
-		marauroa.log.debug("-->: ", msg);
+		if (marauroa.debug.messages) {
+			marauroa.log.debug("-->: ", msg);
+		}
 		this.socket.send(JSON.stringify(myMessage));
 	},
 
