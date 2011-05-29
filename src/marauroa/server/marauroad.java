@@ -414,6 +414,15 @@ public class marauroad extends Thread {
 	}
 
 	/**
+	 * gets the RPServerManager
+	 *
+	 * @return RPServerManager
+	 */
+	public RPServerManager getRPServerManager() {
+		return rpMan;
+	}
+
+	/**
 	 * shuts down Marauroa
 	 */
 	public void finish() {

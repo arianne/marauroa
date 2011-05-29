@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import marauroa.common.Configuration;
+import marauroa.server.game.rp.IRPRuleProcessor;
+import marauroa.server.game.rp.RPServerManager;
 
 /**
  * a servlet for static content
@@ -31,6 +33,16 @@ import marauroa.common.Configuration;
 public class WebServletForStaticContent extends HttpServlet {
 
 	private static final long serialVersionUID = 3182173716768800221L;
+	private RPServerManager rpMan;
+
+	/**
+	 * creates a WebServletForStaticContent
+	 *
+	 * @param rpMan RPServerManager
+	 */
+	public WebServletForStaticContent(RPServerManager rpMan) {
+		this.rpMan = rpMan;
+	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -45,7 +57,11 @@ public class WebServletForStaticContent extends HttpServlet {
 		} else if (filename.endsWith(".xml")) {
 			response.setContentType("text/xml");
 		} else {
-			response.setCharacterEncoding("application/octet-stream");
+			String contentType = rpMan.getMimeTypeForResource(filename);
+			if (contentType == null) {
+				contentType = "application/octet-stream";
+			}
+			response.setContentType(contentType);
 		}
 
 		Configuration conf = Configuration.getConfiguration();
@@ -73,6 +89,9 @@ public class WebServletForStaticContent extends HttpServlet {
 			is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("js/" + filename);
 			if (is == null) {
 				is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("srcjs/" + filename);
+			}
+			if (is == null) {
+				is = rpMan.getResource(filename);
 			}
 			if (is == null) {
 				throw new FileNotFoundException(filename);

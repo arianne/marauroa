@@ -12,6 +12,7 @@
  ***************************************************************************/
 package marauroa.server.game.rp;
 
+import java.io.InputStream;
 import java.util.List;
 
 import marauroa.common.game.AccountResult;
@@ -158,4 +159,20 @@ public interface IRPRuleProcessor {
 	 * @throws RPObjectNotFoundException if the object was not found
 	 */
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException;
+
+	/**
+	 * gets the content type for the requested resource
+	 * 
+	 * @param resource name of resource
+	 * @return mime content/type or <code>null</code>
+	 */
+	public String getMimeTypeForResource(String resource);
+
+	/**
+	 * gets an input stream to the requested resource
+	 * 
+	 * @param resource name of resource
+	 * @return InputStream or <code>null</code>
+	 */
+	public InputStream getResource(String resource);
 }

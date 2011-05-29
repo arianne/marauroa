@@ -13,6 +13,7 @@
 package marauroa.server.game.rp;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.ConcurrentModificationException;
@@ -652,5 +653,26 @@ public class RPServerManager extends Thread {
 	 */
 	public ConnectionValidator getValidator() {
 		return netMan.getValidator();
+	}
+
+
+	/**
+	 * gets the content type for the requested resource
+	 * 
+	 * @param resource name of resource
+	 * @return mime content/type or <code>null</code>
+	 */
+	public String getMimeTypeForResource(String resource) {
+		return ruleProcessor.getMimeTypeForResource(resource);
+	}
+
+	/**
+	 * gets an input stream to the requested resource
+	 * 
+	 * @param resource name of resource
+	 * @return InputStream or <code>null</code>
+	 */
+	public InputStream getResource(String resource) {
+		return ruleProcessor.getResource(resource);
 	}
 }

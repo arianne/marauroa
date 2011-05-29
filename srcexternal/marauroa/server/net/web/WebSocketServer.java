@@ -71,7 +71,7 @@ public class WebSocketServer {
 		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_PORTS_KEY, "" + conf.getInt("flash_port", port));
 		holder.setInitParameter("bufferSize", conf.get("http_buffer_size", "1000000"));
 		context.addServlet(holder, "/socket.io/*");
-		context.addServlet(new ServletHolder(new WebServletForStaticContent()), "/*");
+		context.addServlet(new ServletHolder(new WebServletForStaticContent(marauroad.getMarauroa().getRPServerManager())), "/*");
 
 		server.setHandler(context);
 		server.start();

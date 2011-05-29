@@ -12,6 +12,7 @@
  ***************************************************************************/
 package marauroa.functional.basic;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -236,5 +237,13 @@ public class BareRPRuleProcessor implements IRPRuleProcessor {
 
 	public ConnectionValidator getValidator() {
 		return rpman.getValidator();
+	}
+
+	public String getMimeTypeForResource(String resource) {
+		return null;
+	}
+
+	public InputStream getResource(String resource) {
+		return null;
 	}
 }
