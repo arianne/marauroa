@@ -272,8 +272,6 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 		/**
 		 * Decode a stream of bytes into a Message.
 		 *
-		 * @param address
-		 *            address the message comes from.
 		 * @param data
 		 *            data that represent the serialized message
 		 * @throws IOException

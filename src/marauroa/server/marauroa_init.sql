@@ -62,9 +62,8 @@ create table if not exists loginEvent
   primary key(id)
   );
 
-/*create index i_loginEvent_player_id ON loginEvent(player_id);*/
-/*create index i_loginEvent_address ON loginEvent(address);*/
-/*create index i_loginEvent_player_id_address ON loginEvent(player_id, address);*/
+/*create index i_loginEvent_player_id_timedate ON loginEvent(player_id, timedate);*/
+/*create index i_loginEvent_address_timedate ON loginEvent(address, timedate);*/
 
 
 create table if not exists passwordChange
