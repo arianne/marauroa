@@ -77,6 +77,9 @@ public abstract class ClientFramework {
 	/** How long we should wait for connect. */
 	public final static int TIMEOUT = 10000;
 
+	/** wait longer for an login to compensate for slow database operation */
+	private final static int TIMEOUT_EXTENDED = 300000;
+
 	private int perceptionsCount;
 
 	/**
@@ -86,7 +89,7 @@ public abstract class ClientFramework {
 	protected INetworkClientManagerInterface netMan;
 
 	/** We keep a list of all messages waiting for being processed. */
-	private List<Message> messages;
+	private final List<Message> messages;
 
 	/**
 	 * Constructor.
@@ -149,12 +152,12 @@ public abstract class ClientFramework {
 	 *             if there is no message available in TIMEOUT milliseconds.
 	 * @throws BannedAddressException
 	 */
-	private Message getMessage() throws InvalidVersionException, TimeoutException,
+	private Message getMessage(int timeout) throws InvalidVersionException, TimeoutException,
 	        BannedAddressException {
 		Message msg = null;
 
 		if (messages.isEmpty()) {
-			msg = netMan.getMessage(TIMEOUT);
+			msg = netMan.getMessage(timeout);
 
 			if (msg instanceof MessageS2CConnectNACK) {
 				throw new BannedAddressException();
@@ -231,8 +234,15 @@ public abstract class ClientFramework {
 		/* Send to server a login request and indicate the game name and version */
 		netMan.addMessage(new MessageC2SLoginRequestKey(null, getGameName(), getVersionNumber()));
 
+		int timeout = TIMEOUT;
 		while (received < 3) {
-			Message msg = getMessage();
+			Message msg = getMessage(timeout);
+			// Okay, now  we know that there is a marauroa server responding to the handshake.
+			// We can give it more time for the next steps in case the database is slow.
+			// Loging heavily depends on the database because number of failed logins for both
+			// ip-address and username, banstatus, username&password have to be checked. And
+			// the list of characters needs to be loaded from the database.
+			timeout = TIMEOUT_EXTENDED;
 
 			switch (msg.getType()) {
 				case S2C_INVALIDMESSAGE: {
@@ -329,7 +339,7 @@ public abstract class ClientFramework {
 					MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
 					logger.debug("Login failed. Reason: " + msgNACK.getResolution());
 					throw new LoginFailedException(msgNACK.getResolution(), msgNACK.getResolutionCode());
-				
+
 				/* Login failed, explain reason on event */
 				case S2C_LOGIN_MESSAGE_NACK:
 					MessageS2CLoginMessageNACK msgMessageNACK = (MessageS2CLoginMessageNACK) msg;
@@ -363,7 +373,7 @@ public abstract class ClientFramework {
 		int received = 0;
 
 		while (received != 1) {
-			Message msg = getMessage();
+			Message msg = getMessage(TIMEOUT_EXTENDED);
 
 			switch (msg.getType()) {
 				/* Server accepted the character we chose */
@@ -410,7 +420,7 @@ public abstract class ClientFramework {
 		AccountResult result = null;
 
 		while (received != 1) {
-			Message msg = getMessage();
+			Message msg = getMessage(TIMEOUT_EXTENDED);
 
 			switch (msg.getType()) {
 				case S2C_INVALIDMESSAGE: {
@@ -469,7 +479,7 @@ public abstract class ClientFramework {
 		CharacterResult result = null;
 
 		while (received != 2) {
-			Message msg = getMessage();
+			Message msg = getMessage(TIMEOUT_EXTENDED);
 
 			switch (msg.getType()) {
 				/* Account was created */
@@ -519,7 +529,7 @@ public abstract class ClientFramework {
 	 */
 	public void send(RPAction action) {
 		/*
-		 * Each time we send an action we are confirming server our presence, so we 
+		 * Each time we send an action we are confirming server our presence, so we
 		 * reset the counter to avoid sending keep alive messages.
 		 */
 		perceptionsCount = 0;
@@ -547,7 +557,7 @@ public abstract class ClientFramework {
 		int received = 0;
 
 		while (received != 1) {
-			Message msg = getMessage();
+			Message msg = getMessage(TIMEOUT);
 			switch (msg.getType()) {
 				case S2C_LOGOUT_ACK:
 					logger.debug("Logout ACK");
@@ -669,10 +679,10 @@ public abstract class ClientFramework {
 
 	/**
 	 * is called before a content transfer is started.
-	 * 
-	 * <code> items </code> contains a list of names and timestamp. 
-	 * That information can be used to decide if a transfer from server is needed. 
-	 * By setting attribute ack to true in a TransferContent it will be acknowledged.   
+	 *
+	 * <code> items </code> contains a list of names and timestamp.
+	 * That information can be used to decide if a transfer from server is needed.
+	 * By setting attribute ack to true in a TransferContent it will be acknowledged.
 	 * All acknowledges items in the returned List, will be transfered by server.
 	 *
 	 * @param items
@@ -707,8 +717,8 @@ public abstract class ClientFramework {
 	protected void onAvailableCharacterDetails(@SuppressWarnings("unused") Map<String, RPObject> characters) {
 		// stub
 	}
-	
-	
+
+
 	/**
 	 * It is called when we get the list of server information strings
 	 *
