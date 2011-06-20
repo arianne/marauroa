@@ -357,10 +357,10 @@ public class RPServerManager extends Thread {
 		 * the owner, because visible attributes are already stored in the
 		 * perception.
 		 */
-		RPObject copy = new RPObject();
-		copy.fill(playerObject);
 
 		if (perception.type == Perception.SYNC) {
+			RPObject copy = new RPObject();
+			copy.fill(playerObject);
 			if (!playerObject.isHidden()) {
 				copy.clearVisible(true);
 			}
@@ -370,7 +370,7 @@ public class RPServerManager extends Thread {
 			RPObject deleted = new RPObject();
 
 			try {
-				copy.getDifferences(added, deleted);
+				playerObject.getDifferences(added, deleted);
 				if (!playerObject.isHidden()) {
 					added.clearVisible(false);
 					deleted.clearVisible(false);
@@ -386,7 +386,6 @@ public class RPServerManager extends Thread {
 			} catch (Exception e) {
 				logger.error("Error getting object differences", e);
 				logger.error(playerObject);
-				logger.error(copy);
 				added = null;
 				deleted = null;
 			}
