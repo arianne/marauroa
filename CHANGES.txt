@@ -4,6 +4,8 @@ Changelog
 - performance improvement by not deep copying all player objects every turn.
 - performance improvement by skipping RPBOject.id validation during cloning of RPSlots
 - performance improvement by removing redundant calls to Attribute.has() and RPObject.getID()
+- increased client side timeout while the server is processing the login (may do slow database queries)
+- defined better indices for loginEvent designed to answer the number of recently failed logins question fast
 
 3.8.6
 - performance optimization in RPObject.getDifference() by drastically reducing the number of RPobject instantiations
