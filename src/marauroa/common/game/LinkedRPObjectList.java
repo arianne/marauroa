@@ -84,10 +84,21 @@ class LinkedRPObjectList extends LinkedList<RPObject> {
 
 		return null;
 	}
-	
+
 	@Override
 	public boolean add(RPObject object) {
-	    checkObjectNotAllreadyInList(object);
+		checkObjectNotAllreadyInList(object);
+		return super.add(object);
+	}
+
+	/**
+	 * adds an object without checking if it is already in the list.
+	 * This is useful for cloning the list.
+	 *
+	 * @param object object to add
+	 * @return true
+	 */
+	boolean addTrusted(RPObject object) {
 		return super.add(object);
 	}
 
