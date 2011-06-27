@@ -76,8 +76,9 @@ class ActionHandler extends MessageHandler {
 			 * Log the action into statistics system. Or if the action didn't
 			 * have type, log it as an invalid action.
 			 */
-			if (action.has("type")) {
-				stats.add("Actions " + action.get("type"), 1);
+			String type = action.get("type");
+			if (type != null) {
+				stats.add("Actions " + type, 1);
 			} else {
 				stats.add("Actions invalid", 1);
 			}

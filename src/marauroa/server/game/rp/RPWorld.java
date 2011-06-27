@@ -200,10 +200,11 @@ public class RPWorld implements Iterable<IRPZone> {
 	 *            the object to add
 	 */
 	public void add(RPObject object) {
-		if (object.has("zoneid")) {
-			IRPZone zone = zones.get(new IRPZone.ID(object.get("zoneid")));
+		String zoneid = object.get("zoneid");
+		if (zoneid != null) {
+			IRPZone zone = zones.get(new IRPZone.ID(zoneid));
 			if (zone == null) {
-				logger.error("Unknown zone: " + object.get("zoneid"));
+				logger.error("Unknown zone: " + zoneid);
 				return;
 			}
 			zone.assignRPObjectID(object);
