@@ -783,8 +783,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		if (addedSomething) {
 			content.put("id", attr.get("id"));
 			/* Object stored at slots don't have now the zoneid attribute. */
-			if (attr.has("zoneid")) {
-				content.put("zoneid", attr.get("zoneid"));
+			String zoneid = attr.get("zoneid");
+			if (zoneid != null) {
+				content.put("zoneid", zoneid);
 			}
 		}
 	}
@@ -811,8 +812,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		if (deletedSomething) {
 			content.put("id", attr.get("id"));
 			// Object stored at slots don't have now the zoneid attribute.
-			if (attr.has("zoneid")) {
-				content.put("zoneid", attr.get("zoneid"));
+			String zoneid = attr.get("zoneid");
+			if (zoneid != null) {
+				content.put("zoneid", zoneid);
 			}
 		}
 	}

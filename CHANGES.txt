@@ -1,7 +1,8 @@
 Changelog
 ---------
 3.8.7
-
+- performance improvement by not deep copying all player objects every turn.
+- performance improvement by skipping RPBOject.id validation during cloning of RPSlots
 
 3.8.6
 - performance optimization in RPObject.getDifference() by drastically reducing the number of RPobject instantiations

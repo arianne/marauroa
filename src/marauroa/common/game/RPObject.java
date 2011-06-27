@@ -1364,12 +1364,11 @@ public class RPObject extends SlotOwner {
 
 	@Override
 	public int hashCode() {
-		int hash = 0;
-		if (has("id")) {
-			hash = getInt("id");
+		String hash = get("id");
+		if (hash != null) {
+			return Integer.parseInt(hash);
 		}
-
-		return hash;
+		return 31;
 	}
 
 	/**
@@ -1551,12 +1550,7 @@ public class RPObject extends SlotOwner {
 		 */
 		public ID(RPObject attr) {
 			this.id = attr.getInt("id");
-			/*
-			 * Zone id is optional when the object is contained.
-			 */
-			if (attr.has("zoneid")) {
-				this.zoneid = attr.get("zoneid");
-			}
+			this.zoneid = attr.get("zoneid");
 		}
 
 		/**
@@ -1567,12 +1561,7 @@ public class RPObject extends SlotOwner {
 		 */
 		public ID(RPAction attr) {
 			this.id = attr.getInt("sourceid");
-			/*
-			 * Zone id is optional when the object is contained.
-			 */
-			if (attr.has("zoneid")) {
-				this.zoneid = attr.get("zoneid");
-			}
+			this.zoneid = attr.get("zoneid");
 		}
 
 		/**
@@ -2003,15 +1992,17 @@ public class RPObject extends SlotOwner {
 		 */
 		if (!addedChanges.isEmpty()) {
 			addedChanges.put("id", get("id"));
-			if (has("zoneid")) {
-				addedChanges.put("zoneid", get("zoneid"));
+			String zoneid = get("zoneid");
+			if (zoneid != null) {
+				addedChanges.put("zoneid", zoneid);
 			}
 		}
 
 		if (!deletedChanges.isEmpty()) {
 			deletedChanges.put("id", get("id"));
-			if (has("zoneid")) {
-				deletedChanges.put("zoneid", get("zoneid"));
+			String zoneid = get("zoneid");
+			if (zoneid != null) {
+				deletedChanges.put("zoneid", zoneid);
 			}
 		}
 	}

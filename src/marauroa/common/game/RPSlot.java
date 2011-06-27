@@ -579,21 +579,21 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		for (RPObject object : objects) {
 			RPObject copied = (RPObject) object.clone();
 			copied.setContainer(owner, slot);
-			slot.objects.add(copied);
+			slot.objects.addTrusted(copied);
 		}
 
 		slot.added = new LinkedRPObjectList();
 		for (RPObject object : added) {
 			RPObject copied = (RPObject) object.clone();
 			copied.setContainer(owner, slot);
-			slot.added.add(copied);
+			slot.added.addTrusted(copied);
 		}
 
 		slot.deleted = new LinkedRPObjectList();
 		for (RPObject object : deleted) {
 			RPObject copied = (RPObject) object.clone();
 			copied.setContainer(owner, slot);
-			slot.deleted.add(copied);
+			slot.deleted.addTrusted(copied);
 		}
 
 		return slot;
