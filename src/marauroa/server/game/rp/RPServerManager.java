@@ -324,15 +324,13 @@ public class RPServerManager extends Thread {
 	private Perception getPlayerPerception(PlayerEntry entry) {
 		Perception perception = null;
 
-		RPObject.ID id = entry.object.getID();
+		IRPZone.ID id = new IRPZone.ID(entry.object.get("zoneid"));
 		IRPZone zone = world.getRPZone(id);
 
 		if (entry.requestedSync == false) {
-			logger.debug("Perception DELTA for player (" + id + ")");
 			perception = zone.getPerception(entry.object, Perception.DELTA);
 		} else {
 			entry.requestedSync = false;
-			logger.debug("Perception SYNC for player (" + id + ")");
 			perception = zone.getPerception(entry.object, Perception.SYNC);
 		}
 
