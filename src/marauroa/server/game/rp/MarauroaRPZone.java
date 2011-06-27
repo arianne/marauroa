@@ -331,8 +331,10 @@ public class MarauroaRPZone implements IRPZone {
 						continue;
 					}
 					try {
-						if(!has(modified_obj.getID())) {
-							logger.debug("Modifying a non existing object: "+modified_obj);
+						if (logger.isDebugEnabled()) {
+							if(!has(modified_obj.getID())) {
+								logger.debug("Modifying a non existing object: "+modified_obj);
+							}
 						}
 						
 						prebuildDeltaPerception.modified(modified_obj);
