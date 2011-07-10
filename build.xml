@@ -141,12 +141,14 @@
 		<mkdir dir="marauroa-${version}/libs"/>
 		<copy todir="marauroa-${version}" file="${extras}/marauroad.bat"/>
 		<copy todir="marauroa-${version}" file="${extras}/marauroad"/>
-		<copy todir="marauroa-${version}/libs" file="${build-archive}/${jarname}"/>
-		<copy todir="marauroa-${version}/libs" file="${build-archive}/${jarname_client}"/>
-		<copy todir="marauroa-${version}/libs" file="${connectorJ_jar}"/>
-		<copy todir="marauroa-${version}/libs" file="${h2_jar}"/>
-		<copy todir="marauroa-${version}/libs" file="${jython_jar}"/>
-		<copy todir="marauroa-${version}/libs" file="${log4j_jar}"/>
+		<copy todir="marauroa-${version}" file="${build-archive}/${jarname}"/>
+		<copy todir="marauroa-${version}" file="${build-archive}/${jarname_client}"/>
+		<copy todir="marauroa-${version}/libs">
+			<fileset dir="${libdir}">
+				<exclude name="jnlp.jar" />
+				<exclude name="junit-4.4jar" />
+			</fileset>
+		</copy>
 		<copy todir="marauroa-${version}" file="AUTHORS.txt"/>
 		<copy todir="marauroa-${version}" file="CHANGES.txt"/>
 		<copy todir="marauroa-${version}" file="LICENSE.txt"/>

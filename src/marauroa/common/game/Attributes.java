@@ -312,7 +312,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	public String get(String attribute) {
 		String value = content.get(attribute);
 
-		if (value == null) {
+		if ((value == null) && (attribute != null)) {
 			/*
 			 * If instance doesn't have the attribute, check if RPClass has it
 			 * as a static attribute.
