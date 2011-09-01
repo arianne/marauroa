@@ -944,7 +944,7 @@ public class RPObject extends SlotOwner {
 			throw new IllegalArgumentException(
 					"\"id\" and \"zoneid\" are reserved keys that may not be used");
 		}
-		if ((maps != null) && maps.containsKey(map)) {
+		if ((maps != null) && maps.containsKey(map) && maps.get(map).has(key)) {
 			this.modified = true;
 			if (deletedMaps == null) {
 				deletedMaps = new LinkedList<String>();
