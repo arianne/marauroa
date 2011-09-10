@@ -288,7 +288,7 @@ public class AccountDAO {
 					res = "Your account has been merged into another account.\nPlease login with that account or contact support.\r\n";
 				}
 
-				if (((reason != null) || (status != null)) && (!"merged".equals(status))) {
+				if (((reason != null) || (!"active".equals(status))) && (!"merged".equals(status))) {
 					try {
 						Configuration conf = Configuration.getConfiguration();
 						if (conf.has("server_abuseContact")) {
