@@ -48,8 +48,6 @@
 			<classpath>
 				<pathelement path="${log4j_jar}"/>
 				<pathelement path="${junit_jar}"/>
-				<pathelement path="${connectorJ_jar}"/>
-				<pathelement path="${h2_jar}"/>
 				<pathelement path="${jnlp_jar}"/>
 				<pathelement path="${jython_jar}"/>
 			</classpath>
@@ -99,8 +97,6 @@
 			<classpath>
 				<pathelement path="${log4j_jar}"/>
 				<pathelement path="${junit_jar}"/>
-				<pathelement path="${connectorJ_jar}"/>
-				<pathelement path="${h2_jar}"/>
 				<pathelement path="${jnlp_jar}"/>
 				<pathelement path="${jython_jar}"/>
 			</classpath>
@@ -134,7 +130,7 @@
 
 		<replaceregexp file="${extras}/marauroad"
 	    	       match="export LOCALCLASSPATH=.*"
-    	    	   replace="export LOCALCLASSPATH=.:libs/marauroa-${version}.jar:libs/jython.jar:libs/h2.jar:libs/mysql-connector.jar:libs/log4j.jar"
+    	    	   replace="export LOCALCLASSPATH=.:libs/marauroa-${version}.jar:{jython_jar}:${h2_jar}:${connectorJ_jar}:${log4j_jar}"
                    byline="true"/>
 
 		<mkdir dir="marauroa-${version}"/>
