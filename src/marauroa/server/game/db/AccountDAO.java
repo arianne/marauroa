@@ -275,17 +275,25 @@ public class AccountDAO {
 				String expire = result.getString("expire");
 				if (reason != null) {
 					if (expire != null) {
-						res = "Your account is temporarily banned until " + expire + " server time.\n";
+						res = "Your account is temporarily suspended until " + expire + " server time.\r\n";
 					} else {
-						res = "Your account is banned.\n";
+						res = "Your account is banned.\r\n";
 					}
-					res = res + "The reason given was: " + reason;
+					res = res + "The reason given was: " + reason + "\r\n";
 				} else if ("banned".equals(status)) {
-					res = "Your account has been banned. Please contact support.";
+					res = "Your account has been banned. Please contact support.\r\n";
 				} else if ("inactive".equals(status)) {
-					res = "Your account has been flagged as inactive. Please contact support.";
+					res = "Your account has been flagged as inactive. Please contact support\r\n.";
 				} else if ("merged".equals(status)) {
-					res = "Your account has been merged into another account.\nPlease login with that account or contact support.";
+					res = "Your account has been merged into another account.\nPlease login with that account or contact support.\r\n";
+				}
+				try {
+					Configuration conf = Configuration.getConfiguration();
+					if (conf.has("server_abuseContact")) {
+						res = conf.get("server_abuseContact");
+					}
+				} catch (IOException e) {
+					logger.error(e, e);
 				}
 			}
 			result.close();

@@ -1,7 +1,7 @@
 Changelog
 ---------
 3.8.8
-- 
+- new server.ini variable server_abuseContact to add a sentence with contact information to the ban dialog.
 
 
 3.8.7
