@@ -287,13 +287,16 @@ public class AccountDAO {
 				} else if ("merged".equals(status)) {
 					res = "Your account has been merged into another account.\nPlease login with that account or contact support.\r\n";
 				}
-				try {
-					Configuration conf = Configuration.getConfiguration();
-					if (conf.has("server_abuseContact")) {
-						res = conf.get("server_abuseContact");
+
+				if (!"merged".equals(status)) {
+					try {
+						Configuration conf = Configuration.getConfiguration();
+						if (conf.has("server_abuseContact")) {
+							res += conf.get("server_abuseContact");
+						}
+					} catch (IOException e) {
+						logger.error(e, e);
 					}
-				} catch (IOException e) {
-					logger.error(e, e);
 				}
 			}
 			result.close();
