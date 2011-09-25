@@ -114,7 +114,9 @@ public class RPScheduler {
 			for (RPAction action : list) {
 				MDC.put("context", object + " " + action);
 				try {
-					ruleProcessor.execute(object, action);
+					if ((DebugInterface.get()).executeAction(object, action)) {
+						ruleProcessor.execute(object, action);						
+					}
 				} catch (Exception e) {
 					logger.error("error in visit()", e);
 				}
