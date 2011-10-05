@@ -75,7 +75,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	protected String rewriteSql(String sql) {
 		String mySql = sql.trim();
 		if (mySql.toLowerCase(Locale.ENGLISH).startsWith("create table")) {
-			mySql = sql.substring(0, sql.length() - 1) + " TYPE=InnoDB;";
+			mySql = sql.substring(0, sql.length() - 1) + " ENGINE=InnoDB;";
 		}
 		return mySql;
 	}
