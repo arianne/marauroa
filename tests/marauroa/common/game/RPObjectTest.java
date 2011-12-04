@@ -274,6 +274,10 @@ public class RPObjectTest {
 		
 	}
 
+	/**
+	 * Test cloning an RPObject
+	 */
+	@Test
 	public void testClone() {
 		RPObject obj1 = new RPObject();
 		Object obj2 =  obj1.clone();
