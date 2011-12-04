@@ -62,11 +62,11 @@ public class AttributesTest {
 	}
 
 	
-	@Test ( expected = NullPointerException.class)
+	@Test
 	public void testGetOnEmptyattribute(){
 		Attributes test = new Attributes(RPClass.getBaseRPObjectDefault());
 		assertNull("Attribute is empty", test.get("a"));
-		assertNull("throws NPE", test.get(null));
+		assertNull("does not throw NPE", test.get(null));
 	}
 	
 	/**
