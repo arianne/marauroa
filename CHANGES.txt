@@ -1,8 +1,9 @@
 Changelog
 ---------
 3.8.8
+- RPRuleProcessorImpl provides a default implementation for IRPRuleProcessor
 - new server.ini variable server_abuseContact to add a sentence with contact information to the ban dialog.
-- use ENGINE instead of TYPE on table creation to be compatible with MySQL 5.5 (breaks compatibility with MyQSL 3.x)
+- use ENGINE instead of TYPE on table creation to be compatible with MySQL 5.5 (now at least MySQL 4.0 is required)
 
 3.8.7
 - performance improvement by not deep copying all player objects every turn.

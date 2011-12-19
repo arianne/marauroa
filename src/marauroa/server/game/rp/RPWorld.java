@@ -53,6 +53,8 @@ public class RPWorld implements Iterable<IRPZone> {
 	/** The all-mighty player container. */
 	PlayerEntryContainer playerContainer;
 
+	IRPZone defaultZone;
+
 	/**
 	 * creates a new RPWorld. Note this class is designed as a singleton.
 	 */
@@ -86,9 +88,9 @@ public class RPWorld implements Iterable<IRPZone> {
 	 */
 	public static RPWorld get() {
 		if (instance == null) {
-			RPWorld instance = new RPWorld();
-			instance.initialize();
-			RPWorld.instance = instance;
+			RPWorld inst = new RPWorld();
+			inst.initialize();
+			RPWorld.instance = inst;
 		}
 		return instance;
 	}
@@ -120,6 +122,30 @@ public class RPWorld implements Iterable<IRPZone> {
 	 */
 	public void addRPZone(IRPZone zone) {
 		zones.put(zone.getID(), zone);
+	}
+
+	/**
+	 * gets the default zone.
+	 * 
+	 * @return default zone
+	 */
+	public IRPZone getDefaultZone() {
+		if (defaultZone != null) {
+			return defaultZone;
+		}
+		if (!zones.isEmpty()) {
+			return zones.values().iterator().next();
+		}
+		return null;
+	}
+
+	/**
+	 * sets the default zone
+	 *
+	 * @param defaultZone default zone
+	 */
+	public void setDefaultZone(IRPZone defaultZone) {
+		this.defaultZone = defaultZone;
 	}
 
 	/**
