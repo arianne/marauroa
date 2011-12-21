@@ -161,16 +161,17 @@ public class RPServerManager extends Thread {
 	 * @throws IllegalArgumentException
 	 */
 	protected void initializeExtensions(Configuration conf) throws ClassNotFoundException,
-	        IllegalArgumentException, SecurityException, IllegalAccessException,
-	        InvocationTargetException, NoSuchMethodException {
-		Class<?> worldClass = Class.forName(conf.get("world"));
+			IllegalArgumentException, SecurityException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException {
+
+		Class<?> worldClass = Class.forName(conf.get("world", "marauroa.server.game.rp.RPWorld"));
 		// call the get() method without parameters to retrieve the singleton
 		// instance
 		world = (RPWorld) worldClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
 		RPWorld.set(world);
 		world.onInit();
 
-		Class<?> ruleProcessorClass = Class.forName(conf.get("ruleprocessor"));
+		Class<?> ruleProcessorClass = Class.forName(conf.get("ruleprocessor", "marauroa.server.game.rp.RPRuleProcessorImpl"));
 		// call the get() method without parameters to retrieve the singleton
 		// instance
 		ruleProcessor = (IRPRuleProcessor) ruleProcessorClass.getDeclaredMethod("get", new Class[0]).invoke(null, (Object[]) null);
