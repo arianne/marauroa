@@ -157,7 +157,7 @@ public class marauroad extends Thread {
 	private static final Logger logger = Log4J.getLogger(marauroad.class);
 
 	/** Which marauroa version are we running */
-	private static final String VERSION = "3.8.8";
+	private static final String VERSION = "3.9.0";
 
 	/** Marauroa is a singleton. */
 	private static marauroad marauroa;
@@ -180,7 +180,7 @@ public class marauroad extends Thread {
 			} else if (args[i].equals("-h")) {
 				System.out.println("Marauroa - an open source multiplayer online framework for game development -");
 				System.out.println("Running on version " + VERSION);
-				System.out.println("(C) 1999-2010 Miguel Angel Blanch Lardin and the Arianne project");
+				System.out.println("Marauroa is released under the Gnu General Public License: LICENSE.txt");
 				System.out.println();
 				System.out.println("usage: [-c server.ini]");
 				System.out.println("\t-c: to choose a configuration file different of marauroa.ini or to use a");
@@ -202,8 +202,26 @@ public class marauroad extends Thread {
 			// initialize failed
 			System.exit(-1);
 		}
-
+		tryToStartWebSocketServerIfConfigured();
 		marauroad.getMarauroa().start();
+	}
+
+	/**
+	 * tries to start the webservice server, if desired by configuration
+	 */
+	private static void tryToStartWebSocketServerIfConfigured() {
+		Configuration conf;
+		try {
+			conf = Configuration.getConfiguration();
+			if (!conf.has("http_port")) {
+				return;
+			}
+
+			Class<?> clazz = Class.forName("marauroa.server.net.web.WebSocketServer");
+			clazz.getMethod("startWebSocketServer").invoke(null);
+		} catch (Exception e) {
+			logger.warn("Trying to start webserver failed:", e);
+		}
 	}
 
 	private void createBeanForStatistics() {
