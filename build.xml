@@ -71,7 +71,7 @@
 
 		<copy todir="${buildroot}">
 			<fileset dir="${src}">
-				<exclude name="*.java"/>
+				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
 	</target>
