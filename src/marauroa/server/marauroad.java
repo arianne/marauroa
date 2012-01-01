@@ -288,37 +288,31 @@ public class marauroad extends Thread {
 	public boolean init(String[] args) {
 		long startTime = System.currentTimeMillis();
 
-		createBeanForStatistics();
-
-		logger.debug("staring initialize");
-
 		System.out.println("Starting Marauroa http://arianne.sf.net/engine/marauroa.html");
 		System.out.println("Arianne's open source multiplayer online framework for game development");
 		System.out.println("Marauroa is released under the Gnu General Public License: LICENSE.txt");
-
-		marauroad.setArguments(args);
-
-		String log4jConfiguration = null;
-
-		try {
-			Configuration conf = Configuration.getConfiguration();
-			log4jConfiguration = conf.get("log4j_url");
-		} catch (IOException e) {
-			System.out.println("ERROR: Marauroa can't find configuration file.");
-			System.out.println("Run game configuration to get a valid \"server.ini\" file");
-			System.exit(1);
-		}
-
-		if(log4jConfiguration==null) {
-			log4jConfiguration="marauroa/server/log4j.properties";
-		}
+		System.out.println();
 
 		// Initialize Loggging
 		try {
-		  Log4J.init(log4jConfiguration);
+		  Log4J.init("marauroa/server/log4j.properties");
 		} catch(Exception e) {
 			System.out.println("ERROR: Marauroa can't initialize logging.");
 			System.out.println("Verify you have created log/ directory.");
+			System.exit(1);
+		}
+
+		logger.debug("staring initialize");
+
+		createBeanForStatistics();
+
+		marauroad.setArguments(args);
+
+		try {
+			Configuration.getConfiguration().get("x");
+		} catch (IOException e) {
+			System.out.println("ERROR: Marauroa can't find configuration file.");
+			System.out.println("Run game configuration to get a valid \"server.ini\" file");
 			System.exit(1);
 		}
 
