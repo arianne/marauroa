@@ -30,9 +30,22 @@ public class MessageC2SLoginRequestKey extends Message {
 	/** Version of the game that the client is running */
 	private String version;
 
+	/** skip the game version check */
+	private boolean skip = false;
+
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SLoginRequestKey() {
 		super(MessageType.C2S_LOGIN_REQUESTKEY, null);
+	}
+
+	/**
+	 * Constructor for allowing creation of an empty messag
+	 *
+	 * @param skip game version check
+	 */
+	public MessageC2SLoginRequestKey(boolean skip) {
+		super(MessageType.C2S_LOGIN_REQUESTKEY, null);
+		this.skip = skip;
 	}
 
 	/**
@@ -63,6 +76,16 @@ public class MessageC2SLoginRequestKey extends Message {
 	 */
 	public String getVersion() {
 		return version;
+	}
+
+
+	/**
+	 * Should the game version check be skipped?
+	 *
+	 * @return true, if the game version check should be skipped
+	 */
+	public boolean skipGameVersionCheck() {
+		return skip;
 	}
 
 	/**

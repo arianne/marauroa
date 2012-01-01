@@ -21,7 +21,7 @@ import marauroa.common.net.Channel;
 /**
  * This message indicate the server that the client wants to login and send the
  * needed info: server public key
- * 
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageS2CLoginSendKey extends Message {
@@ -36,7 +36,7 @@ public class MessageS2CLoginSendKey extends Message {
 	/**
 	 * Constructor with a TCP/IP source/destination of the message and the
 	 * public key server is using.
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param key
@@ -49,7 +49,7 @@ public class MessageS2CLoginSendKey extends Message {
 
 	/**
 	 * This method returns the username
-	 * 
+	 *
 	 * @return the username
 	 */
 	public RSAPublicKey getKey() {
@@ -58,7 +58,7 @@ public class MessageS2CLoginSendKey extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
@@ -84,4 +84,15 @@ public class MessageS2CLoginSendKey extends Message {
 			throw new IOException();
 		}
 	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"n\":\"");
+		out.append(new BigInteger(key.getN().toByteArray()));
+		out.append("\",\"e\":\"");
+		out.append(new BigInteger(key.getE().toByteArray()));
+		out.append("\"");
+	}
+
 }

@@ -34,8 +34,7 @@ import marauroa.common.net.Channel;
 import marauroa.common.net.ConnectionManager;
 import marauroa.common.net.MessageFactory;
 import marauroa.common.net.message.Message;
-import marauroa.common.net.message.MessageS2CLoginNACK;
-import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
+import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.server.db.command.DBCommand;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.container.ClientState;
@@ -178,8 +177,8 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 					entry.clientid, channel, 0);
 			DBCommandQueue.get().enqueue(command);
 		} else {
-			Message msg = new MessageS2CLoginNACK(channel, Reasons.SEED_WRONG);
-			send(webSocketChannel, msg);
+			Message msg = new MessageC2SLoginRequestKey(true);
+			serverManager.onMessage(this, webSocketChannel, msg);
 		}
 
 	}
