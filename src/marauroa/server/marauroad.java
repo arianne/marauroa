@@ -274,24 +274,9 @@ public class marauroad extends Thread {
 
 		logger.debug("staring initialize");
 
-		System.out.println("Marauroa - arianne's open source multiplayer online framework for game development -");
-		System.out.println("Running on version " + VERSION);
-		System.out.println("(C) 1999-2011 Miguel Angel Blanch Lardin and the Arianne project");
-		System.out.println();
-		System.out.println("This program is free software; you can redistribute it and/or modify");
-		System.out.println("it under the terms of the GNU General Public License as published by");
-		System.out.println("the Free Software Foundation; either version 2 of the License, or");
-		System.out.println("(at your option) any later version.");
-		System.out.println();
-		System.out.println("This program is distributed in the hope that it will be useful,");
-		System.out.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
-		System.out.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
-		System.out.println("GNU General Public License for more details.");
-		System.out.println();
-		System.out.println("You should have received a copy of the GNU General Public License");
-		System.out.println("along with this program; if not, write to the Free Software");
-		System.out.println("Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA");
-		System.out.println();
+		System.out.println("Starting Marauroa http://arianne.sf.net/engine/marauroa.html");
+		System.out.println("Arianne's open source multiplayer online framework for game development");
+		System.out.println("Marauroa is released under the Gnu General Public License: LICENSE.txt");
 
 		marauroad.setArguments(args);
 
@@ -324,7 +309,7 @@ public class marauroad extends Thread {
 			new DatabaseFactory().initializeDatabase();
 		} catch (DatabaseConnectionException e) {
 			System.out.println("ERROR: Marauroa can't connect to database");
-			System.out.println("Verify \"server.ini\" file to make sure access to database is possible.");
+			System.out.println("Verify \"server.ini\" file to make sure access to database configuration is correct.");
 			System.exit(1);
 		}
 
@@ -346,7 +331,7 @@ public class marauroad extends Thread {
 			netMan = new marauroa.server.net.NetworkServerManager();
 			netMan.start();
 		} catch (Exception e) {
-			logger.error("Marauroa can't create NetworkServerManager.\n" + "Reasons:\n"
+			logger.error("Marauroa can't create NetworkServerManager.\n" + "Possible Reasons:\n"
 					+ "- You are already running a copy of Marauroa on the same TCP port\n"
 					+ "- You haven't specified a valid configuration file\n"
 					+ "- You haven't create database\n"
@@ -360,7 +345,7 @@ public class marauroad extends Thread {
 		} catch (Exception e) {
 			logger.error(
 							"Marauroa can't create RPServerManager.\n"
-									+ "Reasons:\n"
+									+ "Possible Reasons:\n"
 									+ "- You haven't specified a valid configuration file\n"
 									+ "- You haven't correctly filled the values related to game configuration. Use generateini application to create a valid configuration file.\n"
 									+ "- There may be an error in the Game startup method.\n", e);
@@ -380,7 +365,7 @@ public class marauroad extends Thread {
 		} catch (Exception e) {
 			logger.error(
 							"Marauroa can't create GameServerManager.\n"
-									+ "Reasons:\n"
+									+ "Possible Reasons:\n"
 									+ "- You haven't specified a valid configuration file\n"
 									+ "- You haven't correctly filled the values related to server information configuration. Use generateini application to create a valid configuration file.\n",
 							e);
