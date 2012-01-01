@@ -69,10 +69,9 @@
 			<classpath refid="alljars" />
 		</javac>
 
-		<copy todir="${buildroot}/marauroa/server/">
-			<fileset dir="${src}/marauroa/server">
-				<include name="*.sql"/>
-				<include name="*.properties"/>
+		<copy todir="${buildroot}">
+			<fileset dir="${src}">
+				<exclude name="*.java"/>
 			</fileset>
 		</copy>
 	</target>
