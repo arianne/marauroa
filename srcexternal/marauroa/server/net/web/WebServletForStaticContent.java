@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import marauroa.common.Configuration;
-import marauroa.server.game.rp.IRPRuleProcessor;
 import marauroa.server.game.rp.RPServerManager;
 
 /**
@@ -33,7 +32,7 @@ import marauroa.server.game.rp.RPServerManager;
 public class WebServletForStaticContent extends HttpServlet {
 
 	private static final long serialVersionUID = 3182173716768800221L;
-	private RPServerManager rpMan;
+	private final RPServerManager rpMan;
 
 	/**
 	 * creates a WebServletForStaticContent
@@ -46,7 +45,7 @@ public class WebServletForStaticContent extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String filename = request.getRequestURI();
+		String filename = request.getPathInfo();
 		filename = filename.substring(request.getContextPath().length());
 		if (filename.endsWith("js")) {
 			response.setContentType("text/javascript");
