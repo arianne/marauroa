@@ -76,6 +76,16 @@ marauroa.messageFactory = new function() {
 		marauroa.clientFramework.onCreateAccountNack(this.username, this.reason);
 	}
 
+	// Message S2C CreateCharacter ACK
+	this.t27 = function() {
+		marauroa.clientFramework.onCreateCharacterAck(this.charname, this.template);
+	}
+
+	// Message S2C CreateCharacter NACK
+	this.t28 = function() {
+		marauroa.clientFramework.onCreateCharacterNack(this.charname, this.reason);
+	}
+
 	
 	// handle unexpected unknown messages
 	this.unknownMessage = function() {

@@ -19,6 +19,7 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.game.Result;
 import marauroa.common.net.Channel;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the client that the server has reject its create character Message
@@ -105,5 +106,20 @@ public class MessageS2CCreateCharacterNACK extends Message {
 		if (type != MessageType.S2C_CREATECHARACTER_NACK) {
 			throw new IOException();
 		}
+	}
+
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",");
+		OutputSerializer.writeJson(out, "charname", character);
+		out.append(",\"reason\": {");
+		OutputSerializer.writeJson(out, "code", Integer.toString(reason.ordinal()));
+		out.append(",");
+		OutputSerializer.writeJson(out, "name", reason.name());
+		out.append(",");
+		OutputSerializer.writeJson(out, "text", reason.getText());
+		out.append("}");
 	}
 }

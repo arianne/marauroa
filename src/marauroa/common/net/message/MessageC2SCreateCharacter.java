@@ -13,6 +13,7 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
+import java.util.Map;
 
 import marauroa.common.game.RPObject;
 import marauroa.common.net.Channel;
@@ -95,6 +96,19 @@ public class MessageC2SCreateCharacter extends Message {
 		super.readObject(in);
 		character = in.readString();
 		template = (RPObject) in.readObject(new RPObject());
+
+		if (type != MessageType.C2S_CREATECHARACTER) {
+			throw new IOException();
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
+		character = (String) in.get("charname");
+		template = new RPObject();
+		template.readFromMap((Map<String, Object>) in.get("template"));
 
 		if (type != MessageType.C2S_CREATECHARACTER) {
 			throw new IOException();

@@ -266,6 +266,22 @@ marauroa.clientFramework = {
 
 	onCreateAccountNack: function(username, reason) {
 		marauroa.log.debug("Creating Account \"" + username + "\" failed: ", reason);
-	}
+	},
 
+	createCharacter: function(charname, template) {
+		var msg = {
+				"t": "26",
+				"charname": charname,
+				"template": template
+			};
+		this.sendMessage(msg);
+	},
+
+	onCreateCharacterAck: function(charname, template) {
+		marauroa.log.debug("Character \"" + charname + "\" created successfully.");
+	},
+
+	onCreateCharacterNack: function(charname, reason) {
+		marauroa.log.debug("Creating Character \"" + charname + "\" failed: ", reason);
+	}
 }
