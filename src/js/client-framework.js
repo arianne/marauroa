@@ -175,14 +175,14 @@ marauroa.clientFramework = {
 		this.socket.close();
 	},
 
-	/**
+	/*
 	 * Are we connected to the server?
 	 *
 	 * @return true unless it is sure that we are disconnected
 	 */
-	getConnectionState: function() {
+	/*getConnectionState: function() {
 		// TODO: return netMan.getConnectionState();
-	},
+	},*/
 
 	/**
 	 * It is called when a perception arrives so you can choose how to apply the
@@ -248,5 +248,24 @@ marauroa.clientFramework = {
 	 */
 	onVersionNumberRequired: function() {
 		return "0.0";
+	},
+
+	createAccount: function(username, password, email) {
+		var msg = {
+				"t": "23",
+				"u": username,
+				"p": password,
+				"e": email
+			};
+		this.sendMessage(msg);
+	},
+
+	onCreateAccountAck: function(username) {
+		marauroa.log.debug("Account \"" + username + "\" created successfully.");
+	},
+
+	onCreateAccountNack: function(username, reason) {
+		marauroa.log.debug("Creating Account \"" + username + "\" failed: ", reason);
 	}
+
 }

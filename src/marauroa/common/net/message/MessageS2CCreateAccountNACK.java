@@ -19,6 +19,7 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.game.Result;
 import marauroa.common.net.Channel;
+import marauroa.common.net.OutputSerializer;
 
 
 /**
@@ -103,5 +104,20 @@ public class MessageS2CCreateAccountNACK extends Message {
 		if (type != MessageType.S2C_CREATEACCOUNT_NACK) {
 			throw new IOException();
 		}
+	}
+
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",");
+		OutputSerializer.writeJson(out, "username", username);
+		out.append(",\"reason\": {");
+		OutputSerializer.writeJson(out, "code", Integer.toString(reason.ordinal()));
+		out.append(",");
+		OutputSerializer.writeJson(out, "name", reason.name());
+		out.append(",");
+		OutputSerializer.writeJson(out, "text", reason.getText());
+		out.append("}");
 	}
 }

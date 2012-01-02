@@ -15,6 +15,7 @@ package marauroa.common.net.message;
 import java.io.IOException;
 
 import marauroa.common.net.Channel;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the client that the server has accepted its create
@@ -78,5 +79,12 @@ public class MessageS2CCreateAccountACK extends Message {
 		if (type != MessageType.S2C_CREATEACCOUNT_ACK) {
 			throw new IOException();
 		}
+	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",");
+		OutputSerializer.writeJson(out, "username", username);
 	}
 }

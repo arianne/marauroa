@@ -66,6 +66,17 @@ marauroa.messageFactory = new function() {
 		marauroa.clientFramework.sendMessage(msg);
 	}
 
+	// Message S2C CreateAccount ACK
+	this.t24 = function() {
+		marauroa.clientFramework.onCreateAccountAck(this.username);
+	}
+
+	// Message S2C CreateAccount NACK
+	this.t25 = function() {
+		marauroa.clientFramework.onCreateAccountNack(this.username, this.reason);
+	}
+
+	
 	// handle unexpected unknown messages
 	this.unknownMessage = function() {
 		// do nothing
