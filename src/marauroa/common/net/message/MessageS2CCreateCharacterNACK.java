@@ -28,6 +28,9 @@ import marauroa.common.net.Channel;
 public class MessageS2CCreateCharacterNACK extends Message {
 	private static Logger logger = Log4J.getLogger(MessageS2CCreateAccountNACK.class);
 
+	/** name of character */
+	private String character;
+
 	/** The reason to reject character creation */
 	private Result reason;
 
@@ -42,12 +45,15 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param character
+	 *            name of character
 	 * @param resolution
 	 *            the reason to deny the login
 	 */
-	public MessageS2CCreateCharacterNACK(Channel source, Result resolution) {
+	public MessageS2CCreateCharacterNACK(Channel source, String character, Result resolution) {
 		super(MessageType.S2C_CREATECHARACTER_NACK, source);
-		reason = resolution;
+		this.character = character;
+		this.reason = resolution;
 	}
 
 	/**

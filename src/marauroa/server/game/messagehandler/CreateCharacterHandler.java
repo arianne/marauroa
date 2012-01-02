@@ -70,7 +70,7 @@ class CreateCharacterHandler extends MessageHandler {
 				int maxNumberOfCharacters = Configuration.getConfiguration().getInt("limit_characters_per_account", Integer.MAX_VALUE);
 				if (entry.characterCounter >= maxNumberOfCharacters) {
 					Result result = Result.FAILED_TOO_MANY;
-					MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(channel, result);
+					MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(channel, character, result);
 					msgCreateCharacterNACK.setClientID(clientid);
 					msgCreateCharacterNACK.setProtocolVersion(protocolVersion);
 					netMan.sendMessage(msgCreateCharacterNACK);
@@ -140,7 +140,7 @@ class CreateCharacterHandler extends MessageHandler {
 			 * to player.
 			 */
 			MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(
-					channel, result);
+					channel, character, result);
 			msgCreateCharacterNACK.setClientID(clientid);
 			msgCreateCharacterNACK.setProtocolVersion(protocolVersion);
 			netMan.sendMessage(msgCreateCharacterNACK);
