@@ -19,7 +19,7 @@
  *
  */
 marauroa.clientFramework = {
-	clientid: -1,
+	clientid: "-1",
 
 	/**
 	 * connect to the server
