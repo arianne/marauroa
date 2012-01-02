@@ -29,6 +29,7 @@ import marauroa.common.net.Channel;
 public class MessageS2CCreateAccountNACK extends Message {
 	private static Logger logger = Log4J.getLogger(MessageS2CCreateAccountNACK.class);
 
+	private String username;
 	private Result reason;
 
 	/** Constructor for allowing creation of an empty message */
@@ -42,12 +43,15 @@ public class MessageS2CCreateAccountNACK extends Message {
 	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param username
+	 *            username of the failed account creation attempt
 	 * @param resolution
 	 *            the reason to deny the create account
 	 */
-	public MessageS2CCreateAccountNACK(Channel source, Result resolution) {
+	public MessageS2CCreateAccountNACK(Channel source, String username, Result resolution) {
 		super(MessageType.S2C_CREATEACCOUNT_NACK, source);
-		reason = resolution;
+		this.username = username;
+		this.reason = resolution;
 	}
 
 	/**

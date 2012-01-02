@@ -51,7 +51,7 @@ class CreateAccountHandler extends MessageHandler {
 				}
 				return;
 			}
-			
+
 			String username = null;
 			String pasword = null;
 			String email = null;
@@ -98,7 +98,7 @@ class CreateAccountHandler extends MessageHandler {
 				 * failure.
 				 */
 				MessageS2CCreateAccountNACK msgCreateAccountNACK = new MessageS2CCreateAccountNACK(
-						message.getChannel(), result);
+						message.getChannel(), username, result);
 				msgCreateAccountNACK.setProtocolVersion(message.getProtocolVersion());
 				netMan.sendMessage(msgCreateAccountNACK);
 			}
