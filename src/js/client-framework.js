@@ -252,9 +252,19 @@ marauroa.clientFramework = {
 	 */
 	onAvailableCharacterDetails: function(characters) {
 		marauroa.log.debug("onAvailableCharacterDetails: ", characters);
+
+		// create a character if there is none
 		if (marauroa.util.isEmpty(characters)) {
 			marauroa.log.debug("No character found, creating a character with the username (redefine onAvailableCharacterDetails to prevent this).");
 			this.createCharacter(this.username, {});
+			return;
+		}
+
+		// automatically select the first one
+		for (key in characters) {
+			if (characters.hasOwnProperty(key)) {
+				this.chooseCharacter(key);
+			}
 		}
 	},
 
