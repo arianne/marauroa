@@ -41,6 +41,7 @@ marauroa.messageFactory = new function() {
 	// Message S2C Send Key
 	this.t15 = function() {
 		marauroa.log.debug("Server send key: ", this);
+		marauroa.clientFramework.onLoginRequired();
 	}
 	
 	// Message S2C Perception

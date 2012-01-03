@@ -69,6 +69,10 @@ marauroa.clientFramework = {
 		marauroa.log.debug("onDisconnect: " + reason + " error: " + error);
 	},
 
+	onLoginRequired(): function() {
+		// a login is required
+	},
+
 	login: function(username, password) {
 		var msg = {
 			"t": "34",
