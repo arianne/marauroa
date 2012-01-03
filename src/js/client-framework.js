@@ -78,6 +78,10 @@ marauroa.clientFramework = {
 		this.sendMessage(msg);		
 	},
 
+	onServerInfo: function(contents) {
+		marauroa.log.debug("ServerInfo", contents);
+	},
+
 	onLoginFailed: function(reason, text) {
 		marauroa.log.error("Login failed with reason " + reason + ": " + text);
 	},

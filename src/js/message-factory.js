@@ -35,7 +35,6 @@ marauroa.messageFactory = new function() {
 
 	// Message S2C Login ACK
 	this.t13 = function() {
-		
 	}
 
 	// Message S2C Send Key
@@ -50,7 +49,7 @@ marauroa.messageFactory = new function() {
 
 	// Message S2C Server Info
 	this.t20 = function() {
-		
+		marauroa.clientFramework.onServerInfo(this.contents);
 	}
 
 	// Message S2C Transfer
