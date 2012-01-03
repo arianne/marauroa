@@ -142,4 +142,21 @@ public class MessageS2CServerInfo extends Message {
 			throw new IOException();
 		}
 	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"contents\":[");
+		boolean first = true;
+		for (String line : contents) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			OutputSerializer.writeJson(out, line);
+		}
+		out.append("]");
+	}
+
 }

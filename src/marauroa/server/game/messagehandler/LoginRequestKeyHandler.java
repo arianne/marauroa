@@ -42,16 +42,17 @@ class LoginRequestKeyHandler extends MessageHandler {
 
 		/*
 		 * Check game version with data suplied by client. The RP may decide to
-		 * deny login to this player.
+		 * deny login to this player, unless the check should be skipped
 		 */
-		if (rpMan.checkGameVersion(msgRequest.getGame(), msgRequest.getVersion())) {
+		if (msgRequest.skipGameVersionCheck()
+			||	rpMan.checkGameVersion(msgRequest.getGame(), msgRequest.getVersion())) {
 			/*
 			 * If this is correct we send player the server key so it can sign
 			 * the password.
 			 */
 			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg
 			        .getChannel(), key);
-			msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
+			msgLoginSendKey.setClientID(msg.getClientID());
 			msgLoginSendKey.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendKey);
 		} else {

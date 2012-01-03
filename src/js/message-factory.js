@@ -33,9 +33,25 @@ marauroa.messageFactory = new function() {
 		marauroa.clientFramework.onChooseCharacterNack();
 	}
 
+	// Message S2C Login ACK
+	this.t13 = function() {
+		marauroa.clientFramework.onPreviousLogins(this.previousLogins);
+	}
+
+	// Message S2C Send Key
+	this.t15 = function() {
+		marauroa.log.debug("Server send key: ", this);
+		marauroa.clientFramework.onLoginRequired();
+	}
+	
 	// Message S2C Perception
 	this.t19 = function() {
 		marauroa.clientFramework.onPerception(this);
+	}
+
+	// Message S2C Server Info
+	this.t20 = function() {
+		marauroa.clientFramework.onServerInfo(this.contents);
 	}
 
 	// Message S2C Transfer
@@ -61,6 +77,27 @@ marauroa.messageFactory = new function() {
 		marauroa.clientFramework.sendMessage(msg);
 	}
 
+	// Message S2C CreateAccount ACK
+	this.t24 = function() {
+		marauroa.clientFramework.onCreateAccountAck(this.username);
+	}
+
+	// Message S2C CreateAccount NACK
+	this.t25 = function() {
+		marauroa.clientFramework.onCreateAccountNack(this.username, this.reason);
+	}
+
+	// Message S2C CreateCharacter ACK
+	this.t27 = function() {
+		marauroa.clientFramework.onCreateCharacterAck(this.charname, this.template);
+	}
+
+	// Message S2C CreateCharacter NACK
+	this.t28 = function() {
+		marauroa.clientFramework.onCreateCharacterNack(this.charname, this.reason);
+	}
+
+	
 	// handle unexpected unknown messages
 	this.unknownMessage = function() {
 		// do nothing

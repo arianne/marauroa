@@ -19,7 +19,7 @@
  *
  */
 marauroa.clientFramework = {
-	clientid: -1,
+	clientid: "-1",
 
 	/**
 	 * connect to the server
@@ -69,6 +69,27 @@ marauroa.clientFramework = {
 		marauroa.log.debug("onDisconnect: " + reason + " error: " + error);
 	},
 
+	onLoginRequired: function() {
+		// a login is required
+	},
+
+	login: function(username, password) {
+		var msg = {
+			"t": "34",
+			"u": username,
+			"p": password
+		};
+		this.sendMessage(msg);		
+	},
+
+	onServerInfo: function(contents) {
+		marauroa.log.debug("ServerInfo", contents);
+	},
+
+	onPreviousLogins: function(previousLogins) {
+		marauroa.log.debug("Previous Logins", previousLogins);
+	},
+
 	onLoginFailed: function(reason, text) {
 		marauroa.log.error("Login failed with reason " + reason + ": " + text);
 	},
@@ -77,7 +98,7 @@ marauroa.clientFramework = {
 		if (marauroa.debug.messages) {
 			marauroa.log.debug("<--: ", msg);
 		}
-		if (msg.t == 9) {
+		if (msg.t == 9 || msg.t == 15) {
 			this.clientid = msg.c;
 		}
 		if (typeof(msg) == "string") {
@@ -175,14 +196,14 @@ marauroa.clientFramework = {
 		this.socket.close();
 	},
 
-	/**
+	/*
 	 * Are we connected to the server?
 	 *
 	 * @return true unless it is sure that we are disconnected
 	 */
-	getConnectionState: function() {
+	/*getConnectionState: function() {
 		// TODO: return netMan.getConnectionState();
-	},
+	},*/
 
 	/**
 	 * It is called when a perception arrives so you can choose how to apply the
@@ -232,21 +253,40 @@ marauroa.clientFramework = {
 		marauroa.log.debug("onAvailableCharacterDetails: ", characters);
 	},
 
-	/**
-	 * Returns the name of the game that this client implements
-	 *
-	 * @return the name of the game that this client implements
-	 */
-	onGameNameRequired: function() {
-		return "implement onGameNameRequired()";
+	createAccount: function(username, password, email) {
+		var msg = {
+				"t": "23",
+				"u": username,
+				"p": password,
+				"e": email
+			};
+		this.sendMessage(msg);
 	},
 
-	/**
-	 * Returns the version number of the game
-	 *
-	 * @return the version number of the game
-	 */
-	onVersionNumberRequired: function() {
-		return "0.0";
+	onCreateAccountAck: function(username) {
+		marauroa.log.debug("Account \"" + username + "\" created successfully.");
+	},
+
+	onCreateAccountNack: function(username, reason) {
+		marauroa.log.debug("Creating Account \"" + username + "\" failed: ", reason);
+		alert(reason.text);
+	},
+
+	createCharacter: function(charname, template) {
+		var msg = {
+				"t": "26",
+				"charname": charname,
+				"template": template
+			};
+		this.sendMessage(msg);
+	},
+
+	onCreateCharacterAck: function(charname, template) {
+		marauroa.log.debug("Character \"" + charname + "\" created successfully.");
+	},
+
+	onCreateCharacterNack: function(charname, reason) {
+		marauroa.log.debug("Creating Character \"" + charname + "\" failed: ", reason);
+		alert(reason.text);
 	}
 }

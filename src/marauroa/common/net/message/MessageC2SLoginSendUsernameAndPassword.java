@@ -1,6 +1,5 @@
-/* $Id: MessageS2CCreateAccountACK.java,v 1.7 2010/11/26 20:05:18 martinfuchs Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *                   (C) Copyright 2003-2011 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -13,45 +12,44 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
+import java.util.Map;
 
-import marauroa.common.net.Channel;
-import marauroa.common.net.OutputSerializer;
+import marauroa.common.crypto.Hash;
 
 /**
- * This message indicate the client that the server has accepted its create
- * account Message
+ * This message indicate the server that the client wants to login. This message
+ * is only to be used over a secure channel.
  *
- * @see marauroa.common.net.message.Message
+ * @see marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword
  */
-public class MessageS2CCreateAccountACK extends Message {
+public class MessageC2SLoginSendUsernameAndPassword extends MessageSendByteArray {
 
 	private String username;
 
+	private byte[] password;
+
 	/** Constructor for allowing creation of an empty message */
-	public MessageS2CCreateAccountACK() {
-		super(MessageType.S2C_CREATEACCOUNT_ACK, null);
+	public MessageC2SLoginSendUsernameAndPassword() {
+		super(MessageType.C2S_LOGIN_SENDUSERNAMEANDPASSWORD);
 	}
 
 	/**
-	 * Constructor with a TCP/IP source/destination of the message and the confirmed username
+	 * This method returns the username
 	 *
-	 * @param source
-	 *            The TCP/IP address associated to this message
-	 * @param username
-	 * 			  The confirmed username from server.
-	 */
-	public MessageS2CCreateAccountACK(Channel source, String username) {
-		super(MessageType.S2C_CREATEACCOUNT_ACK, source);
-		this.username = username;
-	}
-
-	/**
-	 * Returns the username created by the server.
-	 *
-	 * @return the username created by the server.
+	 * @return the username
 	 */
 	public String getUsername() {
 		return username;
+	}
+
+	/**
+	 * This method returns the encoded password
+	 *
+	 * @return the password
+	 */
+	public byte[] getPassword() {
+		return password;
+
 	}
 
 	/**
@@ -61,30 +59,36 @@ public class MessageS2CCreateAccountACK extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (S2C CreateAccount ACK) from (" + getAddress() + ") CONTENTS: ()";
+		return "Message (C2S Login) from (" + getAddress() + ") CONTENTS: (nonce:"
+		        + Hash.toHexString(hash) + "\tusername:" + username + "\tpassword:"
+		        + Hash.toHexString(Hash.hash(password)) + ")";
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(username);
+		out.write(password);
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
-
 		username = in.readString();
-
-		if (type != MessageType.S2C_CREATEACCOUNT_ACK) {
+		password = Hash.hash(in.readString());
+		if (type != MessageType.C2S_LOGIN_SENDUSERNAMEANDPASSWORD) {
 			throw new IOException();
 		}
 	}
 
 	@Override
-	public void writeToJson(StringBuilder out) {
-		super.writeToJson(out);
-		out.append(",");
-		OutputSerializer.writeJson(out, "username", username);
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
+		username = (String) in.get("u");
+		password = Hash.hash((String) in.get("p"));
+
+		if (type != MessageType.C2S_LOGIN_SENDUSERNAMEANDPASSWORD) {
+			throw new IOException();
+		}
 	}
 }

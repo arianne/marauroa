@@ -34,8 +34,7 @@ import marauroa.common.net.Channel;
 import marauroa.common.net.ConnectionManager;
 import marauroa.common.net.MessageFactory;
 import marauroa.common.net.message.Message;
-import marauroa.common.net.message.MessageS2CLoginNACK;
-import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
+import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.server.db.command.DBCommand;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.container.ClientState;
@@ -178,8 +177,11 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 					entry.clientid, channel, 0);
 			DBCommandQueue.get().enqueue(command);
 		} else {
-			Message msg = new MessageS2CLoginNACK(channel, Reasons.SEED_WRONG);
-			send(webSocketChannel, msg);
+			entry.state = ClientState.CONNECTION_ACCEPTED;
+			entry.disableTimeout();
+			Message msg = new MessageC2SLoginRequestKey(channel, true);
+			msg.setClientID(entry.clientid);
+			serverManager.onMessage(this, webSocketChannel, msg);
 		}
 
 	}
@@ -203,7 +205,7 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 	 */
 	@SuppressWarnings("unchecked")
 	public void onMessage(WebSocketChannel webSocketChannel, int messageType, String message) {
-		logger.info("messateType: " + messageType + " message: " + message);
+		logger.debug("messageType: " + messageType + " message: " + message);
 		Map<String, Object> map = (Map<String, Object>) JSON.parse(message);
 		try {
 			Message msg = MessageFactory.getFactory().getMessage(map);

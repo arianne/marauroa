@@ -37,14 +37,16 @@ public class WebSocketServer {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		marauroad.getMarauroa().init(args);
-
-		startWebSocketServer();
-
-		marauroad.getMarauroa().start();
+		System.err.println("The instructions, you followed, are outdated.");
+		System.err.println("Please use the normal marauroa.server.marauroad as main class");
 	}
 
-	private static void startWebSocketServer() throws Exception {
+	/**
+	 * starts the web server
+	 *
+	 * @throws Exception in case of an unexpected exception
+	 */
+	public static void startWebSocketServer() throws Exception {
 		Configuration conf = Configuration.getConfiguration();
 		if (!conf.has("http_port")) {
 			return;

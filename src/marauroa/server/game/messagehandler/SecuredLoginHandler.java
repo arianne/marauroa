@@ -26,6 +26,7 @@ import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
+import marauroa.common.net.message.MessageC2SLoginSendUsernameAndPassword;
 import marauroa.common.net.message.MessageS2CLoginACK;
 import marauroa.common.net.message.MessageS2CLoginMessageNACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
@@ -63,15 +64,15 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 	public void process(Message msg) {
 			int clientid = msg.getClientID();
 			PlayerEntry entry = playerContainer.get(clientid);
-			
+
 			// verify event
 			if (!isValidEvent(msg, entry, ClientState.CONNECTION_ACCEPTED)) {
 				return;
 			}
 
 			SecuredLoginInfo info = fillLoginInfo(msg, entry);
-			DBCommand command = new LoginCommand(info, 
-					this, entry.clientid, 
+			DBCommand command = new LoginCommand(info,
+					this, entry.clientid,
 					msg.getChannel(), msg.getProtocolVersion());
 			DBCommandQueue.get().enqueue(command);
 	}
@@ -105,8 +106,8 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 		netMan.sendMessage(msgServerInfo);
 
 		/* Build player character list and send it to client */
-		DBCommand command = new LoadAllActiveCharactersCommand(entry.username, 
-				new SendCharacterListHandler(netMan, protocolVersion), 
+		DBCommand command = new LoadAllActiveCharactersCommand(entry.username,
+				new SendCharacterListHandler(netMan, protocolVersion),
 				clientid, channel, protocolVersion);
 		DBCommandQueue.get().enqueue(command);
 
@@ -121,12 +122,19 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 			info.clientNonce = msgLogin.getHash();
 			info.username = msgLogin.getUsername();
 			info.password = msgLogin.getPassword();
-		} else {
+		} else if (msg instanceof MessageC2SLoginSendNonceNamePasswordAndSeed) {
 			MessageC2SLoginSendNonceNamePasswordAndSeed msgLogin = (MessageC2SLoginSendNonceNamePasswordAndSeed) msg;
 			info.clientNonce = msgLogin.getHash();
 			info.username = msgLogin.getUsername();
 			info.password = msgLogin.getPassword();
 			info.seed = decode(info, msgLogin.getSeed());
+		} else {
+			MessageC2SLoginSendUsernameAndPassword msgLogin = (MessageC2SLoginSendUsernameAndPassword) msg;
+			info = new SecuredLoginInfo(entry.getAddress());
+			entry.loginInformations = info;
+			info.username = msgLogin.getUsername();
+			info.password = msgLogin.getPassword();
+			info.usingSecureChannel = false;
 		}
 		return info;
 	}
@@ -176,7 +184,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 			}
 		}
 
-		/** 
+		/**
 		 * This method builds a String[] from the properties used in Server Info
 		 *
 		 * @return Server Info
@@ -216,7 +224,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 
 				msgLoginNACK.setProtocolVersion(command.getProtocolVersion());
 				netMan.sendMessage(msgLoginNACK);
-				
+
 				/*
 				 * Disconnect player of server.
 				 */
@@ -224,7 +232,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 
 				return;
 			}
-			
+
 			/*
 			 * We verify the username and the password to make sure player is
 			 * who he/she says he/she is.

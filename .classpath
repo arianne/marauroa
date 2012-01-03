@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="srcexternal"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="src" path="functional_tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
@@ -13,7 +12,6 @@
 	<classpathentry kind="lib" path="libs/jetty-http-7.1.6.v20100715.jar"/>
 	<classpathentry kind="lib" path="libs/jetty-security-7.1.6.v20100715.jar"/>
 	<classpathentry kind="lib" path="libs/jetty-servlet-7.1.6.v20100715.jar"/>
-	<classpathentry kind="lib" path="libs/socketio-java-20101204.jar"/>
 	<classpathentry kind="lib" path="libs/jetty-client-7.1.6.v20100715.jar"/>
 	<classpathentry kind="lib" path="libs/jetty-continuation-7.1.6.v20100715.jar"/>
 	<classpathentry kind="lib" path="libs/jetty-io-7.1.6.v20100715.jar"/>
@@ -23,5 +21,6 @@
 	<classpathentry kind="lib" path="libs/jetty-websocket-7.1.6.v20100715.jar"/>
 	<classpathentry kind="lib" path="libs/jetty-xml-7.1.6.v20100715.jar"/>
 	<classpathentry kind="lib" path="libs/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="libs/socketio-java-20110114.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

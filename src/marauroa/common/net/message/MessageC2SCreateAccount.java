@@ -13,6 +13,7 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
+import java.util.Map;
 
 import marauroa.common.net.Channel;
 
@@ -108,6 +109,23 @@ public class MessageC2SCreateAccount extends Message {
 		password = in.readString();
 		email = in.readString();
 
+		if (type != MessageType.C2S_CREATEACCOUNT) {
+			throw new IOException();
+		}
+	}
+
+	@Override
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
+		if (in.get("u") != null) {
+			username = in.get("u").toString();
+		}
+		if (in.get("p") != null) {
+			password = in.get("p").toString();
+		}
+		if (in.get("e") != null) {
+			email = in.get("e").toString();
+		}
 		if (type != MessageType.C2S_CREATEACCOUNT) {
 			throw new IOException();
 		}
