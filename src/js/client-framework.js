@@ -79,7 +79,8 @@ marauroa.clientFramework = {
 			"u": username,
 			"p": password
 		};
-		this.sendMessage(msg);		
+		this.username = username;
+		this.sendMessage(msg);
 	},
 
 	onServerInfo: function(contents) {
@@ -251,6 +252,10 @@ marauroa.clientFramework = {
 	 */
 	onAvailableCharacterDetails: function(characters) {
 		marauroa.log.debug("onAvailableCharacterDetails: ", characters);
+		if (marauroa.util.isEmpty(characters)) {
+			marauroa.log.debug("No character found, creating a character with the username (redefine onAvailableCharacterDetails to prevent this).");
+			this.createCharacter(this.username, {});
+		}
 	},
 
 	createAccount: function(username, password, email) {
