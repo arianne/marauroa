@@ -62,7 +62,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 	 * @return true, if the game and version is compatible
 	 */
 	public boolean checkGameVersion(String game, String version) {
-		return game.equals("Chat");
+		return true;
 	}
 
 	/**
