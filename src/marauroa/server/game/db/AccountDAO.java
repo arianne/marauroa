@@ -47,7 +47,7 @@ public class AccountDAO {
 		// hide constructor as this class should only be instantiated by DAORegister
 	}
 
-	
+
 	/**
 	 * creates an account
 	 *
@@ -171,7 +171,7 @@ public class AccountDAO {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * checks if this account exists
 	 *
@@ -336,7 +336,7 @@ public class AccountDAO {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * gets the id of the account
 	 *
@@ -372,7 +372,7 @@ public class AccountDAO {
 	 */
 	public boolean verify(DBTransaction transaction, SecuredLoginInfo informations)
 	        throws SQLException {
-		if (Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
+		if (informations.isUsingSecureChannel() && Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
 			logger.debug("Different hashs for client Nonce");
 			return false;
 		}
@@ -393,14 +393,18 @@ public class AccountDAO {
 			}
 		}
 
-		byte[] b1 = informations.key.decodeByteArray(informations.password);
-		byte[] b2 = Hash.xor(informations.clientNonce, informations.serverNonce);
-		if (b2 == null) {
-			logger.debug("B2 is null");
-			return false;
+		byte[] password;
+		if (informations.isUsingSecureChannel()) {
+			byte[] b1 = informations.key.decodeByteArray(informations.password);
+			byte[] b2 = Hash.xor(informations.clientNonce, informations.serverNonce);
+			if (b2 == null) {
+				logger.debug("B2 is null");
+				return false;
+			}
+			password = Hash.xor(b1, b2);
+		} else {
+			password = informations.password;
 		}
-
-		byte[] password = Hash.xor(b1, b2);
 		if (password == null) {
 			logger.debug("Password is null");
 			return false;
@@ -418,12 +422,12 @@ public class AccountDAO {
 
 		return res;
 	}
-	
+
 	/**
 	 * verifies the account credentials using the database
 	 *
 	 * @param transaction DBTransaction
-	 * @param username username 
+	 * @param username username
 	 * @param hexPassword hashed password
 	 * @return true on success, false if the account does not exists or the password does not match
 	 * @throws SQLException in case of an database error
@@ -459,7 +463,7 @@ public class AccountDAO {
 	 * deletes an account from the database
 	 *
 	 * @param transaction DBTransaction
-	 * @param username username 
+	 * @param username username
 	 * @return always true
 	 * @throws SQLException in case of an database error
 	 */
@@ -519,7 +523,7 @@ public class AccountDAO {
 		int attemps = transaction.querySingleCellInt(query, params);
 		return attemps > conf.getInt("account_creation_limit", TimeoutConf.ACCOUNT_CREATION_LIMIT);
 	}
-	
+
 	/**
 	 * adds a ban (which may be temporary)
 	 *
@@ -533,7 +537,7 @@ public class AccountDAO {
 			throws SQLException {
 		try {
 			int player_id = getDatabasePlayerId(username);
-			
+
 			String expireStr = "'[expire]'";
 			if (expire == null) {
 				expireStr = "null";
@@ -548,13 +552,13 @@ public class AccountDAO {
 			logger.debug("addBan is using query: " + query);
 
 			transaction.execute(query, params);
-			
+
 			if("null".equals(expireStr)) {
 				setAccountStatus(transaction, username, "banned");
 			}
-			
+
 		} catch (SQLException e) {
-			logger.error("Can't insert ban for player \"" + username + "\" with expire of " + 
+			logger.error("Can't insert ban for player \"" + username + "\" with expire of " +
 					expire + " into database", e);
 			throw e;
 		}
@@ -608,7 +612,7 @@ public class AccountDAO {
 			TransactionPool.get().commit(transaction);
 		}
 	}
-	
+
 	/**
 	 * checks if this account exists
 	 *
@@ -730,7 +734,7 @@ public class AccountDAO {
 	/**
 	 * deletes an account from the database
 	 *
-	 * @param username username 
+	 * @param username username
 	 * @return always true
 	 * @throws SQLException in case of an database error
 	 */
@@ -762,7 +766,7 @@ public class AccountDAO {
 			TransactionPool.get().commit(transaction);
 		}
 	}
-	
+
 	/**
 	 * adds a ban (which may be temporary)
 	 *
@@ -773,10 +777,10 @@ public class AccountDAO {
 	 */
 	public void addBan(String username, String reason, Timestamp expire)
 			throws SQLException {
-		
+
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
-			addBan(transaction, username, reason, expire);			
+			addBan(transaction, username, reason, expire);
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}

@@ -66,14 +66,15 @@ public class Message implements Serializable {
 		C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED,
 		S2C_LOGIN_MESSAGE_NACK,
 		P2S_CREATECHARACTER,
-		P2S_CREATEACCOUNT
+		P2S_CREATEACCOUNT,
+		C2S_LOGIN_SENDUSERNAMEANDPASSWORD
 	}
 
 	/** Type of the message */
 	protected MessageType type;
 
 	/** Clientid of the player that generated the message */
-	protected int clientid;
+	protected int clientid = -1;
 
 	/** Timestamp about when the message was created */
 	protected int timestampMessage;

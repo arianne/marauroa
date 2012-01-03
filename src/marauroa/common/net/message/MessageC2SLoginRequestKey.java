@@ -41,18 +41,18 @@ public class MessageC2SLoginRequestKey extends Message {
 	/**
 	 * Constructor for allowing creation of an empty messag
 	 *
+	 * @param source The TCP/IP address associated to this message
 	 * @param skip game version check
 	 */
-	public MessageC2SLoginRequestKey(boolean skip) {
-		super(MessageType.C2S_LOGIN_REQUESTKEY, null);
+	public MessageC2SLoginRequestKey(Channel source, boolean skip) {
+		super(MessageType.C2S_LOGIN_REQUESTKEY, source);
 		this.skip = skip;
 	}
 
 	/**
 	 * Constructor with a TCP/IP source/destination of the message and game name and version.
 	 *
-	 * @param source
-	 *            The TCP/IP address associated to this message
+	 * @param source The TCP/IP address associated to this message
 	 * @param game the game name
 	 * @param version the version of the game.
 	 */

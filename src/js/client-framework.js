@@ -69,6 +69,15 @@ marauroa.clientFramework = {
 		marauroa.log.debug("onDisconnect: " + reason + " error: " + error);
 	},
 
+	login: function(username, password) {
+		var msg = {
+			"t": "34",
+			"u": username,
+			"p": password
+		};
+		this.sendMessage(msg);		
+	},
+
 	onLoginFailed: function(reason, text) {
 		marauroa.log.error("Login failed with reason " + reason + ": " + text);
 	},
@@ -77,7 +86,7 @@ marauroa.clientFramework = {
 		if (marauroa.debug.messages) {
 			marauroa.log.debug("<--: ", msg);
 		}
-		if (msg.t == 9) {
+		if (msg.t == 9 || msg.t == 15) {
 			this.clientid = msg.c;
 		}
 		if (typeof(msg) == "string") {

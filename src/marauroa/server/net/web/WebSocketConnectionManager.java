@@ -177,7 +177,10 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 					entry.clientid, channel, 0);
 			DBCommandQueue.get().enqueue(command);
 		} else {
-			Message msg = new MessageC2SLoginRequestKey(true);
+			entry.state = ClientState.CONNECTION_ACCEPTED;
+			entry.disableTimeout();
+			Message msg = new MessageC2SLoginRequestKey(channel, true);
+			msg.setClientID(entry.clientid);
 			serverManager.onMessage(this, webSocketChannel, msg);
 		}
 
@@ -202,7 +205,7 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 	 */
 	@SuppressWarnings("unchecked")
 	public void onMessage(WebSocketChannel webSocketChannel, int messageType, String message) {
-		logger.info("messateType: " + messageType + " message: " + message);
+		logger.debug("messageType: " + messageType + " message: " + message);
 		Map<String, Object> map = (Map<String, Object>) JSON.parse(message);
 		try {
 			Message msg = MessageFactory.getFactory().getMessage(map);

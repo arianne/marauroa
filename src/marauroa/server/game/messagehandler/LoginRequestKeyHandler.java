@@ -52,7 +52,7 @@ class LoginRequestKeyHandler extends MessageHandler {
 			 */
 			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg
 			        .getChannel(), key);
-			msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
+			msgLoginSendKey.setClientID(msg.getClientID());
 			msgLoginSendKey.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendKey);
 		} else {

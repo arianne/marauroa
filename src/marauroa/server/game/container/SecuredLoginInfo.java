@@ -21,7 +21,6 @@ import marauroa.server.game.db.LoginEventDAO;
  * login is completed the information is cleared.
  */
 public class SecuredLoginInfo {
-	@SuppressWarnings("hiding")
 	private static Logger logger = Log4J.getLogger(SecuredLoginInfo.class);
 
 	/** A long array of bytes that represent the Hash of a random value. */
@@ -54,6 +53,9 @@ public class SecuredLoginInfo {
 	/** reason why a login failed */
 	public Reasons reason;
 
+	/** is the password encrypted */
+	public boolean usingSecureChannel = true;
+
 	/**
 	 * Constructor
 	 *
@@ -63,12 +65,21 @@ public class SecuredLoginInfo {
 	 *            the client hash
 	 * @param serverNonce
 	 *            the server random bigint
-	 * @param address client ip address 
+	 * @param address client ip address
 	 */
 	public SecuredLoginInfo(RSAKey key, byte[] clientNonceHash, byte[] serverNonce, InetAddress address) {
 		this.key = key;
 		this.clientNonceHash = Utility.copy(clientNonceHash);
 		this.serverNonce = Utility.copy(serverNonce);
+		this.address = address;
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param address client ip address
+	 */
+	public SecuredLoginInfo(InetAddress address) {
 		this.address = address;
 	}
 
@@ -152,9 +163,9 @@ public class SecuredLoginInfo {
 		boolean res = true;
 		try {
 			LoginEventDAO loginEventDAO = DAORegister.get().get(LoginEventDAO.class);
-			res = loginEventDAO.isAccountBlocked(transaction, username) 
+			res = loginEventDAO.isAccountBlocked(transaction, username)
 				|| loginEventDAO.isAddressBlocked(transaction, address.getHostAddress());
-			
+
 			TransactionPool.get().commit(transaction);
 		} catch (SQLException e) {
 			TransactionPool.get().rollback(transaction);
@@ -188,6 +199,15 @@ public class SecuredLoginInfo {
 	}
 
 	/**
+	 * are we using a secure channel so that we can skip our own RSA encryption and replay protection
+	 *
+	 * @return usingSecureChannel
+	 */
+	public boolean isUsingSecureChannel() {
+		return usingSecureChannel;
+	}
+
+	/**
 	 * returns a string suitable for debug output of this DBCommand.
 	 *
 	 * @return debug string
@@ -197,4 +217,5 @@ public class SecuredLoginInfo {
 		return "SecuredLoginInfo [username=" + username + ", address="
 				+ address + ", seed=" + seed + ", reason=" + reason + "]";
 	}
+
 }

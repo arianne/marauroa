@@ -33,6 +33,11 @@ marauroa.messageFactory = new function() {
 		marauroa.clientFramework.onChooseCharacterNack();
 	}
 
+	// Message S2C Login ACK
+	this.t13 = function() {
+		
+	}
+
 	// Message S2C Send Key
 	this.t15 = function() {
 		marauroa.log.debug("Server send key: ", this);
@@ -41,6 +46,11 @@ marauroa.messageFactory = new function() {
 	// Message S2C Perception
 	this.t19 = function() {
 		marauroa.clientFramework.onPerception(this);
+	}
+
+	// Message S2C Server Info
+	this.t20 = function() {
+		
 	}
 
 	// Message S2C Transfer
