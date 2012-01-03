@@ -82,6 +82,10 @@ marauroa.clientFramework = {
 		marauroa.log.debug("ServerInfo", contents);
 	},
 
+	onPreviousLogins: function(previousLogins) {
+		marauroa.log.debug("Previous Logins", previousLogins);
+	},
+
 	onLoginFailed: function(reason, text) {
 		marauroa.log.error("Login failed with reason " + reason + ": " + text);
 	},

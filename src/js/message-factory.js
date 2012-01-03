@@ -35,6 +35,7 @@ marauroa.messageFactory = new function() {
 
 	// Message S2C Login ACK
 	this.t13 = function() {
+		marauroa.clientFramework.onPreviousLogins(this.previousLogins);
 	}
 
 	// Message S2C Send Key

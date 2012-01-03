@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.net.Channel;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the client that the server has accepted its login
@@ -87,5 +88,21 @@ public class MessageS2CLoginACK extends Message {
 		if (type != MessageType.S2C_LOGIN_ACK) {
 			throw new IOException();
 		}
+	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"previousLogins\":[");
+		boolean first = true;
+		for (String line : previousLogins) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			OutputSerializer.writeJson(out, line);
+		}
+		out.append("]");
 	}
 }
