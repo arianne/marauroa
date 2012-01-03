@@ -133,10 +133,11 @@ public class RPWorld implements Iterable<IRPZone> {
 		if (defaultZone != null) {
 			return defaultZone;
 		}
-		if (!zones.isEmpty()) {
-			return zones.values().iterator().next();
+		if (zones.isEmpty()) {
+			IRPZone zone = new MarauroaRPZone("lobby");
+			addRPZone(zone);
 		}
-		return null;
+		return zones.values().iterator().next();
 	}
 
 	/**

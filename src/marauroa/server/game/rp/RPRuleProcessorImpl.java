@@ -63,7 +63,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 	 * @return true, if the game and version is compatible
 	 */
 	public boolean checkGameVersion(String game, String version) {
-		return game.equals("Chat");
+		return true;
 	}
 
 	/**
@@ -167,7 +167,8 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 			transactionPool.commit(trans);
 			return new AccountResult(Result.OK_CREATED, username);
 
-		} catch (SQLException e1) {
+		} catch (SQLException e) {
+			logger.error(e, e);
 			transactionPool.rollback(trans);
 			return new AccountResult(Result.FAILED_EXCEPTION, username);
 		}
@@ -197,7 +198,8 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 			transactionPool.commit(trans);
 			return new CharacterResult(Result.OK_CREATED, character, object);
 
-		} catch (Exception e1) {
+		} catch (Exception e) {
+			logger.error(e, e);
 			transactionPool.rollback(trans);
 			return new CharacterResult(Result.FAILED_EXCEPTION, character, template);
 		}
