@@ -232,24 +232,6 @@ marauroa.clientFramework = {
 		marauroa.log.debug("onAvailableCharacterDetails: ", characters);
 	},
 
-	/**
-	 * Returns the name of the game that this client implements
-	 *
-	 * @return the name of the game that this client implements
-	 */
-	onGameNameRequired: function() {
-		return "implement onGameNameRequired()";
-	},
-
-	/**
-	 * Returns the version number of the game
-	 *
-	 * @return the version number of the game
-	 */
-	onVersionNumberRequired: function() {
-		return "0.0";
-	},
-
 	createAccount: function(username, password, email) {
 		var msg = {
 				"t": "23",
