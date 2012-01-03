@@ -248,6 +248,7 @@ marauroa.clientFramework = {
 
 	onCreateAccountNack: function(username, reason) {
 		marauroa.log.debug("Creating Account \"" + username + "\" failed: ", reason);
+		alert(reason.text);
 	},
 
 	createCharacter: function(charname, template) {
@@ -265,5 +266,6 @@ marauroa.clientFramework = {
 
 	onCreateCharacterNack: function(charname, reason) {
 		marauroa.log.debug("Creating Character \"" + charname + "\" failed: ", reason);
+		alert(reason.text);
 	}
 }
