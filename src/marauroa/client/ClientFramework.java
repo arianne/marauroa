@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -128,7 +131,70 @@ public abstract class ClientFramework {
 	 *             if connection is not possible
 	 */
 	public void connect(String host, int port) throws IOException {
-		netMan = new TCPNetworkClientManager(host, port);
+		InetSocketAddress address = new InetSocketAddress(host, port);
+		IOException originalException = null;
+		boolean connected = false;
+
+		// if a SOCKS-proxy is specified, try it first
+		Proxy proxy = discoverProxy(host, port);
+		if (proxy != Proxy.NO_PROXY) {
+			try {
+				connect(proxy, address);
+				connected = true;
+			} catch (IOException e) {
+				originalException = e;
+			}
+		}
+
+		// if no proxy is specified, or it failed, try without proxy
+		if (!connected) {
+			try {
+				connect(Proxy.NO_PROXY, address);
+			} catch (IOException e) {
+				// if this is only the fallback, throw the original exception instead
+				if (originalException != null) {
+					throw originalException;
+				}
+				throw e;
+			}
+		}
+	}
+
+	/**
+	 * discovers a SOCKS proxy, ignores all other proxies
+	 *
+	 * @param host name or ip-address of server
+	 * @param port port of server
+	 * @return a Proxy object
+	 * @throws IOException in case of an unexpected error
+	 */
+	private Proxy discoverProxy(String host, int port) throws IOException {
+		ProxySelector selector = ProxySelector.getDefault();
+		if (selector == null) {
+			return Proxy.NO_PROXY;
+		}
+
+		String quotedHost = host;
+		URI uri = null;
+		if (!host.startsWith("[") && (host.indexOf(":") >= 0)) {
+			quotedHost = "[" + host + "]";
+		}
+		try {
+			uri = new URI("socket://" + quotedHost + ":" + port);
+		} catch (URISyntaxException e) {
+			throw new IOException("Error, while discovering proxyserver: ", e);
+		}
+
+		List<Proxy> proxies = selector.select(uri);
+		if (proxies == null) {
+			return Proxy.NO_PROXY;
+		}
+		for (Proxy proxy : proxies) {
+			if (proxy.type() == Proxy.Type.SOCKS) {
+				return proxy;
+			}
+		}
+		return Proxy.NO_PROXY;
 	}
 
 	/**
