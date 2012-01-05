@@ -74,8 +74,9 @@ public class NetConst {
 	 * 31 - Added KeepAlive message.
 	 * 32 - Include RPObjects in S2CCharacterList
 	 * 33 - Added support for maps as attributes
+	 * 34 - Added hash on content transfer
 	 */
-	public static final byte NETWORK_PROTOCOL_VERSION = 33;
+	public static final byte NETWORK_PROTOCOL_VERSION = 34;
 
 	/** Oldest supported protocol version */
 	public static final byte NETWORK_PROTOCOL_VERSION_MIN = 31;
@@ -91,5 +92,8 @@ public class NetConst {
 	
 	/** the first version that supports maps in rpobjects. */
 	public static final byte FIRST_VERSION_WITH_MAP_SUPPORT = 33;
+
+	/** the first version that supports maps in rpobjects. */
+	public static final byte FIRST_VERSION_WITH_CONTENT_HASH = 34;
 	
 }
