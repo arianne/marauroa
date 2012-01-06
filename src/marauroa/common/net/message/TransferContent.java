@@ -1,6 +1,6 @@
 /* $Id: TransferContent.java,v 1.8 2010/11/14 15:49:16 nhnb Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *                   (C) Copyright 2003-2012 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -15,18 +15,17 @@ package marauroa.common.net.message;
 import java.io.IOException;
 
 import marauroa.common.Utility;
+import marauroa.common.crypto.Hash;
+import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
-
-import org.apache.log4j.Logger;
 
 /**
  * A helper class to transfer content from server to client.
  *
- * @author miguel
+ * @author miguel, hendrik
  *
  */
 public class TransferContent {
-	private static final Logger logger = Logger.getLogger(TransferContent.class);
 
 	/**
 	 * Name of the content to transfer.
@@ -40,20 +39,17 @@ public class TransferContent {
 	 */
 	public int timestamp;
 
-	/**
-	 * The content itself.
-	 */
+	/** The content itself. */
 	public byte[] data;
 
-	/**
-	 * If the client can cache this content,  this would be true.
-	 */
+	/** If the client can cache this content,  this would be true. */
 	public boolean cacheable;
 
-	/**
-	 * If the client approved this content to be transfered it will be true.
-	 */
+	/** If the client approved this content to be transfered it will be true. */
 	public boolean ack;
+
+	/** a hash of the data */
+	private byte[] hash;
 
 	/**
 	 * Constructor
@@ -67,6 +63,18 @@ public class TransferContent {
 		timestamp = 0;
 	}
 
+	/**
+	 * gets the hash
+	 *
+	 * @return hash
+	 */
+	public byte[] getHash() {
+		if (hash == null) {
+			hash = Hash.hash(data);
+		}
+		return hash;
+	}
+
 	@Override
 	public String toString() {
 		StringBuffer sstr = new StringBuffer();
@@ -75,6 +83,8 @@ public class TransferContent {
 		sstr.append(name);
 		sstr.append("\" timestamp=\"");
 		sstr.append(timestamp);
+		sstr.append("\" hash=\"");
+		sstr.append(Hash.toHexString(getHash()));
 		sstr.append("\"]");
 
 		return sstr.toString();
@@ -102,6 +112,9 @@ public class TransferContent {
 	public void writeREQ(marauroa.common.net.OutputSerializer out) throws IOException {
 		out.write(name);
 		out.write(timestamp);
+		if (out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_CONTENT_HASH) {
+			out.write(getHash());
+		}
 		out.write((byte) (cacheable ? 1 : 0));
 	}
 
@@ -115,6 +128,8 @@ public class TransferContent {
 		OutputSerializer.writeJson(out, name);
 		out.append(",\"timestamp\":");
 		OutputSerializer.writeJson(out, Integer.toString(timestamp));
+		out.append(",\"hash\":");
+		OutputSerializer.writeJson(out, Hash.toHexString(getHash()));
 		out.append(",\"cachable\":");
 		out.append(cacheable ? "true" : "false");
 		out.append("}");
@@ -128,6 +143,9 @@ public class TransferContent {
 	public void readREQ(marauroa.common.net.InputSerializer in) throws IOException {
 		name = in.readString();
 		timestamp = in.readInt();
+		if (in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_CONTENT_HASH) {
+			hash = in.readByteArray();
+		}
 		cacheable = (in.readByte() == 1);
 	}
 
@@ -184,6 +202,9 @@ public class TransferContent {
 		out.write(name);
 		out.write(data);
 		out.write(timestamp);
+		if (out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_CONTENT_HASH) {
+			out.write(getHash());
+		}
 		out.write((byte) (cacheable ? 1 : 0));
 	}
 
@@ -196,6 +217,9 @@ public class TransferContent {
 		name = in.readString();
 		data = in.readByteArray();
 		timestamp = in.readInt();
+		if (in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_CONTENT_HASH) {
+			hash = in.readByteArray();
+		}
 		cacheable = (in.readByte() == 1);
 	}
 
