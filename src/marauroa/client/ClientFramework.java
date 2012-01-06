@@ -182,7 +182,9 @@ public abstract class ClientFramework {
 		try {
 			uri = new URI("socket://" + quotedHost + ":" + port);
 		} catch (URISyntaxException e) {
-			throw new IOException("Error, while discovering proxyserver: ", e);
+			IOException ioE = new IOException("Error, while discovering proxyserver: ");
+			ioE.initCause(e);
+			throw ioE;
 		}
 
 		List<Proxy> proxies = selector.select(uri);
