@@ -24,7 +24,7 @@ import marauroa.server.game.GameServerManager;
  */
 class LoginRequestKeyHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(LoginRequestKeyHandler.class);
 
 	/**
 	 * This method handles the initial login of the client into the server.

@@ -39,7 +39,7 @@ import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;
  */
 class CreateCharacterHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(CreateCharacterHandler.class);
 
 	/**
 	 * This message is used to create a character in a game account. It may fail

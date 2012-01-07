@@ -11,7 +11,7 @@ import marauroa.server.game.GameServerManager;
  */
 class UnkownMessageHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(UnkownMessageHandler.class);
 
 	@Override
 	public void process(Message message) {

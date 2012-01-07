@@ -28,7 +28,7 @@ import marauroa.server.game.container.PlayerEntry;
  */
 class LogoutHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(LogoutHandler.class);
 
 	/**
 	 * This method is called when server receives a logout message from a

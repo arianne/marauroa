@@ -50,7 +50,7 @@ import org.apache.log4j.Logger;
  */
 class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(SecuredLoginHandler.class);
 
 
 	/**

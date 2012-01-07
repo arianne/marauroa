@@ -27,7 +27,7 @@ import marauroa.server.game.container.PlayerEntry;
  */
 class ActionHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(ActionHandler.class);
 
 
 	/**

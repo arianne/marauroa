@@ -24,7 +24,7 @@ import marauroa.server.game.container.PlayerEntry;
  */
 class KeepAliveHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(KeepAliveHandler.class);
 
 	/**
 	 * This message is send from client to confirm that he is still alive and has not timeout. 

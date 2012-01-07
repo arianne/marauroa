@@ -30,7 +30,7 @@ import marauroa.server.net.INetworkServerManager;
  */
 abstract class MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(MessageHandler.class);
 
 	/** We need network server manager to be able to send messages */
 	protected INetworkServerManager netMan;
@@ -66,7 +66,7 @@ abstract class MessageHandler {
 			/*
 			 * Error: Player didn't login.
 			 */
-			logger.warn("Client(" + msg.getAddress() + ") has not login yet");
+			logger.warn("Client(" + msg.getAddress() + ") has not logged in, yet");
 			return false;
 		}
 

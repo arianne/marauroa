@@ -27,7 +27,7 @@ import marauroa.server.game.container.PlayerEntry;
 //TODO: Consider removing this message as with TCP it won't fail.
 class OutOfSyncHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(OutOfSyncHandler.class);
 
 	/**
 	 * This message is send from client to notify that client suffered a network

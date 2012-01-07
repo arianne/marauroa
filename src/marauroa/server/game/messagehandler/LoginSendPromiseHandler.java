@@ -30,7 +30,7 @@ import marauroa.server.game.container.PlayerEntry;
  */
 class LoginSendPromiseHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(LoginSendPromiseHandler.class);
 	private int maxNumberOfPlayers = 128;
 
 	public LoginSendPromiseHandler() {

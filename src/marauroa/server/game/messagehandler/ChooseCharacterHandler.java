@@ -37,7 +37,7 @@ import marauroa.server.game.rp.RPServerManager;
  */
 class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(ChooseCharacterHandler.class);
 
 	/**
 	 * This methods handles the logic when a Choose Character message is
