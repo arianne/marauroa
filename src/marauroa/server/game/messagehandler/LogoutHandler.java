@@ -18,7 +18,6 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLogout;
 import marauroa.common.net.message.MessageS2CLogoutACK;
 import marauroa.common.net.message.MessageS2CLogoutNACK;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 

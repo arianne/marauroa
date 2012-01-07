@@ -17,7 +17,6 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CLoginSendKey;
-import marauroa.server.game.GameServerManager;
 
 /**
  * Process the C2S Login request key message.

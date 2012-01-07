@@ -21,7 +21,6 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CLoginSendNonce;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.PlayerEntry;
 
 /**

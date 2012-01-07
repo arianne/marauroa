@@ -15,7 +15,6 @@ package marauroa.server.game.messagehandler;
 import marauroa.common.Log4J;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SOutOfSync;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 

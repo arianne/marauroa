@@ -26,7 +26,6 @@ import marauroa.common.net.message.MessageS2CCreateCharacterACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
 import marauroa.server.db.command.DBCommand;
 import marauroa.server.db.command.DBCommandQueue;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;

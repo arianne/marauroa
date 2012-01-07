@@ -2,7 +2,6 @@ package marauroa.server.game.messagehandler;
 
 import marauroa.common.Log4J;
 import marauroa.common.net.message.Message;
-import marauroa.server.game.GameServerManager;
 
 /**
  * Handles unknown messages
