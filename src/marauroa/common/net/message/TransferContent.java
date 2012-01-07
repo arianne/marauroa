@@ -75,6 +75,15 @@ public class TransferContent {
 		return hash;
 	}
 
+	/**
+	 * gets the transmitted hash, may be <code>null</code>.
+	 *
+	 * @return transmitted hash or <code>null</code>
+	 */
+	public byte[] getTransmittedHash() {
+		return hash;
+	}
+
 	@Override
 	public String toString() {
 		StringBuffer sstr = new StringBuffer();
@@ -83,8 +92,6 @@ public class TransferContent {
 		sstr.append(name);
 		sstr.append("\" timestamp=\"");
 		sstr.append(timestamp);
-		sstr.append("\" hash=\"");
-		sstr.append(Hash.toHexString(getHash()));
 		sstr.append("\"]");
 
 		return sstr.toString();
