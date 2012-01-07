@@ -173,8 +173,9 @@ public final class NIONetworkServerManager extends Thread implements IWorker, ID
 	public void onConnect(SocketChannel channel) {
 		Socket socket = channel.socket();
 
+		logger.info("Connected from " + socket.getRemoteSocketAddress());
 		if (connectionValidator.checkBanned(socket)) {
-			logger.debug("Reject connection from banned IP: " + socket.getInetAddress());
+			logger.info("Reject connection from banned IP: " + socket.getInetAddress());
 
 			/*
 			 * Sends a connect NACK message if the address is banned.
@@ -358,7 +359,7 @@ public final class NIONetworkServerManager extends Thread implements IWorker, ID
 	 *            the channel to clear
 	 */
 	public void onDisconnect(SocketChannel channel) {
-		logger.info("NET Disconnecting " + channel);
+		logger.info("NET Disconnecting " + channel.socket().getRemoteSocketAddress());
 		decoder.clear(channel);
 	}
 }
