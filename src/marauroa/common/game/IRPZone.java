@@ -62,7 +62,7 @@ public interface IRPZone extends Iterable<RPObject> {
 		@Override
 		public boolean equals(Object anotherid) {
 			if (anotherid instanceof IRPZone.ID) {
-			    return (((IRPZone.ID) anotherid).id).equals(this.id);
+				return (((IRPZone.ID) anotherid).id).equals(this.id);
 			} else {
 				return false;
 			}
@@ -71,10 +71,10 @@ public interface IRPZone extends Iterable<RPObject> {
 		/** We need it for HashMap */
 		@Override
 		public int hashCode() {
-			if (id!= null){
+			if (id != null) {
 				return id.hashCode();
-			}
-			else return 0;
+			} else
+				return 0;
 		}
 
 		/**
@@ -88,14 +88,14 @@ public interface IRPZone extends Iterable<RPObject> {
 		}
 
 		/** Serialize the object into a stream of bytes. */
-                @Override
+		@Override
 		public void writeObject(marauroa.common.net.OutputSerializer out)
-		        throws java.io.IOException {
+				throws java.io.IOException {
 			out.write(id);
 		}
 
 		/** Deserialize the object and fills this object with the data */
-                @Override
+		@Override
 		public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 			id = in.readString();
 		}
@@ -209,7 +209,7 @@ public interface IRPZone extends Iterable<RPObject> {
 	 *
 	 * @return an iterator over zone
 	 */
-        @Override
+	@Override
 	public Iterator<RPObject> iterator();
 
 	/**
@@ -234,16 +234,16 @@ public interface IRPZone extends Iterable<RPObject> {
 	 * This method is called to take zone to the next turn
 	 */
 	public void nextTurn();
-	
+
 	/**
-         * Zone's parent, null if root
-         * @return Parent zone
-         */
+	 * Zone's parent, null if root
+	 * @return Parent zone
+	 */
 	public IRPZone getParent();
-        
-        /**
-         * Set Zone's parent
-         * @return Parent zone
-         */
+
+	/**
+	 * Set Zone's parent
+	 * @param parent Parent zone
+	 */
 	public void setParent(IRPZone parent);
 }
