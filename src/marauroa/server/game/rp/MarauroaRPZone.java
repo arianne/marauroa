@@ -13,17 +13,7 @@
 package marauroa.server.game.rp;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
+import java.util.*;
 import marauroa.common.Log4J;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
@@ -44,6 +34,7 @@ import marauroa.server.game.dbcommand.StoreZoneCommand;
  * modified each turn.
  *
  * <pre>
+
  *   The Traditional method:
  *
  *   - Get objects that our player should see ( 1000 objects )
@@ -81,6 +72,7 @@ import marauroa.server.game.dbcommand.StoreZoneCommand;
  * <p>
  * The delta2 algorithm is based on four containers:
  * <ul>
+
  * <li>List of added objects
  * <li>List of modified added attributes of objects
  * <li>List of modified deleted attributes of objects
@@ -121,27 +113,37 @@ public class MarauroaRPZone implements IRPZone {
 	private int lastNonPermanentIdAssigned = 0;
 
 	private static Random rand = new Random();
+	
+	protected IRPZone parent;
 
 	/**
 	 * Creates a new MarauroaRPZone
 	 *
 	 * @param zoneid name of zone
 	 */
+	
 	public MarauroaRPZone(String zoneid) {
+		this(zoneid, null);
+	}
+	
+	public MarauroaRPZone(String zoneid, MarauroaRPZone parent) {
+		this.parent = parent;
 		this.zoneid = new ID(zoneid);
 		rand.setSeed(new Date().getTime());
 
 		objects = new LinkedHashMap<RPObject.ID, RPObject>();
 		modified = new HashSet<RPObject>();
 
-		perception = new Perception(Perception.DELTA, this.zoneid);
+                perception = new Perception(Perception.DELTA, this.zoneid);
 	}
 
 	/** Returns the zoneid */
+	@Override
 	public ID getID() {
 		return zoneid;
 	}
 
+	@Override
 	public void onFinish() throws Exception {
 		storeToDatabase();
 	}
@@ -163,6 +165,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * Load objects in database for this zone that were stored 
 	 * and waits for the database operation to complete.
 	 */
+	@Override
 	public void onInit() throws Exception {
 		DAORegister.get().get(RPZoneDAO.class).loadRPZone(this);
 	}
@@ -175,6 +178,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * @throws RPObjectInvalidException
 	 *             if it lacks of mandatory attributes.
 	 */
+	@Override
 	public void add(RPObject object) throws RPObjectInvalidException {
 		try {
 			RPObject.ID id = object.getID();
@@ -200,6 +204,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * @throws RPObjectInvalidException
 	 *             if it lacks of mandatory attributes.
 	 */
+	@Override
 	public void modify(RPObject object) throws RPObjectInvalidException {
 		try {
 			modified.add(object);
@@ -215,6 +220,7 @@ public class MarauroaRPZone implements IRPZone {
 	 *            identified of the removed object
 	 * @return the removed object
 	 */
+	@Override
 	public RPObject remove(RPObject.ID id) {
 		RPObject object = objects.remove(id);
 
@@ -237,6 +243,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * @param object
 	 *            the object to hide.
 	 */
+	@Override
 	public void hide(RPObject object) {
 		object.hide();
 
@@ -255,6 +262,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * @param object
 	 *            the object to unhide.
 	 */
+	@Override
 	public void unhide(RPObject object) {
 		object.unhide();
 
@@ -269,6 +277,7 @@ public class MarauroaRPZone implements IRPZone {
 	 *            identified of the removed object
 	 * @return the object
 	 */
+	@Override
 	public RPObject get(RPObject.ID id) {
 		return objects.get(id);
 	}
@@ -280,6 +289,7 @@ public class MarauroaRPZone implements IRPZone {
 	 *            identified of the removed object
 	 * @return true if object exists.
 	 */
+	@Override
 	public boolean has(RPObject.ID id) {
 		return objects.containsKey(id);
 	}
@@ -290,6 +300,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * @param object
 	 *            the object that is going to obtain a new id
 	 */
+	@Override
 	public void assignRPObjectID(RPObject object) {
 		RPObject.ID id = new RPObject.ID(++lastNonPermanentIdAssigned, zoneid);
 		while (has(id)) {
@@ -305,10 +316,11 @@ public class MarauroaRPZone implements IRPZone {
 	 *
 	 * @return an iterator
 	 */
+	@Override
 	public Iterator<RPObject> iterator() {
 		return objects.values().iterator();
 	}
-
+        
 	/**
 	 * Returns the perception of given type for that object.
 	 *
@@ -317,38 +329,61 @@ public class MarauroaRPZone implements IRPZone {
 	 * @param type
 	 *            the type of perception:
 	 *            <ul>
+
 	 *            <li>SYNC
 	 *            <li>DELTA
 	 *            </ul>
 	 */
+	@Override
 	public Perception getPerception(RPObject player, byte type) {
+            logger.info("Adding changes from " + getID());
 		if (type == Perception.DELTA) {
 			if (prebuildDeltaPerception == null) {
-				prebuildDeltaPerception = perception;
+                            prebuildDeltaPerception = perception;
 
 				for (RPObject modified_obj : modified) {
 					if (modified_obj.isHidden()) {
 						continue;
-					}
+                        }
 					try {
 						if (logger.isDebugEnabled()) {
 							if(!has(modified_obj.getID())) {
 								logger.debug("Modifying a non existing object: "+modified_obj);
 							}
 						}
-						
+                                
 						prebuildDeltaPerception.modified(modified_obj);
 					} catch (Exception e) {
 						logger.error("cannot add object to modified list (object is: ["
 						        + modified_obj + "])", e);
-					}
-				}
+                            }
+                        }
 			}
+                    //Add the changes in the hierarchy. This is recursive.
+                    if (getParent() != null) {
+                        Perception parentPerception = getParent().getPerception(player, type);
+                        for (RPObject modified_obj : parentPerception.modifiedAddedList) {
+                            if (modified_obj.isHidden()) {
+                                continue;
+                            }
+                            try {
+                                if (logger.isDebugEnabled()) {
+                                    if (!has(modified_obj.getID())) {
+                                        logger.debug("Modifying a non existing object: " + modified_obj);
+                                    }
+                                }
 
+                                prebuildDeltaPerception.modified(modified_obj);
+                            } catch (Exception e) {
+                                logger.error("cannot add object to modified list (object is: ["
+                                        + modified_obj + "])", e);
+                            }
+                        }
+                    }
 			return prebuildDeltaPerception;
 		} else /* type==Perception.SYNC */{
 			if (prebuildSyncPerception == null) {
-				prebuildSyncPerception = new Perception(Perception.SYNC, getID());
+                                prebuildSyncPerception = new Perception(Perception.SYNC, getID());
 				prebuildSyncPerception.addedList = new ArrayList<RPObject>(objects.size());
 				for (RPObject obj : objects.values()) {
 					if (!obj.isHidden()) {
@@ -378,6 +413,7 @@ public class MarauroaRPZone implements IRPZone {
 	 *
 	 * @return amount of objects.
 	 */
+	@Override
 	public long size() {
 		return objects.size();
 	}
@@ -398,6 +434,7 @@ public class MarauroaRPZone implements IRPZone {
 	 * This method moves zone from this turn to the next turn. It is called by
 	 * RPWorld.
 	 */
+	@Override
 	public void nextTurn() {
 		reset();
 
@@ -407,4 +444,17 @@ public class MarauroaRPZone implements IRPZone {
 		modified.clear();
 		perception.clear();
 	}
+
+	@Override
+	public IRPZone getParent() {
+		return parent;
+	}
+
+        /**
+        * @param parent the parent to set
+        */
+    @Override
+        public void setParent(IRPZone parent) {
+            this.parent = parent;
+        }
 }

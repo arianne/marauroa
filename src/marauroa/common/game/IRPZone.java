@@ -88,12 +88,14 @@ public interface IRPZone extends Iterable<RPObject> {
 		}
 
 		/** Serialize the object into a stream of bytes. */
+                @Override
 		public void writeObject(marauroa.common.net.OutputSerializer out)
 		        throws java.io.IOException {
 			out.write(id);
 		}
 
 		/** Deserialize the object and fills this object with the data */
+                @Override
 		public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 			id = in.readString();
 		}
@@ -207,6 +209,7 @@ public interface IRPZone extends Iterable<RPObject> {
 	 *
 	 * @return an iterator over zone
 	 */
+        @Override
 	public Iterator<RPObject> iterator();
 
 	/**
@@ -231,4 +234,16 @@ public interface IRPZone extends Iterable<RPObject> {
 	 * This method is called to take zone to the next turn
 	 */
 	public void nextTurn();
+	
+	/**
+         * Zone's parent, null if root
+         * @return Parent zone
+         */
+	public IRPZone getParent();
+        
+        /**
+         * Set Zone's parent
+         * @return Parent zone
+         */
+	public void setParent(IRPZone parent);
 }

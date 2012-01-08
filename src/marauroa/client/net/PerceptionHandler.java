@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import marauroa.common.Log4J;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
@@ -41,7 +40,7 @@ public class PerceptionHandler {
 	/** A list of previous perceptions that are still waiting for being applied. */
 	private List<MessageS2CPerception> previousPerceptions;
 
-	/** the timestamp of last sucessfully applied perception */
+	/** the timestamp of last successfully applied perception */
 	private int previousTimestamp;
 
 	/** This is true if we are synced with server representation. */
@@ -68,6 +67,60 @@ public class PerceptionHandler {
 		this.listener = listener;
 	}
 
+//	public void apply(MessageS2CPerceptions message, RPWorld world) throws Exception {
+//		
+//		
+//		/*
+//		 * if timestamp fits, execute all perceptions
+//		 */
+//		if (previousTimestamp + 1 == message.getPerceptionTimestamp()) {
+//			applyPerceptions(message, world);
+//			previousTimestamp = message.getPerceptionTimestamp();
+//			
+//			//try if there are previous messages we can now use
+//			boolean useless = false;
+//			while (!useless) {
+//				useless = true;
+//				for (MessageS2CPerceptions m : previousHierarchyPerceptions) {
+//					if (previousTimestamp + 1 == m.getPerceptionTimestamp()) {
+//						applyPerceptions(m, world);
+//						previousTimestamp = m.getPerceptionTimestamp();
+//						useless = false;
+//					}
+//				}
+//			}
+//			if (synced == false && previousPerceptions.isEmpty()) {
+//				synced = true;
+//				listener.onSynced();
+//			}
+//		/*
+//		 * else, store message
+//		 */
+//		} else {
+//			synced = false;
+//			listener.onUnsynced();
+//		}
+//	}
+	
+//	private void applyPerceptions(MessageS2CPerceptions message, RPWorld world) throws Exception {
+//		listener.onPerceptionBegin(/*message.getPerceptionType()*/(byte)0, message.getPerceptionTimestamp());
+//		
+//		for (MessageS2CPerception p : message.getPerceptions()) {
+//			IRPZone.ID zoneId = p.getRPZoneID();
+//			if (world.getRPZone(zoneId) == null) {
+//				world.addRPZone(new ClientRPZone(world, zoneId));
+//				listener.onZoneAdded(zoneId);
+//			}
+//			ClientRPZone zone = (ClientRPZone)world.getRPZone(zoneId);
+//			zone.setUpdateTimestamp(message.getPerceptionTimestamp());
+//			applyPerception(p, zone, message.getPerceptionType());
+//		}
+//		
+//		applyPerceptionMyRPObject(message, world);
+//		
+//		listener.onPerceptionEnd(/*message.getPerceptionType()*/(byte)0, message.getPerceptionTimestamp());
+//	}
+	
 	/**
 	 * Apply a perception to a world instance.
 	 * 
@@ -78,16 +131,16 @@ public class PerceptionHandler {
 	 * @throws Exception
 	 */
 	public void apply(MessageS2CPerception message, Map<RPObject.ID, RPObject> world_instance)
-	        throws Exception {
-		listener.onPerceptionBegin(message.getPerceptionType(), message.getPerceptionTimestamp());
-		
+            throws Exception {
+        listener.onPerceptionBegin(message.getPerceptionType(), message.getPerceptionTimestamp());
+
 		/*
 		 * We want to clear previous delta^2 info in the objects.
 		 * Delta^2 is only useful in server for getting changes done to the object.
 		 */
 		for(RPObject obj: world_instance.values()) {
-			obj.resetAddedAndDeleted();
-		}
+                obj.resetAddedAndDeleted();
+            }
 
 		/*
 		 * When we get a sync perception, we set sync flag to true and clear the
@@ -146,7 +199,7 @@ public class PerceptionHandler {
 						applyPerceptionMyRPObject(previousmessage, world_instance);
 					} catch (Exception e) {
 						listener.onException(e, message);
-					}
+		}
 					it.remove();
 				}
 			}
@@ -158,7 +211,7 @@ public class PerceptionHandler {
 			} else {
 				synced = false;
 				listener.onUnsynced();
-			}
+	}
 		}
 
 		/* Notify the listener that the perception is applied */
@@ -166,7 +219,8 @@ public class PerceptionHandler {
 	}
 
 	/**
-	 * This method applys perceptions addedto the Map<RPObject::ID,RPObject>
+	 * This method applies perceptions added to the Map<RPObject::ID,RPObject>
+
 	 * passed as argument. It clears the map if this is a sync perception
 	 * 
 	 * @param message
@@ -266,6 +320,7 @@ public class PerceptionHandler {
 
 	/**
 	 * This method applys perceptions for our RPObject to the Map<RPObject::ID,RPObject>
+
 	 * passed as argument.
 	 * 
 	 * @param message

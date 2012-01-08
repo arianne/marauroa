@@ -13,6 +13,7 @@
 package marauroa.server.game.rp;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -54,6 +55,8 @@ public class RPWorld implements Iterable<IRPZone> {
 	PlayerEntryContainer playerContainer;
 
 	IRPZone defaultZone;
+
+	LinkedList<IZoneListener> zoneListeners = new LinkedList<IZoneListener>();
 
 	/**
 	 * creates a new RPWorld. Note this class is designed as a singleton.
@@ -122,6 +125,11 @@ public class RPWorld implements Iterable<IRPZone> {
 	 */
 	public void addRPZone(IRPZone zone) {
 		zones.put(zone.getID(), zone);
+
+		for (Iterator<IZoneListener> it = zoneListeners.iterator(); it.hasNext();) {
+			IZoneListener listener = it.next();
+			listener.onZoneAdded(zone.getID());
+		}
 	}
 
 	/**
@@ -196,7 +204,12 @@ public class RPWorld implements Iterable<IRPZone> {
 		if(zone!=null) {
 		  zone.onFinish();
 		}
-		
+
+		for (Iterator<IZoneListener> it = zoneListeners.iterator(); it.hasNext();) {
+			IZoneListener listener = it.next();
+			listener.onZoneRemoved(zoneid);
+		}
+
 		return zone;
 	}
 
@@ -209,14 +222,7 @@ public class RPWorld implements Iterable<IRPZone> {
 	 * @throws Exception caused by onFinish
 	 */
 	public IRPZone removeRPZone(RPObject.ID objectid) throws Exception {
-		IRPZone.ID zoneid=new IRPZone.ID(objectid.getZoneID());
-		IRPZone zone=zones.remove(zoneid);
-		
-		if(zone!=null) {
-		  zone.onFinish();
-		}
-		
-		return zone;
+		return removeRPZone(new IRPZone.ID(objectid.getZoneID()));
 	}
 	
 	/**
@@ -392,5 +398,21 @@ public class RPWorld implements Iterable<IRPZone> {
 		}
 
 		return size;
+	}
+
+	/**
+	 * Add a zone listener
+	 * @param listener 
+	 */
+	public void addZoneListener(IZoneListener listener){
+		zoneListeners.add(listener);
+	}
+
+	/**
+	 * Remove a zone listener
+	 * @param listener 
+	 */
+	public void removeZoneListener(IZoneListener listener){
+		zoneListeners.remove(listener);
 	}
 }
