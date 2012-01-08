@@ -322,7 +322,7 @@ public class MarauroaRPZone implements IRPZone {
 	 *            </ul>
 	 */
 	public Perception getPerception(RPObject player, byte type) {
-		logger.info("Adding changes from " + getID());
+		logger.debug("Adding changes from " + getID());
 		if (type == Perception.DELTA) {
 			if (prebuildDeltaPerception == null) {
 				prebuildDeltaPerception = perception;
