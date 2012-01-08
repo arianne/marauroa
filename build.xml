@@ -44,7 +44,7 @@
                    byline="true"/>
 
 		<!-- Compile it -->
-		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}">
+		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
 			<classpath>
 				<pathelement path="${log4j_jar}"/>
 				<pathelement path="${junit_jar}"/>
@@ -68,7 +68,7 @@
 		<mkdir dir="${buildroot_client}"/>
 		
 		<!-- Compile it -->
-		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot_client}" debug="true" debuglevel="source,lines">
+		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot_client}" debug="true" debuglevel="source,lines" includeantruntime="false">
 			<include name="marauroa/client/**"/>
 			<include name="marauroa/common/**"/>
 			<classpath>
