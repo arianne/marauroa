@@ -26,6 +26,7 @@ public class Channel {
 	private Object internalChannel;
 	private InetAddress address;
 	private ConnectionManager connectionManager;
+	private boolean waitingForPerception;
 
 	/**
 	 * creates a new Channel object.
@@ -72,5 +73,23 @@ public class Channel {
 	 */
 	public ConnectionManager getConnectionManager() {
 		return connectionManager;
+	}
+
+	/**
+	 * are we waiting for a perception?
+	 *
+	 * @return true, if we are waiting for a perception
+	 */
+	public boolean isWaitingForPerception() {
+		return waitingForPerception;
+	}
+
+	/**
+	 * sets the flag indicating whether this connection is waiting for a perception
+	 *
+	 * @param waitingForPerception waiting for perception
+	 */
+	public void setWaitingForPerception(boolean waitingForPerception) {
+		this.waitingForPerception = waitingForPerception;
 	}
 }

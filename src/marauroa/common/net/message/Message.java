@@ -179,13 +179,40 @@ public class Message implements Serializable {
 	}
 
 	/**
+	 * may this method be skipped?
+	 *
+	 * @return true, if this method may be skipped; false otherwise.
+	 */
+	public boolean isSkippable() {
+		return false;
+	}
+
+	/**
+	 * is this message a perception
+	 *
+	 * @return true, if this message is a perception; false otherwise
+	 */
+	public boolean isPerception() {
+		return false;
+	}
+
+	/**
+	 * does this message require a perception
+	 *
+	 * @return true, if this message requires a perception, false otherwise
+	 */
+	public boolean requiresPerception() {
+		return false;
+	}
+
+	/**
 	 * gets the protocol version
 	 *
 	 * @return protocol version
 	 */
 	public int getProtocolVersion() {
-    	return protocolVersion;
-    }
+		return protocolVersion;
+	}
 
 	/**
 	 * sets the protocol version, limited to the max supported version
@@ -193,8 +220,8 @@ public class Message implements Serializable {
 	 * @param protocolVersion protocol versoin
 	 */
 	public void setProtocolVersion(int protocolVersion) {
-    	this.protocolVersion = Math.min(NetConst.NETWORK_PROTOCOL_VERSION, protocolVersion);
-    }
+		this.protocolVersion = Math.min(NetConst.NETWORK_PROTOCOL_VERSION, protocolVersion);
+	}
 
 
 	/**
@@ -245,15 +272,6 @@ public class Message implements Serializable {
 		type = MessageType.values()[in.readByte()];
 		clientid = in.readInt();
 		timestampMessage = in.readInt();
-	}
-
-	/**
-	 * may this method be skipped?
-	 *
-	 * @return true, if this method may be skipped; false otherwise.
-	 */
-	public boolean isSkippable() {
-		return false;
 	}
 
 	/**

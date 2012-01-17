@@ -27,7 +27,7 @@ public interface ConnectionManager {
 
 	boolean isFinished();
 
-	void send(Object internalChannel, Message msg);
+	void send(Object internalChannel, Message msg, boolean isPerceptionRequired);
 
 	void close(Object internalChannel);
 

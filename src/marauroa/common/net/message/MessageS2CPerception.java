@@ -524,4 +524,14 @@ public class MessageS2CPerception extends Message {
 		return true;
 	}
 
+	/**
+	 * is this message a perception
+	 *
+	 * @return true, if this message is a perception; false otherwise
+	 */
+	@Override
+	public boolean isPerception() {
+		return true;
+	}
+
 }

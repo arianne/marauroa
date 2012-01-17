@@ -61,6 +61,16 @@ public class MessageS2CTransfer extends Message {
 		return new LinkedList<TransferContent>(contents);
 	}
 
+	/**
+	 * does this message require a perception
+	 *
+	 * @return true, if this message requires a perception, false otherwise
+	 */
+	@Override
+	public boolean requiresPerception() {
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		StringBuffer st = new StringBuffer("Message (S2C Transfer) from (" + getAddress()

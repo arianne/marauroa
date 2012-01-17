@@ -149,7 +149,13 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 		}
 
 		Channel channel = msg.getChannel();
-		channel.getConnectionManager().send(channel.getInternalChannel(), msg);
+		if (msg.requiresPerception()) {
+			channel.setWaitingForPerception(true);
+		}
+		channel.getConnectionManager().send(channel.getInternalChannel(), msg, channel.isWaitingForPerception());
+		if (msg.isPerception()) {
+			channel.setWaitingForPerception(false);
+		}
 	}
 
 	/**

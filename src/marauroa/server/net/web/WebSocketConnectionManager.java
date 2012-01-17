@@ -225,8 +225,8 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 		return true;
 	}
 
-	public void send(Object internalChannel, Message msg) {
-		if (msg.isSkippable()) {
+	public void send(Object internalChannel, Message msg, boolean isPerceptionRequired) {
+		if (!isPerceptionRequired && msg.isSkippable()) {
 			return;
 		}
 		StringBuilder out = new StringBuilder();

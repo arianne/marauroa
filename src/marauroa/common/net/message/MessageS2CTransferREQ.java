@@ -54,6 +54,16 @@ public class MessageS2CTransferREQ extends Message {
 		return contents;
 	}
 
+	/**
+	 * does this message require a perception
+	 *
+	 * @return true, if this message requires a perception, false otherwise
+	 */
+	@Override
+	public boolean requiresPerception() {
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from (" + getAddress()
