@@ -22,8 +22,10 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 
 import marauroa.client.net.INetworkClientManagerInterface;
+import marauroa.client.net.KeepAliveSender;
 import marauroa.client.net.TCPNetworkClientManager;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
@@ -83,7 +85,8 @@ public abstract class ClientFramework {
 	/** wait longer for an login to compensate for slow database operation */
 	private final static int TIMEOUT_EXTENDED = 300000;
 
-	private int perceptionsCount;
+	/** a timer for keep a live messages */
+	private Timer keepAliveTimer = null;
 
 	/**
 	 * We keep an instance of network manager to be able to communicate with
@@ -103,9 +106,7 @@ public abstract class ClientFramework {
 	 */
 	public ClientFramework(String loggingProperties) {
 		Log4J.init(loggingProperties);
-
 		messages = new LinkedList<Message>();
-		perceptionsCount = 0;
 	}
 
 	/**
@@ -114,9 +115,7 @@ public abstract class ClientFramework {
 	 */
 	public ClientFramework() {
 		Log4J.init();
-
 		messages = new LinkedList<Message>();
-		perceptionsCount = 0;
 	}
 
 	/**
@@ -447,6 +446,8 @@ public abstract class ClientFramework {
 				/* Server accepted the character we chose */
 				case S2C_CHOOSECHARACTER_ACK:
 					logger.debug("Choose Character ACK");
+					keepAliveTimer = new Timer("KeepAlive", true);
+					keepAliveTimer.schedule(new KeepAliveSender(netMan), 1000, 10000);
 					return true;
 					/* Server rejected the character we chose. No reason */
 				case S2C_CHOOSECHARACTER_NACK:
@@ -596,12 +597,6 @@ public abstract class ClientFramework {
 	 *            the action to send to server.
 	 */
 	public void send(RPAction action) {
-		/*
-		 * Each time we send an action we are confirming server our presence, so we
-		 * reset the counter to avoid sending keep alive messages.
-		 */
-		perceptionsCount = 0;
-
 		MessageC2SAction msgAction = new MessageC2SAction(null, action);
 		netMan.addMessage(msgAction);
 	}
@@ -629,6 +624,9 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 				case S2C_LOGOUT_ACK:
 					logger.debug("Logout ACK");
+					if (keepAliveTimer != null) {
+						keepAliveTimer.cancel();
+					}
 					return true;
 				case S2C_LOGOUT_NACK:
 					logger.debug("Logout NACK");
@@ -644,10 +642,12 @@ public abstract class ClientFramework {
 	 *
 	 */
 	public void close() {
+		if (keepAliveTimer != null) {
+			keepAliveTimer.cancel();
+		}
+
+		// Netman is null while we don't call connect method.
 		if (netMan != null) {
-			/*
-			 * Netman is null while we don't call connect method.
-			 */
 			netMan.finish();
 		}
 	}
@@ -671,16 +671,6 @@ public abstract class ClientFramework {
 			switch (msg.getType()) {
 				/* It can be a perception message */
 				case S2C_PERCEPTION: {
-					perceptionsCount++;
-
-					/*
-					 * Only once each 30 perceptions we tell that we are alive.
-					 */
-					if (perceptionsCount % 30 + 1 == 30) {
-						MessageC2SKeepAlive msgAlive = new MessageC2SKeepAlive();
-						netMan.addMessage(msgAlive);
-					}
-
 					logger.debug("Processing Message Perception");
 					MessageS2CPerception msgPer = (MessageS2CPerception) msg;
 					onPerception(msgPer);

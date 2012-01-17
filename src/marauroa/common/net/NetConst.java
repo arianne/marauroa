@@ -74,7 +74,7 @@ public class NetConst {
 	 * 31 - Added KeepAlive message.
 	 * 32 - Include RPObjects in S2CCharacterList
 	 * 33 - Added support for maps as attributes
-	 * 34 - Added hash on content transfer
+	 * 34 - Added hash on content transfer, empty perceptions are now omittable
 	 */
 	public static final byte NETWORK_PROTOCOL_VERSION = 34;
 
@@ -95,5 +95,12 @@ public class NetConst {
 
 	/** the first version that supports maps in rpobjects. */
 	public static final byte FIRST_VERSION_WITH_CONTENT_HASH = 34;
-	
+
+	/**
+	 * the first version which allows the omittion of empty perceptions 
+	 * because the client does not depend sending of the KeepAlive message 
+	 * anymore on counting perception messages
+	 */
+	public static final int FIRST_VERSION_WITH_OMITTABLE_EMPTY_PERCEPTIONS = 34;
+
 }

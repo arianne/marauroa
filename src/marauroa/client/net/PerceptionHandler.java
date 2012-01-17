@@ -109,12 +109,8 @@ public class PerceptionHandler {
 			} catch (Exception e) {
 				listener.onException(e, message);
 			}
-			/*
-			 * When we get a delta perception, we need to check that it is the
-			 * one that we are expecting.
-			 */
-		} else if (message.getPerceptionType() == Perception.DELTA
-		        && previousTimestamp + 1 == message.getPerceptionTimestamp()) {
+			// Since we are using TCP, we don't have to check the order of perceptions anymore
+		} else if (message.getPerceptionType() == Perception.DELTA) {
 			try {
 				/** OnSync: Keep processing */
 				previousTimestamp = message.getPerceptionTimestamp();
@@ -135,20 +131,18 @@ public class PerceptionHandler {
 
 			for (Iterator<MessageS2CPerception> it = previousPerceptions.iterator(); it.hasNext();) {
 				MessageS2CPerception previousmessage = it.next();
-				if (previousTimestamp + 1 == previousmessage.getPerceptionTimestamp()) {
-					try {
-						/** OnSync: Keep processing */
-						previousTimestamp = previousmessage.getPerceptionTimestamp();
+				try {
+					/** OnSync: Keep processing */
+					previousTimestamp = previousmessage.getPerceptionTimestamp();
 
-						applyPerceptionDeletedRPObjects(previousmessage, world_instance);
-						applyPerceptionModifiedRPObjects(previousmessage, world_instance);
-						applyPerceptionAddedRPObjects(previousmessage, world_instance);
-						applyPerceptionMyRPObject(previousmessage, world_instance);
-					} catch (Exception e) {
-						listener.onException(e, message);
-					}
-					it.remove();
+					applyPerceptionDeletedRPObjects(previousmessage, world_instance);
+					applyPerceptionModifiedRPObjects(previousmessage, world_instance);
+					applyPerceptionAddedRPObjects(previousmessage, world_instance);
+					applyPerceptionMyRPObject(previousmessage, world_instance);
+				} catch (Exception e) {
+					listener.onException(e, message);
 				}
+				it.remove();
 			}
 
 			/* If there are no preceptions that means we are synced */
