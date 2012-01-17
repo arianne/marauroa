@@ -21,7 +21,6 @@ import marauroa.common.net.message.MessageS2CChooseCharacterACK;
 import marauroa.common.net.message.MessageS2CChooseCharacterNACK;
 import marauroa.server.db.command.DBCommand;
 import marauroa.server.db.command.DBCommandQueue;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.db.DAORegister;
@@ -36,7 +35,7 @@ import marauroa.server.game.rp.RPServerManager;
  */
 class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(ChooseCharacterHandler.class);
 
 	/**
 	 * This methods handles the logic when a Choose Character message is

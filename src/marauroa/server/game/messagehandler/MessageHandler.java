@@ -15,7 +15,6 @@ package marauroa.server.game.messagehandler;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.net.message.Message;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.Statistics;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
@@ -30,7 +29,7 @@ import marauroa.server.net.INetworkServerManager;
  */
 abstract class MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(MessageHandler.class);
 
 	/** We need network server manager to be able to send messages */
 	protected INetworkServerManager netMan;
@@ -63,16 +62,12 @@ abstract class MessageHandler {
 	 */
 	protected boolean isValidEvent(Message msg, PlayerEntry entry, ClientState... states) {
 		if (entry == null) {
-			/*
-			 * Error: Player didn't login.
-			 */
-			logger.warn("Client(" + msg.getAddress() + ") has not login yet");
+			// Error: Player didn't login.
+			logger.warn("Client(" + msg.getAddress() + ") has not logged in, but sent message: " + msg.toString());
 			return false;
 		}
 
-		/*
-		 * Now we check if client is in any of the valid states
-		 */
+		// Now we check if client is in any of the valid states
 		boolean isInCorrectState = false;
 		for (ClientState state : states) {
 			if (entry.state == state) {
@@ -80,9 +75,7 @@ abstract class MessageHandler {
 			}
 		}
 
-		/*
-		 * And it it is not in the correct state, return false.
-		 */
+		// And it it is not in the correct state, return false.
 		if (!isInCorrectState) {
 			StringBuffer statesString = new StringBuffer();
 			for (ClientState state : states) {
@@ -90,7 +83,7 @@ abstract class MessageHandler {
 			}
 
 			logger.warn("Client(" + msg.getAddress() + ") is not in the required state ("
-			        + statesString.toString() + ")");
+				+ statesString.toString() + ")");
 			return false;
 		}
 

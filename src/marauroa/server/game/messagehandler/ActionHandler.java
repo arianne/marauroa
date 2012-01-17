@@ -17,7 +17,6 @@ import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 
@@ -27,7 +26,7 @@ import marauroa.server.game.container.PlayerEntry;
  */
 class ActionHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(ActionHandler.class);
 
 
 	/**

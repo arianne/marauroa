@@ -21,7 +21,6 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CLoginSendNonce;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.SecuredLoginInfo;
 
@@ -31,7 +30,7 @@ import marauroa.server.game.container.SecuredLoginInfo;
  */
 class LoginSendPromiseHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(LoginSendPromiseHandler.class);
 	private int maxNumberOfPlayers = 128;
 
 	public LoginSendPromiseHandler() {
