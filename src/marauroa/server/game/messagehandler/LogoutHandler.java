@@ -18,7 +18,6 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLogout;
 import marauroa.common.net.message.MessageS2CLogoutACK;
 import marauroa.common.net.message.MessageS2CLogoutNACK;
-import marauroa.server.game.GameServerManager;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 
@@ -28,7 +27,7 @@ import marauroa.server.game.container.PlayerEntry;
  */
 class LogoutHandler extends MessageHandler {
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
+	private static final marauroa.common.Logger logger = Log4J.getLogger(LogoutHandler.class);
 
 	/**
 	 * This method is called when server receives a logout message from a
@@ -80,7 +79,7 @@ class LogoutHandler extends MessageHandler {
 
 			if (shouldLogout) {
 				stats.add("Players logout", 1);
-				logger.info("Logging out correctly channel: "+entry.channel);
+				logger.info("Logging out correctly channel: " + entry.getAddress());
 				playerContainer.remove(clientid);
 
 				/* Send Logout ACK message */

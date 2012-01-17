@@ -408,7 +408,7 @@ public class RPServerManager extends Thread {
 			try {
 				// Before creating the perception we check the player is still there.
 				if(entry.isTimeout()) {
-					logger.info("Request (TIMEOUT) disconnection of Player "+entry.channel);
+					logger.info("Request (TIMEOUT) disconnection of Player " + entry.getAddress());
 					playersToRemove.add(entry);
 					continue;
 				}

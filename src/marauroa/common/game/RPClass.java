@@ -185,6 +185,21 @@ public class RPClass implements marauroa.common.net.Serializable {
 		return rpClassList.get(name);
 	}
 
+
+	/**
+	 * gets the RPClass object, if the class is defined and the default calss otherwise
+	 *
+	 * @param name name of rpclass
+	 * @return RPClass of that name or default
+	 */
+	static RPClass getRPClassOrDefault(String name) {
+		RPClass rpclassObject = rpClassList.get(name);
+		if (rpclassObject == null) {
+			rpclassObject = RPClass.getBaseRPObjectDefault();
+		}
+		return rpclassObject;
+	}
+
 	/**
 	 * This method sets the parent of this rpclass
 	 *
@@ -840,5 +855,4 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 		return isEqual;
 	}
-
 }

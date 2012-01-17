@@ -35,4 +35,22 @@ public class RPAction extends Attributes {
 		super(RPClass.getBaseRPObjectDefault());
 	}
 
+	/**
+	 * Constructor
+	 *
+	 * @param rpclass rpclass
+	 */
+	public RPAction(String rpclass) {
+		super(RPClass.getRPClassOrDefault(rpclass));
+	}
+
+
+	/**
+	 * Constructor
+	 *
+	 * @param rpclass rpclass
+	 */
+	public RPAction(RPClass rpclass) {
+		super(rpclass);
+	}
 }

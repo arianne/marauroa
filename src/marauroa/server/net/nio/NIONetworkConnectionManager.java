@@ -153,7 +153,7 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 			 * Sends a connect NACK message if the address is banned.
 			 */
 			MessageS2CConnectNACK msg = new MessageS2CConnectNACK();
-			send(internalChannel, msg);
+			send(internalChannel, msg, true);
 
 			/*
 			 * NOTE: We should wait a bit to close the channel... to make sure
@@ -215,10 +215,14 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 	 * This method add a message to be delivered to the client the message is
 	 * pointed to.
 	 *
-	 * @param msg
-	 *            the message to be delivered.
+	 * @param internalChannel the channel to the client
+	 * @param msg the message to be delivered.
+	 * @param isPerceptionRequired true indicates that the message may not be skipped
 	 */
-	public void send(Object internalChannel, Message msg) {
+	public void send(Object internalChannel, Message msg, boolean isPerceptionRequired) {
+		if (!isPerceptionRequired && msg.isSkippable() && (msg.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_OMITTABLE_EMPTY_PERCEPTIONS)) {
+			return;
+		}
 		try {
 			if (logger.isDebugEnabled()) {
 				logger.debug("send message(type=" + msg.getType() + ") from " + msg.getClientID()
@@ -232,13 +236,12 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 
 			server.send((SocketChannel) internalChannel, data);
 		} catch (IOException e) {
-			e.printStackTrace();
-			/**
-			 * I am not interested in the exception. NioServer will detect this
-			 * and close connection
-			 */
+			// I am not interested in the exception. NioServer will detect this
+			// and close connection
+			logger.debug(e, e);
 		}
 	}
+
 
 	/**
 	 * This method disconnect a socket.
@@ -277,7 +280,7 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 					stats.add("Message invalid version", 1);
 					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(null, "Invalid client version: Update client");
 					invMsg.setProtocolVersion(e.getProtocolVersion());
-					send(event.channel, invMsg);
+					send(event.channel, invMsg, true);
 				} catch (IOException e) {
 					logger.warn("IOException while building message:\n" + Utility.dumpByteArray(event.data), e);
 					logger.warn("sender was: " + event.channel.socket().getRemoteSocketAddress());
@@ -301,7 +304,7 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 	 *            the channel to clear
 	 */
 	public void onDisconnect(SocketChannel channel) {
-		logger.info("NET Disconnecting " + channel);
+		logger.info("NET Disconnecting " + channel.socket().getRemoteSocketAddress());
 		decoder.clear(channel);
 		serverManager.onDisconnect(this, channel);
 	}

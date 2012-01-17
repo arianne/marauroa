@@ -65,7 +65,7 @@
                    byline="true"/>
 
 		<!-- Compile it -->
-		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit};${exclude.web}">
+		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit};${exclude.web}" includeantruntime="false">
 			<classpath refid="alljars" />
 		</javac>
 
@@ -83,7 +83,7 @@
 		<mkdir dir="${buildroot_client}"/>
 		
 		<!-- Compile it -->
-		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot_client}" debug="true" debuglevel="source,lines">
+		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot_client}" debug="true" debuglevel="source,lines" includeantruntime="false">
 			<include name="marauroa/client/**"/>
 			<include name="marauroa/common/**"/>
 			<classpath>
