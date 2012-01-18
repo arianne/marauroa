@@ -222,7 +222,7 @@ public class Message implements Serializable {
 	 *                if the serializations fails
 	 */
 	public void readObject(InputSerializer in) throws IOException {
-		int protocolVersion = in.readByte();
+		protocolVersion = in.readByte();
 		if (protocolVersion < NetConst.NETWORK_PROTOCOL_VERSION_MIN
 				|| protocolVersion > NetConst.NETWORK_PROTOCOL_VERSION_MAX) {
 			throw new IOException("Unsupported protocol version.");
