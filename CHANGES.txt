@@ -1,9 +1,12 @@
 Changelog
 ---------
 3.8.8
+- client support for skippable empty perceptions
+- ban messages are no longer restricted 256,
+  if both server and client use the new protocol version 34
 - added RPClass support (type checks and transfer compression) to RPAction
 - content transfer includes a md5 hash of the content,
-  if both server and client are using the new protocol version 34
+  if both server and client use the new protocol version 34
 - automatically try to use a configured SOCKS-proxy. If it cannot be used, Marauroa falls back to direct connections
 - RPRuleProcessorImpl provides a default implementation for IRPRuleProcessor
 - new server.ini variable server_abuseContact to add a sentence with contact information to the ban dialog.

@@ -82,7 +82,8 @@ public class NetConst {
 	public static final byte NETWORK_PROTOCOL_VERSION_MIN = 31;
 	
 	/** Newest supported protocol version */
-	public static final byte NETWORK_PROTOCOL_VERSION_MAX = 40;
+	// 40 up to Marauroa version 3.8.8
+	public static final byte NETWORK_PROTOCOL_VERSION_MAX = 80;
 
 	/** the first version with details on the MessageS2CCharacterList. */
 	public static final byte FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST = 32;
@@ -102,5 +103,8 @@ public class NetConst {
 	 * anymore on counting perception messages
 	 */
 	public static final int FIRST_VERSION_WITH_OMITTABLE_EMPTY_PERCEPTIONS = 34;
+
+	/** longer reasons for bans */
+	public static final int FIRST_VERSION_WITH_LONG_BAN_MESSAGE = 34;
 
 }
