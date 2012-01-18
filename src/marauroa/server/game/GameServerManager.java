@@ -290,7 +290,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 *            the channel that was closed.
 	 */
 	public void onDisconnect(Channel channel) {
-		logger.info("GAME Disconnecting " + channel);
+		logger.info("GAME Disconnecting " + channel.getInetAddress());
 		delayedEventHandler.addDelayedEvent(disconnectHandler, channel);
 	}
 

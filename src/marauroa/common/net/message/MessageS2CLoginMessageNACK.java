@@ -17,6 +17,8 @@ import java.io.IOException;
 
 import marauroa.common.net.Channel;
 
+import marauroa.common.net.NetConst;
+
 /**
  * This message indicate the client that the server has reject its login Message
  *
@@ -44,9 +46,6 @@ public class MessageS2CLoginMessageNACK extends Message {
 	public MessageS2CLoginMessageNACK(Channel source, String reason) {
 		super(MessageType.S2C_LOGIN_MESSAGE_NACK, source);
 		this.reason = reason;
-		if (this.reason.length() > 250) {
-			this.reason = this.reason.substring(0, 250);
-		}
 	}
 
 	/**
@@ -71,13 +70,25 @@ public class MessageS2CLoginMessageNACK extends Message {
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
-		out.write255LongString(reason);
+		if (out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_LONG_BAN_MESSAGE) {
+			out.write65536LongString(reason);
+		} else {
+			String temp = reason;
+			if (temp.length() > 250) {
+				temp = temp.substring(0, 250);
+			}
+			out.write255LongString(temp);
+		}
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
-		reason = in.read255LongString();
+		if (getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_LONG_BAN_MESSAGE) {
+			reason = in.read65536LongString();
+		} else {
+			reason = in.read255LongString();
+		}
 
 		if (type != MessageType.S2C_LOGIN_MESSAGE_NACK) {
 			throw new IOException();
