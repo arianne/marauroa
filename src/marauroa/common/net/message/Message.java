@@ -207,7 +207,7 @@ public class Message implements Serializable {
 	 *                if the serializations fails
 	 */
 	public void writeObject(OutputSerializer out) throws IOException {
-		out.write((byte)protocolVersion);
+		out.write((byte) Math.min(protocolVersion, NetConst.NETWORK_PROTOCOL_VERSION));
 		out.write((byte) type.ordinal());
 		out.write(clientid);
 		out.write(timestampMessage);
