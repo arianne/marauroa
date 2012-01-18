@@ -466,12 +466,13 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 					return true;
 				} else {
 					logger.warn("Write requested not to keeprunning");
-					connected=false;
+					connected = false;
 					return false;
 				}
 			} catch (IOException e) {
 				/* Report the exception */
 				logger.error("error while sending a packet (msg=(" + msg + "))", e);
+				connected = false;
 				return false;
 			}
 		}
