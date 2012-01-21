@@ -121,15 +121,11 @@ public class PlayerEntry {
 		 * Add a login event to database each time player login, even if it
 		 * fails.
 		 *
-		 * @param addr
-		 *            the IP address that originated the request.
-		 * @param loginResult
-		 *            the result of the login action, where true is login
-		 *            correct and false login failed.
-		 * @throws SQLException
-		 *             if there is any database problem.
+		 * @param addr the IP address that originated the request.
+		 * @param result 0 failed password, 1 successful login, 2 banned, 3 inactive, 4 blocked, 5 merged
+		 * @throws SQLException if there is any database problem.
 		 */
-		public void addLoginEvent(InetAddress addr, boolean loginResult) throws SQLException {
+		public void addLoginEvent(InetAddress addr, int result) throws SQLException {
 			String service = null;
 			try {
 				Configuration conf = Configuration.getConfiguration();
@@ -141,7 +137,7 @@ public class PlayerEntry {
 			} catch (IOException e) {
 				logger.error(e, e);
 			}
-			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, addr, service, seed, loginResult);
+			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, addr, service, seed, result);
 		}
 
 		/**
@@ -193,30 +189,6 @@ public class PlayerEntry {
 			} catch (SQLException e) {
 				TransactionPool.get().rollback(transaction);
 				logger.error(e, e);
-			}
-			return res;
-		}
-
-		/**
-		 * Returns a string indicating the status of the account.
-		 * It can be: <ul>
-		 * <li>active
-		 * <li>inactive
-		 * <li>banned
-		 * </ul>
-		 * @return a string indicating the status of the account.
-		 * @throws SQLException
-		 */
-		public String getStatus() throws SQLException {
-			DBTransaction transaction = TransactionPool.get().beginWork();
-			String res = null;
-			try {
-				if (DAORegister.get().get(AccountDAO.class).hasPlayer(transaction, username)) {
-					res = DAORegister.get().get(AccountDAO.class).getAccountBanMessage(transaction, username);
-				}
-				TransactionPool.get().commit(transaction);
-			} catch (SQLException e) {
-				TransactionPool.get().rollback(transaction);
 			}
 			return res;
 		}

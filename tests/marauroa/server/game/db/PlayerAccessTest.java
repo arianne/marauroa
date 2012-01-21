@@ -244,7 +244,7 @@ public class PlayerAccessTest {
 			assertFalse(loginEventDAO.isAccountBlocked(transaction, username));
 
 			for (int i = 0; i < TimeoutConf.FAILED_LOGIN_ATTEMPTS_ACCOUNT + 1; i++) {
-				DAORegister.get().get(LoginEventDAO.class).addLoginEvent(transaction, username, address, null, null, false);
+				DAORegister.get().get(LoginEventDAO.class).addLoginEvent(transaction, username, address, null, null, 0);
 			}
 
 			assertTrue(loginEventDAO.isAccountBlocked(transaction, username));
