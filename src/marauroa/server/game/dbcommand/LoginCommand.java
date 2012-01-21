@@ -21,6 +21,7 @@ import marauroa.common.net.Channel;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.game.container.SecuredLoginInfo;
+import marauroa.server.game.db.AccountDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
@@ -65,6 +66,7 @@ public class LoginCommand extends DBCommandWithCallback {
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
 		if (info.isBlocked()) {
 			failReason = MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES;
+			info.addLoginEvent(info.address, 4);
 			callback();
 			return;
 		}
@@ -74,21 +76,31 @@ public class LoginCommand extends DBCommandWithCallback {
 				info.reason = MessageS2CLoginNACK.Reasons.USERNAME_WRONG;
 			}
 			failReason = info.reason;
-			info.addLoginEvent(info.address, false);
+			info.addLoginEvent(info.address, 0);
 			callback();
 			return;
 		}
 
-		String accountStatus = info.getStatus();
-		if (accountStatus != null) {
-			failMessage = accountStatus;
+		String accountStatusMessage = DAORegister.get().get(AccountDAO.class).getAccountBanMessage(transaction, info.username);
+		if (accountStatusMessage != null) {
+			String status = DAORegister.get().get(AccountDAO.class).getAccountStatus(transaction, info.username);
+			if (status == null) {
+				// oops
+			} else if (status.equals("banned")) {
+				info.addLoginEvent(info.address, 2);
+			} else if (status.equals("inactive")) {
+				info.addLoginEvent(info.address, 3);
+			} else if (status.equals("merged")) {
+				info.addLoginEvent(info.address, 5);
+			}
+			failMessage = accountStatusMessage;
 			callback();
 			return;
 		}
 
 		/* Successful login */
 		previousLogins = DAORegister.get().get(LoginEventDAO.class).getLoginEvents(info.username, 1);
-		info.addLoginEvent(info.address, true);
+		info.addLoginEvent(info.address, 1);
 
 		callback();
 	}

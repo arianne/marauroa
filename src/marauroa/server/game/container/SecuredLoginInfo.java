@@ -98,15 +98,11 @@ public class SecuredLoginInfo {
 	 * Add a login event to database each time player login, even if it
 	 * fails.
 	 *
-	 * @param address
-	 *            the IP address that originated the request.
-	 * @param loginResult
-	 *            the result of the login action, where true is login
-	 *            correct and false login failed.
-	 * @throws SQLException
-	 *             if there is any database problem.
+	 * @param address the IP address that originated the request.
+	 * @param result 0 failed password, 1 successful login, 2 banned, 3 inactive, 4 blocked, 5 merged
+	 * @throws SQLException if there is any database problem.
 	 */
-	public void addLoginEvent(InetAddress address, boolean loginResult) throws SQLException {
+	public void addLoginEvent(InetAddress address, int result) throws SQLException {
 		String service = null;
 		try {
 			Configuration conf = Configuration.getConfiguration();
@@ -118,7 +114,7 @@ public class SecuredLoginInfo {
 		} catch (IOException e) {
 			logger.error(e, e);
 		}
-		DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, address, service, seed, loginResult);
+		DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, address, service, seed, result);
 	}
 
 	/**
