@@ -1,6 +1,7 @@
 Changelog
 ---------
-3.8.8
+3.9
+- failed logins are now logged with distinct status values
 - client support for skippable empty perceptions
 - ban messages are no longer restricted 256,
   if both server and client use the new protocol version 34

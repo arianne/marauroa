@@ -44,34 +44,6 @@ public class LoginEventDAO {
 		// hide constructor as this class should only be instantiated by DAORegister
 	}
 
-	/**
-	 * logs an login attempt
-	 *
-	 * @param transaction DBTransaction
-	 * @param username username
-	 * @param source ip-address
-	 * @param correctLogin true, if the login was successful; false otherwise
-	 * @throws SQLException in case of an database error
-	 */
-	@Deprecated
-	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, boolean correctLogin) throws SQLException {
-		addLoginEvent(transaction, username, source, null, null, correctLogin);
-	}
-
-	/**
-	 * logs an login attempt
-	 *
-	 * @param transaction DBTransaction
-	 * @param username username
-	 * @param source ip-address
-	 * @param seed seed
-	 * @param correctLogin true, if the login was successful; false otherwise
-	 * @throws SQLException in case of an database error
-	 */
-	@Deprecated
-	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, String seed, boolean correctLogin) throws SQLException {
-		addLoginEvent(transaction, username, source, null, seed, correctLogin);
-	}
 
 	/**
 	 * logs an login attempt
@@ -81,10 +53,10 @@ public class LoginEventDAO {
 	 * @param source ip-address
 	 * @param service name of service
 	 * @param seed seed
-	 * @param correctLogin true, if the login was successful; false otherwise
+	 * @param result 0 failed password, 1 successful login, 2 banned, 3 inactive, 4 blocked, 5 merged
 	 * @throws SQLException in case of an database error
 	 */
-	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, String service, String seed, boolean correctLogin) throws SQLException {
+	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, String service, String seed, int result) throws SQLException {
 
 		try {
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
@@ -97,7 +69,7 @@ public class LoginEventDAO {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
 			params.put("address", source.getHostAddress());
-			params.put("result", Integer.valueOf(correctLogin ? 1 : 0));
+			params.put("result", result);
 			if (service != null) {
 				params.put("service", service);
 			}
@@ -370,7 +342,7 @@ public class LoginEventDAO {
 		String query = "SELECT count(*) as amount FROM loginEvent, account"
 				+ " WHERE loginEvent.player_id=account.id"
 				+ " AND username='[username]'"
-		        + " AND loginEvent.result=0 and loginEvent.timedate > '[timestamp]'";
+		        + " AND loginEvent.result != 1 and loginEvent.timedate > '[timestamp]'";
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
@@ -395,7 +367,7 @@ public class LoginEventDAO {
 	public boolean isAddressBlocked(DBTransaction transaction, String address) throws SQLException {
 		String query = "SELECT count(*) as amount FROM loginEvent"
 				+ " WHERE address='[address]'"
-		        + " AND result=0 and timedate > '[timestamp]'";
+		        + " AND result != 1 and timedate > '[timestamp]'";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("address", address);
 
@@ -413,53 +385,15 @@ public class LoginEventDAO {
 	 *
 	 * @param username username
 	 * @param source ip-address
-	 * @param correctLogin true, if the login was successful; false otherwise
-	 * @throws SQLException in case of an database error
-	 */
-	@Deprecated
-	public void addLoginEvent(String username, InetAddress source, boolean correctLogin) throws SQLException {
-		DBTransaction transaction = TransactionPool.get().beginWork();
-		try {
-			addLoginEvent(transaction, username, source, null, null, correctLogin);
-		} finally {
-			TransactionPool.get().commit(transaction);
-		}
-	}
-
-
-	/**
-	 * logs an login attempt
-	 *
-	 * @param seed a seed to log
-	 * @param username username
-	 * @param source ip-address
-	 * @param correctLogin true, if the login was successful; false otherwise
-	 * @throws SQLException in case of an database error
-	 */
-	@Deprecated
-	public void addLoginEvent(String username, InetAddress source, String seed, boolean correctLogin) throws SQLException {
-		DBTransaction transaction = TransactionPool.get().beginWork();
-		try {
-			addLoginEvent(transaction, username, source, null, seed, correctLogin);
-		} finally {
-			TransactionPool.get().commit(transaction);
-		}
-	}
-
-	/**
-	 * logs an login attempt
-	 *
-	 * @param username username
-	 * @param source ip-address
 	 * @param service name of service
 	 * @param seed seed
-	 * @param correctLogin true, if the login was successful; false otherwise
+	 * @param result 0 failed password, 1 successful login, 2 banned, 3 inactive, 4 blocked, 5 merged
 	 * @throws SQLException in case of an database error
 	 */
-	public void addLoginEvent(String username, InetAddress source, String service, String seed, boolean correctLogin) throws SQLException {
+	public void addLoginEvent(String username, InetAddress source, String service, String seed, int result) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
-			addLoginEvent(transaction, username, source, service, seed, correctLogin);
+			addLoginEvent(transaction, username, source, service, seed, result);
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}
