@@ -13,6 +13,7 @@ marauroa.perceptionListener = {
 	 * @return true to stop further processing
 	 */
 	onAdded: function(object) {
+		return false;
 	},
 
 	/**
@@ -27,6 +28,7 @@ marauroa.perceptionListener = {
 	 * @return true to stop further processing
 	 */
 	onModifiedAdded: function(object, changes) {
+		return false;
 	},
 
 	/**
@@ -41,6 +43,7 @@ marauroa.perceptionListener = {
 	 * @return true to stop further processing
 	 */
 	onModifiedDeleted: function(object, changes) {
+		return false;
 	},
 
 	/**
@@ -52,6 +55,7 @@ marauroa.perceptionListener = {
 	 * @return true to stop further processing
 	 */
 	onDeleted: function(object) {
+		return false;
 	},
 
 	/**
@@ -65,6 +69,7 @@ marauroa.perceptionListener = {
 	 * @return true to stop further processing
 	 */
 	onMyRPObject: function(added, deleted) {
+		return false;
 	},
 
 	/**
@@ -74,6 +79,7 @@ marauroa.perceptionListener = {
 	 * @return true to stop further processing
 	 */
 	onClear: function() {
+		return false;
 	},
 
 	/**
@@ -107,6 +113,7 @@ marauroa.perceptionListener = {
 	 *            the message that causes the problem
 	 */
 	onException: function(exception, perception) {
+		marauroa.log.error(exception, perception);
 	}
 }
 marauroa.currentZone = {
@@ -179,9 +186,10 @@ marauroa.perceptionHandler = {
 		if (msg.dO) {
 			for (var i in msg.dO) {
 				if (msg.dO.hasOwnProperty(i)) {
+					var tmp = msg.dO[i].a.id;
 					if (!marauroa.perceptionListener.onDeleted(msg.dO[i])) {
-						marauroa.currentZone[i].destroy(marauroa.currentZone);
-						delete marauroa.currentZone[i];
+						marauroa.currentZone[tmp].destroy(marauroa.currentZone);
+						delete marauroa.currentZone[tmp];
 					}
 				}
 			}
