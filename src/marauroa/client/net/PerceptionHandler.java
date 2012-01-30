@@ -41,9 +41,6 @@ public class PerceptionHandler {
 	/** A list of previous perceptions that are still waiting for being applied. */
 	private List<MessageS2CPerception> previousPerceptions;
 
-	/** the timestamp of last sucessfully applied perception */
-	private int previousTimestamp;
-
 	/** This is true if we are synced with server representation. */
 	private boolean synced;
 
@@ -53,7 +50,6 @@ public class PerceptionHandler {
 	 */
 	public PerceptionHandler() {
 		synced = false;
-		previousTimestamp = -1;
 		previousPerceptions = new LinkedList<MessageS2CPerception>();
 	}
 
@@ -96,7 +92,6 @@ public class PerceptionHandler {
 		if (message.getPerceptionType() == Perception.SYNC) {
 			try {
 				/** OnSync: Keep processing */
-				previousTimestamp = message.getPerceptionTimestamp();
 				previousPerceptions.clear();
 
 				applyPerceptionAddedRPObjects(message, world_instance);
@@ -113,7 +108,6 @@ public class PerceptionHandler {
 		} else if (message.getPerceptionType() == Perception.DELTA) {
 			try {
 				/** OnSync: Keep processing */
-				previousTimestamp = message.getPerceptionTimestamp();
 
 				applyPerceptionDeletedRPObjects(message, world_instance);
 				applyPerceptionModifiedRPObjects(message, world_instance);
@@ -133,8 +127,6 @@ public class PerceptionHandler {
 				MessageS2CPerception previousmessage = it.next();
 				try {
 					/** OnSync: Keep processing */
-					previousTimestamp = previousmessage.getPerceptionTimestamp();
-
 					applyPerceptionDeletedRPObjects(previousmessage, world_instance);
 					applyPerceptionModifiedRPObjects(previousmessage, world_instance);
 					applyPerceptionAddedRPObjects(previousmessage, world_instance);
