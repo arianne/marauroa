@@ -1,21 +1,14 @@
-/* $Id: Log4J.java,v 1.19 2009/07/18 11:11:37 nhnb Exp $ */
 /***************************************************************************
- *						(C) Copyright 2003 - Marauroa					   *
+ *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
- *																		   *
- *	 This program is free software; you can redistribute it and/or modify  *
- *	 it under the terms of the GNU General Public License as published by  *
- *	 the Free Software Foundation; either version 2 of the License, or	   *
- *	 (at your option) any later version.								   *
- *																		   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
  ***************************************************************************/
-/*
- * Log4J.java
- *
- * Created on 6. Juli 2005, 19:42
- */
-
 package marauroa.common;
 
 import java.io.ByteArrayInputStream;
