@@ -1,6 +1,5 @@
-/* $Id: TCPNetworkClientManager.java,v 1.33 2010/11/26 20:04:32 martinfuchs Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *                   (C) Copyright 2003-2012 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -349,7 +348,6 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 				start = 4;
 				int read = 0;
 				long waittime = 10;
-				int counter = 0;
 				do {
 					start = start + read;
 					read = is.read(buffer, start, size - start);
@@ -367,7 +365,6 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 					} catch (InterruptedException e) {
 						logger.error(e, e);
 					}
-					counter++;
 				} while (start + read < size);
 
 				logger.debug("Received Marauroa Packet");
