@@ -1,6 +1,5 @@
-/* $Id: InputSerializer.java,v 1.16 2010/06/11 19:00:57 nhnb Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -20,7 +19,6 @@ import marauroa.common.TimeoutConf;
 /**
  * InputSerializer is used to serialize classes that implement the Serializable
  * interface from an InputStream.
- *
  */
 public class InputSerializer {
 

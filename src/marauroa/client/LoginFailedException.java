@@ -1,14 +1,13 @@
-/* $Id: LoginFailedException.java,v 1.5 2010/05/23 21:38:13 nhnb Exp $ */
 /***************************************************************************
- *						(C) Copyright 2003 - Marauroa					   *
+ *                   (C) Copyright 2007-2012 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
- *																		   *
- *	 This program is free software; you can redistribute it and/or modify  *
- *	 it under the terms of the GNU General Public License as published by  *
- *	 the Free Software Foundation; either version 2 of the License, or	   *
- *	 (at your option) any later version.								   *
- *																		   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
  ***************************************************************************/
 package marauroa.client;
 
@@ -31,7 +30,6 @@ public class LoginFailedException extends Exception {
 		super("Login failed: " + reason);
 	}
 
-
 	/**
 	 * creates a new LoginFailedException
 	 *
@@ -40,9 +38,8 @@ public class LoginFailedException extends Exception {
 	 */
 	public LoginFailedException(String reason, Reasons reasonCode) {
 		this(reason);
-		this.reason= reasonCode;
-    }
-
+		this.reason = reasonCode;
+	}
 
 	/**
 	 * gets the reason
@@ -50,6 +47,6 @@ public class LoginFailedException extends Exception {
 	 * @return Reason
 	 */
 	public Reasons getReason() {
-    	return reason;
-    }
+		return reason;
+	}
 }

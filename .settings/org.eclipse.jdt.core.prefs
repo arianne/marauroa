@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #Mon Feb 28 23:00:16 CET 2011
+=======
+#Sat Feb 12 17:01:42 CET 2011
+>>>>>>> refs/remotes/origin/master
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.5
@@ -7,7 +11,10 @@ org.eclipse.jdt.core.compiler.compliance=1.5
 org.eclipse.jdt.core.compiler.debug.lineNumber=generate
 org.eclipse.jdt.core.compiler.debug.localVariable=generate
 org.eclipse.jdt.core.compiler.debug.sourceFile=generate
+<<<<<<< HEAD
 org.eclipse.jdt.core.compiler.doc.comment.support=enabled
+=======
+>>>>>>> refs/remotes/origin/master
 org.eclipse.jdt.core.compiler.problem.annotationSuperInterface=error
 org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
 org.eclipse.jdt.core.compiler.problem.autoboxing=ignore

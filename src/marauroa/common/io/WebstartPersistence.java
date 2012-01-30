@@ -1,14 +1,13 @@
-/* $Id: WebstartPersistence.java,v 1.5 2008/02/22 10:28:32 arianne_rpg Exp $ */
 /***************************************************************************
- *						(C) Copyright 2003 - Marauroa					   *
+ *                   (C) Copyright 2003-2008 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
- *																		   *
- *	 This program is free software; you can redistribute it and/or modify  *
- *	 it under the terms of the GNU General Public License as published by  *
- *	 the Free Software Foundation; either version 2 of the License, or	   *
- *	 (at your option) any later version.								   *
- *																		   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
  ***************************************************************************/
 package marauroa.common.io;
 
@@ -67,7 +66,7 @@ public class WebstartPersistence extends Persistence {
 	 */
 	@Override
 	public InputStream getInputStream(boolean relativeToHome, String basedir, String filename)
-	        throws IOException {
+			throws IOException {
 		URL muffinURL = new URL(codebase.toString() + filename);
 		FileContents fc = ps.get(muffinURL);
 		InputStream is = fc.getInputStream();
@@ -86,7 +85,7 @@ public class WebstartPersistence extends Persistence {
 	 */
 	@Override
 	public OutputStream getOutputStream(boolean relativeToHome, String basedir, String filename)
-	        throws IOException {
+			throws IOException {
 		URL muffinURL = new URL(codebase.toString() + filename);
 		try {
 			ps.delete(muffinURL);

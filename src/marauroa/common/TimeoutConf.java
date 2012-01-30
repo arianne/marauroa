@@ -1,6 +1,5 @@
-/* $Id: TimeoutConf.java,v 1.20 2010/06/13 20:16:44 nhnb Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *                   (C) Copyright 2003-2010 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -52,7 +51,7 @@ public class TimeoutConf {
 	 * The amount of failed login tries before considering the ip blocked.
 	 */
 	public static final int FAILED_LOGIN_ATTEMPTS_IP = 3;
-	
+
 	/**
 	 * The amount of seconds until being able to retry login after N failed
 	 * attempts.

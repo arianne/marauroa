@@ -1,6 +1,5 @@
-/* $Id: AbstractDatabaseAdapter.java,v 1.14 2010/08/23 21:30:34 nhnb Exp $ */
 /***************************************************************************
- *                   (C) Copyright 2007-2010 - Marauroa                    *
+ *                   (C) Copyright 2007-2011 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -28,15 +27,15 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.server.db.DatabaseConnectionException;
 
-
 /**
  * abstract database adapter
  *
  * @author hendrik
  */
 public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
-    private static Logger logger = Log4J.getLogger(AbstractDatabaseAdapter.class);
-    /** connection to the database */
+	private static Logger logger = Log4J.getLogger(AbstractDatabaseAdapter.class);
+
+	/** connection to the database */
 	protected Connection connection;
 
 	/** list of open statements */
@@ -77,11 +76,12 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 		try {
 			// instantiate the Driver class
 			try {
-				if  (connInfo.get("jdbc_class") != null) {
+				if (connInfo.get("jdbc_class") != null) {
 					Class.forName((String) connInfo.get("jdbc_class")).newInstance();
 				}
 			} catch (Exception e) {
-				throw new DatabaseConnectionException("Cannot load driver class " + connInfo.get("jdbc_class"), e);
+				throw new DatabaseConnectionException("Cannot load driver class "
+						+ connInfo.get("jdbc_class"), e);
 			}
 
 			Properties connectionInfo = new Properties();
@@ -93,20 +93,22 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 			}
 			connectionInfo.put("charSet", "UTF-8");
 
-			Connection conn = DriverManager.getConnection((String) connInfo.get("jdbc_url"), connectionInfo);
+			Connection conn = DriverManager.getConnection((String) connInfo.get("jdbc_url"),
+					connectionInfo);
 
 			// enable transaction support
 			conn.setAutoCommit(false);
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
 
 			DatabaseMetaData meta = conn.getMetaData();
-			logger.info("Connected to " + connInfo.get("jdbc_url") 
-			    + ": " + meta.getDatabaseProductName() + " " + meta.getDatabaseProductVersion()
-			    + " with driver " +  meta.getDriverName() + " " + meta.getDriverVersion());
+			logger.info("Connected to " + connInfo.get("jdbc_url") + ": "
+					+ meta.getDatabaseProductName() + " " + meta.getDatabaseProductVersion()
+					+ " with driver " + meta.getDriverName() + " " + meta.getDriverVersion());
 
 			return conn;
 		} catch (SQLException e) {
-			throw new DatabaseConnectionException("Unable to create a connection to: " + connInfo.get("jdbc_url"), e);
+			throw new DatabaseConnectionException("Unable to create a connection to: "
+					+ connInfo.get("jdbc_url"), e);
 		}
 	}
 
@@ -119,7 +121,6 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 		closeStatements();
 		connection.rollback();
 	}
-
 
 	public int execute(String sql) throws SQLException {
 		String mySql = rewriteSql(sql);
@@ -214,7 +215,7 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	}
 
 	private void closeStatements() throws SQLException {
-		// Note: Some JDBC drivers like Informix require resultSet.close() 
+		// Note: Some JDBC drivers like Informix require resultSet.close()
 		// before statement.close() although the second one is supposed to
 		// close open ResultSets by itself according to the API doc.
 		for (ResultSet resultSet : resultSets) {
@@ -251,7 +252,6 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 		return res;
 	}
 
-
 	public boolean doesColumnExist(String table, String column) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
 		ResultSet result = meta.getColumns(null, null, table, column);
@@ -259,14 +259,14 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 		result.close();
 		return res;
 	}
-	
+
 	public int getColumnLength(String table, String column) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
 		ResultSet result = meta.getColumns(null, null, table, column);
 		if (result.next()) {
 			return result.getInt("COLUMN_SIZE");
 		}
-		return -1; 
+		return -1;
 	}
 
 	/**

@@ -1,4 +1,3 @@
-/* $Id: DBTransactionTest.java,v 1.3 2010/05/08 23:03:37 nhnb Exp $ */
 /***************************************************************************
  *                   (C) Copyright 2007-2010 - Marauroa                    *
  ***************************************************************************
@@ -26,7 +25,6 @@ import org.junit.Test;
  * Tests for DBTransaction
  *
  * @author hendrik
- *
  */
 public class DBTransactionTest {
 

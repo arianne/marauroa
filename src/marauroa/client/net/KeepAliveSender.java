@@ -1,5 +1,5 @@
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *                   (C) Copyright 2003-2012 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -35,6 +35,7 @@ public class KeepAliveSender extends TimerTask {
 	/**
 	 * sends a keep alive message.
 	 */
+	@Override
 	public void run() {
 		MessageC2SKeepAlive msgAlive = new MessageC2SKeepAlive();
 		netMan.addMessage(msgAlive);

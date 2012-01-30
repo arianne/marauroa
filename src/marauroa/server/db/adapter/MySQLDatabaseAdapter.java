@@ -1,6 +1,5 @@
-/* $Id: MySQLDatabaseAdapter.java,v 1.14 2010/05/29 21:30:11 nhnb Exp $ */
 /***************************************************************************
- *                   (C) Copyright 2007-2009 - Marauroa                    *
+ *                   (C) Copyright 2007-2011 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -28,7 +27,7 @@ import marauroa.server.db.DatabaseConnectionException;
  * @author hendrik
  */
 public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
-    private static Logger logger = Log4J.getLogger(MySQLDatabaseAdapter.class);
+	private static Logger logger = Log4J.getLogger(MySQLDatabaseAdapter.class);
 
 	/**
 	 * creates a new MySQLDatabaseAdapter
@@ -50,20 +49,20 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	}
 
 	@Override
-    protected Connection createConnection(Properties connInfo) throws DatabaseConnectionException {
-	    Connection con = super.createConnection(connInfo);
+	protected Connection createConnection(Properties connInfo) throws DatabaseConnectionException {
+		Connection con = super.createConnection(connInfo);
 		DatabaseMetaData meta;
-        try {
-	        meta = con.getMetaData();
+		try {
+			meta = con.getMetaData();
 			String name = meta.getDatabaseProductName();
-		    if (name.toLowerCase(Locale.ENGLISH).indexOf("mysql") < 0) {
-		    	logger.warn("Using MySQLDatabaseAdapter to connect to " + name);
-		    }
-        } catch (SQLException e) {
-	        logger.error(e, e);
-        }
-	    return con;
-    }
+			if (name.toLowerCase(Locale.ENGLISH).indexOf("mysql") < 0) {
+				logger.warn("Using MySQLDatabaseAdapter to connect to " + name);
+			}
+		} catch (SQLException e) {
+			logger.error(e, e);
+		}
+		return con;
+	}
 
 	/**
 	 * rewrites CREATE TABLE statements to add TYPE=InnoDB

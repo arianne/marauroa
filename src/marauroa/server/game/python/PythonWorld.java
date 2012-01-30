@@ -1,6 +1,5 @@
-/* $Id: PythonWorld.java,v 1.8 2008/08/16 16:56:46 nhnb Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *                   (C) Copyright 2003-2008 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -18,7 +17,6 @@ package marauroa.server.game.python;
  * server init and server shutdown.
  * 
  * @author miguel
- * 
  */
 public class PythonWorld {
 

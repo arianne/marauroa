@@ -1,14 +1,13 @@
-/* $Id: INetworkClientManagerInterface.java,v 1.9 2008/02/22 10:28:31 arianne_rpg Exp $ */
 /***************************************************************************
- *						(C) Copyright 2003 - Marauroa					   *
+ *                   (C) Copyright 2003-2012 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
- *																		   *
- *	 This program is free software; you can redistribute it and/or modify  *
- *	 it under the terms of the GNU General Public License as published by  *
- *	 the Free Software Foundation; either version 2 of the License, or	   *
- *	 (at your option) any later version.								   *
- *																		   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
  ***************************************************************************/
 package marauroa.client.net;
 
@@ -39,8 +38,7 @@ public interface INetworkClientManagerInterface {
 	 * This method returns a Message from the list or block for timeout
 	 * milliseconds until a message is available or null if timeout happens.
 	 *
-	 * @param timeout
-	 *            timeout time in milliseconds
+	 * @param timeout timeout time in milliseconds
 	 * @return a Message or null if timeout happens
 	 * @throws InvalidVersionException
 	 */
@@ -50,8 +48,7 @@ public interface INetworkClientManagerInterface {
 	 * This method add a message to be delivered to the client the message is
 	 * pointed to.
 	 *
-	 * @param msg
-	 *            the message to be delivered.
+	 * @param msg the message to be delivered.
 	 */
 	void addMessage(Message msg);
 
