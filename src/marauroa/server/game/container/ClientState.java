@@ -1,6 +1,5 @@
-/* $Id: ClientState.java,v 1.5 2010/05/14 19:39:42 kymara Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2007 - Marauroa                      *
+ *                   (C) Copyright 2007-2012 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -23,12 +22,16 @@ package marauroa.server.game.container;
  * will only leave when logout is accepted, LOGOUT_ACCEPTED.
  */
 public enum ClientState {
+
 	/** Connection is accepted but login stage is not completed. */
 	CONNECTION_ACCEPTED,
+
 	/** Login identification is completed but still choosing character- */
 	LOGIN_COMPLETE,
+
 	/** Client is already playing. */
 	GAME_BEGIN,
+
 	/** The client has requested logout and the petition is accepted */
 	LOGOUT_ACCEPTED
 }

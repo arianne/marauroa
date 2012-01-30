@@ -1,6 +1,5 @@
-/* $Id: NIONetworkServerManager.java,v 1.46 2010/11/25 08:25:03 martinfuchs Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *                   (C) Copyright 2003-2012 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -36,11 +35,10 @@ import marauroa.server.net.flood.IFloodCheck;
 import marauroa.server.net.validator.ConnectionValidator;
 
 /**
- * This is the implementation of a worker that sends messages, receives them, ...
+ * This is the implementation of a worker that sends messages, receives them, 
  * This class also handles validation of connection and disconnection events
  * 
  * @author miguel
- * 
  */
 public final class NIONetworkServerManager extends Thread implements IWorker, IDisconnectedListener,
         INetworkServerManager {

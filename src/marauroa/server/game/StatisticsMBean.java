@@ -1,6 +1,5 @@
-/* $Id: StatisticsMBean.java,v 1.5 2009/07/18 11:20:35 nhnb Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2003 - Marauroa                      *
+ *                   (C) Copyright 2003-2009 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -15,11 +14,11 @@ package marauroa.server.game;
 /** statistics interface for the java management bean */
 public interface StatisticsMBean {
 
-    /**
-     * gets statistics for the specified type
-     *
-     * @param type name of statistics type to return
-     * @return value
-     */
+	/**
+	 * gets statistics for the specified type
+	 *
+	 * @param type name of statistics type to return
+	 * @return value
+	 */
 	public long get(String type);
 }
