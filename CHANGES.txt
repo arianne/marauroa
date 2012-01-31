@@ -16,7 +16,7 @@ Changelog
 - automatically try to use a configured SOCKS-proxy. If it cannot be used, Marauroa falls back to direct connections
 - RPRuleProcessorImpl provides a default implementation for IRPRuleProcessor
 - new server.ini variable server_abuseContact to add a sentence with contact information to the ban dialog.
-- use ENGINE instead of TYPE on table creation to be compatible with MySQL 5.5 (now at least MySQL 4.0 is required)
+- use ENGINE instead of TYPE on table creation to be compatible with MySQL 5.5
 
 
 3.8.7
