@@ -30,6 +30,9 @@ import marauroa.server.db.DatabaseConnectionException;
 public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
     private static Logger logger = Log4J.getLogger(MySQLDatabaseAdapter.class);
 
+	// major version of the database
+	private int majorVersion;
+
 	/**
 	 * creates a new MySQLDatabaseAdapter
 	 *
@@ -56,14 +59,15 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
         try {
 	        meta = con.getMetaData();
 			String name = meta.getDatabaseProductName();
-		    if (name.toLowerCase(Locale.ENGLISH).indexOf("mysql") < 0) {
-		    	logger.warn("Using MySQLDatabaseAdapter to connect to " + name);
-		    }
-        } catch (SQLException e) {
-	        logger.error(e, e);
-        }
-	    return con;
-    }
+			if (name.toLowerCase(Locale.ENGLISH).indexOf("mysql") < 0) {
+				logger.warn("Using MySQLDatabaseAdapter to connect to " + name);
+			}
+			this.majorVersion = con.getMetaData().getDatabaseMajorVersion();
+		} catch (SQLException e) {
+			logger.error(e, e);
+		}
+		return con;
+	}
 
 	/**
 	 * rewrites CREATE TABLE statements to add TYPE=InnoDB
@@ -75,7 +79,11 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	protected String rewriteSql(String sql) {
 		String mySql = sql.trim();
 		if (mySql.toLowerCase(Locale.ENGLISH).startsWith("create table")) {
-			mySql = sql.substring(0, sql.length() - 1) + " ENGINE=InnoDB;";
+			if (this.majorVersion >= 5) {
+				mySql = sql.substring(0, sql.length() - 1) + " ENGINE=InnoDB;";
+			} else {
+				mySql = sql.substring(0, sql.length() - 1) + " TYPE=InnoDB;";
+			}
 		}
 		return mySql;
 	}
