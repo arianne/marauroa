@@ -181,6 +181,9 @@ public class TransferContent {
 		name = in.readString();
 		data = in.readByteArray();
 		timestamp = in.readInt();
+		if (in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_CONTENT_HASH) {
+			hash = in.readByteArray();
+		}
 		cacheable = (in.readByte() == 1);
 	}
 }
