@@ -69,17 +69,11 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			metaData.getCommand().execute(transaction);
 			TransactionPool.get().commit(transaction);
 		} catch (IOException e) {
-			logger.error(e, e);
-			TransactionPool.get().rollback(transaction);
-			metaData.getCommand().setException(e);
+			handleError(metaData, transaction, e);
 		} catch (SQLException e) {
-			logger.error(e, e);
-			TransactionPool.get().rollback(transaction);
-			metaData.getCommand().setException(e);
+			handleError(metaData, transaction, e);
 		} catch (RuntimeException e) {
-			logger.error(e, e);
-			TransactionPool.get().rollback(transaction);
-			metaData.getCommand().setException(e);
+			handleError(metaData, transaction, e);
 		}
 
 		if (metaData.isResultAwaited()) {
@@ -87,5 +81,12 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			DBCommandQueue.get().addResult(metaData);
 		}
 		MDC.put("context", "");
+	}
+
+	private void handleError(DBCommandMetaData metaData, DBTransaction transaction, Exception e) {
+		logger.error(e, e);
+		TransactionPool.get().rollback(transaction);
+		TransactionPool.get().verifyAllAvailableConnections();
+		metaData.getCommand().setException(e);
 	}
 }
