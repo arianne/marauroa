@@ -165,7 +165,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 		readManager.interrupt();
 
-		while (isfinished == false) {
+		while (!isfinished) {
 			Thread.yield();
 		}
 
