@@ -109,7 +109,7 @@ public class MessageS2CTransfer extends Message {
 
 	@Override
 	public void writeToJson(StringBuilder out) {
-		return;
+		// do nothing
 	}
 
 	@Override
