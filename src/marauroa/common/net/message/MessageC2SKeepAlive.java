@@ -18,9 +18,9 @@ import marauroa.common.net.Channel;
 
 /**
  * This message is sent from client to server to indicate that he is still there
- * and that wants to be considered connected. 
+ * and that wants to be considered connected.
  * <p>
- * There are strange situations on TCP that cause a considerable amount of time to 
+ * There are strange situations on TCP that cause a considerable amount of time to
  * be ellapsed until the stack realized that a timeout happens.
  */
 public class MessageC2SKeepAlive extends Message {
@@ -50,10 +50,6 @@ public class MessageC2SKeepAlive extends Message {
 		return "Message (C2S Keep Alive) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
-	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
-		super.writeObject(out);
-	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {

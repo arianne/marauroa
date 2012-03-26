@@ -47,10 +47,6 @@ public class MessageC2SLogout extends Message {
 		return "Message (C2S Logout) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
-	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
-		super.writeObject(out);
-	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {

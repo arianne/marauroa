@@ -46,10 +46,6 @@ public class MessageC2SOutOfSync extends Message {
 		return "Message (C2S Out of Sync) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
-	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
-		super.writeObject(out);
-	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
