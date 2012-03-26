@@ -17,16 +17,16 @@ import java.util.Map;
 import marauroa.server.game.rp.RPObjectFactory;
 
 /**
- * <p>Keeps track of the DAOs (data access objects) to use. They are registered 
+ * <p>Keeps track of the DAOs (data access objects) to use. They are registered
  * using their class name:<br>
  * <code>register(CharacterDAO.class, new CharacterDAO());</code></p>
  *
  * <p>Games can add their own DAOs. They can even replace framework DAOs
- * with their own subclasses. Stendhal for example enhances the normal 
- * CharacterDAO with its own subclass to update a redundant table used 
+ * with their own subclasses. Stendhal for example enhances the normal
+ * CharacterDAO with its own subclass to update a redundant table used
  * by the Stendhal website: <br>
  * <code>DAORegister.get().register(CharacterDAO.class, new StendhalCharacterDAO());</code></p>
- * 
+ *
  * <p>Game should register their DAOs in the "initialize()" method of their DatabaseFactory,
  * as defined in the server.ini: <br>
  * <code>database_implementation=games.demo.server.DemoDatabaseFactory</code>
@@ -36,7 +36,7 @@ import marauroa.server.game.rp.RPObjectFactory;
  */
 public class DAORegister {
 
-	private Map<Class<?>, Object> register = new HashMap<Class<?>, Object>();
+	private final Map<Class<?>, Object> register = new HashMap<Class<?>, Object>();
 	private RPObjectFactory factory;
 	private static DAORegister instance;
 
@@ -74,13 +74,12 @@ public class DAORegister {
 	 * gets the instance for the requested DAO
 	 *
 	 * @param <T>   type of DAO
-	 * @param clazz class of DAP
+	 * @param clazz class of DAO
 	 * @return instance of DOA
 	 * @throws IllegalArgumentException in case there is no instance registered for the specified class
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T get(Class<T> clazz) {
-		T res = (T) register.get(clazz);
+		T res = clazz.cast(register.get(clazz));
 		if (res == null) {
 			throw new IllegalArgumentException("No DAO registered for class " + clazz);
 		}
