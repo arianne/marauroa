@@ -1,5 +1,6 @@
 package clientconnect;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import helper.ResetMarauroaSingleton;
 
@@ -9,7 +10,6 @@ import java.util.List;
 import marauroa.client.ClientFramework;
 import marauroa.client.LoginFailedException;
 import marauroa.common.game.AccountResult;
-import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.message.MessageS2CPerception;
@@ -19,8 +19,6 @@ import marauroa.server.marauroad;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 public class ClientConnectTest {
 
@@ -31,12 +29,13 @@ public class ClientConnectTest {
 		if (db.exists()) {
 			db.delete();
 		}
-		
-		
+
+
 		String filename = "./functional_tests/clientconnect/clientconnect.ini";
 		assertTrue(new File(filename).exists());
 		String[] args = new String[] { "-c", filename };
 		marauroad.main(args);
+		Thread.sleep(1000);
 
 	}
 
@@ -54,12 +53,12 @@ public class ClientConnectTest {
 		cl.connect("localhost", 12300);
 		assertEquals(new AccountResult(Result.OK_CREATED,"hugo").toString(),cl.createAccount("hugo", "pw2", "emil").toString());
 		assertEquals(new AccountResult(Result.FAILED_PLAYER_EXISTS,"hugo").toString(),cl.createAccount("hugo", "pw2", "emil").toString());
-		
+
 		cl.login("hugo", "pw2");
 		cl.logout();
 	}
-	
-	
+
+
 	@Test (expected=LoginFailedException.class)
 	public void wrongPwTest() throws Exception {
 		ClientFramework cl = new MinimalClient();
@@ -69,19 +68,19 @@ public class ClientConnectTest {
 		cl.login("haxor", "badpw");
 		cl.logout();
 	}
-	
+
 	@Test
 	public void createCharacterTest() throws Exception {
 		ClientFramework cl = new MinimalClient();
 
 		cl.connect("localhost", 12300);
 		assertEquals(new AccountResult(Result.OK_CREATED,"character").toString(),cl.createAccount("character", "pw2", "emil").toString());
-		
+
 		cl.login("character", "pw2");
 		assertEquals(Result.OK_CREATED,cl.createCharacter("jack", new RPObject()).getResult());
 		//XXX shouldnt this be Result.FAILED_CHARACTER_EXISTS?
 		assertEquals(Result.FAILED_PLAYER_EXISTS,cl.createCharacter("jack", new RPObject()).getResult());
-		
+
 		cl.logout();
 	}
 
@@ -98,7 +97,7 @@ public class ClientConnectTest {
 
 		@Override
 		protected void onServerInfo(String[] info) {
-			
+
 		}
 
 		@Override
