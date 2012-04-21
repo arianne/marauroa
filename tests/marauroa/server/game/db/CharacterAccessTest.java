@@ -34,9 +34,9 @@ import org.junit.Test;
 
 /**
  * Test the character related methods of database access.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class CharacterAccessTest {
 
@@ -46,7 +46,7 @@ public class CharacterAccessTest {
 
 	/**
 	 * Setup one time the database.
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
@@ -58,16 +58,17 @@ public class CharacterAccessTest {
 		props.put("jdbc_class", "com.mysql.jdbc.Driver");
 		props.put("jdbc_user", "junittest");
 		props.put("jdbc_pwd", "passwd");
+		props.put("database_adapter", "marauroa.server.db.adapter.MySQLDatabaseAdapter");
 
 		transactionPool = new TransactionPool(props);
-		
+
 		accountDAO = DAORegister.get().get(AccountDAO.class);
 		characterDAO = DAORegister.get().get(CharacterDAO.class);
 	}
 
 	/**
 	 * Setup one time the database.
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@AfterClass
@@ -79,7 +80,7 @@ public class CharacterAccessTest {
 	/**
 	 * Add a character to a player account and test it existence with
 	 * hasCharacter method.
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -102,7 +103,7 @@ public class CharacterAccessTest {
 
 	/**
 	 * Test that adding two times the same character throws a SQLException
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -128,7 +129,7 @@ public class CharacterAccessTest {
 
 	/**
 	 * Test that remove character removed it and assert with hasCharacter.
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -154,7 +155,7 @@ public class CharacterAccessTest {
 	/**
 	 * Check that removing the player does in fact also removes the character
 	 * that belonged to that player.
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -180,7 +181,7 @@ public class CharacterAccessTest {
 	/**
 	 * Check that getCharacters return a list with all the characters that
 	 * belong to a player.
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -207,7 +208,7 @@ public class CharacterAccessTest {
 	 * Check that storing and loading an avatar associated to a character of a
 	 * player works as expected. This code depends on RPObject and
 	 * Serialization.
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */

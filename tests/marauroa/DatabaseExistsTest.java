@@ -31,6 +31,7 @@ public class DatabaseExistsTest {
 			props.put("jdbc_class", "com.mysql.jdbc.Driver");
 			props.put("jdbc_user", "junittest");
 			props.put("jdbc_pwd", "passwd");
+			props.put("database_adapter", "marauroa.server.db.adapter.MySQLDatabaseAdapter");
 
 			TransactionPool pool = new TransactionPool(props);
 			pool.rollback(pool.beginWork());
