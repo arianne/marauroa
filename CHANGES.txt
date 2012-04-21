@@ -1,6 +1,5 @@
 Changelog
 ---------
-<<<<<<< HEAD
 3.9.5
 - added support for HTML5
 
