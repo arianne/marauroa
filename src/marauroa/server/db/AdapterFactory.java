@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2007-2010 - Marauroa                    *
+ *                   (C) Copyright 2007-2012 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -16,7 +16,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
-import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.server.db.adapter.DatabaseAdapter;
@@ -71,14 +70,8 @@ class AdapterFactory {
 	 * @return DatabaseAdapter for the specified database
 	 */
     public DatabaseAdapter create() {
-		Configuration configuration;
-		try {
-			configuration = Configuration.getConfiguration();
-		} catch (IOException e) {
-			throw new RuntimeException("Could not read configuration:", e);
-		}
-		int maxRetries = configuration.getInt("database_connection_retries", 60);
-		int wait = configuration.getInt("database_connection_waittime", 1000);
+		int maxRetries = Integer.parseInt(connInfo.getProperty("database_connection_retries", "60"));
+		int wait = Integer.parseInt(connInfo.getProperty("database_connection_waittime", "1000"));
 
 		int i = 0;
 		while (true) {
