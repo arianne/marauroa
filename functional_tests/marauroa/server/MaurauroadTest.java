@@ -7,8 +7,10 @@ import java.io.File;
 import marauroa.helper.ResetMarauroaSingleton;
 
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class MaurauroadTest {
 
 	@Test
