@@ -28,7 +28,7 @@ import marauroa.server.db.DatabaseConnectionException;
  * @author hendrik
  */
 public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
-	private static Logger logger = Log4J.getLogger(MySQLDatabaseAdapter.class);
+	private static Logger logger = Log4J.getLogger(H2DatabaseAdapter.class);
 
 	/**
 	 * creates a new H2Adapter
@@ -57,7 +57,7 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 			meta = con.getMetaData();
 			String name = meta.getDatabaseProductName();
 			if (name.toLowerCase(Locale.ENGLISH).indexOf("h2") < 0) {
-				logger.warn("Using H2DatabaseAdapter to connect to " + name);
+				logger.warn("Using H2DatabaseAdapter to connect to " + name, new Throwable());
 			}
 			if (connInfo.getProperty("jdbc_url", "").toLowerCase(Locale.ENGLISH).indexOf(";mode=") > -1) {
 				logger.warn("The configuration parameter jdbc_url configures H2 for compatibility mode. This is likely to cause trouble.");
