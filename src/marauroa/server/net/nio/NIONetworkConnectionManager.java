@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Utility;
 import marauroa.common.net.Channel;
@@ -99,7 +100,9 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 
 		logger.debug("NetworkServerManager started successfully");
 
-		server = new NioServer(null, NetConst.tcpPort, this);
+		Configuration conf = Configuration.getConfiguration();
+		int port = Integer.parseInt(conf.get("tcp_port"));
+		server = new NioServer(null, port, this);
 		server.start();
 
 		// Register network listener for get disconnection events.
