@@ -24,6 +24,7 @@ public class NetConst {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(NetConst.class);
 
 	/** Port that will use the server for listen to incoming packets */
+	@Deprecated
 	public static final int tcpPort;
 
 	static {
@@ -79,7 +80,7 @@ public class NetConst {
 
 	/** Oldest supported protocol version */
 	public static final byte NETWORK_PROTOCOL_VERSION_MIN = 31;
-	
+
 	/** Newest supported protocol version */
 	// 40 up to Marauroa version 3.8.8
 	public static final byte NETWORK_PROTOCOL_VERSION_MAX = 80;
@@ -89,7 +90,7 @@ public class NetConst {
 
 	/** the first version with support for older versions. */
 	public static final byte FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT = 33;
-	
+
 	/** the first version that supports maps in rpobjects. */
 	public static final byte FIRST_VERSION_WITH_MAP_SUPPORT = 33;
 
@@ -97,8 +98,8 @@ public class NetConst {
 	public static final byte FIRST_VERSION_WITH_CONTENT_HASH = 34;
 
 	/**
-	 * the first version which allows the omittion of empty perceptions 
-	 * because the client does not depend sending of the KeepAlive message 
+	 * the first version which allows the omittion of empty perceptions
+	 * because the client does not depend sending of the KeepAlive message
 	 * anymore on counting perception messages
 	 */
 	public static final int FIRST_VERSION_WITH_OMITTABLE_EMPTY_PERCEPTIONS = 34;
