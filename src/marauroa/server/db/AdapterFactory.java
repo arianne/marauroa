@@ -14,7 +14,6 @@ package marauroa.server.db;
 import java.lang.reflect.Constructor;
 import java.util.Properties;
 
-import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.server.db.adapter.DatabaseAdapter;
@@ -28,7 +27,7 @@ import marauroa.server.db.adapter.MySQLDatabaseAdapter;
 class AdapterFactory {
 	private static Logger logger = Log4J.getLogger(AdapterFactory.class);
 
-	private Properties connInfo;
+	private final Properties connInfo;
 
 	/**
 	 * creates a new AdapterFactory
@@ -47,8 +46,7 @@ class AdapterFactory {
 	@SuppressWarnings("unchecked")
     public DatabaseAdapter create() {
 		try {
-			Configuration configuration = Configuration.getConfiguration();
-			String adapter = configuration.get("database_adapter");
+			String adapter = connInfo.getProperty("database_adapter");
 			if (adapter == null) {
 				return new MySQLDatabaseAdapter(connInfo);
 			}
