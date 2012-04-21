@@ -56,8 +56,7 @@ class AdapterFactory {
 	 * @throws InvocationTargetException if the constructor threw an exception
 	 */
 	private DatabaseAdapter internalCreate() throws IOException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-		Configuration configuration = Configuration.getConfiguration();
-		String adapter = configuration.get("database_adapter");
+		String adapter = connInfo.getProperty("database_adapter");
 		if (adapter == null) {
 			return new MySQLDatabaseAdapter(connInfo);
 		}

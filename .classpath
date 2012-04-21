@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="src" path="functional_tests"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-1.5.0-sun-1.5.0.18"/>
 	<classpathentry kind="lib" path="libs/jnlp.jar"/>
 	<classpathentry kind="lib" path="libs/log4j.jar"/>
 	<classpathentry kind="lib" path="libs/jython.jar"/>
@@ -22,5 +21,6 @@
 	<classpathentry kind="lib" path="libs/jetty-xml-7.1.6.v20100715.jar"/>
 	<classpathentry kind="lib" path="libs/servlet-api-2.5.jar"/>
 	<classpathentry kind="lib" path="libs/socketio-java-20110114.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

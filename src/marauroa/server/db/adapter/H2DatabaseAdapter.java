@@ -28,7 +28,7 @@ import marauroa.server.db.DatabaseConnectionException;
  * @author hendrik
  */
 public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
-	private static Logger logger = Log4J.getLogger(MySQLDatabaseAdapter.class);
+	private static Logger logger = Log4J.getLogger(H2DatabaseAdapter.class);
 
 	/**
 	 * creates a new H2Adapter
