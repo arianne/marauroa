@@ -1,19 +1,19 @@
-package serverstartstop;
+package marauroa.server;
 
-import helper.ResetMarauroaSingleton;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import marauroa.server.marauroad;
+import marauroa.helper.ResetMarauroaSingleton;
 
 import org.junit.AfterClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-public class maurauroadTest {
+
+public class MaurauroadTest {
 
 	@Test
 	public void testname() throws Exception {
-		String filename = "./functional_tests/serverstartstop/testserver.ini";
+		String filename = "./functional_tests/marauroa/server/testserver.ini";
 		assertTrue(new File(filename).exists());
 		String[] args = new String[] { "-c", filename };
 
@@ -21,7 +21,6 @@ public class maurauroadTest {
 		// let marauroa start up before we kill it
 		Thread.sleep(1000);
 		marauroad.getMarauroa().finish();
-
 	}
 
 	@AfterClass

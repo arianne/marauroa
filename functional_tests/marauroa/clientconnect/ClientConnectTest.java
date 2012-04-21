@@ -1,8 +1,7 @@
-package clientconnect;
+package marauroa.clientconnect;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import helper.ResetMarauroaSingleton;
 
 import java.io.File;
 import java.util.List;
@@ -14,6 +13,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.common.net.message.TransferContent;
+import marauroa.helper.ResetMarauroaSingleton;
 import marauroa.server.marauroad;
 
 import org.junit.AfterClass;
@@ -25,13 +25,13 @@ public class ClientConnectTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		File db = new File("./functional_tests/clientconnect/clientconnect.h2.db");
+		File db = new File("./functional_tests/marauroa/clientconnect/clientconnect.h2.db");
 		if (db.exists()) {
 			db.delete();
 		}
 
 
-		String filename = "./functional_tests/clientconnect/clientconnect.ini";
+		String filename = "./functional_tests/marauroa/clientconnect/clientconnect.ini";
 		assertTrue(new File(filename).exists());
 		String[] args = new String[] { "-c", filename };
 		marauroad.main(args);

@@ -3,5 +3,5 @@
  * This package provides the classes needed.
  * 
  */
-package helper;
+package marauroa.helper;
 
