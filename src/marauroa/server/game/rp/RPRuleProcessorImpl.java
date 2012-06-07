@@ -100,7 +100,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 		return true;
 	}
 
-	
+
 	/**
 	 * Callback method called when a new player enters in the game
 	 *
@@ -171,7 +171,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 		AccountDAO accountDAO = DAORegister.get().get(AccountDAO.class);
 		try {
 			if (accountDAO.hasPlayer(trans, username)) {
-				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username);
+				return new AccountResult(Result.FAILED_CHARACTER_EXISTS, username);
 			}
 			accountDAO.addPlayer(trans, username, Hash.hash(password), email);
 			transactionPool.commit(trans);
