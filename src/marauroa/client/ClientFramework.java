@@ -477,70 +477,22 @@ public abstract class ClientFramework {
 	 *             if timeout happens while waiting for the message.
 	 * @throws BannedAddressException
 	 */
-	@SuppressWarnings("null")
 	public synchronized AccountResult createAccount(String username, String password, String email)
 	        throws TimeoutException, InvalidVersionException, BannedAddressException {
+		Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
+
+		netMan.addMessage(msgCA);
 
 		int received = 0;
-		RSAPublicKey key = null;
-		byte[] clientNonce = null;
-		byte[] serverNonce = null;
 
-		/* Send to server a login request and indicate the game name and version */
-		netMan.addMessage(new MessageC2SLoginRequestKey(null, getGameName(), getVersionNumber()));
-
-		int timeout = TIMEOUT;
 		AccountResult result = null;
 
-		while (received < 3) {
-			Message msg = getMessage(timeout);
-			// Okay, now  we know that there is a marauroa server responding to the handshake.
-			// We can give it more time for the next steps in case the database is slow.
-			// Loging heavily depends on the database because number of failed logins for both
-			// ip-address and username, banstatus, username&password have to be checked. And
-			// the list of characters needs to be loaded from the database.
-			timeout = TIMEOUT_EXTENDED;
+		while (received != 1) {
+			Message msg = getMessage(TIMEOUT_EXTENDED);
 
 			switch (msg.getType()) {
 				case S2C_INVALIDMESSAGE: {
-					logger.error(((MessageS2CInvalidMessage) msg).getReason());
-					return new AccountResult(Result.FAILED_EXCEPTION, username);
-				}
-				/* Server sends its public RSA key */
-				case S2C_LOGIN_SENDKEY: {
-					logger.debug("Received Key");
-					key = ((MessageS2CLoginSendKey) msg).getKey();
-
-					clientNonce = Hash.random(Hash.hashLength());
-					netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce)));
-					break;
-				}
-					/* Server sends a random big integer */
-				case S2C_LOGIN_SENDNONCE: {
-					logger.debug("Received Server Nonce");
-					if (serverNonce != null) {
-						logger.error("Already received a serverNonce");
-						return new AccountResult(Result.FAILED_EXCEPTION, username);
-					}
-
-					serverNonce = ((MessageS2CLoginSendNonce) msg).getHash();
-					byte[] b1 = Hash.xor(clientNonce, serverNonce);
-					if (b1 == null) {
-						logger.error("Incorrect hash b1");
-						return new AccountResult(Result.FAILED_EXCEPTION, username);
-					}
-
-					byte[] b2 = Hash.xor(b1, Hash.hash(password));
-					if (b2 == null) {
-						logger.error("Incorrect hash b2");
-						return new AccountResult(Result.FAILED_EXCEPTION, username);
-					}
-
-					byte[] cryptedPassword = key.encodeByteArray(b2);
-					netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(null,
-				        clientNonce, username, cryptedPassword));
-					Message msgCA = new MessageC2SCreateAccount(null, username, password, cryptedPassword, email);
-					netMan.addMessage(msgCA);
+					result = new AccountResult(Result.FAILED_EXCEPTION, username);
 					break;
 				}
 				/* Account was created */
@@ -561,10 +513,8 @@ public abstract class ClientFramework {
 
 					received++;
 					break;
-
-				/* If message doesn't match, store it, someone will need it. */
 				default:
-					messages.add(msg);
+					logger.debug("Unexpected method while waiting for confirmation of account creation: " + msg);
 			}
 		}
 

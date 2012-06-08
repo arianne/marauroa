@@ -14,10 +14,6 @@ package marauroa.common.net.message;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
-import marauroa.common.Utility;
-import marauroa.common.crypto.Hash;
-import marauroa.common.net.NetConst;
-
 /**
  * This message indicate the server to create an account.
  *
@@ -30,9 +26,6 @@ public class MessageC2SCreateAccount extends Message {
 
 	/** Desired password */
 	private String password;
-
-	/** Desired password */
-	private byte[] hash;
 
 	/** email address for whatever thing it may be needed. */
 	private String email;
@@ -52,18 +45,14 @@ public class MessageC2SCreateAccount extends Message {
 	 *            desired username
 	 * @param password
 	 *            desired password
-	 * @param
-	 *        hash
-	 *            password hash
 	 * @param email
 	 *            email of the player
 	 */
-	public MessageC2SCreateAccount(SocketChannel source, String username, String password, byte[] hash,
+	public MessageC2SCreateAccount(SocketChannel source, String username, String password,
 	        String email) {
 		super(MessageType.C2S_CREATEACCOUNT, source);
 		this.username = username;
 		this.password = password;
-		this.hash = Utility.copy(hash);
 		this.email = email;
 	}
 
@@ -92,19 +81,6 @@ public class MessageC2SCreateAccount extends Message {
 	}
 
 	/**
-	 * gets the password hash
-	 *
-	 * @return hash
-	 */
-	public byte[] getHash() {
-		if (hash == null) {
-			return Hash.hash(password);
-		} else {
-			return Utility.copy(hash);
-		}
-	}
-
-	/**
 	 * This method returns a String that represent the object
 	 *
 	 * @return a string representing the object.
@@ -119,11 +95,7 @@ public class MessageC2SCreateAccount extends Message {
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(username);
-		if (out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_IMPROVED_ACCOUNT_CREATION) {
-			out.write(hash);
-		} else {
-			out.write(password);
-		}
+		out.write(password);
 		out.write(email);
 	}
 
@@ -131,11 +103,7 @@ public class MessageC2SCreateAccount extends Message {
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		username = in.readString();
-		if (in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_IMPROVED_ACCOUNT_CREATION) {
-			hash = in.readByteArray();
-		} else {
-			password = in.readString();
-		}
+		password = in.readString();
 		email = in.readString();
 
 		if (type != MessageType.C2S_CREATEACCOUNT) {
