@@ -24,6 +24,7 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
 import marauroa.common.Utility;
+import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.NetConst;
@@ -190,6 +191,27 @@ public class PlayerEntry {
 				logger.error(e, e);
 			}
 			return res;
+		}
+
+		/**
+		 * gets the decrypted password
+		 *
+		 * @return the decrypted password hash
+		 */
+		public byte[] getDecryptedPasswordHash() {
+			byte[] b1 = key.decodeByteArray(password);
+			byte[] b2 = Hash.xor(clientNonce, serverNonce);
+			if (b2 == null) {
+				logger.debug("B2 is null");
+				return null;
+			}
+
+			byte[] passwordHash = Hash.xor(b1, b2);
+			if (password == null) {
+				logger.debug("Password is null");
+				return null;
+			}
+			return passwordHash;
 		}
 
 		/**
