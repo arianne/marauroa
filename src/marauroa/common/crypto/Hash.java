@@ -11,8 +11,10 @@
  ***************************************************************************/
 package marauroa.common.crypto;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -33,8 +35,12 @@ public class Hash {
 	private static Logger logger = Log4J.getLogger(Hash.class);
 
 	private static String hex = "0123456789ABCDEF";
+	/** Password salt size in bytes */
+	private static final int SALT_BYTES = 8;
 
 	static private MessageDigest md;
+	/** Hashing method used for passwords. (SHA-512) */
+	private static MessageDigest passwdMD;
 
 	static private SecureRandom random;
 
@@ -42,6 +48,7 @@ public class Hash {
 		try {
 			md = MessageDigest.getInstance("MD5");
 			random = SecureRandom.getInstance("SHA1PRNG");
+			passwdMD = MessageDigest.getInstance("SHA-512");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -82,6 +89,58 @@ public class Hash {
 		md.reset();
 		md.update(value);
 		return md.digest();
+	}
+	
+	/**
+	 * Create a salt.
+	 * 
+	 * @return salt
+	 */
+	private static byte[] createSalt() {
+		byte[] res = new byte[SALT_BYTES];
+		random.nextBytes(res);
+		return res;
+	}
+	
+	/**
+	 * Calculate hash using the digest used for the passwords.
+	 * 
+	 * @param bytes input data
+	 * @return hash of the input
+	 */
+	synchronized private static byte[] passwordHash(final byte[] bytes) {
+		passwdMD.reset();
+		return passwdMD.digest(bytes);
+	}
+	
+	/**
+	 * Calculate hash of salt and a pre-hashed (md5) password.
+	 * 
+	 * @param salt
+	 * @param passwordHash
+	 * @return hash
+	 */
+	private static byte[] saltedPasswordHash(final byte[] salt, final byte[] passwordHash) {
+		ByteBuffer saltedpw = ByteBuffer.allocate(salt.length + passwordHash.length);
+		saltedpw.put(salt);
+		saltedpw.put(passwordHash);
+		return passwordHash(saltedpw.array());
+	}
+	
+	public static final String saltedPasswordHash(final byte[] passwordHash) {
+		byte[] salt = createSalt();
+		byte[] fullHash = saltedPasswordHash(salt, passwordHash);
+		StringBuilder res = new StringBuilder(toHexString(salt));
+		res.append(":");
+		res.append(toHexString(fullHash));
+		
+		return res.toString();
+	}
+	
+	public static byte[] saltedPasswordHash(String hexSalt, byte[] passwordHash) {
+		byte[] salt = fromHexString(hexSalt);
+		
+		return saltedPasswordHash(salt, passwordHash);
 	}
 
 	/**
@@ -150,6 +209,15 @@ public class Hash {
 			res.append(hex.charAt((b & 0xF)));
 		}
 		return res.toString();
+	}
+	
+	private static byte[] fromHexString(final String hexString) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		for (int i = 0; i < hexString.length(); i += 2) {
+			String part = hexString.substring(i, i + 2);
+			stream.write(Integer.parseInt(part, 16));
+		}
+		return stream.toByteArray();
 	}
 
 	/**

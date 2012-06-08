@@ -56,7 +56,7 @@ public class AccountDAO {
 	 * @param email email-address
 	 * @throws SQLException in case of an database error
 	 */
-	public void addPlayer(DBTransaction transaction, String username, byte[] password, String email)
+	public void addPlayer(DBTransaction transaction, String username, String password, String email)
 			throws SQLException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(email)) {
@@ -68,7 +68,7 @@ public class AccountDAO {
 				+ " values('[username]','[password]', '[email]', 'active')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
-			params.put("password", Hash.toHexString(password));
+			params.put("password", password);
 			params.put("email", email);
 			logger.debug("addPlayer is using query: " + query);
 
@@ -78,6 +78,20 @@ public class AccountDAO {
 			throw e;
 		}
 	}
+	
+	/**
+	 * creates an account
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param password password
+	 * @param email email-address
+	 * @throws SQLException in case of an database error
+	 */
+	public void addPlayer(DBTransaction transaction, String username,
+			byte[] password, String email) throws SQLException {
+		addPlayer(transaction, username, Hash.toHexString(password), email);
+	}	
 
 	/**
 	 * generates an account name based on the specified pattern (uses for automatic testing)
@@ -156,12 +170,12 @@ public class AccountDAO {
 
 			int id = getDatabasePlayerId(transaction, username);
 
-			byte[] hashedPassword = Hash.hash(password);
+			String saltedPassword = Hash.saltedPasswordHash(Hash.hash(password));
 
 			String query = "update account set password='[password]' where id=[player_id]";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", id);
-			params.put("password", Hash.toHexString(hashedPassword));
+			params.put("password", saltedPassword);
 			logger.debug("changePassword is using query: " + query);
 
 			transaction.execute(query, params);
@@ -409,18 +423,8 @@ public class AccountDAO {
 			logger.debug("Password is null");
 			return false;
 		}
-
-		// check new Marauroa 2.0 password type
-		String hexPassword = Hash.toHexString(password);
-		boolean res = verifyUsingDB(transaction, informations.username, hexPassword);
-
-		if (!res) {
-			// compatibility: check old Marauroa 1.0 password type
-			hexPassword = Hash.toHexString(Hash.hash(password));
-			res = verifyUsingDB(transaction, informations.username, hexPassword);
-		}
-
-		return res;
+		
+		return verifyUsingDB(transaction, informations.username, password);
 	}
 	
 	/**
@@ -432,31 +436,48 @@ public class AccountDAO {
 	 * @return true on success, false if the account does not exists or the password does not match
 	 * @throws SQLException in case of an database error
 	 */
-	private boolean verifyUsingDB(DBTransaction transaction, String username, String hexPassword) throws SQLException {
+	private boolean verifyUsingDB(DBTransaction transaction, String username, byte[] password) throws SQLException {
 		try {
-			String query = "select username from account where username = "
-				+ "'[username]' and password = '[password]'";
+			String query = "select username, password from account where username = '[username]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
-			params.put("password", hexPassword);
 			logger.debug("verifyAccount is executing query " + query);
 			ResultSet resultSet = transaction.query(query, params);
-			if (resultSet.next()) {
-				String userNameFromDB = resultSet.getString("username");
-				if (!userNameFromDB.equalsIgnoreCase(username)) {
-					logger.warn("Username \"" + username + "\" is not the same that stored username \"" + userNameFromDB + "\"");
-					resultSet.close();
-					return false;
+			try {
+				if (resultSet.next()) {
+					String userNameFromDB = resultSet.getString("username");
+					if (!userNameFromDB.equalsIgnoreCase(username)) {
+						logger.warn("Username \"" + username + "\" is not the same that stored username \"" + userNameFromDB + "\"");
+						return false;
+					}
+					return verifyPassword(resultSet.getString("password"), password);
 				}
+			} finally {
 				resultSet.close();
-				return true;
 			}
-			resultSet.close();
 			return false;
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + username + "\"", e);
 			throw e;
 		}
+	}
+	
+	private boolean verifyPassword(String dbPassword, byte[] password) {
+		int saltIndex = dbPassword.indexOf(":");
+		if (saltIndex == -1) {
+			// Compatibility with unsalted passwords
+			String hexPassword = Hash.toHexString(password);
+			boolean res = hexPassword.equals(dbPassword);
+			if (!res) {
+				// compatibility: check old Marauroa 1.0 password type
+				hexPassword = Hash.toHexString(Hash.hash(password));
+				res = hexPassword.equals(dbPassword);
+			}
+			return res;
+		}
+		String salt = dbPassword.substring(0, saltIndex);
+		byte[] hash = Hash.saltedPasswordHash(salt, password);
+		return Hash.toHexString(hash).equals(dbPassword.substring(saltIndex + 1));
 	}
 
 	/**
