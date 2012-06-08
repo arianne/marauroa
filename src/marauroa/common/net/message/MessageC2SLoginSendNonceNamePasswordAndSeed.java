@@ -19,9 +19,9 @@ import marauroa.common.crypto.Hash;
 
 /**
  * This message indicate the server that the client wants to login and send the
- * needed info: username, password and seed to the server. The password is 
- * protected by Crypt(xor(xor(client nonce, server nonce), password)) 
- * 
+ * needed info: username, password and seed to the server. The password is
+ * protected by Crypt(xor(xor(client nonce, server nonce), password))
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByteArray {
@@ -38,7 +38,7 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 	/**
 	 * Constructor with a TCP/IP source/destination of the message and the name
 	 * of the choosen character.
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param nonce
@@ -60,7 +60,7 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 
 	/**
 	 * This method returns the username
-	 * 
+	 *
 	 * @return the username
 	 */
 	public String getUsername() {
@@ -69,7 +69,7 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 
 	/**
 	 * This method returns the encoded password
-	 * 
+	 *
 	 * @return the password
 	 */
 	public byte[] getPassword() {
@@ -78,7 +78,7 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 
 	/**
 	 * This method returns the seed
-	 * 
+	 *
 	 * @return the seed
 	 */
 	public byte[] getSeed() {
@@ -86,14 +86,14 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 	}
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
 	public String toString() {
 		return "Message (C2S Login) from (" + getAddress() + ") CONTENTS: (nonce:"
-		        + Hash.toHexString(hash) + "\tusername:" + username + "\tpassword:"
-		        + Hash.toHexString(password) + "\tseed:" + Hash.toHexString(seed) + ")";
+		        + Hash.toHexString(hash) + "\tusername:" + username + "\tseed:"
+				+ Hash.toHexString(seed) + ")";
 	}
 
 	@Override

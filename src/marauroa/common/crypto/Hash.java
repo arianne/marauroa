@@ -11,10 +11,8 @@
  ***************************************************************************/
 package marauroa.common.crypto;
 
-import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -25,8 +23,8 @@ import marauroa.common.Logger;
 /**
  * This class is used to create Hashes of byte arrays.
  * It is thread safe.
- * 
- * This class require from JVM that it provides MD5 digest 
+ *
+ * This class require from JVM that it provides MD5 digest
  * and SHA1PRNG random number generator.
  *
  * @author quisar
@@ -35,12 +33,8 @@ public class Hash {
 	private static Logger logger = Log4J.getLogger(Hash.class);
 
 	private static String hex = "0123456789ABCDEF";
-	/** Password salt size in bytes */
-	private static final int SALT_BYTES = 8;
 
 	static private MessageDigest md;
-	/** Hashing method used for passwords. (SHA-512) */
-	private static MessageDigest passwdMD;
 
 	static private SecureRandom random;
 
@@ -48,7 +42,6 @@ public class Hash {
 		try {
 			md = MessageDigest.getInstance("MD5");
 			random = SecureRandom.getInstance("SHA1PRNG");
-			passwdMD = MessageDigest.getInstance("SHA-512");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -57,7 +50,7 @@ public class Hash {
 	/**
 	 * Return a hash of the given argument.
 	 * It is thread safe.
-	 * 
+	 *
 	 * @param value a string
 	 * @return the hash of the string.
 	 */
@@ -81,7 +74,7 @@ public class Hash {
 	/**
 	 * Return the hash of an array of bytes.
 	 * This method is thread safe.
-	 * 
+	 *
 	 * @param value an array of bytes.
 	 * @return the hash of an array of bytes.
 	 */
@@ -90,62 +83,10 @@ public class Hash {
 		md.update(value);
 		return md.digest();
 	}
-	
-	/**
-	 * Create a salt.
-	 * 
-	 * @return salt
-	 */
-	private static byte[] createSalt() {
-		byte[] res = new byte[SALT_BYTES];
-		random.nextBytes(res);
-		return res;
-	}
-	
-	/**
-	 * Calculate hash using the digest used for the passwords.
-	 * 
-	 * @param bytes input data
-	 * @return hash of the input
-	 */
-	synchronized private static byte[] passwordHash(final byte[] bytes) {
-		passwdMD.reset();
-		return passwdMD.digest(bytes);
-	}
-	
-	/**
-	 * Calculate hash of salt and a pre-hashed (md5) password.
-	 * 
-	 * @param salt
-	 * @param passwordHash
-	 * @return hash
-	 */
-	private static byte[] saltedPasswordHash(final byte[] salt, final byte[] passwordHash) {
-		ByteBuffer saltedpw = ByteBuffer.allocate(salt.length + passwordHash.length);
-		saltedpw.put(salt);
-		saltedpw.put(passwordHash);
-		return passwordHash(saltedpw.array());
-	}
-	
-	public static final String saltedPasswordHash(final byte[] passwordHash) {
-		byte[] salt = createSalt();
-		byte[] fullHash = saltedPasswordHash(salt, passwordHash);
-		StringBuilder res = new StringBuilder(toHexString(salt));
-		res.append(":");
-		res.append(toHexString(fullHash));
-		
-		return res.toString();
-	}
-	
-	public static byte[] saltedPasswordHash(String hexSalt, byte[] passwordHash) {
-		byte[] salt = fromHexString(hexSalt);
-		
-		return saltedPasswordHash(salt, passwordHash);
-	}
 
 	/**
 	 * Returns the XOR of two arrays of bytes of the same size otherwise it returns null.
-	 * 
+	 *
 	 * @param b1 an array of bytes.
 	 * @param b2 an array of bytes.
 	 * @return an array of bytes containing the xor of b1 and b2
@@ -162,15 +103,15 @@ public class Hash {
 	}
 
 	/**
-	 * Compare two arrays of bytes so that it returns a negative integer, zero, 
-	 * or a positive integer as the first argument is less than, equal to, or 
+	 * Compare two arrays of bytes so that it returns a negative integer, zero,
+	 * or a positive integer as the first argument is less than, equal to, or
 	 * greater than the second.
-	 * 
-	 * @param b1 an array of bytes. 
+	 *
+	 * @param b1 an array of bytes.
 	 * @param b2 an array of bytes.
-	 * 
-	 * @return a negative integer, zero, 
-	 * or a positive integer as the first argument is less than, equal to, or 
+	 *
+	 * @return a negative integer, zero,
+	 * or a positive integer as the first argument is less than, equal to, or
 	 * greater than the second.
 	 */
 	public static final int compare(final byte[] b1, final byte[] b2) {
@@ -187,7 +128,7 @@ public class Hash {
 
 	/**
 	 * Generate an array of bytes of nbBytes size.
-	 * 
+	 *
 	 * @param nbBytes size of the array.
 	 * @return an array of bytes of nbBytes size.
 	 */
@@ -209,15 +150,6 @@ public class Hash {
 			res.append(hex.charAt((b & 0xF)));
 		}
 		return res.toString();
-	}
-	
-	private static byte[] fromHexString(final String hexString) {
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		for (int i = 0; i < hexString.length(); i += 2) {
-			String part = hexString.substring(i, i + 2);
-			stream.write(Integer.parseInt(part, 16));
-		}
-		return stream.toByteArray();
 	}
 
 	/**
