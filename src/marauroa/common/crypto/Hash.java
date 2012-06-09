@@ -23,8 +23,8 @@ import marauroa.common.Logger;
 /**
  * This class is used to create Hashes of byte arrays.
  * It is thread safe.
- * 
- * This class require from JVM that it provides MD5 digest 
+ *
+ * This class require from JVM that it provides MD5 digest
  * and SHA1PRNG random number generator.
  *
  * @author quisar
@@ -50,7 +50,7 @@ public class Hash {
 	/**
 	 * Return a hash of the given argument.
 	 * It is thread safe.
-	 * 
+	 *
 	 * @param value a string
 	 * @return the hash of the string.
 	 */
@@ -74,7 +74,7 @@ public class Hash {
 	/**
 	 * Return the hash of an array of bytes.
 	 * This method is thread safe.
-	 * 
+	 *
 	 * @param value an array of bytes.
 	 * @return the hash of an array of bytes.
 	 */
@@ -86,7 +86,7 @@ public class Hash {
 
 	/**
 	 * Returns the XOR of two arrays of bytes of the same size otherwise it returns null.
-	 * 
+	 *
 	 * @param b1 an array of bytes.
 	 * @param b2 an array of bytes.
 	 * @return an array of bytes containing the xor of b1 and b2
@@ -103,15 +103,15 @@ public class Hash {
 	}
 
 	/**
-	 * Compare two arrays of bytes so that it returns a negative integer, zero, 
-	 * or a positive integer as the first argument is less than, equal to, or 
+	 * Compare two arrays of bytes so that it returns a negative integer, zero,
+	 * or a positive integer as the first argument is less than, equal to, or
 	 * greater than the second.
-	 * 
-	 * @param b1 an array of bytes. 
+	 *
+	 * @param b1 an array of bytes.
 	 * @param b2 an array of bytes.
-	 * 
-	 * @return a negative integer, zero, 
-	 * or a positive integer as the first argument is less than, equal to, or 
+	 *
+	 * @return a negative integer, zero,
+	 * or a positive integer as the first argument is less than, equal to, or
 	 * greater than the second.
 	 */
 	public static final int compare(final byte[] b1, final byte[] b2) {
@@ -128,7 +128,7 @@ public class Hash {
 
 	/**
 	 * Generate an array of bytes of nbBytes size.
-	 * 
+	 *
 	 * @param nbBytes size of the array.
 	 * @return an array of bytes of nbBytes size.
 	 */
