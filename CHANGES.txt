@@ -1,6 +1,7 @@
 Changelog
 ---------
 3.9.1
+- added support for Sha512Crypt with salt and pepper
 - fixed cacheable flag being ignored
 
 3.9
