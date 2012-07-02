@@ -446,6 +446,9 @@ public class AccountDAO {
 			resultSet.close();
 
 			boolean res = false;
+			if (storedPassword == null) {
+				return res;
+			}
 			if (storedPassword.startsWith("$6$")) {
 				String pepper = Configuration.getConfiguration().get("password_pepper", "");
 				res = Sha512Crypt.verifyPassword(pepper + Hash.toHexString(password), storedPassword);
