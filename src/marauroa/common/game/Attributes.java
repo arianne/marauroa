@@ -73,13 +73,19 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		modified = attr.modified;
 
 		content.clear();
-		content.putAll(attr.content);
+		synchronized (attr.content) {
+			content.putAll(attr.content);
+		}
 
 		added.clear();
-		added.putAll(attr.added);
+		synchronized (attr.added) {
+			added.putAll(attr.added);
+		}
 
 		deleted.clear();
-		deleted.putAll(attr.deleted);
+		synchronized (attr.deleted) {
+			deleted.putAll(attr.deleted);
+		}
 
 		return this;
 	}
