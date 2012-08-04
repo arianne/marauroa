@@ -420,7 +420,7 @@ public class AccountDAO {
 	 *
 	 * @param transaction DBTransaction
 	 * @param username username
-	 * @param hexPassword hashed password
+	 * @param password hashed password
 	 * @return true on success, false if the account does not exists or the password does not match
 	 * @throws SQLException in case of an database error
 	 */
