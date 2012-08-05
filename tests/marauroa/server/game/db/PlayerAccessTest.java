@@ -37,18 +37,18 @@ import org.junit.Test;
 /**
  * Test database methods that are related with player like adding a player,
  * removing it, changing its status, etc...
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class PlayerAccessTest {
 	private static TransactionPool transactionPool;
 	private static AccountDAO accountDAO;
 	private static LoginEventDAO loginEventDAO;
-	
+
 	/**
 	 * Setup one time the accountDAO.
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
@@ -60,7 +60,7 @@ public class PlayerAccessTest {
 		props.put("jdbc_class", "com.mysql.jdbc.Driver");
 		props.put("jdbc_user", "junittest");
 		props.put("jdbc_pwd", "passwd");
-
+		props.put("database_adapter", "marauroa.server.db.adapter.MySQLDatabaseAdapter");
 		transactionPool = new TransactionPool(props);
 		accountDAO = DAORegister.get().get(AccountDAO.class);
 		loginEventDAO = DAORegister.get().get(LoginEventDAO.class);
@@ -68,7 +68,7 @@ public class PlayerAccessTest {
 
 	/**
 	 * Setup one time the accountDAO.
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@AfterClass
@@ -80,7 +80,7 @@ public class PlayerAccessTest {
 	/**
 	 * Test if create a player account works by adding it and making sure that
 	 * the account is there using has method.
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -101,7 +101,7 @@ public class PlayerAccessTest {
 	 * account There is right now no simple way of checking the value, as we
 	 * would need the RSA key of the server to encript the password. ( and this
 	 * is stored at marauroa.ini )
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws IOException
 	 */
@@ -136,7 +136,7 @@ public class PlayerAccessTest {
 
 	/**
 	 * Test if adding two times the same player throw a SQLException
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test(expected = SQLException.class)
@@ -164,7 +164,7 @@ public class PlayerAccessTest {
 	/**
 	 * Remove a player and check that it is not anymore at database with has
 	 * method.
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -184,7 +184,7 @@ public class PlayerAccessTest {
 
 	/**
 	 * Check get status method. Every account is active by default.
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -203,7 +203,7 @@ public class PlayerAccessTest {
 
 	/**
 	 * Check the set status method, it uses getStatus to check the set value.
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Test
@@ -225,7 +225,7 @@ public class PlayerAccessTest {
 	/**
 	 * Test if create a player account works by adding it and making sure that
 	 * the account is there using has method.
-	 * 
+	 *
 	 * @throws SQLException
 	 * @throws UnknownHostException
 	 */

@@ -13,12 +13,10 @@ package marauroa.server.net.nio;
 
 import java.nio.channels.SocketChannel;
 
-import marauroa.server.net.nio.NioServer;
-
 /**
  * This interface should be implemented by all the classes that are added as
  * workers to NIOServer
- * 
+ *
  * @author miguel
  */
 public interface IWorker {
@@ -30,7 +28,7 @@ public interface IWorker {
 	 */
 	public void setServer(NioServer server);
 
-	/** 
+	/**
 	 * This is a callback method that is called onConnect.
 	 *
 	 * @param channel SocketChannel

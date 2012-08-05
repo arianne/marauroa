@@ -143,4 +143,11 @@ public interface DatabaseAdapter {
 	 * @throws SQLException in case of an database error
 	 */
 	public int getColumnLength(String table, String column) throws SQLException;
+
+	/**
+	 * verifies that the connection i still working
+	 *
+	 * @return true, if the connection is valid; false otherwise
+	 */
+	public boolean verifyConnection();
 }

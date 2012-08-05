@@ -134,14 +134,18 @@ public abstract class ClientFramework {
 		boolean connected = false;
 
 		// if a SOCKS-proxy is specified, try it first
-		Proxy proxy = discoverProxy(host, port);
-		if (proxy != Proxy.NO_PROXY) {
-			try {
+		try {
+			Proxy proxy = discoverProxy(host, port);
+			if (proxy != Proxy.NO_PROXY) {
 				connect(proxy, address);
 				connected = true;
-			} catch (IOException e) {
-				originalException = e;
 			}
+		} catch (IOException e) {
+			originalException = e;
+		} catch (IllegalArgumentException e) {
+			// workaround for javaws bug in discoverProxy (ProxySelector)
+			// http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=1055
+			originalException = new IOException(e);
 		}
 
 		// if no proxy is specified, or it failed, try without proxy

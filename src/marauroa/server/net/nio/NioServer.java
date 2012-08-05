@@ -32,9 +32,9 @@ import marauroa.common.Log4J;
 /**
  * This class is the basic schema for a nio server. It works in a pattern of
  * master/slave.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 class NioServer extends Thread {
 	private static final int BACKLOG_WARNING_SIZE = 10;
@@ -43,9 +43,9 @@ class NioServer extends Thread {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(NioServer.class);
 
 	/** The host:port combination to listen on */
-	private InetAddress hostAddress;
+	private final InetAddress hostAddress;
 
-	private int port;
+	private final int port;
 
 	/** While keepRunning is true, we keep receiving messages */
 	private boolean keepRunning;
@@ -57,24 +57,24 @@ class NioServer extends Thread {
 	private ServerSocketChannel serverChannel;
 
 	/** The selector we'll be monitoring */
-	private Selector selector;
+	private final Selector selector;
 
 	/** The buffer into which we'll read data when it's available */
-	private ByteBuffer readBuffer = ByteBuffer.allocate(8192);
+	private final ByteBuffer readBuffer = ByteBuffer.allocate(8192);
 
 	/**
 	 * This is the slave associated with this master. As it is a simple thread,
 	 * we only need one slave.
 	 */
-	private IWorker worker;
+	private final IWorker worker;
 
 	/** A list of PendingChange instances */
-	private List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
+	private final List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
 
-	private List<ChangeRequest> pendingClosed;
+	private final List<ChangeRequest> pendingClosed;
 
 	/** Maps a SocketChannel to a list of ByteBuffer instances */
-	private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
+	private final Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
 
 
 	public NioServer(InetAddress hostAddress, int port, IWorker worker) throws IOException {
@@ -95,7 +95,7 @@ class NioServer extends Thread {
 	/**
 	 * This method closes a channel. It also notify any listener about the
 	 * event.
-	 * 
+	 *
 	 * @param channel
 	 *            the channel to close.
 	 */
@@ -106,14 +106,14 @@ class NioServer extends Thread {
 		synchronized (this.pendingClosed) {
 			pendingClosed.add(new ChangeRequest(channel, ChangeRequest.CLOSE, 0));
 		}
-		
+
 		// Wake up to make the closure effective.
 		selector.wakeup();
 	}
 
 	/**
 	 * This method is used to send data on a socket.
-	 * 
+	 *
 	 * @param socket
 	 *            the socketchannel to use.
 	 * @param data
@@ -152,7 +152,7 @@ class NioServer extends Thread {
 
 		selector.wakeup();
 
-		while (isFinished == false) {
+		while (!(isFinished)) {
 			Thread.yield();
 		}
 

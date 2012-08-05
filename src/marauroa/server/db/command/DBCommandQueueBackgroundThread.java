@@ -43,7 +43,11 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			}
 
 			if (metaData != null) {
-				processCommand(metaData);
+				int i = 0;
+				while (!processCommand(metaData) && (i < 3)) {
+					logger.warn("Retrying last transaction because of errors.");
+					i++;
+				}
 			} else {
 				// There are no more pending commands, check if the server is being shutdown.
 				if (queue.isFinished()) {
@@ -57,29 +61,28 @@ class DBCommandQueueBackgroundThread implements Runnable {
 	 * processes a command
 	 *
 	 * @param metaData meta data about the command to process
+	 * @return completed
 	 */
-	private void processCommand(DBCommandMetaData metaData) {
+	private boolean processCommand(DBCommandMetaData metaData) {
+		boolean completed = true;
 		MDC.put("context", metaData + " ");
 		if (TransactionPool.get() == null) {
 			logger.warn("Database not initialized, skipping database operation");
-			return;
+			return completed;
 		}
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			metaData.getCommand().execute(transaction);
 			TransactionPool.get().commit(transaction);
 		} catch (IOException e) {
-			logger.error(e, e);
-			TransactionPool.get().rollback(transaction);
-			metaData.getCommand().setException(e);
+			handleError(metaData, transaction, e);
+			completed = false;
 		} catch (SQLException e) {
-			logger.error(e, e);
-			TransactionPool.get().rollback(transaction);
-			metaData.getCommand().setException(e);
+			handleError(metaData, transaction, e);
+			completed = false;
 		} catch (RuntimeException e) {
-			logger.error(e, e);
-			TransactionPool.get().rollback(transaction);
-			metaData.getCommand().setException(e);
+			handleError(metaData, transaction, e);
+			completed = false;
 		}
 
 		if (metaData.isResultAwaited()) {
@@ -87,5 +90,13 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			DBCommandQueue.get().addResult(metaData);
 		}
 		MDC.put("context", "");
+		return completed;
+	}
+
+	private void handleError(DBCommandMetaData metaData, DBTransaction transaction, Exception e) {
+		logger.error(e, e);
+		TransactionPool.get().rollback(transaction);
+		TransactionPool.get().verifyAllAvailableConnections();
+		metaData.getCommand().setException(e);
 	}
 }

@@ -57,7 +57,7 @@ public class DBTransaction {
 	}
 
 	/**
-	 * prints an error if a DBTransaction is accessed outside the thread 
+	 * prints an error if a DBTransaction is accessed outside the thread
 	 * it was bound to.
 	 */
 	private void ensureCorrectThread(boolean acceptUnused) {
@@ -136,7 +136,7 @@ public class DBTransaction {
                 // intercept SQL-Injection
                 if (secondLastToken.equals("(")) {
                     if (!token.matches(RE_INT_LIST)) {
-                        throw new SQLException("Illegal argument: \"" + token + "\" is not an integer list"); 
+                        throw new SQLException("Illegal argument: \"" + token + "\" is not an integer list");
                     }
                 } else if (secondLastToken.equals("'")) {
                     if (token.length() > 0) {
@@ -144,7 +144,7 @@ public class DBTransaction {
                     }
                 } else {
                     if (!token.matches(RE_INT)) {
-                        throw new SQLException("Illegal argument: \"" + token + "\" is not an integer."); 
+                        throw new SQLException("Illegal argument: \"" + token + "\" is not an integer.");
                     }
                 }
             }
@@ -164,13 +164,13 @@ public class DBTransaction {
      * @param query   SQL statement
      * @param params  parameter values
      * @return number of affected rows
-     * @throws SQLException in case of an database error 
+     * @throws SQLException in case of an database error
      */
 	public int execute(String query, Map<String, Object> params) throws SQLException {
 		ensureCorrectThread(false);
 		String sql = subst(query, params);
 		return databaseAdapter.execute(sql);
-	}	
+	}
 
     /**
      * executes an SQL statement with parameter substitution
@@ -179,7 +179,7 @@ public class DBTransaction {
      * @param params  parameter values
      * @param inStream input streams to stream into "?" columns
      * @return number of affected rows
-     * @throws SQLException in case of an database error 
+     * @throws SQLException in case of an database error
      * @throws IOException in case of an input/output error
      */
 	public int execute(String query, Map<String, Object> params, InputStream... inStream) throws SQLException, IOException {
@@ -194,7 +194,7 @@ public class DBTransaction {
      * @param query   SQL statement
      * @param params  parameter values
      * @return ResultSet
-     * @throws SQLException in case of an database error 
+     * @throws SQLException in case of an database error
      */
 	public ResultSet query(String query, Map<String, Object> params) throws SQLException {
 		ensureCorrectThread(false);
@@ -208,7 +208,7 @@ public class DBTransaction {
      * @param query   SQL statement
      * @param params  parameter values
      * @return value of the first column in the first row
-     * @throws SQLException in case of an database error 
+     * @throws SQLException in case of an database error
      */
 	public int querySingleCellInt(String query, Map<String, Object> params) throws SQLException {
 		ensureCorrectThread(false);
@@ -220,8 +220,8 @@ public class DBTransaction {
 	 * gets the id of the last insert. Note: The table and idcolumn parameters
 	 * <b>must</b> match the last insert statement. This is because on some
 	 * database systems a SELECT IDENTITY is performed and on other database
-	 * systems a SELECT curval(table_idcolumn_seq). 
-	 *  
+	 * systems a SELECT curval(table_idcolumn_seq).
+	 *
 	 * @param table  name of table on which the last insert was done
 	 * @param idcolumn name autoincrement serial column of that table
 	 * @return generated id
@@ -238,7 +238,7 @@ public class DBTransaction {
      * @param query   SQL statement
      * @param params  parameter values
      * @return PreparedStatement
-     * @throws SQLException in case of an database error 
+     * @throws SQLException in case of an database error
 	 */
 	public PreparedStatement prepareStatement(String query, Map<String, Object> params) throws SQLException {
 		ensureCorrectThread(false);
@@ -271,9 +271,10 @@ public class DBTransaction {
 		ensureCorrectThread(false);
 		return databaseAdapter.doesColumnExist(table, column);
 	}
-	
+
 	/**
 	 * Gets the length of the specified column
+	 *
 	 * @param table name of table
 	 * @param column name of column
 	 * @return the length of the column
@@ -282,6 +283,15 @@ public class DBTransaction {
 	public int getColumnLength(String table, String column) throws SQLException {
 		ensureCorrectThread(false);
 		return databaseAdapter.getColumnLength(table, column);
+	}
+
+	/**
+	 * verifies that the connection i still working
+	 *
+	 * @return true, if the connection is valid; false otherwise
+	 */
+	public boolean verifyConnection() {
+		return databaseAdapter.verifyConnection();
 	}
 
 }

@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -219,6 +220,7 @@ public class TransactionPool {
 	 */
 	private void killTransaction(DBTransaction dbtransaction) {
 		try {
+			dbtransaction.setThread(Thread.currentThread());
 			dbtransaction.rollback();
 		} catch (SQLException e) {
 			logger.debug(e, e);
@@ -226,6 +228,22 @@ public class TransactionPool {
 		dbtransaction.close();
 		dbtransactions.remove(dbtransaction);
 		callers.remove(dbtransaction);
+	}
+
+	/**
+	 * verifies all available transactions
+	 */
+	public void verifyAllAvailableConnections() {
+		synchronized (wait) {
+			Iterator<DBTransaction> itr = freeDBTransactions.iterator();
+			while (itr.hasNext()) {
+				DBTransaction transaction = itr.next();
+				if (!transaction.verifyConnection()) {
+					killTransaction(transaction);
+					itr.remove();
+				}
+			}
+		}
 	}
 
 	/**

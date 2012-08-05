@@ -31,9 +31,9 @@ import org.junit.Test;
 
 /**
  * This test unit test the load and store methods of rpzoneDAO.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class RPZoneAccessTest {
 
@@ -45,7 +45,7 @@ public class RPZoneAccessTest {
 
 	/**
 	 * Setup one time the rpzoneDAO.
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
@@ -57,14 +57,15 @@ public class RPZoneAccessTest {
 		props.put("jdbc_class", "com.mysql.jdbc.Driver");
 		props.put("jdbc_user", "junittest");
 		props.put("jdbc_pwd", "passwd");
+		props.put("database_adapter", "marauroa.server.db.adapter.MySQLDatabaseAdapter");
 
 		transactionPool = new TransactionPool(props);
-		rpzoneDAO = DAORegister.get().get(RPZoneDAO.class);	
+		rpzoneDAO = DAORegister.get().get(RPZoneDAO.class);
 	}
 
 	/**
 	 * Setup one time the rpzoneDAO.
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@AfterClass
@@ -73,7 +74,7 @@ public class RPZoneAccessTest {
 	}
 	/**
 	 * Populates the zone with some objects.
-	 * 
+	 *
 	 */
 	@Before
 	public void populateZone() {
@@ -121,7 +122,7 @@ public class RPZoneAccessTest {
 	 * Test the store and load methods of database by creating a zone and adding
 	 * a object and then storing it for at a later stage load the zone from
 	 * database into a new zone instance.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -146,7 +147,7 @@ public class RPZoneAccessTest {
 	 * a object and then storing it for at a later stage load the zone from
 	 * database into a new zone instance and repeating the operation a second
 	 * time ( to test database update ).
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

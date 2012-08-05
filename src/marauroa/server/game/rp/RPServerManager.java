@@ -204,7 +204,7 @@ public class RPServerManager extends Thread {
 	public void finish() {
 		keepRunning = false;
 
-		while (isfinished == false) {
+		while (!isfinished) {
 			Thread.yield();
 		}
 
@@ -327,7 +327,7 @@ public class RPServerManager extends Thread {
 		IRPZone.ID id = new IRPZone.ID(entry.object.get("zoneid"));
 		IRPZone zone = world.getRPZone(id);
 
-		if (entry.requestedSync == false) {
+		if (!(entry.requestedSync)) {
 			perception = zone.getPerception(entry.object, Perception.DELTA);
 		} else {
 			entry.requestedSync = false;
@@ -655,7 +655,7 @@ public class RPServerManager extends Thread {
 
 	/**
 	 * gets the content type for the requested resource
-	 * 
+	 *
 	 * @param resource name of resource
 	 * @return mime content/type or <code>null</code>
 	 */
@@ -665,7 +665,7 @@ public class RPServerManager extends Thread {
 
 	/**
 	 * gets an input stream to the requested resource
-	 * 
+	 *
 	 * @param resource name of resource
 	 * @return InputStream or <code>null</code>
 	 */

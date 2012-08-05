@@ -8,6 +8,7 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.Utility;
+import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
 import marauroa.server.db.DBTransaction;
@@ -201,6 +202,27 @@ public class SecuredLoginInfo {
 	 */
 	public boolean isUsingSecureChannel() {
 		return usingSecureChannel;
+	}
+
+	/**
+	 * gets the decrypted password
+	 *
+	 * @return the decrypted password hash
+	 */
+	public byte[] getDecryptedPasswordHash() {
+		byte[] b1 = key.decodeByteArray(password);
+		byte[] b2 = Hash.xor(clientNonce, serverNonce);
+		if (b2 == null) {
+			logger.debug("B2 is null");
+			return null;
+		}
+
+		byte[] passwordHash = Hash.xor(b1, b2);
+		if (password == null) {
+			logger.debug("Password is null");
+			return null;
+		}
+		return passwordHash;
 	}
 
 	/**

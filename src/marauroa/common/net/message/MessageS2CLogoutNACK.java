@@ -48,10 +48,6 @@ public class MessageS2CLogoutNACK extends Message {
 		return "Message (S2C Logout NACK) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
-	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
-		super.writeObject(out);
-	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {

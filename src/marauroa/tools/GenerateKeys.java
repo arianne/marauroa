@@ -29,7 +29,7 @@ public class GenerateKeys {
 	/**
 	 * reads a String from the input. When no String is chosen the defaultValue
 	 * is used.
-	 * 
+	 *
 	 * @param defaultValue
 	 *            if no value is written.
 	 * @return the string read or default if none was read.
@@ -52,17 +52,17 @@ public class GenerateKeys {
 
 	/**
 	 * @param args
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		in = new BufferedReader(new InputStreamReader(System.in));
-		
+
 		/* The size of the RSA Key in bits, usually 512 */
-		System.out.print("# How long should the key be? [512]: ");
-		final String keySize = getStringWithDefault("512");
+		System.out.print("# How long should the key be (minimum 512)? [1024]: ");
+		final String keySize = getStringWithDefault("1024");
 		System.out.println();
 		System.out.println("# Using key of " + keySize + " bits.");
-		System.out.println("# Please wait while the key is generated.");
+		System.out.println("# Please wait while the key is generated (this may take a couple of minutes).");
 		System.out.println("# Moving your mouse around to generate randomness may speed up the process.");
 		RSAKey rsakey = RSAKey.generateKey(Integer.valueOf(keySize));
 		System.out.println();

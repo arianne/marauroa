@@ -278,4 +278,19 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	protected String rewriteSql(String sql) {
 		return sql;
 	}
+
+	/**
+	 * verifies that the connection i still working
+	 *
+	 * @return true, if the connection is valid; false otherwise
+	 */
+	public boolean verifyConnection() {
+		try {
+			query("SELECT 1");
+			return true;
+		} catch (SQLException e) {
+			// something went wrong
+			return false;
+		}
+	}
 }

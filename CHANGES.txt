@@ -3,6 +3,12 @@ Changelog
 3.9.5
 - added support for HTML5
 
+3.9.2
+- workaround for IllegalArgumentException in proxy check (see http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=1055 ) 
+
+3.9.1
+- added support for Sha512Crypt with salt and pepper
+- fixed cacheable flag being ignored
 
 3.9
 - failed logins are now logged with distinct status values
