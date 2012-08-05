@@ -106,8 +106,7 @@ public class TransactionPool {
 		while (dbtransaction == null) {
 			synchronized (wait) {
 				createMinimumDBTransactions();
-				while (freeDBTransactions.size() == 0) {
-					createMinimumDBTransactions();
+				if (freeDBTransactions.size() == 0) {
 					try {
 						logger.info("Waiting for a DBTransaction", new Throwable());
 						dumpOpenTransactions();
@@ -115,10 +114,10 @@ public class TransactionPool {
 					} catch (InterruptedException e) {
 						logger.error(e, e);
 					}
+				} else {
+					dbtransaction = freeDBTransactions.remove(0);
+					addThreadTransaction(dbtransaction);
 				}
-
-				dbtransaction = freeDBTransactions.remove(0);
-				addThreadTransaction(dbtransaction);
 				// TODO: check that the connection is still alive
 			}
 		}
@@ -135,7 +134,7 @@ public class TransactionPool {
 	 */
 	public void dumpOpenTransactions() {
 		for (Pair<String, StackTraceElement[]> pair : callers.values()) {
-			logger.info("      * " + pair.first() + " " + Arrays.asList(pair.second()));
+			logger.warn("      * " + pair.first() + " " + Arrays.asList(pair.second()));
 		}
 	}
 
@@ -208,6 +207,7 @@ public class TransactionPool {
 				killTransaction(dbtransaction);
 				logger.error("Hanging transaction " + dbtransaction + " was kicked.");
 			}
+			wait.notifyAll();
 		}
 		set.clear();
 	}
