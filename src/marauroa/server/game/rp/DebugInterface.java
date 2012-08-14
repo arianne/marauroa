@@ -51,4 +51,32 @@ public class DebugInterface {
 		return true;
 	}
 
+	/** 
+	 * This method is called when a player is added to the game world
+	 *
+	 * @param object player object
+	 * @return true, to continue, false to cause an error
+	 */
+	public boolean onInit(@SuppressWarnings("unused") RPObject object) {
+		return true;
+	}
+
+	/** 
+	 * This method is called when a player leaves the game
+	 *
+	 * @param object player object
+	 * @return true, to continue, false to prevent logout
+	 */
+	public boolean onExit(@SuppressWarnings("unused") RPObject object) {
+		return true;
+	}
+
+	/** 
+	 * This method is called when connection to client is closed
+	 *
+	 * @param object player object
+	 */
+	public void onTimeout(@SuppressWarnings("unused") RPObject object) {
+		return;
+	}
 }

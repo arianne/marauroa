@@ -429,21 +429,39 @@ public class RPServerManager extends Thread {
 		}
 	}
 
-	/** This method is called when a player is added to the game */
+	/**
+	 * This method is called when a player is added to the game
+	 *
+	 * @param object player object
+	 * @return true, to continue, false to cause an error
+	 * @throws RPObjectInvalidException if the object was invalid
+	 */
 	public boolean onInit(RPObject object) throws RPObjectInvalidException {
+		if (!DebugInterface.get().onInit(object)) {
+			return false;
+		}
 		return ruleProcessor.onInit(object);
 	}
 
-	/** This method is called when a player leaves the game */
+	/**
+	 * This method is called when a player leaves the game
+	 *
+	 * @param object player object
+	 * @return true, to continue, false to prevent logout
+	 */
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
 		scheduler.clearRPActions(object);
 		contentsToTransfer.remove(object);
 
+		if (!DebugInterface.get().onExit(object)) {
+			return false;
+		}
 		return ruleProcessor.onExit(object);
 	}
 
 	/** This method is called when connection to client is closed */
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
+		DebugInterface.get().onTimeout(object);
 		scheduler.clearRPActions(object);
 		contentsToTransfer.remove(object);
 
