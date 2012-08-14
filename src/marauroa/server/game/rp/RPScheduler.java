@@ -43,12 +43,8 @@ public class RPScheduler {
 	/** a HashMap<RPObject,RPActionList> of entries for next turn */
 	private Map<RPObject, List<RPAction>> nextTurn;
 
-	/** Turn we are executing now */
-	private int turn;
-
 	/** Constructor */
 	public RPScheduler() {
-		turn = 0;
 		actualTurn = new HashMap<RPObject, List<RPAction>>();
 		nextTurn = new HashMap<RPObject, List<RPAction>>();
 	}
@@ -129,12 +125,8 @@ public class RPScheduler {
 	 * actual turn
 	 */
 	public synchronized void nextTurn() {
-		++turn;
 
-		/*
-		 * we cross-exchange the two turns and erase the contents of the next
-		 * turn
-		 */
+		// we cross-exchange the two turns and erase the contents of the next turn
 		Map<RPObject, List<RPAction>> tmp = actualTurn;
 		actualTurn = nextTurn;
 		nextTurn = tmp;
