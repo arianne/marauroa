@@ -14,6 +14,7 @@
 	
 	<path id="compile-tests-classpath">
 		<path refid="compile-classpath" />
+		<path location="${build-classes}" />
 	</path>
 
 	<!-- Clears the instalation -->
@@ -200,4 +201,9 @@
 	<target name="dist" depends="clean, dist_binary, dist_docs, dist_source"/>
 	
 	<!-- testing targets -->
+	<target name="compile-tests" depends="compile">
+		<javac srcdir="${src-test}" source="1.5" target="1.5" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+			<classpath refid="compile-tests-classpath" />
+		</javac>
+	</target>
 </project>
