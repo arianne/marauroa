@@ -14,7 +14,6 @@
 	
 	<path id="compile-tests-classpath">
 		<path refid="compile-classpath" />
-		
 	</path>
 
 	<!-- Clears the instalation -->
@@ -29,6 +28,8 @@
 	<target name="init">
 		<mkdir dir="${build-archive}" />
 		<mkdir dir="${build}" />
+		<mkdir dir="${build-classes}" />
+		<mkdir dir="${build-tests}" />
 		<mkdir dir="${dist}" />
 		<mkdir dir="${docs}" />
 	</target>
@@ -56,11 +57,11 @@
                    byline="true"/>
 
 		<!-- Compile it -->
-		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${build-classes}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
 			<classpath refid="compile-classpath" />
 		</javac>
 
-		<copy todir="${buildroot}/marauroa/server/">
+		<copy todir="${build-classes}/marauroa/server/">
 			<fileset dir="${src}/marauroa/server">
 				<include name="*.sql"/>
 				<include name="*.properties"/>
@@ -71,11 +72,11 @@
 
 	<!-- Compiles the project -->
 	<target name="compile-client">
-		<delete dir="${buildroot_client}" quiet="true" />
-		<mkdir dir="${buildroot_client}"/>
+		<delete dir="${build-client}" quiet="true" />
+		<mkdir dir="${build-client}"/>
 		
 		<!-- Compile it -->
-		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot_client}" debug="true" debuglevel="source,lines" includeantruntime="false">
+		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${build-client}" debug="true" debuglevel="source,lines" includeantruntime="false">
 			<include name="marauroa/client/**"/>
 			<include name="marauroa/common/**"/>
 			<classpath>
@@ -101,7 +102,7 @@
 
 	<!-- Create jar file for Marauroa -->
 	<target name="jar-all" depends="compile">
-		<jar jarfile="${build-archive}/${jarname}" basedir="${buildroot}/">
+		<jar jarfile="${build-archive}/${jarname}" basedir="${build-classes}/">
 			<manifest>
 				<attribute name="Main-Class" value="marauroa.server.marauroad"/>
 			</manifest>
@@ -111,7 +112,7 @@
 
 	<!-- Create jar file for Marauroa -->
 	<target name="jar-client" depends="compile-client">
-		<jar jarfile="${build-archive}/${jarname_client}" basedir="${buildroot_client}/" />
+		<jar jarfile="${build-archive}/${jarname_client}" basedir="${build-client}/" />
 	</target>
 
 	<target name="jar" depends="jar-all, jar-client" />
