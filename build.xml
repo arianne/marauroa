@@ -4,6 +4,18 @@
 
 	<property name="jarname" value="marauroa-${version}.jar"/>
 	<property name="jarname_client" value="marauroa-client-only-${version}.jar"/>
+	
+	<path id="compile-classpath">
+		<pathelement path="${log4j_jar}"/>
+		<pathelement path="${junit_jar}"/>
+		<pathelement path="${jnlp_jar}"/>
+		<pathelement path="${jython_jar}"/>
+	</path>
+	
+	<path id="compile-tests-classpath">
+		<path refid="compile-classpath" />
+		
+	</path>
 
 	<!-- Clears the instalation -->
 	<target name="clean">
@@ -45,12 +57,7 @@
 
 		<!-- Compile it -->
 		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${buildroot}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
-			<classpath>
-				<pathelement path="${log4j_jar}"/>
-				<pathelement path="${junit_jar}"/>
-				<pathelement path="${jnlp_jar}"/>
-				<pathelement path="${jython_jar}"/>
-			</classpath>
+			<classpath refid="compile-classpath" />
 		</javac>
 
 		<copy todir="${buildroot}/marauroa/server/">
@@ -87,12 +94,7 @@
            version="true"
            use="true"
            windowtitle="Marauroa API Documentation Version: ${version}">
-			<classpath>
-				<pathelement path="${log4j_jar}"/>
-				<pathelement path="${junit_jar}"/>
-				<pathelement path="${jnlp_jar}"/>
-				<pathelement path="${jython_jar}"/>
-			</classpath>
+			<classpath refid="compile-classpath" />
 			<packageset dir="src" defaultexcludes="yes" />
 		</javadoc>
 	</target>
@@ -195,4 +197,6 @@
 
 	<!-- builds the whole project for releasing -->
 	<target name="dist" depends="clean, dist_binary, dist_docs, dist_source"/>
+	
+	<!-- testing targets -->
 </project>
