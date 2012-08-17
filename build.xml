@@ -16,6 +16,12 @@
 		<path refid="compile-classpath" />
 		<path location="${build-classes}" />
 	</path>
+	
+	<path id="run-tests-classpath">
+		<path refid="compile-tests-classpath" />
+		<pathelement path="${build-tests}" />
+		<pathelement path="."/>
+	</path>
 
 	<!-- Clears the instalation -->
 	<target name="clean">
@@ -206,4 +212,22 @@
 			<classpath refid="compile-tests-classpath" />
 		</javac>
 	</target>
+	
+	<target name="run-tests" depends="compile-tests">
+		<delete dir="${build-tests-report}" quiet="true" />
+		<mkdir dir="${build-tests-report}" />
+		<junit printsummary="yes" fork="no">
+			<jvmarg value="-Djava.awt.headless=true"/>
+			<classpath refid="run-tests-classpath" />
+			<formatter type="plain" usefile="false"/>
+			<formatter type="xml"/>
+			<batchtest todir="${build-tests-report}">
+				<fileset dir="${src-test}">
+					<include name="**/*Test.java"/>
+					<include name="**/Test*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
 </project>
