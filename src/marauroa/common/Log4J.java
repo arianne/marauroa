@@ -20,7 +20,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 /**
  * This is a convenience class for initializing log4j
- * 
+ *
  * Please when using Log4j follow the next rules:<ul>
  * <li><b>debug</b> just debug info that may be need to find a bug.
  * <li><b>info</b> is just important information that we should be aware to spot behaviors on application.
@@ -28,7 +28,7 @@ import org.apache.log4j.PropertyConfigurator;
  * <li><b>error</b> is a big problem on the application that it can't handle.
  * <li><b>fatal</b> is such a problem that the application will stop.
  * </ul>
- * 
+ *
  * @author Matthias Totz
  */
 public class Log4J {
@@ -65,7 +65,7 @@ public class Log4J {
 			Properties props = new Properties();
 			if (propsFile == null) {
 				System.err.println("Cannot find " + filename + " in classpath. Using default properties.");
-				props.load(new ByteArrayInputStream(DEFAULT_PROPERTIES.getBytes()));
+				props.load(new ByteArrayInputStream(DEFAULT_PROPERTIES.getBytes("UTF-8")));
 			} else {
 				System.out.println("Configuring Log4J using " + filename);
 				props.load(propsFile);
