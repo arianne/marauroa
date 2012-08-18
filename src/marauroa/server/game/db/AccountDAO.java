@@ -134,18 +134,32 @@ public class AccountDAO {
 				throw new SQLException("Invalid string username=(" + username + ") email=(" + email
 				        + ")");
 			}
+			String token = Hash.toHexString(Hash.random(16));
 
 			int id = getDatabasePlayerId(transaction, username);
 
+			// insert into the database
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
-			params.put("token", Hash.toHexString(Hash.random(16)));
+			params.put("token", token);
 			params.put("email", email);
 			String query = "insert into email(player_id, email, token)"
 					+ " values ([player_id], '[email]', '[token]')";
 			logger.debug("changePassword is using query: " + query);
 
-			transaction.execute(query, params);
+			int result = transaction.execute(query, params);
+
+			// notify external program
+			if (result == 1) {
+				if (Configuration.getConfiguration().has("email_command")) {
+					String cmd = Configuration.getConfiguration().get("email_command");
+					new ProcessBuilder(cmd, token, email).start();
+				}
+			}
+
+		} catch (IOException e) {
+			logger.error("Can't change email for player \"" + username + "\"", e);
+			throw new SQLException(e);
 		} catch (SQLException e) {
 			logger.error("Can't change email for player \"" + username + "\"", e);
 			throw e;
