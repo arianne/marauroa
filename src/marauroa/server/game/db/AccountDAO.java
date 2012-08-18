@@ -153,7 +153,7 @@ public class AccountDAO {
 			if (result == 1) {
 				if (Configuration.getConfiguration().has("email_command")) {
 					String cmd = Configuration.getConfiguration().get("email_command");
-					new ProcessBuilder(cmd, token, email).start();
+					new ProcessBuilder(cmd, Integer.toString(id), username, token, email).start();
 				}
 			}
 
