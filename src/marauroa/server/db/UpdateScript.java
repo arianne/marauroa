@@ -79,6 +79,12 @@ public class UpdateScript {
 			transaction.execute("ALTER TABLE accountLink ADD COLUMN(secret varchar(255));", null);
 		}
 
+		// 3.9.3
+		if (transaction.doesColumnExist("account", "email")) {
+			transaction.execute("INSERT INTO email (player_id, email, timedate) SELECT id, email, timedate FROM account WHERE email IS NOT NULL and email != ''", null);
+			transaction.execute("ALTER TABLE account DROP COLUMN email;", null);
+		}
+
 		logger.info("Completed database update.");
 	}
 }

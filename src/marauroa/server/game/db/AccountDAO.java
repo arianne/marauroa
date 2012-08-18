@@ -64,8 +64,8 @@ public class AccountDAO {
 				        + ")");
 			}
 
-			String query = "insert into account(username, password, status, email)"
-				+ " values('[username]','[password]', 'active', '[email]')";
+			String query = "insert into account(username, password, status)"
+				+ " values('[username]','[password]', 'active')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			try {
@@ -79,8 +79,6 @@ public class AccountDAO {
 				throw new SQLException(e);
 			}
 			logger.debug("addPlayer is using query: " + query);
-
-			params.put("email", email);
 			transaction.execute(query, params);
 
 			// save email address

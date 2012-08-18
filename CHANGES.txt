@@ -1,5 +1,8 @@
 Changelog
 ---------
+3.9.3
+- dedicated email table
+
 3.9.2
 - workaround for IllegalArgumentException in proxy check (see http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=1055 ) 
 
