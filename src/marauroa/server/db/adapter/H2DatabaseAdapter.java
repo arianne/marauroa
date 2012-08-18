@@ -103,7 +103,7 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	@Override
 	public boolean doesColumnExist(String table, String column) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet result = meta.getColumns(null, null, table.toUpperCase(),
+		ResultSet result = meta.getColumns(null, null, table.toUpperCase(Locale.ENGLISH),
 				column.toUpperCase(Locale.ENGLISH));
 		boolean res = result.next();
 		result.close();
