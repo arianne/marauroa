@@ -41,7 +41,10 @@ public abstract class AbstractDBCommand implements DBCommand {
 	 * @return Timestamp
 	 */
 	public Timestamp getEnqueueTime() {
-		return enqueueTime;
+		if (enqueueTime == null) {
+			return null;
+		}
+		return (Timestamp) enqueueTime.clone();
 	}
 
 	/**
@@ -59,7 +62,7 @@ public abstract class AbstractDBCommand implements DBCommand {
 	 * @param enqueueTime Timestamp
 	 */
 	public void setEnqueueTime(Timestamp enqueueTime) {
-		this.enqueueTime = enqueueTime;
+		this.enqueueTime = (Timestamp) enqueueTime.clone();
 	}
 
 	/**
