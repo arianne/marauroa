@@ -71,7 +71,7 @@ public class HTTPConnectSocket extends Socket {
 		connect.append(":");
 		connect.append(server.getPort());
 		connect.append(" HTTP/1.1\r\n");
-		
+
 		connect.append("Accept: text/plain,text/html;q=0.9,*/*;q=0.5\r\n");
 
 		// TODO: add proxy authentication here
@@ -95,17 +95,17 @@ public class HTTPConnectSocket extends Socket {
 		}
 
 		// verify the server response part 1: Was it a http-connect proxy?
-		String answer = new String(data).toUpperCase(Locale.ENGLISH);
+		String answer = new String(data, "US-ASCII").toUpperCase(Locale.ENGLISH);
 		if (!answer.startsWith("HTTP/")) {
 			data = new byte[4096];
 			int size = is.read(data);
-			String error = answer + new String(data, 0, size);
+			String error = answer + new String(data, 0, size, "US-ASCII");
 			throw new IOException("Proxy connection failed. It does not seem to be a valid http-proxy because I did not understand this response: " + error);
 		}
 
 		// verify the server response part 2: Did the connection succeed?
 		if (!answer.endsWith(" 200")) {
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			BufferedReader br = new BufferedReader(new InputStreamReader(is, "US-ASCII"));
 			String error = answer.substring(answer.length() - 3) + br.readLine();
 			br.close();
 			throw new IOException("Proxy connection failed: " + error);
@@ -138,5 +138,5 @@ public class HTTPConnectSocket extends Socket {
 		throw new IOException("Timeout while reading proxy preload");
 	}
 
-	
+
 }

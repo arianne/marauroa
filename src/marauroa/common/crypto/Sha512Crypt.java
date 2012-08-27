@@ -46,6 +46,7 @@
 
 package marauroa.common.crypto;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 
 /*------------------------------------------------------------------------------
@@ -175,8 +176,14 @@ public final class Sha512Crypt
 	rounds = Math.max(ROUNDS_MIN, Math.min(roundsCount, ROUNDS_MAX));
       }
 
-    byte[] key = keyStr.getBytes();
-    byte[] salt = saltStr.getBytes();
+    byte[] key;
+    byte[] salt;
+	try {
+		key = keyStr.getBytes("UTF-8");
+	    salt = saltStr.getBytes("UTF-8");
+	} catch (UnsupportedEncodingException e) {
+		throw new RuntimeException(e);
+	}
 
     ctx.reset();
     ctx.update(key, 0, key.length);

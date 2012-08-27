@@ -55,7 +55,7 @@ public class GenerateKeys {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		in = new BufferedReader(new InputStreamReader(System.in));
+		in = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 
 		/* The size of the RSA Key in bits, usually 512 */
 		System.out.print("# How long should the key be (minimum 512)? [1024]: ");

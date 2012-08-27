@@ -173,12 +173,11 @@ class NioServer extends Thread {
 					while (changes.hasNext()) {
 						ChangeRequest change = (ChangeRequest) changes.next();
 						if (change.socket.isConnected()) {
-							switch (change.type) {
-								case ChangeRequest.CHANGEOPS:
-									SelectionKey key = change.socket.keyFor(this.selector);
-									if (key.isValid()) {
-										key.interestOps(change.ops);
-									}
+							if (change.type == ChangeRequest.CHANGEOPS) {
+								SelectionKey key = change.socket.keyFor(this.selector);
+								if (key.isValid()) {
+									key.interestOps(change.ops);
+								}
 							}
 						}
 					}
@@ -190,24 +189,18 @@ class NioServer extends Thread {
 					while (it.hasNext()) {
 						ChangeRequest change = (ChangeRequest) it.next();
 						if (change.socket.isConnected()) {
-							switch (change.type) {
-								case ChangeRequest.CLOSE:
-									try {
-										/*
-										 * Force data to be sent if there is data
-										 * waiting.
-										 */
-										if (pendingData.containsKey(change.socket)) {
-											SelectionKey key = change.socket.keyFor(selector);
-											if (key.isValid()) {
-												write(key);
-											}
+							if (change.type == ChangeRequest.CLOSE) {
+								try {
+									// Force data to be sent if there is data waiting.
+									if (pendingData.containsKey(change.socket)) {
+										SelectionKey key = change.socket.keyFor(selector);
+										if (key.isValid()) {
+											write(key);
 										}
+									}
 
-										/*
-										 * Close the socket
-										 */
-										change.socket.close();
+									// Close the socket
+									change.socket.close();
 									} catch (Exception e) {
 										logger.info("Exception happened when closing socket", e);
 									}

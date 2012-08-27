@@ -2,9 +2,7 @@ create table if not exists account
   (
   id integer auto_increment not null,
   username varchar(255) not null,
-  password varchar(255) ,
-  
-  email varchar(64) not null,
+  password varchar(255),
   timedate timestamp default CURRENT_TIMESTAMP,
   status char(8) not null default 'active',
 
@@ -170,3 +168,19 @@ create table if not exists accountLink
 
 /*create index i_accountLink_player_id ON accountLink(player_id);*/
 /*create index i_accountLink_username ON accountLink(username);*/
+
+
+create table if not exists email
+  (
+  id integer auto_increment not null,
+  player_id  integer,
+  email      varchar(64),
+  token      varchar(64),
+  address    varchar(64),
+  timedate   timestamp default CURRENT_TIMESTAMP,
+  confirmed  timestamp,
+  primary key(id)
+  );
+
+/* create index i_email_email_timedate ON email(email, timedate); */
+/* create index i_email_player_id ON email(player_id); */

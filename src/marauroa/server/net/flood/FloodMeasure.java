@@ -33,9 +33,6 @@ public class FloodMeasure {
 	/** The amount of bytes received from client since the timestamp */
 	public int sendBytes;
 
-	/** When this entry was created. */
-	public long starttimestamp;
-
 	/** Store how many times it has caused a flood warning. */
 	public int floodWarnings;
 
@@ -48,7 +45,6 @@ public class FloodMeasure {
 	public FloodMeasure(Channel channel) {
 		this.channel = channel;
 		floodWarnings = 0;
-		starttimestamp = System.currentTimeMillis();
 
 		resetPerSecondData();
 	}

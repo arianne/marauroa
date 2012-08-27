@@ -64,8 +64,8 @@ public class AccountDAO {
 				        + ")");
 			}
 
-			String query = "insert into account(username, password, email, status)"
-				+ " values('[username]','[password]', '[email]', 'active')";
+			String query = "insert into account(username, password, status)"
+				+ " values('[username]','[password]', 'active')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			try {
@@ -78,10 +78,13 @@ public class AccountDAO {
 			} catch (IOException e) {
 				throw new SQLException(e);
 			}
-			params.put("email", email);
 			logger.debug("addPlayer is using query: " + query);
-
 			transaction.execute(query, params);
+
+			// save email address
+			if ((email != null) && (!email.trim().equals(""))) {
+				changeEmail(transaction, username, email);
+			}
 		} catch (SQLException e) {
 			logger.error("Can't add player \"" + username + "\" to database", e);
 			throw e;
@@ -125,23 +128,38 @@ public class AccountDAO {
 	 * @param email new email-address
 	 * @throws SQLException in case of an database error
 	 */
-	public void changeEmail(DBTransaction transaction, String username, String email)
-	        throws SQLException {
+	public void changeEmail(DBTransaction transaction, String username, String email) throws SQLException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(email)) {
 				throw new SQLException("Invalid string username=(" + username + ") email=(" + email
 				        + ")");
 			}
+			String token = Hash.toHexString(Hash.random(16));
 
 			int id = getDatabasePlayerId(transaction, username);
 
-			String query = "update account set email='[email]' where id=[player_id]";
+			// insert into the database
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("player_id", id);
+			params.put("player_id", Integer.valueOf(id));
+			params.put("token", token);
 			params.put("email", email);
+			String query = "insert into email(player_id, email, token)"
+					+ " values ([player_id], '[email]', '[token]')";
 			logger.debug("changePassword is using query: " + query);
 
-			transaction.execute(query, params);
+			int result = transaction.execute(query, params);
+
+			// notify external program
+			if (result == 1) {
+				if (Configuration.getConfiguration().has("email_command")) {
+					String cmd = Configuration.getConfiguration().get("email_command");
+					new ProcessBuilder(cmd, Integer.toString(id), username, token, email).start();
+				}
+			}
+
+		} catch (IOException e) {
+			logger.error("Can't change email for player \"" + username + "\"", e);
+			throw new SQLException(e);
 		} catch (SQLException e) {
 			logger.error("Can't change email for player \"" + username + "\"", e);
 			throw e;
@@ -335,7 +353,7 @@ public class AccountDAO {
 	 */
 	public String getEmail(DBTransaction transaction, String username) throws SQLException {
 		try {
-			String query = "select email from account where username = '[username]'";
+			String query = "select email.email from account, email where username = '[username]' AND account.id=email.player_id";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			logger.debug("getEmail is executing query " + query);
