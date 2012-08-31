@@ -230,6 +230,7 @@
 				</fileset>
 			</batchtest>
 		</junit>
+		<delete file="./server.ini" />
 	</target>
 
 </project>
