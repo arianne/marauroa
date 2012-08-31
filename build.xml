@@ -19,6 +19,7 @@
 	
 	<path id="run-tests-classpath">
 		<path refid="compile-tests-classpath" />
+		<pathelement location="${h2_jar}"/>
 		<pathelement path="${build-tests}" />
 		<pathelement path="."/>
 	</path>
@@ -211,6 +212,7 @@
 		<javac srcdir="${src-test}" source="1.5" target="1.5" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
 			<classpath refid="compile-tests-classpath" />
 		</javac>
+		<copy file="${test-server-ini}" tofile="./server.ini" />
 	</target>
 	
 	<target name="run-tests" depends="compile-tests">
