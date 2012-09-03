@@ -1,5 +1,9 @@
 Changelog
 ---------
+3.9.3
+- marauroa can invoke an external command (email_command in server.ini) with the token and email-address on account creation
+- use a dedicated email table
+
 3.9.2
 - workaround for IllegalArgumentException in proxy check (see http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=1055 ) 
 

@@ -169,13 +169,13 @@ public class Statistics implements StatisticsMBean {
 	}
 
 	/** This is the actual values */
-	private Variables now;
+	private final Variables now;
 
 	/** This is variables values since the server startup */
-	private Variables sinceStart;
+	private final Variables sinceStart;
 
 	/** Server start time */
-	private long startTime;
+	private final long startTime;
 
 	private Statistics() {
 		startTime = System.currentTimeMillis();

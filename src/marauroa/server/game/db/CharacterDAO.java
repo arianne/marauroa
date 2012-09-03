@@ -11,13 +11,13 @@
  ***************************************************************************/
 package marauroa.server.game.db;
 
-import java.util.Date;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -162,7 +162,7 @@ public class CharacterDAO {
 			throw e;
 		}
 	}
-	
+
 
 
 	/**
@@ -306,7 +306,7 @@ public class CharacterDAO {
 			params.put("object_id", Integer.valueOf(objectid));
 			params.put("player_id", Integer.valueOf(id));
 			params.put("character", character);
-			
+
 			logger.debug("storeCharacter is executing query " + query);
 			logger.debug("Character: " + player);
 
@@ -345,7 +345,7 @@ public class CharacterDAO {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
 			params.put("character", character);
-			
+
 			ResultSet result = transaction.query(query, params);
 
 			RPObject player = null;
@@ -380,7 +380,7 @@ public class CharacterDAO {
 	 * @throws SQLException
 	 *             if there is any problem at database
 	 * @throws IOException
-	 *             if there is a problem reading the blob 
+	 *             if there is a problem reading the blob
 	 */
 	private Map<String, RPObject> loadAllCharacters(DBTransaction transaction, String username, String condition)
 	        throws SQLException, IOException {
@@ -393,10 +393,9 @@ public class CharacterDAO {
 			logger.debug("loadAllCharacters is executing query " + query);
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
-			
+
 			ResultSet result = transaction.query(query, params);
 
-			RPObject player = null;
 			while (result.next()) {
 				int objectid = result.getInt("object_id");
 				String name = result.getString("charname");
@@ -404,10 +403,10 @@ public class CharacterDAO {
 				int protocolVersion = NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT - 1;
 				Object temp = result.getObject("protocol_version");
 				if (temp != null) {
-					protocolVersion = ((Integer) temp).intValue(); 
+					protocolVersion = ((Integer) temp).intValue();
 				}
 				RPObject rpobject = DAORegister.get().get(RPObjectDAO.class).readRPObject(objectid, data, protocolVersion, false);
-				logger.debug("Character: " + player);
+				logger.debug("Character: " + rpobject);
 				res.put(name, rpobject);
 			}
 
@@ -434,7 +433,7 @@ public class CharacterDAO {
 	 * @throws SQLException
 	 *             if there is any problem at database
 	 * @throws IOException
-	 *             if there is a problem reading the blob 
+	 *             if there is a problem reading the blob
 	 */
 	public Map<String, RPObject> loadAllCharacters(DBTransaction transaction, String username) throws SQLException, IOException {
 		return loadAllCharacters(transaction, username, "");
@@ -453,7 +452,7 @@ public class CharacterDAO {
 	 * @throws SQLException
 	 *             if there is any problem at database
 	 * @throws IOException
-	 *             if there is a problem reading the blob 
+	 *             if there is a problem reading the blob
 	 */
 	public Map<String, RPObject> loadAllActiveCharacters(DBTransaction transaction, String username) throws SQLException, IOException {
 		return loadAllCharacters(transaction, username, " AND characters.status='active' ");
@@ -475,7 +474,7 @@ public class CharacterDAO {
 		logger.debug("getAccountName is executing query " + query);
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("charname", character);
-		
+
 		ResultSet result = transaction.query(query, params);
 		if (result.next()) {
 			res = result.getString("username");
@@ -501,7 +500,7 @@ public class CharacterDAO {
 		logger.debug("getCanonicalName is executing query " + query);
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("charname", character);
-		
+
 		ResultSet result = transaction.query(query, params);
 		if (result.next()) {
 			res = result.getString("charname");
@@ -559,7 +558,7 @@ public class CharacterDAO {
 		attemps = transaction.querySingleCellInt(query, params);
 		return attemps > conf.getInt("character_creation_limit", TimeoutConf.CHARACTER_CREATION_LIMIT);
 	}
-	
+
 	/**
 	 * Gets the date the character was registered
 	 *
@@ -576,7 +575,7 @@ public class CharacterDAO {
 			logger.debug("getCreationDate is executing query " + query);
 
 			ResultSet result = transaction.query(query, params);
-			
+
 			Date date = null;
 			if (result.next()) {
 				date = result.getDate("timedate");
@@ -754,7 +753,7 @@ public class CharacterDAO {
 	 * @throws SQLException
 	 *             if there is any problem at database
 	 * @throws IOException
-	 *             if there is a problem reading the blob 
+	 *             if there is a problem reading the blob
 	 */
 	public Map<String, RPObject> loadAllCharacters(String username) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
@@ -776,7 +775,7 @@ public class CharacterDAO {
 	 * @throws SQLException
 	 *             if there is any problem at database
 	 * @throws IOException
-	 *             if there is a problem reading the blob 
+	 *             if there is a problem reading the blob
 	 */
 	public Map<String, RPObject> loadAllActiveCharacters(String username) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
@@ -856,5 +855,5 @@ public class CharacterDAO {
 			TransactionPool.get().commit(transaction);
 		}
 	}
-	
+
 }

@@ -21,15 +21,15 @@ import marauroa.common.Log4J;
 
 /**
  * A helper class that runs SQL scripts.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class JDBCSQLHelper {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(JDBCSQLHelper.class);
-	private DBTransaction transaction;
+	private final DBTransaction transaction;
 	private String command;
 
 	/**
@@ -45,7 +45,7 @@ public class JDBCSQLHelper {
 	 * This method runs a SQL file using the given transaction. You are
 	 * responsible of beginning the transaction and commiting the changes or
 	 * rollback on error.
-	 * 
+	 *
 	 * @param file
 	 *            The file name that contains the SQL commands.
 	 * @return true if the whole file was executed or false in any other error.
@@ -56,18 +56,18 @@ public class JDBCSQLHelper {
 
 		try {
 
-			InputStream init_file = getClass().getClassLoader().getResourceAsStream(file);
-			in = new BufferedReader(new InputStreamReader(init_file));
+			InputStream is = getClass().getClassLoader().getResourceAsStream(file);
+			in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
-			StringBuffer is = new StringBuffer();
+			StringBuffer sb = new StringBuffer();
 
 			String line;
 			while ((line = in.readLine()) != null) {
-				is.append(line);
+				sb.append(line);
 				if (line.indexOf(';') != -1) {
-					command = is.toString().trim();
+					command = sb.toString().trim();
 					transaction.execute(command, null);
-					is = new StringBuffer();
+					sb = new StringBuffer();
 				}
 			}
 

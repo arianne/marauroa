@@ -33,9 +33,9 @@ import marauroa.server.net.IDisconnectedListener;
 /**
  * This class is the basic schema for a nio server. It works in a pattern of
  * master/slave.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 class NioServer extends Thread {
 	private static final int BACKLOG_WARNING_SIZE = 10;
@@ -44,9 +44,9 @@ class NioServer extends Thread {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(NioServer.class);
 
 	/** The host:port combination to listen on */
-	private InetAddress hostAddress;
+	private final InetAddress hostAddress;
 
-	private int port;
+	private final int port;
 
 	/** While keepRunning is true, we keep receiving messages */
 	private boolean keepRunning;
@@ -58,27 +58,27 @@ class NioServer extends Thread {
 	private ServerSocketChannel serverChannel;
 
 	/** The selector we'll be monitoring */
-	private Selector selector;
+	private final Selector selector;
 
 	/** The buffer into which we'll read data when it's available */
-	private ByteBuffer readBuffer = ByteBuffer.allocate(8192);
+	private final ByteBuffer readBuffer = ByteBuffer.allocate(8192);
 
 	/**
 	 * This is the slave associated with this master. As it is a simple thread,
 	 * we only need one slave.
 	 */
-	private IWorker worker;
+	private final IWorker worker;
 
 	/** A list of PendingChange instances */
-	private List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
+	private final List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
 
-	private List<ChangeRequest> pendingClosed;
+	private final List<ChangeRequest> pendingClosed;
 
 	/** Maps a SocketChannel to a list of ByteBuffer instances */
-	private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
+	private final Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
 
 	/** A list of the listeners to the onDisconnect event. */
-	private List<IDisconnectedListener> listeners;
+	private final List<IDisconnectedListener> listeners;
 
 	public NioServer(InetAddress hostAddress, int port, IWorker worker) throws IOException {
 		super("NioServer");
@@ -99,7 +99,7 @@ class NioServer extends Thread {
 	/**
 	 * This method closes a channel. It also notify any listener about the
 	 * event.
-	 * 
+	 *
 	 * @param channel
 	 *            the channel to close.
 	 */
@@ -110,11 +110,11 @@ class NioServer extends Thread {
 
 		/*
 		 * We ask the server to close the channel
-		 */	
+		 */
 		synchronized (this.pendingClosed) {
 		  pendingClosed.add(new ChangeRequest(channel, ChangeRequest.CLOSE, 0));
 		}
-		
+
 		/*
 		 * Wake up to make the closure effective.
 		 */
@@ -123,7 +123,7 @@ class NioServer extends Thread {
 
 	/**
 	 * This method is used to send data on a socket.
-	 * 
+	 *
 	 * @param socket
 	 *            the socketchannel to use.
 	 * @param data
@@ -183,12 +183,11 @@ class NioServer extends Thread {
 					while (changes.hasNext()) {
 						ChangeRequest change = (ChangeRequest) changes.next();
 						if (change.socket.isConnected()) {
-							switch (change.type) {
-								case ChangeRequest.CHANGEOPS:
-									SelectionKey key = change.socket.keyFor(this.selector);
-									if (key.isValid()) {
-										key.interestOps(change.ops);
-									}
+							if (change.type == ChangeRequest.CHANGEOPS) {
+								SelectionKey key = change.socket.keyFor(this.selector);
+								if (key.isValid()) {
+									key.interestOps(change.ops);
+								}
 							}
 						}
 					}
@@ -200,28 +199,22 @@ class NioServer extends Thread {
 					while (it.hasNext()) {
 						ChangeRequest change = (ChangeRequest) it.next();
 						if (change.socket.isConnected()) {
-							switch (change.type) {
-								case ChangeRequest.CLOSE:
-									try {
-										/*
-										 * Force data to be sent if there is data
-										 * waiting.
-										 */
-										if (pendingData.containsKey(change.socket)) {
-											SelectionKey key = change.socket.keyFor(selector);
-											if (key.isValid()) {
-												write(key);
-											}
+							if (change.type == ChangeRequest.CLOSE) {
+								try {
+									// Force data to be sent if there is data waiting.
+									if (pendingData.containsKey(change.socket)) {
+										SelectionKey key = change.socket.keyFor(selector);
+										if (key.isValid()) {
+											write(key);
 										}
-
-										/*
-										 * Close the socket
-										 */
-										change.socket.close();
-									} catch (Exception e) {
-										logger.info("Exception happened when closing socket", e);
 									}
-									break;
+
+									// Close the socket
+									change.socket.close();
+								} catch (Exception e) {
+									logger.info("Exception happened when closing socket", e);
+								}
+								break;
 							}
 						} else {
 							logger.info("Closing a not connected socket");
@@ -372,7 +365,7 @@ class NioServer extends Thread {
 		return socketSelector;
 	}
 
-	/** 
+	/**
 	 * Register a listener to notify about disconnected events
 	 *
 	 * @param listener listener to add

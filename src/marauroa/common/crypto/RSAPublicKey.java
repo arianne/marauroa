@@ -13,7 +13,10 @@ package marauroa.common.crypto;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+
+import org.apache.log4j.Logger;
 
 /**
  * Implementation of a RSA key.
@@ -21,6 +24,8 @@ import java.math.BigInteger;
  *
  */
 public class RSAPublicKey {
+	private static final Logger logger = Logger.getLogger(RSAPublicKey.class);
+
 	/** 0 */
 	public static final BigInteger big0 = new BigInteger("0");
 
@@ -126,11 +131,15 @@ public class RSAPublicKey {
 	 * @return BigInteger
 	 */
 	public static BigInteger getValue(String str) {
-		byte[] v = str.getBytes();
-		for (byte b : v) {
-			if (b != 0) {
-				return new BigInteger(1, v);
+		try {
+			byte[] v = str.getBytes("US-ASCII");
+			for (byte b : v) {
+				if (b != 0) {
+					return new BigInteger(1, v);
+				}
 			}
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e, e);
 		}
 		return big0;
 	}
@@ -142,7 +151,12 @@ public class RSAPublicKey {
 	 * @return String
 	 */
 	public static String getString(BigInteger value) {
-		return new String(value.toByteArray());
+		try {
+			return new String(value.toByteArray(), "US-ASCII");
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e, e);
+		}
+		return null;
 	}
 
 }
