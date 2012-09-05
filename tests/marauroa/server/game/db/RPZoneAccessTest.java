@@ -53,7 +53,7 @@ public class RPZoneAccessTest {
 		Log4J.init("marauroa/server/log4j.properties");
 
 		Properties props = new Properties();
-		props.put("jdbc_url", "jdbc:h2:~/marauroa/database/test;AUTO_RECONNECT=TRUE;DB_CLOSE_ON_EXIT=FALSE");
+		props.put("jdbc_url", "jdbc:h2:~/marauroa/database/test;AUTO_RECONNECT=TRUE;DB_CLOSE_ON_EXIT=TRUE");
 		props.put("jdbc_class", "org.h2.Driver");
 		props.put("database_adapter", "marauroa.server.db.adapter.H2DatabaseAdapter");
 
