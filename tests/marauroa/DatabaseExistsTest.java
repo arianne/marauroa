@@ -29,8 +29,6 @@ public class DatabaseExistsTest {
 
 			props.put("jdbc_url", "jdbc:h2:~/marauroa/database/test;AUTO_RECONNECT=TRUE;DB_CLOSE_ON_EXIT=FALSE");
 			props.put("jdbc_class", "org.h2.Driver");
-			props.put("jdbc_user", "sa");
-			props.put("jdbc_pwd", "");
 			props.put("database_adapter", "marauroa.server.db.adapter.H2DatabaseAdapter");
 
 			TransactionPool pool = new TransactionPool(props);
