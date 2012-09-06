@@ -213,6 +213,13 @@
 		<javac srcdir="${src-test}" source="1.5" target="1.5" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
 			<classpath refid="compile-tests-classpath" />
 		</javac>
+		<copy todir="${build-tests}">
+			<fileset dir="${src-test}">
+				<include name="**/*.*" />
+				<exclude name="**/*.java" />
+				<exclude name="**/*.ini" />
+			</fileset>
+		</copy>
 		<copy file="${test-server-ini}" tofile="./server.ini" />
 	</target>
 	
