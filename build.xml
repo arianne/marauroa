@@ -206,7 +206,7 @@
 	</target>
 
 	<!-- builds the whole project for releasing -->
-	<target name="dist" depends="clean, dist_binary, dist_docs, dist_source"/>
+	<target name="dist" depends="dist_binary, dist_docs, dist_source"/>
 	
 	<!-- testing targets -->
 	<target name="compile-tests" depends="compile">
@@ -231,5 +231,5 @@
 		</junit>
 		<delete file="./server.ini" />
 	</target>
-
+	
 </project>
