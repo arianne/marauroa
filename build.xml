@@ -217,8 +217,6 @@
 	</target>
 	
 	<target name="run-tests" depends="compile-tests">
-		<delete dir="${build-tests-report}" quiet="true" />
-		<mkdir dir="${build-tests-report}" />
 		<junit printsummary="yes" fork="yes">
 			<jvmarg value="-Djava.awt.headless=true"/>
 			<classpath refid="run-tests-classpath" />
