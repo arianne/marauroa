@@ -67,6 +67,7 @@
 
 		<!-- Compile it -->
 		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${build-classes}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-classpath" />
 		</javac>
 
@@ -86,6 +87,7 @@
 		
 		<!-- Compile it -->
 		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${build-client}" debug="true" debuglevel="source,lines" includeantruntime="false">
+			<compilerarg line="-encoding utf-8"/>
 			<include name="marauroa/client/**"/>
 			<include name="marauroa/common/**"/>
 			<classpath>
@@ -211,6 +213,7 @@
 	<!-- testing targets -->
 	<target name="compile-tests" depends="compile">
 		<javac srcdir="${src-test}" source="1.5" target="1.5" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-tests-classpath" />
 		</javac>
 		<copy todir="${build-tests}">
