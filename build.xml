@@ -39,6 +39,7 @@
 		<mkdir dir="${build-classes}" />
 		<mkdir dir="${build-tests}" />
 		<mkdir dir="${build-tests-report}" />
+		<mkdir dir="${build-coverage}" />
 		<mkdir dir="${dist}" />
 		<mkdir dir="${docs}" />
 	</target>
@@ -260,20 +261,21 @@
 		<delete file="./server.ini" />
 	</target>
 	
-	<target name="coverage-report">
+	<target name="coverage-report" depends="coverage">
 	    <jacoco:report>
 	        <executiondata>
-	            <file file="jacoco.exec"/>
+	            <file file="jacoco.exec" />
 	        </executiondata>
-	        <structure name="Example Project">
+	        <structure name="${ant.project.name}">
 	            <classfiles>
-	                <fileset dir="classes"/>
+	                <fileset dir="${build-classes}" />
 	            </classfiles>
 	            <sourcefiles encoding="UTF-8">
-	                <fileset dir="src"/>
+	                <fileset dir="${src}" />
 	            </sourcefiles>
 	        </structure>
-	        <html destdir="report"/>
+	        <html destdir="${build-coverage}" />
+	    	<xml destfile="${build-coverage}/jacoco.xml" />
 	    </jacoco:report>
 	</target>
 	
