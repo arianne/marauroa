@@ -56,11 +56,10 @@ public class PlayerAccessTest {
 		Log4J.init("marauroa/server/log4j.properties");
 
 		Properties props = new Properties();
-		props.put("jdbc_url", "jdbc:mysql://127.0.0.1/marauroatest");
-		props.put("jdbc_class", "com.mysql.jdbc.Driver");
-		props.put("jdbc_user", "junittest");
-		props.put("jdbc_pwd", "passwd");
-		props.put("database_adapter", "marauroa.server.db.adapter.MySQLDatabaseAdapter");
+		props.put("jdbc_url", "jdbc:h2:~/marauroa/database/test;AUTO_RECONNECT=TRUE;DB_CLOSE_ON_EXIT=TRUE");
+		props.put("jdbc_class", "org.h2.Driver");
+		props.put("database_adapter", "marauroa.server.db.adapter.H2DatabaseAdapter");
+		
 		transactionPool = new TransactionPool(props);
 		accountDAO = DAORegister.get().get(AccountDAO.class);
 		loginEventDAO = DAORegister.get().get(LoginEventDAO.class);

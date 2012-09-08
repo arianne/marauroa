@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<project name="marauroa" default="dist" basedir=".">
+<project name="marauroa" default="dist" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
 	<property file="build.ant.properties"/>
 
 	<property name="jarname" value="marauroa-${version}.jar"/>
@@ -24,6 +24,7 @@
 	
 	<path id="run-tests-classpath">
 		<path refid="compile-tests-classpath" />
+		<pathelement location="${h2_jar}"/>
 		<pathelement path="${build-tests}" />
 		<pathelement path="."/>
 	</path>
@@ -42,6 +43,8 @@
 		<mkdir dir="${build}" />
 		<mkdir dir="${build-classes}" />
 		<mkdir dir="${build-tests}" />
+		<mkdir dir="${build-tests-report}" />
+		<mkdir dir="${build-coverage}" />
 		<mkdir dir="${dist}" />
 		<mkdir dir="${docs}" />
 	</target>
@@ -82,6 +85,7 @@
 
 		<!-- Compile it -->
 		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${build-classes}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit};${exclude.web}" includeantruntime="false">
+			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-classpath" />
 		</javac>
 
@@ -101,6 +105,7 @@
 		
 		<!-- Compile it -->
 		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${build-client}" debug="true" debuglevel="source,lines" includeantruntime="false">
+			<compilerarg line="-encoding utf-8"/>
 			<include name="marauroa/client/**"/>
 			<include name="marauroa/common/**"/>
 			<classpath>
@@ -221,19 +226,26 @@
 	</target>
 
 	<!-- builds the whole project for releasing -->
-	<target name="dist" depends="clean, dist_binary, dist_docs, dist_source"/>
+	<target name="dist" depends="dist_binary, dist_docs, dist_source"/>
 	
 	<!-- testing targets -->
 	<target name="compile-tests" depends="compile">
 		<javac srcdir="${src-test}" source="1.5" target="1.5" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-tests-classpath" />
 		</javac>
+		<copy todir="${build-tests}">
+			<fileset dir="${src-test}">
+				<include name="**/*.*" />
+				<exclude name="**/*.java" />
+				<exclude name="**/*.ini" />
+			</fileset>
+		</copy>
+		<copy file="${test-server-ini}" tofile="./server.ini" />
 	</target>
 	
 	<target name="run-tests" depends="compile-tests">
-		<delete dir="${build-tests-report}" quiet="true" />
-		<mkdir dir="${build-tests-report}" />
-		<junit printsummary="yes" fork="no">
+		<junit printsummary="yes" fork="yes">
 			<jvmarg value="-Djava.awt.headless=true"/>
 			<classpath refid="run-tests-classpath" />
 			<formatter type="plain" usefile="false"/>
@@ -245,5 +257,43 @@
 				</fileset>
 			</batchtest>
 		</junit>
+		<delete file="./server.ini" />
 	</target>
+
+	<target name="coverage" depends="compile-tests">
+		<jacoco:coverage>
+			<junit printsummary="yes" fork="yes">
+				<jvmarg value="-Djava.awt.headless=true"/>
+				<classpath refid="run-tests-classpath" />
+				<formatter type="plain" usefile="false"/>
+				<formatter type="xml"/>
+				<batchtest todir="${build-tests-report}">
+					<fileset dir="${src-test}">
+						<include name="**/*Test.java"/>
+						<include name="**/Test*.java"/>
+					</fileset>
+				</batchtest>
+			</junit>
+		</jacoco:coverage>
+		<delete file="./server.ini" />
+	</target>
+	
+	<target name="coverage-report" depends="coverage">
+	    <jacoco:report>
+	        <executiondata>
+	            <file file="jacoco.exec" />
+	        </executiondata>
+	        <structure name="${ant.project.name}">
+	            <classfiles>
+	                <fileset dir="${build-classes}" />
+	            </classfiles>
+	            <sourcefiles encoding="UTF-8">
+	                <fileset dir="${src}" />
+	            </sourcefiles>
+	        </structure>
+	        <html destdir="${build-coverage}" />
+	    	<xml destfile="${build-coverage}/jacoco.xml" />
+	    </jacoco:report>
+	</target>
+	
 </project>
