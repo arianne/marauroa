@@ -13,6 +13,7 @@ package marauroa.server.game.messagehandler;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import marauroa.common.Log4J;
 import marauroa.common.Pair;
@@ -86,13 +87,16 @@ public class DelayedEventHandlerThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			while (keepRunning) {
-				/*
-				 * We keep waiting until we are signaled to process some events.
-				 * This way we avoid wasting CPU cycles.
-				 */
-				Pair<DelayedEventHandler, Object> entry = queue.take();
-				entry.first().handleDelayedEvent(rpMan, entry.second());
+			while (true) {
+				// Wait for up to one second for a delayed command. If no command is pending, check for a possible shutdown 
+				Pair<DelayedEventHandler, Object> entry = queue.poll(1, TimeUnit.SECONDS);
+				if (entry == null) {
+					if (!keepRunning) {
+						break;
+					}
+				} else {
+					entry.first().handleDelayedEvent(rpMan, entry.second());
+				}
 			}
 		} catch (InterruptedException e1) {
 			/*
