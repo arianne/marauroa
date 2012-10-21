@@ -19,10 +19,21 @@ import java.nio.channels.SocketChannel;
  * finish the session.
  */
 public class MessageC2SLogout extends Message {
+	private int reason = 0;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SLogout() {
 		super(MessageType.C2S_LOGOUT, null);
+	}
+
+	/**
+	 * Constructor for allowing creation of an empty message
+	 *
+	 * @param reason reason for logout
+	 */
+	public MessageC2SLogout(int reason) {
+		super(MessageType.C2S_LOGOUT, null);
+		this.reason = reason;
 	}
 
 	/**
@@ -33,6 +44,15 @@ public class MessageC2SLogout extends Message {
 	 */
 	public MessageC2SLogout(SocketChannel source) {
 		super(MessageType.C2S_LOGOUT, source);
+	}
+
+	/**
+	 * gets the reason
+	 *
+	 * @return reason
+	 */
+	public int getReason() {
+		return reason;
 	}
 
 	/**
@@ -48,6 +68,9 @@ public class MessageC2SLogout extends Message {
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
+		if (reason != 0) {
+			out.write(reason);
+		}
 	}
 
 	@Override
@@ -56,6 +79,10 @@ public class MessageC2SLogout extends Message {
 
 		if (type != MessageType.C2S_LOGOUT) {
 			throw new IOException();
+		}
+
+		if (in.available() >= 4) {
+			reason = in.readInt();
 		}
 	}
 }

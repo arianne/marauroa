@@ -19,6 +19,7 @@ import marauroa.common.net.message.MessageS2CLogoutACK;
 import marauroa.common.net.message.MessageS2CLogoutNACK;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.rp.DebugInterface;
 
 /**
  * Request server to exit and free resources associated.
@@ -62,18 +63,29 @@ class LogoutHandler extends MessageHandler {
 			 */
 			if (entry.state == ClientState.GAME_BEGIN) {
 				playerContainer.getLock().requestWriteLock();
-				if (rpMan.onExit(object)) {
-					/* NOTE: Set the Object so that it is stored in Database */
-					entry.storeRPObject(object);
-				} else {
-					/*
-					 * If RPManager returned false, that means that logout is
-					 * not allowed right now, so player request is rejected.
-					 * This can be useful to disallow logout on some situations.
-					 */
-					shouldLogout = false;
+
+				try {
+
+					int reason = msg.getReason();
+					if (reason > 0) {
+						DebugInterface.get().onCrash(object);
+						return; // we treat crashes as timeouts for now
+					}
+
+					if (rpMan.onExit(object)) {
+						/* NOTE: Set the Object so that it is stored in Database */
+						entry.storeRPObject(object);
+					} else {
+						/*
+						 * If RPManager returned false, that means that logout is
+						 * not allowed right now, so player request is rejected.
+						 * This can be useful to disallow logout on some situations.
+						 */
+						shouldLogout = false;
+					}
+				} finally {
+					playerContainer.getLock().releaseLock();
 				}
-				playerContainer.getLock().releaseLock();
 			}
 
 			if (shouldLogout) {
