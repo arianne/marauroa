@@ -51,7 +51,7 @@ public class DebugInterface {
 		return true;
 	}
 
-	/** 
+	/**
 	 * This method is called when a player is added to the game world
 	 *
 	 * @param object player object
@@ -61,7 +61,7 @@ public class DebugInterface {
 		return true;
 	}
 
-	/** 
+	/**
 	 * This method is called when a player leaves the game
 	 *
 	 * @param object player object
@@ -71,12 +71,21 @@ public class DebugInterface {
 		return true;
 	}
 
-	/** 
+	/**
 	 * This method is called when connection to client is closed
 	 *
 	 * @param object player object
 	 */
 	public void onTimeout(@SuppressWarnings("unused") RPObject object) {
+		return;
+	}
+
+	/**
+	 * reports crashes
+	 *
+	 * @param object object
+	 */
+	public void onCrash(@SuppressWarnings("unused") RPObject object) {
 		return;
 	}
 }

@@ -22,7 +22,7 @@ import marauroa.common.TimeoutConf;
  */
 public class InputSerializer {
 
-	private InputStream in;
+	private final InputStream in;
 	private int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
 
 
@@ -102,8 +102,8 @@ public class InputSerializer {
 	 * @param b byte to convert
 	 * @return int in range 0-255
 	 */
-	private static int byteToPositiveInt(byte b) { 
-		return b & 0xff; 
+	private static int byteToPositiveInt(byte b) {
+		return b & 0xff;
 	}
 
 	/**
@@ -364,4 +364,17 @@ public class InputSerializer {
 	public void setProtocolVersion(int protocolVersion) {
     	this.protocolVersion = protocolVersion;
     }
+
+	/**
+	 * Number of bytes available to be read. Important Note: This includes data which may be designated for the following objects in the stream
+	 *
+	 * @return number of bytes
+	 */
+	public int available() {
+		try {
+			return in.available();
+		} catch (IOException e) {
+			return -1;
+		}
+	}
 }

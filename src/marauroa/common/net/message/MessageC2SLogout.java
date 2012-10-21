@@ -16,15 +16,30 @@ import java.util.Map;
 
 import marauroa.common.net.Channel;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Logout Message is sent from client to server to indicate that it wants to
  * finish the session.
  */
 public class MessageC2SLogout extends Message {
+	private static Logger logger = Logger.getLogger(MessageC2SLogout.class);
+
+	private int reason = 0;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SLogout() {
 		super(MessageType.C2S_LOGOUT, null);
+	}
+
+	/**
+	 * Constructor for allowing creation of an empty message
+	 *
+	 * @param reason reason for logout
+	 */
+	public MessageC2SLogout(int reason) {
+		super(MessageType.C2S_LOGOUT, null);
+		this.reason = reason;
 	}
 
 	/**
@@ -38,6 +53,15 @@ public class MessageC2SLogout extends Message {
 	}
 
 	/**
+	 * gets the reason
+	 *
+	 * @return reason
+	 */
+	public int getReason() {
+		return reason;
+	}
+
+	/**
 	 * This method returns a String that represent the object
 	 *
 	 * @return a string representing the object.
@@ -47,6 +71,13 @@ public class MessageC2SLogout extends Message {
 		return "Message (C2S Logout) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
+	@Override
+	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+		super.writeObject(out);
+		if (reason != 0) {
+			out.write(reason);
+		}
+	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
@@ -55,11 +86,23 @@ public class MessageC2SLogout extends Message {
 		if (type != MessageType.C2S_LOGOUT) {
 			throw new IOException();
 		}
+
+		if (in.available() >= 4) {
+			reason = in.readInt();
+		}
 	}
 
 	@Override
 	public void readFromMap(Map<String, Object> in) throws IOException {
 		super.readFromMap(in);
+		Object temp = in.get("reason");
+		try {
+			if (temp != null) {
+				reason = Integer.parseInt(temp.toString());
+			}
+		} catch (NumberFormatException e) {
+			logger.warn(e, e);
+		}
 
 		if (type != MessageType.C2S_LOGOUT) {
 			throw new IOException();

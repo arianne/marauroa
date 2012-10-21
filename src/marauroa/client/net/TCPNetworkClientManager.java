@@ -29,6 +29,7 @@ import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.message.Message;
+import marauroa.common.net.message.MessageC2SLogout;
 
 /**
  * This is the basic implementation of a TCP network manager.
@@ -87,6 +88,12 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	 * This is true as long as we are connected to server.
 	 */
 	private boolean connected = false;
+
+	/**
+	 * already registered?
+	 */
+	protected static boolean registered = false;
+
 
 	/**
 	 * Constructor that opens the socket on the marauroa_PORT and start the
@@ -411,11 +418,11 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 		/** the logger instance. */
 		@SuppressWarnings("hiding")
-		private final marauroa.common.Logger logger = Log4J
-		        .getLogger(NetworkClientManagerWrite.class);
+		private final marauroa.common.Logger logger = Log4J.getLogger(NetworkClientManagerWrite.class);
 
 		/** An output stream that represents the socket. */
 		private OutputStream os = null;
+		private boolean loggedOut = false;
 
 		/**
 		 * Constructor
@@ -423,6 +430,18 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 		public NetworkClientManagerWrite() {
 			try {
 				os = socket.getOutputStream();
+				if (!registered) {
+					registered = true;
+					Runtime.getRuntime().addShutdownHook(new Thread() {
+						@Override
+						public void run() {
+							if (!loggedOut) {
+								Message msg = new MessageC2SLogout(1);
+								write(msg);
+							}
+						}
+					});
+				}
 			} catch (IOException e) {
 				logger.error(e, e);
 			}
@@ -436,6 +455,9 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 		 * @return true, if the message was sent successfully
 		 */
 		public synchronized boolean write(Message msg) {
+			if (msg instanceof MessageC2SLogout) {
+				loggedOut = true;
+			}
 			try {
 				if (keepRunning) {
 					/* We enforce the remote endpoint */
