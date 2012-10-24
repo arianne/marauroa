@@ -12,7 +12,6 @@
 package marauroa.server.net.validator;
 
 import java.net.InetAddress;
-import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -45,7 +44,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(ConnectionValidator.class);
 
 	/** Permanent bans are stored inside the database. */
-	private List<InetAddressMask> permanentBans;
+	private final List<InetAddressMask> permanentBans;
 
 	/**
 	 * Temporal bans are added using the API and are lost on each server reset.
@@ -54,7 +53,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	List<InetAddressMask> temporalBans;
 
 	/** A timer to remove ban when it is done. */
-	private Timer timer;
+	private final Timer timer;
 
 	/* timestamp of last reload */
 	private long lastLoadTS;
@@ -91,7 +90,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	 */
 	private class RemoveBan extends TimerTask {
 
-		private InetAddressMask mask;
+		private final InetAddressMask mask;
 
 		/**
 		 * Constructor

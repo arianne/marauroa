@@ -11,8 +11,6 @@
  ***************************************************************************/
 package marauroa.server.net;
 
-import java.nio.channels.SocketChannel;
-
 import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.server.net.validator.ConnectionValidator;
@@ -28,17 +26,17 @@ import marauroa.server.net.validator.ConnectionValidator;
  * <li>Sending a message to the network
  * <li>Finalizing the manager
  * </ul>
- * 
+ *
  * Now lets get back to the interface as exposed to other objects.<br>
- * 
+ *
  * The Write method is immediate, just call it with the message to send, making
  * sure that you have correctly filled SourceAddress and ClientID. The message
  * will then be sent to the Client.
- * 
+ *
  * The Read method is blocking, when you call the Read method it either returns
  * a message from the queue or if the queue is empty the thread blocks (sleeps)
  * until one arrives.
- * 
+ *
  * @author miguel
  */
 public interface INetworkServerManager {
@@ -47,7 +45,7 @@ public interface INetworkServerManager {
 	 * Register a listener that will be called when a disconnected event
 	 * happens. It is up to the implementer if this call add or replace the
 	 * actual listener.
-	 * 
+	 *
 	 * @param listener
 	 *            a listener of disconnection events.
 	 */
@@ -56,14 +54,14 @@ public interface INetworkServerManager {
 	/**
 	 * This method provides the connection validator object. You can use it to
 	 * ban connection IP.
-	 * 
+	 *
 	 * @return validator.
 	 */
 	public abstract ConnectionValidator getValidator();
 
 	/**
 	 * This method blocks until a message is available
-	 * 
+	 *
 	 * @return a Message
 	 */
 	public abstract Message getMessage();
@@ -71,7 +69,7 @@ public interface INetworkServerManager {
 	/**
 	 * This method add a message to be delivered to the client the message is
 	 * pointed to.
-	 * 
+	 *
 	 * @param msg
 	 *            the message to be delivered.
 	 */
@@ -80,7 +78,7 @@ public interface INetworkServerManager {
 	/**
 	 * This method disconnect a client or silently fails if client doesn't
 	 * exists.
-	 * 
+	 *
 	 * @param channel
 	 */
 	public abstract void disconnectClient(Channel channel);
