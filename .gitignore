@@ -9,3 +9,4 @@
 /build-client
 /classes
 /jacoco.exec
+/.sonar
