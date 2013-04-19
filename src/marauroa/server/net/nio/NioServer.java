@@ -175,7 +175,7 @@ class NioServer extends Thread {
 						if (change.socket.isConnected()) {
 							if (change.type == ChangeRequest.CHANGEOPS) {
 								SelectionKey key = change.socket.keyFor(this.selector);
-								if (key.isValid()) {
+								if ((key != null) && key.isValid()) {
 									key.interestOps(change.ops);
 								}
 							}
