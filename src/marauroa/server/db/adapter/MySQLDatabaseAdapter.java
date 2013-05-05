@@ -65,7 +65,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 			return con;
 		} catch (SQLException e) {
 
-			// Shorten extremely long MySql error message, which contains the cause-Exception in the msg.
+			// Shorten extremely long MySql error message, which contains the cause-Exception in getMessage() instead of getCause()
 			String msg = e.toString();
 			if (msg.contains("CommunicationsException")) {
 				int pos = msg.indexOf("BEGIN NESTED EXCEPTION");
