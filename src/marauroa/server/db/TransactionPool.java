@@ -25,6 +25,8 @@ import java.util.Set;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.Pair;
+import marauroa.common.Utility;
+import marauroa.server.db.adapter.DatabaseAdapter;
 
 /**
  * Connection Pool.
@@ -85,7 +87,12 @@ public class TransactionPool {
 	private void createMinimumDBTransactions() {
 		synchronized (wait) {
 			while (dbtransactions.size() < count) {
-				DBTransaction dbtransaction = new DBTransaction(factory.create());
+				DatabaseAdapter adapter = factory.create();
+				if (adapter == null) {
+					Utility.sleep(1000);
+					continue;
+				}
+				DBTransaction dbtransaction = new DBTransaction(adapter);
 				dbtransactions.add(dbtransaction);
 				freeDBTransactions.add(dbtransaction);
 			}
