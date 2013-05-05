@@ -232,6 +232,7 @@ public class TransactionPool {
 		}
 		dbtransaction.close();
 		dbtransactions.remove(dbtransaction);
+		freeDBTransactions.remove(dbtransaction);
 		callers.remove(dbtransaction);
 	}
 
