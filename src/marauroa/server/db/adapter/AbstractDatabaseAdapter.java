@@ -50,7 +50,13 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
 	public AbstractDatabaseAdapter(Properties connInfo) throws DatabaseConnectionException {
-		this.connection = createConnection(connInfo);
+		try {
+			this.connection = createConnection(connInfo);
+		} catch (SQLException e) {
+			throw new DatabaseConnectionException("Unable to create a connection to: "
+					+ connInfo.get("jdbc_url"), e);
+		}
+
 		this.statements = new LinkedList<Statement>();
 		this.resultSets = new LinkedList<ResultSet>();
 	}
@@ -70,46 +76,42 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	 *
 	 * @param connInfo connection information like url, username and password
 	 * @return a connection to the database
+	 * @throws SQLException if the connection cannot be established.
 	 * @throws DatabaseConnectionException if the connection cannot be established.
 	 */
-	protected Connection createConnection(Properties connInfo) throws DatabaseConnectionException {
+	protected Connection createConnection(Properties connInfo) throws SQLException, DatabaseConnectionException {
+		// instantiate the Driver class
 		try {
-			// instantiate the Driver class
-			try {
-				if (connInfo.get("jdbc_class") != null) {
-					Class.forName((String) connInfo.get("jdbc_class")).newInstance();
-				}
-			} catch (Exception e) {
-				throw new DatabaseConnectionException("Cannot load driver class "
-						+ connInfo.get("jdbc_class"), e);
+			if (connInfo.get("jdbc_class") != null) {
+				Class.forName((String) connInfo.get("jdbc_class")).newInstance();
 			}
-
-			Properties connectionInfo = new Properties();
-			if (connInfo.get("jdbc_user") != null) {
-				connectionInfo.put("user", connInfo.get("jdbc_user"));
-			}
-			if (connInfo.get("jdbc_pwd") != null) {
-				connectionInfo.put("password", connInfo.get("jdbc_pwd"));
-			}
-			connectionInfo.put("charSet", "UTF-8");
-
-			Connection conn = DriverManager.getConnection((String) connInfo.get("jdbc_url"),
-					connectionInfo);
-
-			// enable transaction support
-			conn.setAutoCommit(false);
-			conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-
-			DatabaseMetaData meta = conn.getMetaData();
-			logger.info("Connected to " + connInfo.get("jdbc_url") + ": "
-					+ meta.getDatabaseProductName() + " " + meta.getDatabaseProductVersion()
-					+ " with driver " + meta.getDriverName() + " " + meta.getDriverVersion());
-
-			return conn;
-		} catch (SQLException e) {
-			throw new DatabaseConnectionException("Unable to create a connection to: "
-					+ connInfo.get("jdbc_url"), e);
+		} catch (Exception e) {
+			throw new DatabaseConnectionException("Cannot load driver class "
+					+ connInfo.get("jdbc_class"), e);
 		}
+
+		Properties connectionInfo = new Properties();
+		if (connInfo.get("jdbc_user") != null) {
+			connectionInfo.put("user", connInfo.get("jdbc_user"));
+		}
+		if (connInfo.get("jdbc_pwd") != null) {
+			connectionInfo.put("password", connInfo.get("jdbc_pwd"));
+		}
+		connectionInfo.put("charSet", "UTF-8");
+
+		Connection conn = DriverManager.getConnection((String) connInfo.get("jdbc_url"),
+				connectionInfo);
+
+		// enable transaction support
+		conn.setAutoCommit(false);
+		conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+		DatabaseMetaData meta = conn.getMetaData();
+		logger.info("Connected to " + connInfo.get("jdbc_url") + ": "
+				+ meta.getDatabaseProductName() + " " + meta.getDatabaseProductVersion()
+				+ " with driver " + meta.getDriverName() + " " + meta.getDriverVersion());
+
+		return conn;
 	}
 
 	public void commit() throws SQLException {

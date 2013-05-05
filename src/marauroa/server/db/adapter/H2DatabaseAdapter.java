@@ -50,20 +50,15 @@ public class H2DatabaseAdapter extends AbstractDatabaseAdapter {
 	}
 
 	@Override
-	protected Connection createConnection(Properties connInfo) throws DatabaseConnectionException {
+	protected Connection createConnection(Properties connInfo) throws SQLException, DatabaseConnectionException {
 		Connection con = super.createConnection(connInfo);
-		DatabaseMetaData meta;
-		try {
-			meta = con.getMetaData();
-			String name = meta.getDatabaseProductName();
-			if (name.toLowerCase(Locale.ENGLISH).indexOf("h2") < 0) {
-				logger.warn("Using H2DatabaseAdapter to connect to " + name, new Throwable());
-			}
-			if (connInfo.getProperty("jdbc_url", "").toLowerCase(Locale.ENGLISH).indexOf(";mode=") > -1) {
-				logger.warn("The configuration parameter jdbc_url configures H2 for compatibility mode. This is likely to cause trouble.");
-			}
-		} catch (SQLException e) {
-			logger.error(e, e);
+		DatabaseMetaData meta = con.getMetaData();
+		String name = meta.getDatabaseProductName();
+		if (name.toLowerCase(Locale.ENGLISH).indexOf("h2") < 0) {
+			logger.warn("Using H2DatabaseAdapter to connect to " + name, new Throwable());
+		}
+		if (connInfo.getProperty("jdbc_url", "").toLowerCase(Locale.ENGLISH).indexOf(";mode=") > -1) {
+			logger.warn("The configuration parameter jdbc_url configures H2 for compatibility mode. This is likely to cause trouble.");
 		}
 		return con;
 	}
