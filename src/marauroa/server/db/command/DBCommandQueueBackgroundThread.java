@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2010 - Marauroa                    *
+ *                   (C) Copyright 2009-2013 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -18,6 +18,7 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
+import marauroa.server.game.dbcommand.DBCommandWithCallback;
 
 import org.apache.log4j.MDC;
 
@@ -80,6 +81,11 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			logger.error(e, e);
 			TransactionPool.get().rollback(transaction);
 			metaData.getCommand().setException(e);
+		}
+
+		if (metaData.getCommand() instanceof DBCommandWithCallback) {
+			DBCommandWithCallback commandWithCallback = (DBCommandWithCallback) metaData.getCommand();
+			commandWithCallback.invokeCallback();
 		}
 
 		if (metaData.isResultAwaited()) {

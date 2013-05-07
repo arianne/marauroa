@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2010 - Marauroa                    *
+ *                   (C) Copyright 2009-2013 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -21,7 +21,6 @@ import marauroa.server.db.DBTransaction;
 import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
-import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
 
 /**
  * asynchronously loads a list of all character for a user.
@@ -61,9 +60,6 @@ public class LoadAllCharactersCommand  extends DBCommandWithCallback {
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
 		characters = DAORegister.get().get(CharacterDAO.class).loadAllCharacters(transaction, username);
-		if (callback != null) {
-			DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
-		}
 	}
 
 	/**

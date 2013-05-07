@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2012 - Marauroa                    *
+ *                   (C) Copyright 2003-2013 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -24,7 +24,6 @@ import marauroa.server.game.db.AccountDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
-import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
 
 
 /**
@@ -66,7 +65,6 @@ public class LoginCommand extends DBCommandWithCallback {
 		if (info.isBlocked()) {
 			failReason = MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES;
 			info.addLoginEvent(info.address, 4);
-			callback();
 			return;
 		}
 
@@ -76,7 +74,6 @@ public class LoginCommand extends DBCommandWithCallback {
 			}
 			failReason = info.reason;
 			info.addLoginEvent(info.address, 0);
-			callback();
 			return;
 		}
 
@@ -93,22 +90,12 @@ public class LoginCommand extends DBCommandWithCallback {
 				info.addLoginEvent(info.address, 5);
 			}
 			failMessage = accountStatusMessage;
-			callback();
 			return;
 		}
 
 		/* Successful login */
 		previousLogins = DAORegister.get().get(LoginEventDAO.class).getLoginEvents(info.username, 1);
 		info.addLoginEvent(info.address, 1);
-
-		callback();
-	}
-
-	private void callback() {
-		/* notify callback */
-		if (callback != null) {
-			DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
-		}
 	}
 
 	/**
