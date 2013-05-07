@@ -109,23 +109,25 @@ public class PlayerEntry {
 		/**
 		 * Verify that a player is whom he/she says it is.
 		 *
+		 * @param transaction DBTransactions
 		 * @return true if it is correct: username and password matches.
 		 * @throws SQLException
 		 *             if there is any database problem.
 		 */
-		public boolean verify() throws SQLException {
-			return DAORegister.get().get(AccountDAO.class).verify(this);
+		public boolean verify(DBTransaction transaction) throws SQLException {
+			return DAORegister.get().get(AccountDAO.class).verify(transaction, this);
 		}
 
 		/**
 		 * Add a login event to database each time player login, even if it
 		 * fails.
 		 *
+		 * @param transaction DBTransactions
 		 * @param addr the IP address that originated the request.
 		 * @param result 0 failed password, 1 successful login, 2 banned, 3 inactive, 4 blocked, 5 merged
 		 * @throws SQLException if there is any database problem.
 		 */
-		public void addLoginEvent(InetAddress addr, int result) throws SQLException {
+		public void addLoginEvent(DBTransaction transaction, InetAddress addr, int result) throws SQLException {
 			String service = null;
 			try {
 				Configuration conf = Configuration.getConfiguration();
@@ -137,7 +139,7 @@ public class PlayerEntry {
 			} catch (IOException e) {
 				logger.error(e, e);
 			}
-			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(username, addr, service, seed, result);
+			DAORegister.get().get(LoginEventDAO.class).addLoginEvent(transaction, username, addr, service, seed, result);
 		}
 
 		/**
@@ -172,24 +174,17 @@ public class PlayerEntry {
 		 * Returns true if an account is temporarily blocked due to too many
 		 * tries in the defined time frame.
 		 *
+		 * @param transaction DBTransactions
 		 * @return true if an account is temporarily blocked due to too many
 		 *         tries in the defined time frame.
 		 * @throws SQLException
 		 *             if there is any database problem.
 		 */
-		public boolean isBlocked() throws SQLException {
-			DBTransaction transaction = TransactionPool.get().beginWork();
+		public boolean isBlocked(DBTransaction transaction) throws SQLException {
 			boolean res = true;
-			try {
-				LoginEventDAO loginEventDAO = DAORegister.get().get(LoginEventDAO.class);
-				res = loginEventDAO.isAccountBlocked(transaction, username)
-					|| loginEventDAO.isAddressBlocked(transaction, address.getHostAddress());
-
-				TransactionPool.get().commit(transaction);
-			} catch (SQLException e) {
-				TransactionPool.get().rollback(transaction);
-				logger.error(e, e);
-			}
+			LoginEventDAO loginEventDAO = DAORegister.get().get(LoginEventDAO.class);
+			res = loginEventDAO.isAccountBlocked(transaction, username)
+				|| loginEventDAO.isAddressBlocked(transaction, address.getHostAddress());
 			return res;
 		}
 
