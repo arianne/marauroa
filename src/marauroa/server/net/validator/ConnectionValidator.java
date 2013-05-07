@@ -69,9 +69,6 @@ public class ConnectionValidator implements Iterable<InetAddressMask>, DelayedEv
 	public ConnectionValidator() {
 		permanentBans = Collections.synchronizedList(new LinkedList<InetAddressMask>());
 		temporalBans = Collections.synchronizedList(new LinkedList<InetAddressMask>());
-
-		// read ban list from configuration
-		DBCommandQueue.get().enqueue(new LoadBanListCommand(this));
 		timer = new Timer();
 	}
 
