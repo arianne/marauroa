@@ -44,7 +44,11 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			}
 
 			if (metaData != null) {
-				processCommand(metaData);
+				try {
+					processCommand(metaData);
+				} catch (RuntimeException e) {
+					logger.error(e, e);
+				}
 			} else {
 				// There are no more pending commands, check if the server is being shutdown.
 				if (queue.isFinished()) {
@@ -65,22 +69,12 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			logger.warn("Database not initialized, skipping database operation");
 			return;
 		}
-		DBTransaction transaction = TransactionPool.get().beginWork();
-		try {
-			metaData.getCommand().execute(transaction);
-			TransactionPool.get().commit(transaction);
-		} catch (IOException e) {
-			logger.error(e, e);
-			TransactionPool.get().rollback(transaction);
-			metaData.getCommand().setException(e);
-		} catch (SQLException e) {
-			logger.error(e, e);
-			TransactionPool.get().rollback(transaction);
-			metaData.getCommand().setException(e);
-		} catch (RuntimeException e) {
-			logger.error(e, e);
-			TransactionPool.get().rollback(transaction);
-			metaData.getCommand().setException(e);
+
+		for (int i = 0; i < 5; i++) {
+			if (executeDBAction(metaData)) {
+				break;
+			}
+			logger.warn("Retrying DBCommand " + metaData);
 		}
 
 		if (metaData.getCommand() instanceof DBCommandWithCallback) {
@@ -93,5 +87,37 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			DBCommandQueue.get().addResult(metaData);
 		}
 		MDC.put("context", "");
+	}
+
+	/**
+	 * executes the command
+	 *
+	 * @param metaData DBCommandMetaData
+	 * @return true, if the command was executed (sucessfully or unsuccessfully); false if it should be tried again
+	 */
+	private boolean executeDBAction(DBCommandMetaData metaData) {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			metaData.getCommand().execute(transaction);
+			TransactionPool.get().commit(transaction);
+		} catch (IOException e) {
+			logger.error(e, e);
+			TransactionPool.get().rollback(transaction);
+			metaData.getCommand().setException(e);
+		} catch (SQLException e) {
+			logger.error(e, e);
+			if (e.toString().contains("CommunicationsException") || e.toString().contains("Query execution was interrupted")) {
+				TransactionPool.get().killTransaction(transaction);
+				TransactionPool.get().refreshAvailableTransaction();
+				return false;
+			}
+			TransactionPool.get().rollback(transaction);
+			metaData.getCommand().setException(e);
+		} catch (RuntimeException e) {
+			logger.error(e, e);
+			TransactionPool.get().rollback(transaction);
+			metaData.getCommand().setException(e);
+		}
+		return true;
 	}
 }
