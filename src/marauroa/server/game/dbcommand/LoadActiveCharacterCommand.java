@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2010 - Marauroa                    *
+ *                   (C) Copyright 2009-2013 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -21,7 +21,6 @@ import marauroa.server.db.DBTransaction;
 import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
-import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
 
 /**
  * asynchronously loads a charcater's RPObject if the character is active 
@@ -60,14 +59,10 @@ public class LoadActiveCharacterCommand extends LoadCharacterCommand {
 
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
-		if (DAORegister.get().get(CharacterDAO.class).hasActiveCharacter(getUsername(), getCharacterName())) {
+		if (DAORegister.get().get(CharacterDAO.class).hasActiveCharacter(transaction, getUsername(), getCharacterName())) {
 			super.execute(transaction);
 		} else {
 			logger.warn("Trying to load a non active character. username: " + getUsername() + " charactername: " + getCharacterName());
-			// We have to do the callback ourselves because we do not call super.execute().
-			if (callback != null) {
-				DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
-			}
 		}
 	}
 }

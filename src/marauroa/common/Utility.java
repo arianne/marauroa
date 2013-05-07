@@ -138,4 +138,17 @@ public class Utility {
 		System.arraycopy(array, 0, temp, 0, array.length);
 		return temp;
 	}
+
+	/**
+	 * Sleeps a number of milliseconds.
+	 * 
+	 * @param ms number of milliseconds to sleep
+	 */
+	public static void sleep(int ms) {
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			// ignore
+		}
+	}
 }

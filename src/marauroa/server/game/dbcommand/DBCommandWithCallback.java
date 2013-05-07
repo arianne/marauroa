@@ -14,6 +14,7 @@ package marauroa.server.game.dbcommand;
 import marauroa.common.net.Channel;
 import marauroa.server.db.command.AbstractDBCommand;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
+import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
 
 /**
  * A database command with callback support.
@@ -74,6 +75,15 @@ public abstract class DBCommandWithCallback extends AbstractDBCommand {
 	 */
 	public int getProtocolVersion() {
 		return protocolVersion;
+	}
+
+	/**
+	 * invokes the callback.
+	 */
+	public void invokeCallback() {
+		if (callback != null) {
+			DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
+		}
 	}
 
 }

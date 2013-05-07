@@ -12,7 +12,6 @@
 package marauroa.server.net.validator;
 
 import java.net.InetAddress;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,8 +21,12 @@ import java.util.TimerTask;
 
 import marauroa.common.Log4J;
 import marauroa.common.net.Channel;
-import marauroa.server.game.db.BanListDAO;
-import marauroa.server.game.db.DAORegister;
+import marauroa.server.db.command.DBCommandQueue;
+import marauroa.server.game.dbcommand.LoadBanListCommand;
+import marauroa.server.game.messagehandler.DelayedEventHandler;
+import marauroa.server.game.rp.RPServerManager;
+
+
 
 /**
  * The ConnectionValidator validates the ariving connections, currently it can
@@ -38,7 +41,7 @@ import marauroa.server.game.db.DAORegister;
  * querying bans.
  * </ul>
  */
-public class ConnectionValidator implements Iterable<InetAddressMask> {
+public class ConnectionValidator implements Iterable<InetAddressMask>, DelayedEventHandler {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(ConnectionValidator.class);
@@ -65,11 +68,8 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	 * Constructor. It loads permanent bans from database.
 	 */
 	public ConnectionValidator() {
-		permanentBans = new LinkedList<InetAddressMask>();
+		permanentBans = Collections.synchronizedList(new LinkedList<InetAddressMask>());
 		temporalBans = Collections.synchronizedList(new LinkedList<InetAddressMask>());
-
-		/* read ban list from configuration */
-		loadBannedIPNetworkListFromDB();
 		timer = new Timer();
 	}
 
@@ -185,19 +185,10 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 		return false;
 	}
 
-	/**
-	 * loads and initializes the ban list from a database
-	 */
-	public synchronized void loadBannedIPNetworkListFromDB() {
-		try {
-			permanentBans.clear();
-			permanentBans.addAll(DAORegister.get().get(BanListDAO.class).getBannedAddresses());
-		} catch (SQLException sqle) {
-			logger.error("cannot read banned networks database table", sqle);
-		}  catch (NullPointerException e) {
-			logger.error("cannot read banned networks database table", e);
-		}
-
+	public void handleDelayedEvent(RPServerManager rpMan, Object data) {
+		LoadBanListCommand cmd = (LoadBanListCommand) data;
+		permanentBans.clear();
+		permanentBans.addAll(cmd.getPermanentBans());
 		lastLoadTS = System.currentTimeMillis();
 	}
 
@@ -206,7 +197,8 @@ public class ConnectionValidator implements Iterable<InetAddressMask> {
 	 */
 	public synchronized void checkReload() {
 		if (System.currentTimeMillis() - lastLoadTS >= RELOAD_PERMANENT_BANS) {
-			loadBannedIPNetworkListFromDB();
+			DBCommandQueue.get().enqueue(new LoadBanListCommand(this));
 		}
 	}
+
 }

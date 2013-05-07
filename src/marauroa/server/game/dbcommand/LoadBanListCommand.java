@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2013 - Marauroa                    *
+ *                     (C) Copyright 2013 - Marauroa                       *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -13,53 +13,35 @@ package marauroa.server.game.dbcommand;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
-import marauroa.common.game.RPObject;
-import marauroa.common.net.Channel;
 import marauroa.server.db.DBTransaction;
-import marauroa.server.game.db.CharacterDAO;
+import marauroa.server.game.db.BanListDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
+import marauroa.server.net.validator.InetAddressMask;
 
 /**
- * asynchronously loads a list of all character for a user.
+ * asynchronously loads the ip ban list
  *
  * @author hendrik
  */
-public class LoadAllCharactersCommand  extends DBCommandWithCallback {
-	private String username;
-	private Map<String, RPObject> characters;
+public class LoadBanListCommand  extends DBCommandWithCallback {
+	private List<InetAddressMask> permanentBans;
 
 	/**
-	 * Creates a new LoadCharacterCommand
+	 * Creates a new LoadBanListCommand
 	 *
-	 * @param username name of account
-	 */
-	public LoadAllCharactersCommand(String username) {
-		super();
-		this.username = username;
-	}
-
-	/**
-	 * Creates a new LoadCharacterCommand
-	 *
-	 * @param username name of account
 	 * @param callback DelayedEventHandler
-	 * @param clientid optional parameter available to the callback
-	 * @param channel optional parameter available to the callback
-	 * @param protocolVersion version of protocol
 	 */
-	public LoadAllCharactersCommand(String username,
-			DelayedEventHandler callback, int clientid, Channel channel, int protocolVersion) {
-		super(callback, clientid, channel, protocolVersion);
-		this.username = username;
+	public LoadBanListCommand(DelayedEventHandler callback) {
+		super(callback, 0, null, 0);
 	}
-
 
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
-		characters = DAORegister.get().get(CharacterDAO.class).loadAllCharacters(transaction, username);
+		permanentBans = DAORegister.get().get(BanListDAO.class).getBannedAddresses(transaction);
 	}
 
 	/**
@@ -67,8 +49,8 @@ public class LoadAllCharactersCommand  extends DBCommandWithCallback {
 	 *
 	 * @return characters
 	 */
-	public Map<String, RPObject> getCharacters() {
-		return characters;
+	public List<InetAddressMask> getPermanentBans() {
+		return new LinkedList<InetAddressMask>(permanentBans);
 	}
 
 	/**
@@ -78,7 +60,6 @@ public class LoadAllCharactersCommand  extends DBCommandWithCallback {
 	 */
 	@Override
 	public String toString() {
-		return "LoadAllCharactersCommand [username=" + username
-				+ ", characters=" + characters + "]";
+		return "LoadBanListCommand";
 	}
 }

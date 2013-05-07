@@ -52,20 +52,29 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	}
 
 	@Override
-	protected Connection createConnection(Properties connInfo) throws DatabaseConnectionException {
-		Connection con = super.createConnection(connInfo);
-		DatabaseMetaData meta;
+	protected Connection createConnection(Properties connInfo) throws SQLException, DatabaseConnectionException {
 		try {
+			Connection con = super.createConnection(connInfo);
+			DatabaseMetaData meta;
 			meta = con.getMetaData();
 			String name = meta.getDatabaseProductName();
 			if (name.toLowerCase(Locale.ENGLISH).indexOf("mysql") < 0) {
 				logger.warn("Using MySQLDatabaseAdapter to connect to " + name);
 			}
 			this.majorVersion = con.getMetaData().getDatabaseMajorVersion();
+			return con;
 		} catch (SQLException e) {
-			logger.error(e, e);
+
+			// Shorten extremely long MySql error message, which contains the cause-Exception in getMessage() instead of getCause()
+			String msg = e.toString();
+			if (msg.contains("CommunicationsException")) {
+				int pos = msg.indexOf("BEGIN NESTED EXCEPTION");
+				if (pos > -1) {
+					throw new DatabaseConnectionException(msg.substring(0, pos - 3).trim());
+				}
+			}
+			throw e;
 		}
-		return con;
 	}
 
 	/**

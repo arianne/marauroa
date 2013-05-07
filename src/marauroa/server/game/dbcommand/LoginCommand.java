@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2012 - Marauroa                    *
+ *                   (C) Copyright 2003-2013 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -24,7 +24,6 @@ import marauroa.server.game.db.AccountDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
-import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
 
 
 /**
@@ -63,20 +62,18 @@ public class LoginCommand extends DBCommandWithCallback {
 
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
-		if (info.isBlocked()) {
+		if (info.isBlocked(transaction)) {
 			failReason = MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES;
-			info.addLoginEvent(info.address, 4);
-			callback();
+			info.addLoginEvent(transaction, info.address, 4);
 			return;
 		}
 
-		if (!info.verify()) {
+		if (!info.verify(transaction)) {
 			if (info.reason == null) {
 				info.reason = MessageS2CLoginNACK.Reasons.USERNAME_WRONG;
 			}
 			failReason = info.reason;
-			info.addLoginEvent(info.address, 0);
-			callback();
+			info.addLoginEvent(transaction, info.address, 0);
 			return;
 		}
 
@@ -86,29 +83,19 @@ public class LoginCommand extends DBCommandWithCallback {
 			if (status == null) {
 				// oops
 			} else if (status.equals("banned")) {
-				info.addLoginEvent(info.address, 2);
+				info.addLoginEvent(transaction, info.address, 2);
 			} else if (status.equals("inactive")) {
-				info.addLoginEvent(info.address, 3);
+				info.addLoginEvent(transaction, info.address, 3);
 			} else if (status.equals("merged")) {
-				info.addLoginEvent(info.address, 5);
+				info.addLoginEvent(transaction, info.address, 5);
 			}
 			failMessage = accountStatusMessage;
-			callback();
 			return;
 		}
 
 		/* Successful login */
-		previousLogins = DAORegister.get().get(LoginEventDAO.class).getLoginEvents(info.username, 1);
-		info.addLoginEvent(info.address, 1);
-
-		callback();
-	}
-
-	private void callback() {
-		/* notify callback */
-		if (callback != null) {
-			DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
-		}
+		previousLogins = DAORegister.get().get(LoginEventDAO.class).getLoginEvents(transaction, info.username, 1);
+		info.addLoginEvent(transaction, info.address, 1);
 	}
 
 	/**

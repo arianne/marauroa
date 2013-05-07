@@ -26,6 +26,8 @@ import java.util.Set;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.Pair;
+import marauroa.common.Utility;
+import marauroa.server.db.adapter.DatabaseAdapter;
 
 /**
  * Connection Pool.
@@ -86,7 +88,12 @@ public class TransactionPool {
 	private void createMinimumDBTransactions() {
 		synchronized (wait) {
 			while (dbtransactions.size() < count) {
-				DBTransaction dbtransaction = new DBTransaction(factory.create());
+				DatabaseAdapter adapter = factory.create();
+				if (adapter == null) {
+					Utility.sleep(1000);
+					continue;
+				}
+				DBTransaction dbtransaction = new DBTransaction(adapter);
 				dbtransactions.add(dbtransaction);
 				freeDBTransactions.add(dbtransaction);
 			}
@@ -213,12 +220,30 @@ public class TransactionPool {
 	}
 
 	/**
+	 * removes transactions from the pool that are not connected to the databaes anymore
+	 */
+	public void refreshAvailableTransaction() {
+		synchronized (wait) {
+			for (DBTransaction dbtransaction : new HashSet<DBTransaction>(freeDBTransactions)) {
+				try {
+					dbtransaction.setThread(Thread.currentThread());
+					dbtransaction.querySingleCellInt("SELECT 1", null);
+					dbtransaction.setThread(null);
+				} catch (SQLException e) {
+					logger.warn("Killing dead transaction " + dbtransaction + ".");
+					killTransaction(dbtransaction);
+				}
+			}
+		}
+	}
+
+	/**
 	 * kills a transaction by rolling it back and closing it;
 	 * it will be removed from the pool
 	 *
 	 * @param dbtransaction DBTransaction
 	 */
-	private void killTransaction(DBTransaction dbtransaction) {
+	public void killTransaction(DBTransaction dbtransaction) {
 		try {
 			dbtransaction.setThread(Thread.currentThread());
 			dbtransaction.rollback();
@@ -227,6 +252,7 @@ public class TransactionPool {
 		}
 		dbtransaction.close();
 		dbtransactions.remove(dbtransaction);
+		freeDBTransactions.remove(dbtransaction);
 		callers.remove(dbtransaction);
 	}
 

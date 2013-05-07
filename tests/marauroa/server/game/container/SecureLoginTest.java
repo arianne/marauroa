@@ -23,6 +23,8 @@ import java.sql.SQLException;
 
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
+import marauroa.server.db.DBTransaction;
+import marauroa.server.db.TransactionPool;
 import marauroa.server.game.db.AccountDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.DatabaseFactory;
@@ -76,7 +78,12 @@ public class SecureLoginTest {
 			DAORegister.get().get(AccountDAO.class).addPlayer(username, Hash.hash(password), "example@example.com");
 		}
 		SecuredLoginInfo login = simulateSecureLogin(username, password);
-		assertTrue("Unable to verify login", login.verify());
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			assertTrue("Unable to verify login", login.verify(transaction));
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
 	/**
@@ -92,7 +99,12 @@ public class SecureLoginTest {
 		String password = "badpassword";
 
 		SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
-		assertFalse(login.verify());
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			assertFalse(login.verify(transaction));
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
 	}
 
 	public static SecuredLoginInfo simulateSecureLogin(String username, String password) throws UnknownHostException {
