@@ -70,7 +70,7 @@ class AdapterFactory {
 	 * @return DatabaseAdapter for the specified database
 	 */
     public DatabaseAdapter create() {
-		int maxRetries = Integer.parseInt(connInfo.getProperty("database_connection_retries", "60"));
+		int maxRetries = Integer.parseInt(connInfo.getProperty("database_connection_retries", "2000000000"));
 		int wait = Integer.parseInt(connInfo.getProperty("database_connection_waittime", "1000"));
 
 		int i = 0;
