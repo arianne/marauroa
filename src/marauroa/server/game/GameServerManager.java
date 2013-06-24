@@ -23,6 +23,7 @@ import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
 import marauroa.server.game.messagehandler.DisconnectHandler;
 import marauroa.server.game.messagehandler.MessageDispatcher;
+import marauroa.server.game.rp.DebugInterface;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
@@ -144,13 +145,13 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	private static final marauroa.common.Logger logger = Log4J.getLogger(GameServerManager.class);
 
 	/** We need network server manager to be able to send messages */
-	private INetworkServerManager netMan;
+	private final INetworkServerManager netMan;
 
 	/** We need rp manager to run the messages and actions from players */
-	private RPServerManager rpMan;
+	private final RPServerManager rpMan;
 
 	/** The playerContainer handles all the player management */
-	private PlayerEntryContainer playerContainer;
+	private final PlayerEntryContainer playerContainer;
 
 	/** The thread will be running while keepRunning is true */
 	private boolean keepRunning;
@@ -159,13 +160,13 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	private boolean isfinished;
 
 	/** processes delayed events */
-	private DelayedEventHandlerThread delayedEventHandler;
-	
+	private final DelayedEventHandlerThread delayedEventHandler;
+
 	/** dispatches messages to the appropriate handlers */
-	private MessageDispatcher messageDispatcher;
+	private final MessageDispatcher messageDispatcher;
 
 	/** handles disconnects */
-	private DisconnectHandler disconnectHandler = new DisconnectHandler();
+	private final DisconnectHandler disconnectHandler = new DisconnectHandler();
 
 	/**
 	 * Constructor that initialize also the RPManager
@@ -187,18 +188,18 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 		this.netMan = netMan;
 		this.rpMan = rpMan;
-		
+
 
 		netMan.registerDisconnectedListener(this);
 
 		playerContainer = PlayerEntryContainer.getContainer();
-		
+
 		delayedEventHandler= new DelayedEventHandlerThread(rpMan);
 
 		messageDispatcher = new MessageDispatcher();
 		messageDispatcher.init(netMan, rpMan, playerContainer, Statistics.getStatistics(), key);
 	}
-	
+
 	/**
 	 * Starting this thread makes it to start the thread that disconnect players.
 	 */
@@ -216,14 +217,14 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	public void finish() {
 		/* We store all the players when we are requested to exit */
 		storeConnectedPlayers();
-		
+
 		rpMan.finish();
 		keepRunning = false;
-		
+
 		interrupt();
 		delayedEventHandler.setKeepRunning(false);
-		
-		
+
+
 		while (isfinished == false) {
 			Thread.yield();
 		}
@@ -238,13 +239,13 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		 * We want to avoid concurrentComodification of playerContainer.
 		 */
 		List<PlayerEntry> list=new LinkedList<PlayerEntry>();
-		for (PlayerEntry entry : playerContainer) {			
+		for (PlayerEntry entry : playerContainer) {
 			list.add(entry);
 		}
-		
+
 		/*
 		 * Now we iterate the list and remove characters.
-		 */		
+		 */
 		for (PlayerEntry entry : list) {
 			logger.info("STORING ("+entry.username+") :"+entry.object);
 			/*
@@ -267,6 +268,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				if (msg != null) {
 //					playerContainer.getLock().requestWriteLock();
+					DebugInterface.get().onMessage(msg);
 					messageDispatcher.dispatchMessage(msg);
 //					playerContainer.getLock().releaseLock();
 				}
