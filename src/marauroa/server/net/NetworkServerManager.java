@@ -230,6 +230,10 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 	 */
 	public void onDisconnect(ConnectionManager server, Object internalChannel) {
 		Channel channel = channels.get(internalChannel);
+		if (channel == null) {
+			logger.error("Cannot disconnect internalChannel " + internalChannel + " because it is unknown: " + channels);
+			return;
+		}
 		for (IDisconnectedListener listener : listeners) {
 			listener.onDisconnect(channel);
 		}
