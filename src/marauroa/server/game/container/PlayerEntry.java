@@ -13,6 +13,7 @@ package marauroa.server.game.container;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -151,7 +152,17 @@ public class PlayerEntry {
 	 * @return the inet address of this PlayerEntry.
 	 */
 	public InetAddress getAddress() {
-		return channel.getInetAddress();
+		return channel.getInetSocketAddress().getAddress();
+	}
+
+
+	/**
+	 * Return the inet address of this PlayerEntry.
+	 *
+	 * @return the inet address of this PlayerEntry.
+	 */
+	public InetSocketAddress getInetSocketAddress() {
+		return channel.getInetSocketAddress();
 	}
 
 	/**

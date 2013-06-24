@@ -90,7 +90,7 @@ class LogoutHandler extends MessageHandler {
 
 			if (shouldLogout) {
 				stats.add("Players logout", 1);
-				logger.info("Logging out correctly channel: " + entry.getAddress());
+				logger.info("Logging out correctly channel: " + entry.getInetSocketAddress());
 				playerContainer.remove(clientid);
 
 				/* Send Logout ACK message */

@@ -12,7 +12,7 @@
  ***************************************************************************/
 package marauroa.server.net;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 import marauroa.common.net.Channel;
 import marauroa.common.net.ConnectionManager;
@@ -20,7 +20,7 @@ import marauroa.common.net.message.Message;
 
 /**
  * This interface allows ConnectionManagers to talk to the central server manager.
- * 
+ *
  * @author miguel
  */
 public interface IServerManager {
@@ -32,7 +32,7 @@ public interface IServerManager {
 	 */
 	public void addServer(ConnectionManager server);
 
-	/** 
+	/**
 	 * This is a callback method that is called onConnect
 	 *
 	 * @param server IServer
@@ -40,7 +40,7 @@ public interface IServerManager {
 	 * @param internalChannel internal channel object
 	 * @return the channel, if the connection was accepted; <code>null</code> otherwise
 	 */
-	public Channel onConnect(ConnectionManager server, InetAddress address, Object internalChannel);
+	public Channel onConnect(ConnectionManager server, InetSocketAddress address, Object internalChannel);
 
 	/**
 	 * This method is called when data is received from a socket channel
@@ -61,7 +61,7 @@ public interface IServerManager {
 
 	/**
 	 * Register a listener for disconnection events.
-	 * 
+	 *
 	 * @param listener
 	 *            a listener for disconnection events.
 	 */

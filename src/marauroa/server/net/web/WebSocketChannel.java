@@ -13,7 +13,7 @@
 package marauroa.server.net.web;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
 import com.glines.socketio.common.DisconnectReason;
@@ -30,19 +30,19 @@ public class WebSocketChannel implements SocketIOInbound {
 	private final String username;
 	private SocketIOOutbound outboundSocket;
 	private final WebSocketConnectionManager webSocketServerManager;
-	private final InetAddress address;
+	private final InetSocketAddress address;
 
 	/**
 	 * creates a new WebSocketChannel
 	 *
 	 * @param webSocketServerManager
-	 * @param address ip-address of other end
+	 * @param address ip-address and port of other end
 	 * @param username sessionid
 	 * @throws UnknownHostException in case the ip-address is invalid
 	 */
-	public WebSocketChannel(WebSocketConnectionManager webSocketServerManager, String address, String username) throws UnknownHostException {
+	public WebSocketChannel(WebSocketConnectionManager webSocketServerManager, InetSocketAddress address, String username) throws UnknownHostException {
 		this.webSocketServerManager = webSocketServerManager;
-		this.address = InetAddress.getByName(address);
+		this.address = address;
 		this.username = username;
 	}
 
@@ -89,11 +89,11 @@ public class WebSocketChannel implements SocketIOInbound {
 	}
 
 	/**
-	 * gets the ip-address
+	 * gets the ip-address and port
 	 *
 	 * @return address
 	 */
-	public InetAddress getAddress() {
+	public InetSocketAddress getAddress() {
 		return address;
 	}
 

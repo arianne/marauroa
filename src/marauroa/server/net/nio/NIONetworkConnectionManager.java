@@ -13,6 +13,7 @@
 package marauroa.server.net.nio;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -143,7 +144,7 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 	 */
 	public void onConnect(SocketChannel internalChannel) {
 
-		Channel channel = serverManager.onConnect(this, internalChannel.socket().getInetAddress(), internalChannel);
+		Channel channel = serverManager.onConnect(this, (InetSocketAddress) internalChannel.socket().getRemoteSocketAddress(), internalChannel);
 		if (channel != null) {
 			/*
 			 * If the address is not banned, add it to flood validator for

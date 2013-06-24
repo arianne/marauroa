@@ -13,7 +13,7 @@
 package marauroa.server.net;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -211,8 +211,8 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 	/**
 	 * handles a connection from a client
 	 */
-	public Channel onConnect(ConnectionManager connectionManager, InetAddress address, Object internalChannel) {
-		if (connectionValidator.checkBanned(address)) {
+	public Channel onConnect(ConnectionManager connectionManager, InetSocketAddress address, Object internalChannel) {
+		if (connectionValidator.checkBanned(address.getAddress())) {
 			logger.debug("Reject connection from banned IP: " + address);
 			return null;
 		}

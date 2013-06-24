@@ -13,6 +13,7 @@
 package marauroa.common.net;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 
 
@@ -24,7 +25,7 @@ import java.net.InetAddress;
 public class Channel {
 
 	private Object internalChannel;
-	private InetAddress address;
+	private InetSocketAddress address;
 	private ConnectionManager connectionManager;
 	private boolean waitingForPerception;
 
@@ -39,10 +40,10 @@ public class Channel {
 	 * creates a new Channel object.
 	 *
 	 * @param connectionManager the manager to contact to send anything using this channel
-	 * @param address the ip-address of the other end
+	 * @param address the ip-address and port Oof the other end
 	 * @param internalChannel an internal channel object used by the manager
 	 */
-	public Channel(ConnectionManager connectionManager, InetAddress address, Object internalChannel) {
+	public Channel(ConnectionManager connectionManager, InetSocketAddress address, Object internalChannel) {
 		this.connectionManager = connectionManager;
 		this.address = address;
 		this.internalChannel = internalChannel;
@@ -63,6 +64,15 @@ public class Channel {
 	 * @return InetAddress
 	 */
 	public InetAddress getInetAddress() {
+		return address.getAddress();
+	}
+
+	/**
+	 * gets the ip-address and port of the other end
+	 *
+	 * @return InetSocketAddress
+	 */
+	public InetSocketAddress getInetSocketAddress() {
 		return address;
 	}
 

@@ -12,7 +12,6 @@ import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
 import marauroa.server.db.DBTransaction;
-import marauroa.server.db.TransactionPool;
 import marauroa.server.game.db.AccountDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;

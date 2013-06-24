@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -75,7 +76,8 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 	@Override
 	protected SocketIOInbound doSocketIOConnect(HttpServletRequest request, String[] protocols) {
 		try {
-			return new WebSocketChannel(this, request.getRemoteAddr(), extractUsernameFromSession(request));
+			InetSocketAddress address = InetSocketAddress.createUnresolved(request.getRemoteAddr(), request.getRemotePort());
+			return new WebSocketChannel(this, address, extractUsernameFromSession(request));
 		} catch (UnknownHostException e) {
 			logger.error(e, e);
 		}

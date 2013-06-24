@@ -14,7 +14,7 @@ package marauroa.tools.protocolanalyser;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.List;
 
 import marauroa.common.Log4J;
@@ -32,7 +32,7 @@ import marauroa.common.net.message.Message;
  * @author hendrik
  */
 public class ProtocolAnalyser {
-	private Decoder decoder = Decoder.get();
+	private final Decoder decoder = Decoder.get();
 
 	/**
 	 * reads a network dump file and prints the packages, their content and the
@@ -45,7 +45,8 @@ public class ProtocolAnalyser {
 	 *         the dump and the one used to parse it are incompatible
 	 */
 	public void dump(InputStream is, boolean dumpRawData) throws IOException, InvalidVersionException {
-		Channel channel = new Channel(null, InetAddress.getByName("localhost"), null);
+		InetSocketAddress address = InetSocketAddress.createUnresolved("127.0.0.1", 12345);
+		Channel channel = new Channel(null,address, null);
 
 		while (true) {
 			//read a packet from the opened file
