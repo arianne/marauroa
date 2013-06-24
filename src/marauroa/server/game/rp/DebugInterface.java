@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2011 - Faiumoni e. V.                   *
+ *                (C) Copyright 2011-2013 - Faiumoni e. V.                 *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -13,6 +13,7 @@ package marauroa.server.game.rp;
 
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.message.Message;
 
 /**
  * A interface which assists in debugging a server.
@@ -86,6 +87,15 @@ public class DebugInterface {
 	 * @param object object
 	 */
 	public void onCrash(@SuppressWarnings("unused") RPObject object) {
+		return;
+	}
+
+	/**
+	 * This method is called, when a message is received
+	 *
+	 * @param msg message
+	 */
+	public void onMessage(@SuppressWarnings("unused") Message msg) {
 		return;
 	}
 }

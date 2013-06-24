@@ -23,6 +23,7 @@ import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
 import marauroa.server.game.messagehandler.DisconnectHandler;
 import marauroa.server.game.messagehandler.MessageDispatcher;
+import marauroa.server.game.rp.DebugInterface;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.IDisconnectedListener;
 import marauroa.server.net.INetworkServerManager;
@@ -267,6 +268,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 
 				if (msg != null) {
 //					playerContainer.getLock().requestWriteLock();
+					DebugInterface.get().onMessage(msg);
 					messageDispatcher.dispatchMessage(msg);
 //					playerContainer.getLock().releaseLock();
 				}
