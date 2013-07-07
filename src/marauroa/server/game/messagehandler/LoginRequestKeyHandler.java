@@ -45,14 +45,16 @@ class LoginRequestKeyHandler extends MessageHandler {
 		if (msgRequest.skipGameVersionCheck()
 			||	rpMan.checkGameVersion(msgRequest.getGame(), msgRequest.getVersion())) {
 			/*
-			 * If this is correct we send player the server key so it can sign
+			 * If this is correct we send player the server key so it can encrypt
 			 * the password.
 			 */
+			boolean ssl = msgRequest.isSslSupported();
 			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg
-			        .getChannel(), key);
+			        .getChannel(), key, ssl);
 			msgLoginSendKey.setClientID(msg.getClientID());
 			msgLoginSendKey.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendKey);
+//			netMan.activateSsl(msg.getChannel());
 		} else {
 			/* Error: Incompatible game version. Update client */
 			logger.debug("Client is running an incompatible game version. Client("

@@ -27,6 +27,8 @@ public class MessageS2CLoginSendKey extends Message {
 
 	private RSAPublicKey key;
 
+	private boolean ssl;
+
 	/** Constructor for allowing creation of an empty message */
 	public MessageS2CLoginSendKey() {
 		super(MessageType.S2C_LOGIN_SENDKEY, null);
@@ -40,10 +42,13 @@ public class MessageS2CLoginSendKey extends Message {
 	 *            The TCP/IP address associated to this message
 	 * @param key
 	 *            the server public key.
+	 * @param ssl
+	 *            activate ssl
 	 */
-	public MessageS2CLoginSendKey(Channel source, RSAPublicKey key) {
+	public MessageS2CLoginSendKey(Channel source, RSAPublicKey key, boolean ssl) {
 		super(MessageType.S2C_LOGIN_SENDKEY, source);
 		this.key = key;
+		this.ssl = ssl;
 	}
 
 	/**
@@ -53,6 +58,15 @@ public class MessageS2CLoginSendKey extends Message {
 	 */
 	public RSAPublicKey getKey() {
 		return key;
+	}
+
+	/**
+	 * is ssl supported
+	 *
+	 * @return the ssl
+	 */
+	public boolean isSslSupported() {
+		return ssl;
 	}
 
 	/**
@@ -71,6 +85,9 @@ public class MessageS2CLoginSendKey extends Message {
 		super.writeObject(out);
 		out.write(key.getN().toByteArray());
 		out.write(key.getE().toByteArray());
+		if (ssl) {
+			out.write(1);
+		}
 	}
 
 	@Override
@@ -79,6 +96,11 @@ public class MessageS2CLoginSendKey extends Message {
 		BigInteger n = new BigInteger(in.readByteArray());
 		BigInteger e = new BigInteger(in.readByteArray());
 		key = new RSAPublicKey(n, e);
+		if (in.available() >= 1) {
+			ssl = true;
+		}
+
+
 		if (type != MessageType.S2C_LOGIN_SENDKEY) {
 			throw new IOException();
 		}

@@ -322,6 +322,13 @@ public abstract class ClientFramework {
 				case S2C_LOGIN_SENDKEY: {
 					logger.debug("Received Key");
 					key = ((MessageS2CLoginSendKey) msg).getKey();
+					if (((MessageS2CLoginSendKey) msg).isSslSupported()) {
+						try {
+							netMan.activateSsl();
+						} catch (IOException e) {
+							throw new LoginFailedException("Could not establish a secure connection to the server.");
+						}
+					}
 
 					clientNonce = Hash.random(Hash.hashLength());
 					netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce)));

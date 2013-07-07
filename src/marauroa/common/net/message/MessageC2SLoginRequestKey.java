@@ -32,6 +32,9 @@ public class MessageC2SLoginRequestKey extends Message {
 	/** skip the game version check */
 	private boolean skip = false;
 
+	/** supports ssl */
+	private boolean ssl;
+
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SLoginRequestKey() {
 		super(MessageType.C2S_LOGIN_REQUESTKEY, null);
@@ -63,6 +66,7 @@ public class MessageC2SLoginRequestKey extends Message {
 
 	/**
 	 * Returns The name of the game
+	 *
 	 * @return the name of the game
 	 */
 	public String getGame() {
@@ -71,10 +75,20 @@ public class MessageC2SLoginRequestKey extends Message {
 
 	/**
 	 * Returns the version of the game
+	 *
 	 * @return the version of the game
 	 */
 	public String getVersion() {
 		return version;
+	}
+
+	/**
+	 * is ssl supported
+	 *
+	 * @return the ssl
+	 */
+	public boolean isSslSupported() {
+		return ssl;
 	}
 
 
@@ -102,6 +116,7 @@ public class MessageC2SLoginRequestKey extends Message {
 		super.writeObject(out);
 		out.write255LongString(game);
 		out.write255LongString(version);
+		out.write((byte) 1);
 	}
 
 	@Override
@@ -109,7 +124,9 @@ public class MessageC2SLoginRequestKey extends Message {
 		super.readObject(in);
 		game = in.read255LongString();
 		version = in.read255LongString();
-
+		if (in.available() >= 1) {
+			ssl = true;
+		}
 		if (type != MessageType.C2S_LOGIN_REQUESTKEY) {
 			throw new IOException();
 		}

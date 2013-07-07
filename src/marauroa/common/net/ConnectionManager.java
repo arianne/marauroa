@@ -12,8 +12,6 @@
  ***************************************************************************/
 package marauroa.common.net;
 
-import java.io.IOException;
-
 import marauroa.common.net.message.Message;
 
 /**
@@ -30,5 +28,12 @@ public interface ConnectionManager {
 	void send(Object internalChannel, Message msg, boolean isPerceptionRequired);
 
 	void close(Object internalChannel);
+
+	/**
+	 * activates ssl
+	 *
+	 * @param internalChannel intenral channel
+	 */
+	void activateSsl(Object internalChannel);
 
 }

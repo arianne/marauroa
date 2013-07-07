@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import javax.net.ssl.SSLSocketFactory;
+
 import marauroa.common.Log4J;
 import marauroa.common.Utility;
 import marauroa.common.net.Decoder;
@@ -154,6 +156,13 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 		writeManager = new NetworkClientManagerWrite();
 	}
 
+	public void activateSsl() throws IOException {
+	    socket = ((SSLSocketFactory) SSLSocketFactory.getDefault()).createSocket(
+	            socket, socket.getInetAddress().getHostAddress(), socket.getPort(),  true);
+	    readManager.refreshStreamInstance();
+	    writeManager.refreshStreamInstance();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -268,6 +277,10 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 		 */
 		public NetworkClientManagerRead() {
 			super("NetworkClientManagerRead");
+			refreshStreamInstance();
+		}
+
+		public final void refreshStreamInstance() {
 			try {
 				is = socket.getInputStream();
 			} catch (IOException e) {
@@ -428,20 +441,24 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 		 * Constructor
 		 */
 		public NetworkClientManagerWrite() {
+			refreshStreamInstance();
+			if (!registered) {
+				registered = true;
+				Runtime.getRuntime().addShutdownHook(new Thread() {
+					@Override
+					public void run() {
+						if (!loggedOut) {
+							Message msg = new MessageC2SLogout(1);
+							write(msg);
+						}
+					}
+				});
+			}
+		}
+
+		public final void refreshStreamInstance() {
 			try {
 				os = socket.getOutputStream();
-				if (!registered) {
-					registered = true;
-					Runtime.getRuntime().addShutdownHook(new Thread() {
-						@Override
-						public void run() {
-							if (!loggedOut) {
-								Message msg = new MessageC2SLogout(1);
-								write(msg);
-							}
-						}
-					});
-				}
 			} catch (IOException e) {
 				logger.error(e, e);
 			}
