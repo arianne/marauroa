@@ -25,15 +25,15 @@ public interface ConnectionManager {
 
 	boolean isFinished();
 
-	void send(Object internalChannel, Message msg, boolean isPerceptionRequired);
+	void send(Channel channel, Message msg, boolean isPerceptionRequired);
 
-	void close(Object internalChannel);
+	void close(Channel channel);
 
 	/**
 	 * activates ssl
 	 *
 	 * @param internalChannel intenral channel
 	 */
-	void activateSsl(Object internalChannel);
+	void activateSsl(Channel channel);
 
 }

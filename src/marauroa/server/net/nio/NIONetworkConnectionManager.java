@@ -157,7 +157,7 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 			 * Sends a connect NACK message if the address is banned.
 			 */
 			MessageS2CConnectNACK msg = new MessageS2CConnectNACK();
-			send(internalChannel, msg, true);
+			send(channel, msg, true);
 
 			/*
 			 * NOTE: We should wait a bit to close the channel... to make sure
@@ -219,11 +219,11 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 	 * This method add a message to be delivered to the client the message is
 	 * pointed to.
 	 *
-	 * @param internalChannel the channel to the client
+	 * @param channel the channel to the client
 	 * @param msg the message to be delivered.
 	 * @param isPerceptionRequired true indicates that the message may not be skipped
 	 */
-	public void send(Object internalChannel, Message msg, boolean isPerceptionRequired) {
+	public void send(Channel channel, Message msg, boolean isPerceptionRequired) {
 		if (!isPerceptionRequired && msg.isSkippable() && (msg.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_OMITTABLE_EMPTY_PERCEPTIONS)) {
 			return;
 		}
@@ -238,7 +238,8 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 			stats.add("Bytes send", data.length);
 			stats.add("Message send", 1);
 
-			server.send((SocketChannel) internalChannel, data);
+			SocketChannel internalChannel = (SocketChannel) channel.getInternalChannel();
+			server.send(internalChannel, data);
 		} catch (IOException e) {
 			// I am not interested in the exception. NioServer will detect this
 			// and close connection
@@ -253,11 +254,12 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 	 * @param channel
 	 *            the socket channel to close
 	 */
-	public void close(Object channel) {
+	public void close(Channel channel) {
+		SocketChannel internalChannel = (SocketChannel) channel.getInternalChannel();
 		try {
-			server.close((SocketChannel) channel);
+			server.close(internalChannel);
 		} catch (Exception e) {
-			logger.error("Unable to disconnect a client " + ((SocketChannel) channel).socket(), e);
+			logger.error("Unable to disconnect a client " + internalChannel.socket(), e);
 		}
 	}
 
@@ -284,7 +286,8 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 					stats.add("Message invalid version", 1);
 					MessageS2CInvalidMessage invMsg = new MessageS2CInvalidMessage(null, "Invalid client version: Update client");
 					invMsg.setProtocolVersion(e.getProtocolVersion());
-					send(event.channel, invMsg, true);
+					Channel channel = serverManager.getChannel(event.channel);
+					send(channel, invMsg, true);
 				} catch (IOException e) {
 					logger.warn("IOException while building message:\n" + Utility.dumpByteArray(event.data), e);
 					logger.warn("sender was: " + event.channel.socket().getRemoteSocketAddress());
@@ -311,6 +314,11 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 		logger.info("NET Disconnecting " + channel.socket().getRemoteSocketAddress());
 		decoder.clear(channel);
 		serverManager.onDisconnect(this, channel);
+	}
+
+	public void activateSsl(Channel channel) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

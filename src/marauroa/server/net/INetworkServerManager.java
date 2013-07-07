@@ -101,4 +101,11 @@ public interface INetworkServerManager {
 	 */
 	public abstract Object getChannel(Object internalChannel);
 
+	/**
+	 * activates ssl
+	 *
+	 * @param channel channel
+	 */
+	public abstract void activateSsl(Channel channel);
+
 }

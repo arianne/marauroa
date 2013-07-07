@@ -67,4 +67,12 @@ public interface IServerManager {
 	 */
 	public void registerDisconnectedListener(IDisconnectedListener listener);
 
+	/**
+	 * converts an internalChannel to a marauroa channel
+	 *
+	 * @param internalChannel internal low level channel
+	 * @return marauroa Channel
+	 */
+	public Channel getChannel(Object internalChannel);
+
 }

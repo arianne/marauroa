@@ -227,7 +227,7 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 		return true;
 	}
 
-	public void send(Object internalChannel, Message msg, boolean isPerceptionRequired) {
+	public void send(Channel channel, Message msg, boolean isPerceptionRequired) {
 		if (!isPerceptionRequired && msg.isSkippable()) {
 			return;
 		}
@@ -236,12 +236,18 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 		msg.writeToJson(out);
 		out.append("}");
 		if (out.length() > 2) {
-			((WebSocketChannel) internalChannel).sendMessage(out.toString());
+			WebSocketChannel internalChannel = (WebSocketChannel) channel.getInternalChannel();
+			internalChannel.sendMessage(out.toString());
 		}
 	}
 
-	public void close(Object internalChannel) {
-		((WebSocketChannel) internalChannel).close();
+	public void close(Channel channel) {
+		WebSocketChannel internalChannel = (WebSocketChannel) channel.getInternalChannel();
+		internalChannel.close();
+	}
+
+	public void activateSsl(Channel channel) {
+		// ignore, we should just use https anyway.
 	}
 
 }

@@ -152,10 +152,14 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 		if (msg.requiresPerception()) {
 			channel.setWaitingForPerception(true);
 		}
-		channel.getConnectionManager().send(channel.getInternalChannel(), msg, channel.isWaitingForPerception());
+		channel.getConnectionManager().send(channel, msg, channel.isWaitingForPerception());
 		if (msg.isPerception()) {
 			channel.setWaitingForPerception(false);
 		}
+	}
+
+	public void activateSsl(Channel channel) {
+		channel.getConnectionManager().activateSsl(channel);
 	}
 
 	/**
@@ -166,7 +170,7 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 	 */
 	public void disconnectClient(Channel channel) {
 		try {
-			channel.getConnectionManager().close(channel.getInternalChannel());
+			channel.getConnectionManager().close(channel);
 		} catch (Exception e) {
 			logger.error("Unable to disconnect a client " + channel.getInetAddress(), e);
 		}
