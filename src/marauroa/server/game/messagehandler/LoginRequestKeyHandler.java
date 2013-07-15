@@ -49,12 +49,15 @@ class LoginRequestKeyHandler extends MessageHandler {
 			 * the password.
 			 */
 			boolean ssl = msgRequest.isSslSupported();
+			ssl = false;
 			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg
 			        .getChannel(), key, ssl);
 			msgLoginSendKey.setClientID(msg.getClientID());
 			msgLoginSendKey.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendKey);
-//			netMan.activateSsl(msg.getChannel());
+			if (ssl) {
+				netMan.activateSsl(msg.getChannel());
+			}
 		} else {
 			/* Error: Incompatible game version. Update client */
 			logger.debug("Client is running an incompatible game version. Client("
