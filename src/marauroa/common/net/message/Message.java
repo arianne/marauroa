@@ -32,14 +32,23 @@ public class Message implements Serializable {
 
 	/** Type of message */
 	public enum MessageType {
+		/** client to server: player action */
 		C2S_ACTION,
+		/** client to server: character pick */
 		C2S_CHOOSECHARACTER,
+		/** client to server: request key to start login */
 		C2S_LOGIN_REQUESTKEY,
+		/** client to server: send nonce, username and encrypted password */
 		C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
+		/** client to server: sends a promise to the server which is used to setup encryption of the passwrd */
 		C2S_LOGIN_SENDPROMISE,
+		/** client to server: requests a logout */
 		C2S_LOGOUT,
+		/** client to server: requests a full permission */
 		C2S_OUTOFSYNC,
+		/** client to server: acknowledge transfer of binary data (e. g. map information) */
 		C2S_TRANSFER_ACK,
+		/** client to server: tell the server, that we are still alive */
 		C2S_KEEPALIVE,
 		S2C_CHARACTERLIST,
 		S2C_CHOOSECHARACTER_ACK,

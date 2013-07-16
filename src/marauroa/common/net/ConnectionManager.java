@@ -1,6 +1,5 @@
-/* $Id: IDisconnectedListener.java,v 1.6 2007/04/09 14:40:01 arianne_rpg Exp $ */
 /***************************************************************************
- *                      (C) Copyright 2011 - Marauroa                      *
+ *                    (C) Copyright 2011-2013 - Marauroa                   *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -12,8 +11,6 @@
  ***************************************************************************/
 package marauroa.common.net;
 
-import java.io.IOException;
-
 import marauroa.common.net.message.Message;
 
 /**
@@ -23,12 +20,32 @@ import marauroa.common.net.message.Message;
  */
 public interface ConnectionManager {
 
-	void finish();
+	/**
+	 * shuts the server down
+	 */
+	public void finish();
 
+	/**
+	 * was the server shutdown?
+	 *
+	 * @return true, if the server was shut down; false otherwise
+	 */
 	boolean isFinished();
 
+	/**
+	 * sends a message
+	 *
+	 * @param internalChannel channel to send the message to
+	 * @param msg message to send
+	 * @param isPerceptionRequired is the next perception unskipable?
+	 */
 	void send(Object internalChannel, Message msg, boolean isPerceptionRequired);
 
+	/**
+	 * closes a channel
+	 *
+	 * @param internalChannel channel to close
+	 */
 	void close(Object internalChannel);
 
 }

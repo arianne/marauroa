@@ -11,6 +11,9 @@
  ***************************************************************************/
 package marauroa.common.net.message;
 
+import java.awt.HeadlessException;
+import java.awt.KeyboardFocusManager;
+import java.awt.Window;
 import java.io.IOException;
 import java.util.Map;
 
@@ -61,14 +64,23 @@ public class MessageC2SAction extends Message {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Action) from (" + getAddress() + ") CONTENTS: (" + action.toString()
-		        + ")";
+		return "Message (C2S Action) from (" + getAddress() + ") CONTENTS: (" + action.toString() + ")";
 	}
 
+	static boolean first = true;
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		action.writeObject(out);
+
+		// get priority
+		try {
+			KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+			Window window = keyboardFocusManager.getActiveWindow();
+			out.write((byte) ((window != null) ? 0 : 1));
+		} catch (HeadlessException e) {
+			out.write((byte) 2);
+		}
 	}
 
 	@Override

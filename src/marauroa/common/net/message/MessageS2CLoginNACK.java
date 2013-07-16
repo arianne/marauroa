@@ -25,14 +25,23 @@ import marauroa.common.net.OutputSerializer;
 
 public class MessageS2CLoginNACK extends Message {
 
+	/**
+	 * reason for login failure
+	 */
 	public enum Reasons {
+		/** the username or password is wrong */
 		USERNAME_WRONG,
 		/** @since will be replaced by TOO_MANY_TRIES_USERNAME and TOO_MANY_TRIES_IP in the future */
 		TOO_MANY_TRIES,
+		/** the account is banned
 		USERNAME_BANNED,
+		/** there are too many active clients */
 		SERVER_IS_FULL,
+		/** the client is for a different game than the server */
 		GAME_MISMATCH,
+		/** the protocol version is incompatible */
 		PROTOCOL_MISMATCH,
+		/** the nonce, which is used during setup of the encryption, is invalid
 		INVALID_NONCE,
 		/** @since 3.0 */
 		USERNAME_INACTIVE,
