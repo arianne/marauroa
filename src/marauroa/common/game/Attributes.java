@@ -729,7 +729,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 *
 	 * @param sync ignored
 	 */
-	public void clearVisible(boolean sync) {
+	public void clearVisible(@SuppressWarnings("unused") boolean sync) {
 		synchronized(content) {
 
 			Iterator<Map.Entry<String, String>> it = content.entrySet().iterator();

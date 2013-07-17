@@ -29,6 +29,8 @@ public class MessageC2SAction extends Message {
 
 	/** The action to do will be understood by IRPRuleProcessor */
 	private RPAction action;
+	/** the priority of the action */
+	byte priority = -1;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SAction() {
@@ -58,6 +60,15 @@ public class MessageC2SAction extends Message {
 	}
 
 	/**
+	 * This method returns the priority
+	 *
+	 * @return priority
+	 */
+	public byte getPriority() {
+		return priority;
+	}
+
+	/**
 	 * This method returns a String that represent the object
 	 *
 	 * @return a string representing the object.
@@ -67,7 +78,6 @@ public class MessageC2SAction extends Message {
 		return "Message (C2S Action) from (" + getAddress() + ") CONTENTS: (" + action.toString() + ")";
 	}
 
-	static boolean first = true;
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
@@ -87,6 +97,10 @@ public class MessageC2SAction extends Message {
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		action = (RPAction) in.readObject(new RPAction());
+
+		if (in.available() >= 1) {
+			priority = in.readByte();
+		}
 
 		if (type != MessageType.C2S_ACTION) {
 			throw new IOException();

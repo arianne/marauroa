@@ -44,14 +44,13 @@ import org.apache.log4j.NDC;
 public class MessageS2CPerception extends Message {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J
-	        .getLogger(MessageS2CPerception.class);
+	static final marauroa.common.Logger logger = Log4J.getLogger(MessageS2CPerception.class);
 
-	private byte typePerception;
+	byte typePerception;
 
 	private int timestampPerception;
 
-	private IRPZone.ID zoneid;
+	IRPZone.ID zoneid;
 
 	private List<RPObject> addedRPObjects;
 
@@ -473,7 +472,7 @@ public class MessageS2CPerception extends Message {
 		return array.toByteArray();
 	}
 
-	private void computeStaticPartPerception(OutputSerializer ser) throws IOException {
+	void computeStaticPartPerception(OutputSerializer ser) throws IOException {
 		ser.write(typePerception);
 		ser.write(zoneid);
 

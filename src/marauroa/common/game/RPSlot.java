@@ -334,14 +334,14 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 *         otherwise.
 	 */
 	public boolean hasAsAncestor(SlotOwner object) {
-		SlotOwner owner = getOwner();
+		SlotOwner slotOwner = getOwner();
 		// traverse the owner tree
-		while (owner != null) {
+		while (slotOwner != null) {
 			// NOTE: We compare pointers.
-			if (owner == object) {
+			if (slotOwner == object) {
 				return true;
 			}
-			owner = owner.getContainerOwner();
+			slotOwner = slotOwner.getContainerOwner();
 		}
 		return false;
 	}

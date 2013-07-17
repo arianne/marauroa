@@ -40,7 +40,8 @@ public class RPClassTest {
      */
     @Test
     public void testHasClass() {
-        new RPClass("RPClassTest::A");
+        RPClass rpClass = new RPClass("RPClassTest::A");
+        assertEquals("RPClassTest::A", rpClass.getName());
         assertTrue(RPClass.hasRPClass("RPClassTest::A"));
     }
 
