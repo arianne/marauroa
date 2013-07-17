@@ -184,6 +184,10 @@ public class Perception {
 	 * Clear the perception
 	 */
 	public void clear() {
+		// Ensure that events added at object creation are sent only once.
+		for (RPObject added : addedList) {
+			added.clearEvents();
+		}
 		addedList.clear();
 		modifiedAddedList.clear();
 		modifiedDeletedList.clear();
