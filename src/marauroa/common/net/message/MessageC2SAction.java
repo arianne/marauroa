@@ -11,6 +11,9 @@
  ***************************************************************************/
 package marauroa.common.net.message;
 
+import java.awt.HeadlessException;
+import java.awt.KeyboardFocusManager;
+import java.awt.Window;
 import java.io.IOException;
 import java.util.Map;
 
@@ -26,6 +29,8 @@ public class MessageC2SAction extends Message {
 
 	/** The action to do will be understood by IRPRuleProcessor */
 	private RPAction action;
+	/** the priority of the action */
+	byte priority = -1;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SAction() {
@@ -55,26 +60,47 @@ public class MessageC2SAction extends Message {
 	}
 
 	/**
+	 * This method returns the priority
+	 *
+	 * @return priority
+	 */
+	public byte getPriority() {
+		return priority;
+	}
+
+	/**
 	 * This method returns a String that represent the object
 	 *
 	 * @return a string representing the object.
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Action) from (" + getAddress() + ") CONTENTS: (" + action.toString()
-		        + ")";
+		return "Message (C2S Action) from (" + getAddress() + ") CONTENTS: (" + action.toString() + ")";
 	}
 
 	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		action.writeObject(out);
+
+		// get priority
+		try {
+			KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+			Window window = keyboardFocusManager.getActiveWindow();
+			out.write((byte) ((window != null) ? 0 : 1));
+		} catch (HeadlessException e) {
+			out.write((byte) 2);
+		}
 	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		action = (RPAction) in.readObject(new RPAction());
+
+		if (in.available() >= 1) {
+			priority = in.readByte();
+		}
 
 		if (type != MessageType.C2S_ACTION) {
 			throw new IOException();

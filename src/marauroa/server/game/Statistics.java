@@ -35,7 +35,7 @@ public class Statistics implements StatisticsMBean {
 	public static final int DATABASE_STATISTICS_LAPSUS = 60000;
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(Statistics.class);
+	static final marauroa.common.Logger logger = Log4J.getLogger(Statistics.class);
 
 	/**
 	 * This class is very similar to a Map<String, Long> with the extra that

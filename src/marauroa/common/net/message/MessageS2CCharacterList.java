@@ -103,17 +103,17 @@ public class MessageS2CCharacterList extends Message {
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
-		String[] characters = in.readStringArray();
+		String[] readCharacters = in.readStringArray();
 		this.characters = new LinkedHashMap<String, RPObject>();
 
 		// read the map or list, depending on protocol version
 		if (super.protocolVersion >= NetConst.FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST) {
 			Object[] objects = in.readObjectArray(RPObject.class);
-			for (int i = 0; i < characters.length; i++) {
-				this.characters.put(characters[i], (RPObject) objects[i]);
+			for (int i = 0; i < readCharacters.length; i++) {
+				this.characters.put(readCharacters[i], (RPObject) objects[i]);
 			}
 		} else {
-			for (String character : characters) {
+			for (String character : readCharacters) {
 				this.characters.put(character, new RPObject());
 			}
 		}

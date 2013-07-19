@@ -32,40 +32,75 @@ public class Message implements Serializable {
 
 	/** Type of message */
 	public enum MessageType {
+		/** client to server: player action */
 		C2S_ACTION,
+		/** client to server: character pick */
 		C2S_CHOOSECHARACTER,
+		/** client to server: request key to start login */
 		C2S_LOGIN_REQUESTKEY,
+		/** client to server: send nonce, username and encrypted password */
 		C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
+		/** client to server: sends a promise to the server which is used to setup encryption of the passwrd */
 		C2S_LOGIN_SENDPROMISE,
+		/** client to server: requests a logout */
 		C2S_LOGOUT,
+		/** client to server: requests a full permission */
 		C2S_OUTOFSYNC,
+		/** client to server: acknowledge transfer of binary data (e. g. map information) */
 		C2S_TRANSFER_ACK,
+		/** client to server: tell the server, that we are still alive */
 		C2S_KEEPALIVE,
+		/** server to client: sends the character list */
 		S2C_CHARACTERLIST,
+		/** server to client: confirms a successful character choice */
 		S2C_CHOOSECHARACTER_ACK,
+		/** server to client: rejects a character choice */
 		S2C_CHOOSECHARACTER_NACK,
+		/** server to client: rejects the last message */
 		S2C_INVALIDMESSAGE,
+		/** server to client: confirms a successful login */
 		S2C_LOGIN_ACK,
+		/** server to client: rejects a login attempt */
 		S2C_LOGIN_NACK,
+		/** server to client: sends the public key */
 		S2C_LOGIN_SENDKEY,
+		/** server to client: sends a nonce as part of the encryption handshake */
 		S2C_LOGIN_SENDNONCE,
+		/** server to client: confirms a logout attempt */
 		S2C_LOGOUT_ACK,
+		/** server to client: rejects a logout attempt */
 		S2C_LOGOUT_NACK,
+		/** server to client: updates the client view of the world around it */
 		S2C_PERCEPTION,
+		/** server to client: submits server and RPClass information to the client */
 		S2C_SERVERINFO,
+		/** server to client: transfers content to the client */
 		S2C_TRANSFER,
+		/** server to client: offers content to the client */
 		S2C_TRANSFER_REQ,
+		/** client to server: requests an account creation */
 		C2S_CREATEACCOUNT,
+		/** server to client: confirms a successful character creation attempt */
 		S2C_CREATEACCOUNT_ACK,
+		/** server to client: rejects an account cration attempt */
 		S2C_CREATEACCOUNT_NACK,
+		/** client to server: requests a character creation */
 		C2S_CREATECHARACTER,
+		/** server to client: confirms a successful character creation attempt */
 		S2C_CREATECHARACTER_ACK,
+		/** server to client: rejects a character creation attempt */
 		S2C_CREATECHARACTER_NACK,
+		/** server to client: rejects a connection attempt */
 		S2C_CONNECT_NACK,
+		/** client to server: sends username, password and a seed (for single sign on) */
 		C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED,
+		/** server to client: reject a login attempt */
 		S2C_LOGIN_MESSAGE_NACK,
+		/** proxy to server: creates a character on behalf of a user */
 		P2S_CREATECHARACTER,
+		/** proxy to server: creates an account on behalf of a user */
 		P2S_CREATEACCOUNT,
+		/** client to server: sends the username and password */
 		C2S_LOGIN_SENDUSERNAMEANDPASSWORD
 	}
 

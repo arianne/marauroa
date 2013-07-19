@@ -11,23 +11,11 @@
  ***************************************************************************/
 package marauroa.server.net;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.Socket;
-
-import marauroa.client.net.TCPNetworkClientManager;
 import marauroa.common.Configuration;
-import marauroa.common.game.RPAction;
-import marauroa.common.net.InvalidVersionException;
-import marauroa.common.net.message.MessageC2SAction;
 import marauroa.server.net.nio.NIONetworkConnectionManager;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * Test the character related methods of database access.

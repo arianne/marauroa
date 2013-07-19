@@ -37,13 +37,13 @@ public class MessageTest {
 	}
 
 	@Test
-	public final void testGetAddress() throws IOException {
+	public final void testGetAddress() {
 		MockMessage mm = new MockMessage(MessageType.C2S_ACTION, new Channel());
 		assertNull(mm.getAddress());
 	}
 
 	@Test
-	public final void testGetType() throws IOException {
+	public final void testGetType() {
 		MockMessage mm = new MockMessage(MessageType.C2S_ACTION, new Channel());
 		assertTrue(MessageType.C2S_ACTION == mm.getType());
 	}

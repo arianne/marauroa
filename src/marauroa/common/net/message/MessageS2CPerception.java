@@ -44,14 +44,13 @@ import org.apache.log4j.NDC;
 public class MessageS2CPerception extends Message {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J
-	        .getLogger(MessageS2CPerception.class);
+	static final marauroa.common.Logger logger = Log4J.getLogger(MessageS2CPerception.class);
 
-	private byte typePerception;
+	byte typePerception;
 
 	private int timestampPerception;
 
-	private IRPZone.ID zoneid;
+	IRPZone.ID zoneid;
 
 	private List<RPObject> addedRPObjects;
 
@@ -92,31 +91,67 @@ public class MessageS2CPerception extends Message {
 		deletedRPObjects = perception.deletedList;
 	}
 
+	/**
+	 * sets the added and deleted information for the destination player
+	 *
+	 * @param added   added information
+	 * @param deleted deleted information
+	 */
 	public void setMyRPObject(RPObject added, RPObject deleted) {
 		myRPObjectModifiedAdded = added;
 		myRPObjectModifiedDeleted = deleted;
 	}
 
+	/**
+	 * gets the added information for the personal object
+	 *
+	 * @return added information to the personal object
+	 */
 	public RPObject getMyRPObjectAdded() {
 		return myRPObjectModifiedAdded;
 	}
 
+	/**
+	 * gets the deleted information for the personal object
+	 *
+	 * @return deleted information from the personal object
+	 */
 	public RPObject getMyRPObjectDeleted() {
 		return myRPObjectModifiedDeleted;
 	}
 
+	/**
+	 * sets the timestamp of this perception
+	 *
+	 * @param ts counter
+	 */
 	public void setPerceptionTimestamp(int ts) {
 		timestampPerception = ts;
 	}
 
+	/**
+	 * gets the timestamp of this perception
+	 *
+	 * @return counter
+	 */
 	public int getPerceptionTimestamp() {
 		return timestampPerception;
 	}
 
+	/**
+	 * gets the type of this perception
+	 *
+	 * @return full or delta
+	 */
 	public byte getPerceptionType() {
 		return typePerception;
 	}
 
+	/**
+	 * gets the id of the zone, this perception is for
+	 *
+	 * @return IRPZone.ID
+	 */
 	public IRPZone.ID getRPZoneID() {
 		return zoneid;
 	}
@@ -403,6 +438,9 @@ public class MessageS2CPerception extends Message {
 		}
 	}
 
+	/**
+	 * clears the cached perceptions to start the next turn fresh.
+	 */
 	public static void clearPrecomputedPerception() {
 		cache.clear();
 	}
@@ -434,7 +472,7 @@ public class MessageS2CPerception extends Message {
 		return array.toByteArray();
 	}
 
-	private void computeStaticPartPerception(OutputSerializer ser) throws IOException {
+	void computeStaticPartPerception(OutputSerializer ser) throws IOException {
 		ser.write(typePerception);
 		ser.write(zoneid);
 

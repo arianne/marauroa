@@ -159,7 +159,7 @@ public class Decoder {
 	private Map<Object, MessageParts> content;
 
 	/** MessageFactory */
-	private MessageFactory msgFactory;
+	MessageFactory msgFactory;
 
 	/** singleton instance */
 	private static Decoder instance;

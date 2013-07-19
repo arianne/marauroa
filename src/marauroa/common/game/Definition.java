@@ -447,8 +447,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @throws IOException
 	 *             if there is any problem on the serialization
 	 */
-	public void serialize(String value, marauroa.common.net.OutputSerializer out)
-	        throws IOException {		
+	public void serialize(String value, marauroa.common.net.OutputSerializer out) throws IOException {
 		try {
 	        switch (type) {
 	        	case VERY_LONG_STRING:
@@ -473,12 +472,10 @@ public class Definition implements marauroa.common.net.Serializable {
 	        		out.write(Byte.parseByte(value));
 	        		break;
 	        	case FLAG:
-	        		/*
-	        		 * It is empty because it is a flag and so, it is already present.
-	        		 */
+	        		// It is empty because it is a flag and so, it is already present.
 	        		break;
 	        	default:
-	        		/* NOTE: Must never happen */
+	        		// NOTE: Must never happen
 	        		logger.error("got unknown attribute(" + name + ") type:" + type);
 	        		break;
 	        }

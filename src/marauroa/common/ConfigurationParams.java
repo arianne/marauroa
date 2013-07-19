@@ -28,10 +28,20 @@ public class ConfigurationParams {
 
 	private boolean persistence = true;
 
+	/**
+	 * configuration parameter
+	 */
 	public ConfigurationParams() {
 		// default constructor
 	}
 
+	/**
+	 * configuration parameter
+	 *
+	 * @param relativeToHome is the basedir relative to the home folder?
+	 * @param basedir base directory for the configuration file
+	 * @param configurationFile name of configuration file
+	 */
 	public ConfigurationParams(boolean relativeToHome, String basedir, String configurationFile) {
 		this.relativeToHome = relativeToHome;
 		this.basedir = basedir;

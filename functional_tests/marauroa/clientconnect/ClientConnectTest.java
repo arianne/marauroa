@@ -86,7 +86,7 @@ public class ClientConnectTest {
 		cl.logout();
 	}
 
-	private final class MinimalClient extends ClientFramework {
+	final class MinimalClient extends ClientFramework {
 		@Override
 		protected List<TransferContent> onTransferREQ(List<TransferContent> items) {
 			return null;
@@ -94,26 +94,27 @@ public class ClientConnectTest {
 
 		@Override
 		protected void onTransfer(List<TransferContent> items) {
-
+			// ignored
 		}
 
 		@Override
 		protected void onServerInfo(String[] info) {
-
+			// ignored
 		}
 
 		@Override
 		protected void onPreviousLogins(List<String> previousLogins) {
+			// ignored
 		}
 
 		@Override
 		protected void onPerception(MessageS2CPerception message) {
-
+			// ignored
 		}
 
 		@Override
 		protected void onAvailableCharacters(String[] characters) {
-
+			// ignored
 		}
 
 		@Override

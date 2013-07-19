@@ -638,6 +638,8 @@ public class RPObjectDelta2Test {
 	/**
 	 * This test try to show a problem that could happen if you delete and add
 	 * an object on the same turn. It should work correctly.
+	 *
+	 * @throws Exception on en unexpected error
 	 */
 	@Test
 	public void testApplyDifferences() throws Exception {
@@ -776,6 +778,9 @@ public class RPObjectDelta2Test {
 		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
+		for (RPObject o : zone) {
+			assertEquals("Events cleared at zone.nextTurn()", 0, o.events().size());
+		}
 	}
 	
 	/**
