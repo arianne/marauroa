@@ -316,9 +316,13 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 		serverManager.onDisconnect(this, channel);
 	}
 
+	/**
+	 * activates SSL
+	 *
+	 * @param channel channel to activate SSL on
+	 */
 	public void activateSsl(Channel channel) {
-		// TODO Auto-generated method stub
-
+		this.server.activateSsl((SocketChannel) channel.getInternalChannel());
 	}
 
 }

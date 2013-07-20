@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2013 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -20,6 +20,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,6 +47,8 @@ class NioServer extends Thread {
 	private final InetAddress hostAddress;
 
 	private final int port;
+
+	private SslHelper sslHelper;
 
 	/** While keepRunning is true, we keep receiving messages */
 	private boolean keepRunning;
@@ -79,6 +82,14 @@ class NioServer extends Thread {
 
 	public NioServer(InetAddress hostAddress, int port, IWorker worker) throws IOException {
 		super("NioServer");
+
+		try {
+			this.sslHelper = new SslHelper();
+		} catch (GeneralSecurityException e) {
+			logger.error("Failed to initialize ssl", e);
+		} catch (IOException e) {
+			logger.error("Failed to initialize ssl", e);
+		}
 
 		keepRunning = true;
 		isFinished = false;
@@ -256,7 +267,7 @@ class NioServer extends Thread {
 
 		// Register the new SocketChannel with our Selector, indicating
 		// we'd like to be notified when there's data waiting to be read
-		socketChannel.register(this.selector, SelectionKey.OP_READ);
+		socketChannel.register(this.selector, SelectionKey.OP_READ, new SslAttachment());
 
 		worker.onConnect(socketChannel);
 	}
@@ -353,6 +364,16 @@ class NioServer extends Thread {
 		serverChannel.register(socketSelector, SelectionKey.OP_ACCEPT);
 
 		return socketSelector;
+	}
+
+	/**
+	 * activates ssl on a channel
+	 *
+	 * @param internalChannel channel
+	 */
+	public void activateSsl(SocketChannel internalChannel) {
+		SslAttachment sslAttachment = (SslAttachment) internalChannel.keyFor(this.selector).attachment();
+		sslAttachment.activateSsl(sslHelper);
 	}
 
 }
