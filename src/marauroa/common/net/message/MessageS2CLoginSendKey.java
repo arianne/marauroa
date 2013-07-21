@@ -86,7 +86,7 @@ public class MessageS2CLoginSendKey extends Message {
 		out.write(key.getN().toByteArray());
 		out.write(key.getE().toByteArray());
 		if (ssl) {
-			out.write(1);
+			out.write((byte) 1);
 		}
 	}
 
@@ -97,9 +97,8 @@ public class MessageS2CLoginSendKey extends Message {
 		BigInteger e = new BigInteger(in.readByteArray());
 		key = new RSAPublicKey(n, e);
 		if (in.available() >= 1) {
-			ssl = true;
+			ssl = (in.readByte() == 1);
 		}
-
 
 		if (type != MessageType.S2C_LOGIN_SENDKEY) {
 			throw new IOException();
