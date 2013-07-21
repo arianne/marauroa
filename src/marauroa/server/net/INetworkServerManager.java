@@ -108,4 +108,12 @@ public interface INetworkServerManager {
 	 */
 	public abstract void activateSsl(Channel channel);
 
+	/**
+	 * checks whether ssl is supported
+	 *
+	 * @param channel Channel
+	 * @return true, if ssl is supported; false otherwise.
+	 */
+	public abstract boolean isSslSupported(Channel channel);
+
 }

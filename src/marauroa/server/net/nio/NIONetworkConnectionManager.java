@@ -325,4 +325,13 @@ public final class NIONetworkConnectionManager extends Thread implements IWorker
 		this.server.activateSsl((SocketChannel) channel.getInternalChannel());
 	}
 
+	/**
+	 * checks whether SSL is supported
+	 *
+	 * @return true, if SSL is supported; false otherwise.
+	 */
+	public boolean isSslSupported() {
+		return server.isSslSupported();
+	}
+
 }

@@ -367,6 +367,15 @@ class NioServer extends Thread {
 	}
 
 	/**
+	 * checks whether ssl is supported
+	 *
+	 * @return true, if ssl is supported; false otherwise
+	 */
+	public boolean isSslSupported() {
+		return sslHelper != null;
+	}
+
+	/**
 	 * activates ssl on a channel
 	 *
 	 * @param internalChannel channel

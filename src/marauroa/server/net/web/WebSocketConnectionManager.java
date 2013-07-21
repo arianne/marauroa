@@ -246,8 +246,23 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 		internalChannel.close();
 	}
 
+	/**
+	 * activates SSL
+	 *
+	 * @param channel channel
+	 */
 	public void activateSsl(Channel channel) {
 		// ignore, we should just use https anyway.
+	}
+
+	/**
+	 * checks whether SSL is supported
+	 *
+	 * @return true, if SSL is supported; false otherwise.
+	 */
+	public boolean isSslSupported() {
+		// ignore, we should just use https anyway.
+		return false;
 	}
 
 }

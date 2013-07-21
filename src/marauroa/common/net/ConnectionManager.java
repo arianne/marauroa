@@ -49,10 +49,17 @@ public interface ConnectionManager {
 	void close(Channel channel);
 
 	/**
-	 * activates ssl
+	 * activates SSL
 	 *
 	 * @param channel channel
 	 */
 	void activateSsl(Channel channel);
+
+	/**
+	 * checks whether SSL is supported
+	 *
+	 * @return true, if SSL is supported; false otherwise.
+	 */
+	public boolean isSslSupported();
 
 }

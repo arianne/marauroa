@@ -158,8 +158,23 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 		}
 	}
 
+	/**
+	 * activates SSL for the specified channel
+	 *
+	 * @param channel Channel
+	 */
 	public void activateSsl(Channel channel) {
 		channel.getConnectionManager().activateSsl(channel);
+	}
+
+	/**
+	 * checks whether SSL is supported
+	 *
+	 * @param channel Channel
+	 * @return true, if SSL is supported; false otherwise.
+	 */
+	public boolean isSslSupported(Channel channel) {
+		return channel.getConnectionManager().isSslSupported();
 	}
 
 	/**

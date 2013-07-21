@@ -12,6 +12,7 @@
 package marauroa.server.game.messagehandler;
 
 import marauroa.common.Log4J;
+import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageS2CLoginNACK;
@@ -48,15 +49,14 @@ class LoginRequestKeyHandler extends MessageHandler {
 			 * If this is correct we send player the server key so it can encrypt
 			 * the password.
 			 */
-			boolean ssl = msgRequest.isSslSupported();
-			ssl = false;
-			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg
-			        .getChannel(), key, ssl);
+			Channel channel = msg.getChannel();
+			boolean ssl = msgRequest.isSslSupported() && netMan.isSslSupported(channel);
+			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(channel, key, ssl);
 			msgLoginSendKey.setClientID(msg.getClientID());
 			msgLoginSendKey.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendKey);
 			if (ssl) {
-				netMan.activateSsl(msg.getChannel());
+				netMan.activateSsl(channel);
 			}
 		} else {
 			/* Error: Incompatible game version. Update client */
