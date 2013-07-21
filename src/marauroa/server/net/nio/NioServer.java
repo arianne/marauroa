@@ -267,7 +267,7 @@ class NioServer extends Thread {
 
 		// Register the new SocketChannel with our Selector, indicating
 		// we'd like to be notified when there's data waiting to be read
-		socketChannel.register(this.selector, SelectionKey.OP_READ, new SslAttachment());
+		socketChannel.register(this.selector, SelectionKey.OP_READ, new SslAttachment(socketChannel));
 
 		worker.onConnect(socketChannel);
 	}
@@ -281,7 +281,7 @@ class NioServer extends Thread {
 		// Attempt to read off the channel
 		int numRead;
 		try {
-			numRead = socketChannel.read(this.readBuffer);
+			numRead = ((SslAttachment) socketChannel.keyFor(this.selector).attachment()).read(this.readBuffer);
 		} catch (IOException e) {
 			// The remote forcibly closed the connection, cancel
 			// the selection key and close the channel.
@@ -317,7 +317,7 @@ class NioServer extends Thread {
 				// Write until there's not more data ...
 				while (!queue.isEmpty()) {
 					ByteBuffer buf = queue.get(0);
-					socketChannel.write(buf);
+					((SslAttachment) socketChannel.keyFor(this.selector).attachment()).write(buf);
 
 					if (buf.remaining() > 0) {
 						// ... or the socket's buffer fills up
