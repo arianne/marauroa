@@ -41,7 +41,7 @@ public class SslHelper {
 	 * @throws IOException on an input/output error
 	 */
 	public SslHelper()  throws GeneralSecurityException, IOException {
-		char[] passphrase = Configuration.getConfiguration().get("keystore.passphrase", "").toCharArray();
+		char[] passphrase = Configuration.getConfiguration().get("keystore.password", "").toCharArray();
 
 		// First initialize the key and trust material.
 		KeyStore keyStore = KeyStore.getInstance("JKS");
