@@ -361,7 +361,7 @@ public abstract class SlotOwner extends Attributes {
 
 	@Override
 	public String toString() {
-		StringBuffer tmp = new StringBuffer();
+		StringBuilder tmp = new StringBuilder();
 		tmp.append(super.toString());
 
 		if (slots != null) {

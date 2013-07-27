@@ -66,7 +66,7 @@ public class HTTPConnectSocket extends Socket {
 		*/
 
 		OutputStream os = super.getOutputStream();
-		StringBuffer connect = new StringBuffer("CONNECT ");
+		StringBuilder connect = new StringBuilder("CONNECT ");
 		connect.append(server.getHostName());
 		connect.append(":");
 		connect.append(server.getPort());

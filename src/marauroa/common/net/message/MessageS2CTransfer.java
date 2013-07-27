@@ -72,8 +72,8 @@ public class MessageS2CTransfer extends Message {
 
 	@Override
 	public String toString() {
-		StringBuffer st = new StringBuffer("Message (S2C Transfer) from (" + getAddress()
-		        + ") CONTENTS: (");
+		StringBuilder st = new StringBuilder("Message (S2C Transfer) from (" + getAddress()
+				+ ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
 			st.append(content.name);

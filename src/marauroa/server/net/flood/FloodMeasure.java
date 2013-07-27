@@ -126,7 +126,7 @@ public class FloodMeasure {
 
 	@Override
 	public String toString() {
-		StringBuffer os = new StringBuffer();
+		StringBuilder os = new StringBuilder();
 		os.append("[");
 		os.append(" time: " + sinceLastReset());
 		os.append(" send bytes: " + sendBytes);

@@ -75,7 +75,7 @@ public class MessageS2CServerInfo extends Message {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer text = new StringBuffer(" ");
+		StringBuilder text = new StringBuilder(" ");
 
 		for (int i = 0; i < contents.length; ++i) {
 			text.append("[" + contents[i] + "],");

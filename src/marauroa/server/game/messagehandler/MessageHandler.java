@@ -76,7 +76,7 @@ abstract class MessageHandler {
 
 		// And it it is not in the correct state, return false.
 		if (!isInCorrectState) {
-			StringBuffer statesString = new StringBuffer();
+			StringBuilder statesString = new StringBuilder();
 			for (ClientState state : states) {
 				statesString.append(state + " ");
 			}

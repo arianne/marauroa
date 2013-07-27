@@ -1001,7 +1001,7 @@ public class RPObject extends SlotOwner {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer tmp = new StringBuffer("RPObject with ");
+		StringBuilder tmp = new StringBuilder("RPObject with ");
 
 		tmp.append(super.toString());
 
