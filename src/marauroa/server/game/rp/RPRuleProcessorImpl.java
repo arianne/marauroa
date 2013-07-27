@@ -171,7 +171,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 		AccountDAO accountDAO = DAORegister.get().get(AccountDAO.class);
 		try {
 			if (accountDAO.hasPlayer(trans, username)) {
-				return new AccountResult(Result.FAILED_CHARACTER_EXISTS, username);
+				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username);
 			}
 			accountDAO.addPlayer(trans, username, Hash.hash(password), email);
 			transactionPool.commit(trans);
@@ -199,7 +199,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 		CharacterDAO characterDAO = DAORegister.get().get(CharacterDAO.class);
 		try {
 			if (characterDAO.hasCharacter(trans, username, character)) {
-				return new CharacterResult(Result.FAILED_PLAYER_EXISTS, character, template);
+				return new CharacterResult(Result.FAILED_CHARACTER_EXISTS, character, template);
 			}
 			RPObject object = createCharacterObject(username, character, template);
 			IRPZone zone = RPWorld.get().getDefaultZone();
