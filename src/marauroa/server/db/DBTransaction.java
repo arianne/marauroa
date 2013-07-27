@@ -117,7 +117,7 @@ public class DBTransaction {
     	if (params == null) {
     		return sql;
     	}
-        StringBuffer res = new StringBuffer();
+		StringBuilder res = new StringBuilder();
         StringTokenizer st = new StringTokenizer(sql, "([]'", true);
         String lastToken = "";
         String secondLastToken = "";

@@ -461,7 +461,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @return a string representing the object.
 	 */
 	public String toAttributeString() {
-		StringBuffer tmp = new StringBuffer();
+		StringBuilder tmp = new StringBuilder();
 
 		synchronized(content) {
 			for (Map.Entry<String, String> entry : content.entrySet()) {
@@ -474,7 +474,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	private static String listToString(List<String> list) {
-		StringBuffer buffer = new StringBuffer("[");
+		StringBuilder buffer = new StringBuilder("[");
 
 		for (Iterator<?> it = list.iterator(); it.hasNext();) {
 			String value = (String) it.next();

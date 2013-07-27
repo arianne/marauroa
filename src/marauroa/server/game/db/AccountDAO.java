@@ -100,7 +100,7 @@ public class AccountDAO {
 	public String generatePlayer(String pattern) {
 		int length = pattern.length();
 		Random rand = new Random();
-		StringBuffer os = new StringBuffer();
+		StringBuilder os = new StringBuilder();
 
 		for (int i = 0; i < length; i++) {
 			char c = pattern.charAt(i);

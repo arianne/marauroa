@@ -376,7 +376,7 @@ public class PlayerEntry {
 
 	@Override
 	public String toString() {
-		StringBuffer os = new StringBuffer("PlayerEntry");
+		StringBuilder os = new StringBuilder("PlayerEntry");
 		os.append("[clientid=" + clientid + "]");
 		os.append("[channel=" + channel + "]");
 		os.append("[state=" + state + "]");
