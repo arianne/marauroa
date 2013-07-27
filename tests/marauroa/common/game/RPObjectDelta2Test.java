@@ -776,6 +776,9 @@ public class RPObjectDelta2Test {
 		 * Next turn. We want to clear Delta^2 data.
 		 */
 		zone.nextTurn();
+		for (RPObject o : zone) {
+			assertEquals("Events cleared at zone.nextTurn()", 0, o.events().size());
+		}
 	}
 	
 	/**
