@@ -60,14 +60,16 @@ public class AttributesTest {
 		assertEquals(3.0, attr.getDouble("c"), 0.1f);
 	}
 
-	
+	/**
+	 * tests for empty attributes()
+	 */
 	@Test
 	public void testGetOnEmptyattribute(){
 		Attributes test = new Attributes(RPClass.getBaseRPObjectDefault());
 		assertNull("Attribute is empty", test.get("a"));
 		assertNull("does not throw NPE", test.get(null));
 	}
-	
+
 	/**
 	 * Test if an attribute is removed when it is removed. assert that the
 	 * attribute is not longer there.
@@ -208,7 +210,7 @@ public class AttributesTest {
 
 		assertEquals(attr, result);
 	}
-	
+
 	/**
 	 * Assert that no exception is thrown when a long string is added to
 	 * to rpclassless attributes.
@@ -259,11 +261,11 @@ public class AttributesTest {
 
 		assertEquals(attr, other);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Summary: Marauroa NullPointerException in Attribute.has()
-	 * 
+	 *
      * ERROR games.stendhal.server.StendhalRPRuleProcessor  - Player has logout before dead
      * java.lang.NullPointerException
      * marauroa.common.game.RPClass$1.getDefinition(RPClass.java:690)
@@ -278,15 +280,15 @@ public class AttributesTest {
      * games.stendhal.server.entity.creature.Pet.onDead(Pet.java:146)
      * games.stendhal.server.StendhalRPRuleProcessor.beginTurn(StendhalRPRuleProcessor.java:432)
      * marauroa.server.game.rp.RPServerManager.run(RPServerManager.java:510)
- 
+
 	 */
 	@Test
 	public void testBug1833952() {
 		Attributes test=new Attributes(RPClass.getBaseRPObjectDefault());
-		
+
 		assertFalse("Attribute is empty",test.has("a"));
-		assertFalse("Attribute is empty",test.has(null));		
-		
+		assertFalse("Attribute is empty",test.has(null));
+
 	}
 
 	/**
@@ -302,5 +304,11 @@ public class AttributesTest {
 
 		test.put("key", "va\\lu]e");
 		assertThat(test.toString(), equalTo("Attributes of Class(): [key=va\\\\lu\\]e]"));
+
+		test.put("key", "\\va\\lu]e");
+		assertThat(test.toString(), equalTo("Attributes of Class(): [key=\\\\va\\\\lu\\]e]"));
+
+		test.put("key", "va\\lu]e]");
+		assertThat(test.toString(), equalTo("Attributes of Class(): [key=va\\\\lu\\]e\\]]"));
 	}
 }
