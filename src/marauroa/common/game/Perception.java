@@ -214,7 +214,7 @@ public class Perception {
 
 	@Override
 	public String toString() {
-		StringBuffer os = new StringBuffer();
+		StringBuilder os = new StringBuilder();
 		os.append("#Added: \n");
 		for (RPObject ob : addedList) {
 			os.append(ob);

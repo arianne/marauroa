@@ -85,7 +85,7 @@ public class TransferContent {
 
 	@Override
 	public String toString() {
-		StringBuffer sstr = new StringBuffer();
+		StringBuilder sstr = new StringBuilder();
 
 		sstr.append("TransferContent: [name=\"");
 		sstr.append(name);
