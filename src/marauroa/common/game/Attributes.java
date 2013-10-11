@@ -466,12 +466,36 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		synchronized(content) {
 			for (Map.Entry<String, String> entry : content.entrySet()) {
 				tmp.append("[" + entry.getKey());
-				tmp.append("=" + entry.getValue().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\]", "\\\\]") + "]");
+				tmp.append('=');
+				escapeAttributeString(tmp, entry.getValue());
+				tmp.append(']');
 			}
 		}
-
 		return tmp.toString();
 	}
+
+	/**
+	 * escape \ and ] in attributes. This method is faster that String.replaceAll(),
+	 * which may cause significant turn overflows, if there are several debug
+	 * messages within one turn. String.replaceAll() uses regular expressions,
+	 * but this is not necessary here.
+	 *
+	 * @param target target
+	 * @param source string to escape.
+	 */
+	private static void escapeAttributeString(StringBuilder target, String source) {
+		int start = 0;
+		for (int i = 0; i < source.length(); i++) {
+			char chr = source.charAt(i);
+			if (chr == '\\' || chr == ']') {
+				target.append(source.substring(start, i));
+				target.append('\\');
+				start = i;
+			}
+		}
+		target.append(source.substring(start, source.length()));
+	}
+
 
 	private static String listToString(List<String> list) {
 		StringBuilder buffer = new StringBuilder("[");
