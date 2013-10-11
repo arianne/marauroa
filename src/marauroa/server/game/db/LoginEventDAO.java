@@ -15,6 +15,8 @@ import java.net.InetAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -144,7 +146,7 @@ public class LoginEventDAO {
 		 */
 		@Override
 		public String toString() {
-			return "Login " + (correct ? "successful" : "FAILED") + " at " + date + " from " + address;
+			return "Login " + (correct ? "successful" : "FAILED") + " at " + date + " server time from " + address;
 		}
 
 		/**
@@ -234,9 +236,10 @@ public class LoginEventDAO {
 
 			List<String> list = new LinkedList<String>();
 
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			while (resultSet.next()) {
-				LoginEvent event = new LoginEvent(resultSet.getString("address"), resultSet
-				        .getString("timedate"), resultSet.getBoolean("result"));
+				LoginEvent event = new LoginEvent(resultSet.getString("address"), 
+						format.format(resultSet.getTimestamp("timedate")), resultSet.getBoolean("result"));
 				list.add(event.toString());
 			}
 
@@ -284,10 +287,10 @@ public class LoginEventDAO {
 				resultSet.close();
 				return null;
 			}
-			
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			LoginEvent event = new LoginEvent(resultSet.getLong("id"), 
 					resultSet.getLong("player_id"), resultSet.getString("service"),
-					resultSet.getString("address"), resultSet.getString("timedate"),
+					resultSet.getString("address"), format.format(resultSet.getTimestamp("timedate")),
 					resultSet.getBoolean("result"));
 			resultSet.close();
 			return event;
