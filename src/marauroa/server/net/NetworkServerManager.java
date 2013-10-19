@@ -231,7 +231,7 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 	public void onDisconnect(ConnectionManager server, Object internalChannel) {
 		Channel channel = channels.get(internalChannel);
 		if (channel == null) {
-			logger.error("Cannot disconnect internalChannel " + internalChannel + " because it is unknown: " + channels);
+			logger.warn("Cannot disconnect internalChannel " + internalChannel + " because it is unknown. (Happens on connection by a banned ip-address)");
 			return;
 		}
 		for (IDisconnectedListener listener : listeners) {
