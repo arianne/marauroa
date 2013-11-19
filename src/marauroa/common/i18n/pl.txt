@@ -37,3 +37,10 @@ There have been too many failed login attempts from your network. Please wait a 
 Login expired. Please click again on your character on the web page.=Nie powid\u0142o si\u0119 wst\u0119pne uwierzytelnienie. Spr\u00F3buj ponownie.
 This account was merged into another account. Please use the username of the other account to login or contact support.=To konto zosta\u0142o po\u0142\u0105czone z innym kontem. U\u017Cyj loginu innego konta, aby zalogowa\u0107 lub skontaktuj si\u0119 ze wsparciem.
 
+Your account is temporarily suspended until %1$s server time.=Twoje konto zosta\u0142o zawieszone na %1$s wg czasu serwera.
+Your account is banned.=Twoje konto zosta\u0142o zablokowane.
+The reason given was: %1$s=Powodem by\u0142o: %1$s
+Your account has been banned. Please contact support.=Twoje konto zosta\u0142o zablokowane. Skontaktuj si\u0119 ze wsparciem.
+#Your account has been flagged as inactive. Please contact support.=Twoje konto jest jeszcze nieaktywne. Potwierd\u017A rejestracj\u0119 konta przez klikni\u0119cie na odno\u015Bnik znajduj\u0105cy si\u0119 w mailu, kt\u00F3ry zosta\u0142 wys\u0142any na adres podany podczas rejestracji. W razie problem\u00F3w skontaktuj si\u0119 ze wsparciem.
+Your account has been merged into another account.\nPlease login with that account or contact support.=Twoje konto zosta\u0142o po\u0142\u0105czone z innym.\nZaloguj si\u0119 na to konto lub skontaktuj si\u0119 ze wsparciem.
+
