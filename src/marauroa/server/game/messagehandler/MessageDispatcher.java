@@ -30,11 +30,13 @@ import static marauroa.common.net.message.Message.MessageType.P2S_CREATECHARACTE
 import java.util.HashMap;
 import java.util.Map;
 
+import marauroa.common.I18N;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.Message.MessageType;
 import marauroa.server.game.Statistics;
+import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.INetworkServerManager;
@@ -101,10 +103,42 @@ public class MessageDispatcher {
 	 */
 	public void dispatchMessage(Message msg) {
 		logger.debug("Processing " + msg.getType());
+		MessageHandler handler = findMessageHandler(msg);
+		setThreadLanguage(msg);
+
+		try {
+
+			handler.process(msg);
+
+		} finally {
+			I18N.resetThreadLocale();
+		}
+	}
+
+	/**
+	 * finds the handler for this message type
+	 *
+	 * @param msg Message
+	 * @return MessageHandler
+	 */
+	private MessageHandler findMessageHandler(Message msg) {
 		MessageHandler handler = handlers.get(msg.getType());
 		if (handler == null) {
 			handler = new UnkownMessageHandler();
 		}
-		handler.process(msg);
+		return handler;
+	}
+
+	/**
+	 * sets the thread language for this client
+	 *
+	 * @param msg Message
+	 */
+	private void setThreadLanguage(Message msg) {
+		int clientid = msg.getClientID();
+		PlayerEntry entry = PlayerEntryContainer.getContainer().get(clientid);
+		if (entry != null) {
+			I18N.setThreadLocale(entry.locale);
+		}
 	}
 }
