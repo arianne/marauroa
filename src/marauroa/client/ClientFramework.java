@@ -35,6 +35,7 @@ import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
+import marauroa.common.i18n.I18N;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
@@ -107,6 +108,7 @@ public abstract class ClientFramework {
 	public ClientFramework(String loggingProperties) {
 		Log4J.init(loggingProperties);
 		messages = new LinkedList<Message>();
+		I18N.init(Locale.getDefault());
 	}
 
 	/**
@@ -116,6 +118,7 @@ public abstract class ClientFramework {
 	public ClientFramework() {
 		Log4J.init();
 		messages = new LinkedList<Message>();
+		I18N.init(Locale.getDefault());
 	}
 
 	/**

@@ -12,6 +12,16 @@ import java.util.Map;
 public class I18N {
 	private static ThreadLocal<Locale> threadLocale = new ThreadLocal<Locale>();
 	private static Map<String, Map<String, String>> dictionaries = new HashMap<String, Map<String, String>>();
+	private static Locale defaultLocale = Locale.ENGLISH;
+
+	/**
+	 * initialize the I18N system
+	 *
+	 * @param locale default locale
+	 */
+	public static void init(Locale locale) {
+		I18N.defaultLocale = locale;
+	}
 
 	/**
 	 * sets the locale for this thread
@@ -26,7 +36,7 @@ public class I18N {
 	 * resets the locale for this thread
 	 */
 	public static void resetThreadLocale() {
-		threadLocale.set(Locale.ENGLISH);
+		threadLocale.set(defaultLocale);
 	}
 
 	/**
@@ -37,7 +47,7 @@ public class I18N {
 	public static Locale getLocale() {
 		Locale res = threadLocale.get();
 		if (res == null) {
-			res = Locale.ENGLISH;
+			res = defaultLocale;
 		}
 		return res;
 	}
