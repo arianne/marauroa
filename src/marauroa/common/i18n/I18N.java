@@ -22,6 +22,10 @@ public class I18N {
 	private static ThreadLocal<Locale> threadLocale = new ThreadLocal<Locale>();
 	private static Map<String, Map<String, String>> dictionaries = new HashMap<String, Map<String, String>>();
 	private static Locale defaultLocale = Locale.ENGLISH;
+	
+	static {
+		addDictionaryFolder(I18N.class.getPackage().getName().replace('.', '/'));
+	}
 
 	/**
 	 * initialize the I18N system
@@ -30,36 +34,56 @@ public class I18N {
 	 */
 	public static void init(Locale locale) {
 		I18N.defaultLocale = locale;
+	}
 
+	/**
+	 * adds a dictionary folder, so that games can make use of the same translation meachnism
+	 *
+	 * @param folder classpath folder to add
+	 */
+	public static void addDictionaryFolder(String folder) {
 		for (String language : Locale.getISOLanguages()) {
-			InputStream is = I18N.class.getResourceAsStream(language + ".txt");
-
-			BufferedReader reader = null;
+			InputStream is = I18N.class.getClassLoader().getResourceAsStream(folder + "/" + language + ".txt");
 			if (is != null) {
-				Map<String, String> dictionary = new HashMap<String, String>();
-				dictionaries.put(language, dictionary);
-				try {
-					reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-					String line = reader.readLine();
-					while (line != null) {
-						int pos = line.indexOf("=");
-						if (pos > -1) {
-							String key = line.substring(0, pos);
-							String value = line.substring(pos + 1);
-							dictionary.put(key, value);
-						}
-						line = reader.readLine();
-					}
-				} catch (IOException e) {
-					logger.error(e, e);
+				Map<String, String> dictionary = dictionaries.get(language);
+				if (dictionary == null) {
+					dictionary = new HashMap<String, String>();
+					dictionaries.put(language, dictionary);
 				}
-				if (reader != null) {
-					try {
-						reader.close();
-					} catch (IOException e) {
-						logger.error(e, e);
-					}
+
+				readFile(is, dictionary);
+			}
+		}
+	}
+
+	/**
+	 * reads a file into a map
+	 *
+	 * @param is InputStream
+	 * @param resultMap content is store in this map
+	 */
+	private static void readFile(InputStream is, Map<String, String> resultMap) {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+			String line = reader.readLine();
+			while (line != null) {
+				int pos = line.indexOf("=");
+				if (pos > -1) {
+					String key = line.substring(0, pos);
+					String value = line.substring(pos + 1);
+					resultMap.put(key, value);
 				}
+				line = reader.readLine();
+			}
+		} catch (IOException e) {
+			logger.error(e, e);
+		}
+		if (reader != null) {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				logger.error(e, e);
 			}
 		}
 	}
