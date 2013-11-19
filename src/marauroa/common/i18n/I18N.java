@@ -1,8 +1,14 @@
 package marauroa.common.i18n;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import marauroa.common.Log4J;
 
 /**
  * internationalization support
@@ -10,6 +16,9 @@ import java.util.Map;
  * @author hendrik
  */
 public class I18N {
+	/** the logger instance. */
+	private static final marauroa.common.Logger logger = Log4J.getLogger(I18N.class);
+
 	private static ThreadLocal<Locale> threadLocale = new ThreadLocal<Locale>();
 	private static Map<String, Map<String, String>> dictionaries = new HashMap<String, Map<String, String>>();
 	private static Locale defaultLocale = Locale.ENGLISH;
@@ -21,6 +30,38 @@ public class I18N {
 	 */
 	public static void init(Locale locale) {
 		I18N.defaultLocale = locale;
+
+		for (String language : Locale.getISOLanguages()) {
+			InputStream is = I18N.class.getResourceAsStream(language + ".txt");
+
+			BufferedReader reader = null;
+			if (is != null) {
+				Map<String, String> dictionary = new HashMap<String, String>();
+				dictionaries.put(language, dictionary);
+				try {
+					reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+					String line = reader.readLine();
+					while (line != null) {
+						int pos = line.indexOf("=");
+						if (pos > -1) {
+							String key = line.substring(0, pos);
+							String value = line.substring(pos + 1);
+							dictionary.put(key, value);
+						}
+						line = reader.readLine();
+					}
+				} catch (IOException e) {
+					logger.error(e, e);
+				}
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (IOException e) {
+						logger.error(e, e);
+					}
+				}
+			}
+		}
 	}
 
 	/**
