@@ -1,0 +1,3 @@
+Your IP Address has been banned.=Ihre Internet-Adresse wurde gebannt.
+Login failed: %1$s=Login fehlgeschlagen: %1$s
+Timeout happened while waiting server reply.=Timeout beim Warten auf eine Antwort des Servers.
