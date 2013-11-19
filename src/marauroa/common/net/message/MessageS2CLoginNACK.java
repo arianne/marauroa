@@ -16,7 +16,6 @@ import static marauroa.common.i18n.I18N._;
 import java.io.IOException;
 
 import marauroa.common.net.Channel;
-import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
 
 /**
@@ -64,8 +63,7 @@ public class MessageS2CLoginNACK extends Message {
 		    "Account is banned.",
 	        "Server is full.",
 	        "Server is running an incompatible version of game. Please update.",
-	        "marauroa.common.network Protocol invalid version: Running "
-	                + Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
+	        "Invalid network protocol version.",
 	        "The hash you sent does not correspond to the nonce you sent.",
 	        "You account has been marked as inactive, please contact support.",
 	        "There have been too many failed login attempts for your account. "
