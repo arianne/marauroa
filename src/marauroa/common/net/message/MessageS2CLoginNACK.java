@@ -11,6 +11,8 @@
  ***************************************************************************/
 package marauroa.common.net.message;
 
+import static marauroa.common.i18n.I18N._;
+
 import java.io.IOException;
 
 import marauroa.common.net.Channel;
@@ -111,7 +113,7 @@ public class MessageS2CLoginNACK extends Message {
 	 * @return a string representing the resolution.
 	 */
 	public String getResolution() {
-		return text[reason.ordinal()];
+		return _(text[reason.ordinal()]);
 	}
 
 	/**
