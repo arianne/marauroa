@@ -11,6 +11,8 @@
  ***************************************************************************/
 package marauroa.server.game.db;
 
+import static marauroa.common.i18n.I18N._;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -310,17 +312,17 @@ public class AccountDAO {
 				String expire = result.getString("expire");
 				if (reason != null) {
 					if (expire != null) {
-						res = "Your account is temporarily suspended until " + expire + " server time.\r\n";
+						res = _("Your account is temporarily suspended until %1$s server time.", expire) + "\r\n";
 					} else {
-						res = "Your account is banned.\r\n";
+						res = _("Your account is banned.") + "\r\n";
 					}
-					res = res + "The reason given was: " + reason + "\r\n";
+					res = res + _("The reason given was: %1$s", reason) + "\r\n";
 				} else if ("banned".equals(status)) {
-					res = "Your account has been banned. Please contact support.\r\n";
+					res = _("Your account has been banned. Please contact support.") + "\r\n";
 				} else if ("inactive".equals(status)) {
-					res = "Your account has been flagged as inactive. Please contact support\r\n.";
+					res = _("Your account has been flagged as inactive. Please contact support.") + "\r\n";
 				} else if ("merged".equals(status)) {
-					res = "Your account has been merged into another account.\nPlease login with that account or contact support.\r\n";
+					res = _("Your account has been merged into another account.\nPlease login with that account or contact support.") + "\r\n";
 				}
 
 				if (((reason != null) || (!"active".equals(status))) && (!"merged".equals(status))) {
