@@ -415,7 +415,7 @@ public abstract class ClientFramework {
 				case S2C_LOGIN_NACK:
 					MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
 					logger.debug("Login failed. Reason: " + msgNACK.getResolution());
-					throw new LoginFailedException(_(msgNACK.getResolution()), msgNACK.getResolutionCode());
+					throw new LoginFailedException(msgNACK.getResolution(), msgNACK.getResolutionCode());
 
 				/* Login failed, explain reason on event */
 				case S2C_LOGIN_MESSAGE_NACK:
