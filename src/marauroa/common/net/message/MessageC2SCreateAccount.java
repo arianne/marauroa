@@ -90,6 +90,15 @@ public class MessageC2SCreateAccount extends Message {
 	}
 
 	/**
+	 * gets the language
+	 *
+	 * @return language
+	 */
+	public String getLanguage() {
+		return language;
+	}
+
+	/**
 	 * This method returns a String that represent the object
 	 *
 	 * @return a string representing the object.

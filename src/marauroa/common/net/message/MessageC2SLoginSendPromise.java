@@ -49,10 +49,19 @@ public class MessageC2SLoginSendPromise extends MessageSendByteArray {
 		this.language = language;
 	}
 
+	/**
+	 * gets the language
+	 *
+	 * @return language
+	 */
+	public String getLanguage() {
+		return language;
+	}
+
 	@Override
 	public String toString() {
-		return "Message (C2S Login Send Promise) from (" + getAddress() + ") CONTENTS: (hash:"
-		        + Hash.toHexString(hash) + ")";
+		return "Message (C2S Login Send Promise) from (" + getAddress() + ") CONTENTS: (hash: "
+		        + Hash.toHexString(hash) + " language: " + language + ")";
 	}
 
 	@Override
@@ -72,5 +81,4 @@ public class MessageC2SLoginSendPromise extends MessageSendByteArray {
 		super.writeObject(out);
 		out.write255LongString(language);
 	}
-
 }
