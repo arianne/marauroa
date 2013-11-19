@@ -22,4 +22,15 @@ Account was not created because the password is too close to the username.=Accou
 Account was not created because the password is too weak.=Account konnte nicht erstellt werden, weil das Passwort zu schwach ist.
 Account was not created because the account creation limit for your network was reached.\nPlease try again later.=Account konnte nicht erstellt werden, weil bereits zu viele Accounts von diesem Netz erstellt wurden. Bitte versuch es später noch einmal.
 Creation failed because the server is temporary not available. Please try again later.=Account konnte nicht erstellt werden, weil der Server zurzeit nicht erreichbar ist. Bitte versuche es später noch einmal.
-Accounts cannot be created on this server. Please create the account on the main server and wait a while.=Accounts können auf diesem Server nicht erstellt werden. Bitte erstelle einen Accoutn auf dem Hauptserver und warte etwas.
+Accounts cannot be created on this server. Please create the account on the main server and wait a while.=Accounts können auf diesem Server nicht erstellt werden. Bitte erstelle einen Account auf dem Hauptserver und warte etwas.
+
+Username/Password incorrect.=Benutzername oder Passwort sind falsch.
+There have been too many failed login attempts for your account or network. Please wait a couple of minutes or contact support.=Es gab zu viele fehlgeschlagene Anmeldeversuche für diese Account oder von diesem Netzwerk. Bitte warte ein paar Minuten oder wende Dich an den Support.
+Account is banned.=Der Accoutns wurde gebannt.
+Server is full.=Der Server ist voll.
+Server is running an incompatible version of game. Please update.=Dieser Client ist inkompatibel zum Server. Bitte installiere die neuste Version.
+You account has been marked as inactive, please contact support.=Dein Account wurde als inaktiv markiert. Bitte wende Dich an den Support.
+There have been too many failed login attempts for your account. Please wait a couple of minutes or contact support.=Es gab zu viele fehlgeschlagene Anmeldeversuche für diese Account. Bitte warte ein paar Minuten oder wende Dich an den Support.
+There have been too many failed login attempts from your network. Please wait a couple of minutes or contact support.=Es gab zu viele fehlgeschlagene Anmeldeversuche von diesem Netzwerk. Bitte warte ein paar Minuten oder wende Dich an den Support.
+Login expired. Please click again on your character on the web page.=Anmeldung abgelaufen. Bitte klicke auf der Webseite erneut auf Deinen Charakter.
+This account was merged into another account. Please use the username of the other account to login or contact support.=Dieser Account wurde in einen anderen Account gemergt. Bitte melde Dich mit den anderem Account an oder wende Dich an den Support.
