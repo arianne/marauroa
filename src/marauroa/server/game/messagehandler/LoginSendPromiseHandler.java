@@ -12,6 +12,7 @@
 package marauroa.server.game.messagehandler;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
@@ -101,6 +102,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 
 			PlayerEntry entry = playerContainer.add(msgLoginSendPromise.getChannel());
 			entry.setProtocolVersion(msg.getProtocolVersion());
+			entry.locale = new Locale(msgLoginSendPromise.getLanguage());
 
 			byte[] serverNonce = Hash.random(Hash.hashLength());
 			byte[] clientNonceHash = msgLoginSendPromise.getHash();
