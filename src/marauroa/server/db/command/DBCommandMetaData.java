@@ -13,6 +13,7 @@ package marauroa.server.db.command;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * stores meta information about a command
@@ -26,6 +27,8 @@ class DBCommandMetaData {
 	private Thread requestingThread;
 	private boolean awaitResult;
 	private long processedTimestamp = -1;
+	private Locale locale;
+	
 
 	/**
 	 * creates a new DBCommandMetaData object
@@ -35,11 +38,12 @@ class DBCommandMetaData {
 	 * @param requestingThread the thread requesting the execution of the DBCommand
 	 * @param awaitResult does the thread want a result back?
 	 */
-	public DBCommandMetaData(DBCommand command, ResultHandle handle, Thread requestingThread, boolean awaitResult) {
+	public DBCommandMetaData(DBCommand command, ResultHandle handle, Thread requestingThread, boolean awaitResult, Locale locale) {
 		this.command = command;
 		this.handle = handle;
 		this.requestingThread = requestingThread;
 		this.awaitResult = awaitResult;
+		this.locale = locale;
 		command.setEnqueueTime(new Timestamp(new Date().getTime()));
 	}
 
@@ -50,6 +54,15 @@ class DBCommandMetaData {
 	 */
 	public DBCommand getCommand() {
 		return command;
+	}
+
+	/**
+	 * gets the locale context of this command
+	 *
+	 * @return Locale
+	 */
+	public Locale getLocale() {
+		return locale;
 	}
 
 	/**
