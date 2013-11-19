@@ -30,9 +30,9 @@ import static marauroa.common.net.message.Message.MessageType.P2S_CREATECHARACTE
 import java.util.HashMap;
 import java.util.Map;
 
-import marauroa.common.I18N;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
+import marauroa.common.i18n.I18N;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.Message.MessageType;
 import marauroa.server.game.Statistics;
