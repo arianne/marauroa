@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 
@@ -324,7 +325,8 @@ public abstract class ClientFramework {
 					key = ((MessageS2CLoginSendKey) msg).getKey();
 
 					clientNonce = Hash.random(Hash.hashLength());
-					netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce)));
+					Locale locale = Locale.getDefault();
+					netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce), locale.getLanguage()));
 					break;
 				}
 					/* Server sends a random big integer */
@@ -483,7 +485,8 @@ public abstract class ClientFramework {
 	 */
 	public synchronized AccountResult createAccount(String username, String password, String email)
 	        throws TimeoutException, InvalidVersionException, BannedAddressException {
-		Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
+		Locale locale = Locale.getDefault();
+		Message msgCA = new MessageC2SCreateAccount(null, username, password, email, locale.getLanguage());
 
 		netMan.addMessage(msgCA);
 
