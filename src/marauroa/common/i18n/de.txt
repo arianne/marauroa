@@ -34,3 +34,11 @@ There have been too many failed login attempts for your account. Please wait a c
 There have been too many failed login attempts from your network. Please wait a couple of minutes or contact support.=Es gab zu viele fehlgeschlagene Anmeldeversuche von diesem Netzwerk. Bitte warte ein paar Minuten oder wende Dich an den Support.
 Login expired. Please click again on your character on the web page.=Anmeldung abgelaufen. Bitte klicke auf der Webseite erneut auf Deinen Charakter.
 This account was merged into another account. Please use the username of the other account to login or contact support.=Dieser Account wurde in einen anderen Account gemergt. Bitte melde Dich mit den anderem Account an oder wende Dich an den Support.
+
+Your account is temporarily suspended until %1$s server time.=Ihr Account wurde zeitweise bis %1$s Serverzeit suspendiert.
+Your account is banned.=Ihr Account wurde gebannt.
+The reason given was: %1$s=Als Grund wurde angegeben: %1$s
+Your account has been banned. Please contact support.=Ihr Account wurde gebannt. Bitte wenden Sie sich an den Support.
+Your account has been flagged as inactive. Please contact support.=Ihr Account wurde als inaktiv markiert. Bitte wenden Sie sich an den Support.
+Your account has been merged into another account.\nPlease login with that account or contact support.=Ihr Account wurde in einen anderen Account gemergt. Bitte melden Sie sich mit diesem Account an.
+
