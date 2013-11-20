@@ -67,10 +67,11 @@ public class AccountDAO {
 			}
 
 			String query = "insert into account(username, password, status)"
-				+ " values('[username]','[password]', 'active')";
+				+ " values('[username]','[password]', '[status]')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			try {
+				params.put("status", Configuration.getConfiguration().get("account_creation_status", "active"));
 				if (Configuration.getConfiguration().get("password_hash", "sha512").equals("md5")) {
 					params.put("password", Hash.toHexString(passwordHash));
 				} else {
