@@ -12,7 +12,6 @@ Active Authors
 - Hendrik Brummermann    nhnb at users.sf.net
 - Katie Russel           kymara at users.sf.net
 - Markus Keunecke        madmetzger at users.sf.net
-- Martin Fuchs           martinfuchs at users.sf.net
 - Kimmo Rundelin         kiheru at users.sf.net
 
 
@@ -21,6 +20,9 @@ The best way to reach the team is the chat channel
 on http://sourceforge.net/projects/arianne
 
 
+Translators
+===========
+- Polish: Edi18028
 
 
 Past Authors
@@ -28,8 +30,9 @@ Past Authors
 - Miguel Angel Blanch Lardin  (inactive)
 - Waldemar Tribus  (inactive)
 - Benjamin Lerman  (inactive)
-- Matthias Totz  (inactive)
-- Daniel Herding  (inactive)
+- Martin Fuchs     (inactive)
+- Matthias Totz    (inactive)
+- Daniel Herding   (inactive)
 - Jo S. aka intensifly  (inactive)
 - Stephen Ierodiaconou  (inactive)
 
