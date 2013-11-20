@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2007-2012 - Marauroa                    *
+ *                   (C) Copyright 2007-2013 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -11,6 +11,7 @@
  ***************************************************************************/
 package marauroa.client;
 
+import static marauroa.common.i18n.I18N._;
 import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
 
 /**
@@ -27,7 +28,7 @@ public class LoginFailedException extends Exception {
 	 * @param reason a human readable error message
 	 */
 	public LoginFailedException(String reason) {
-		super("Login failed: " + reason);
+		super(_("Login failed: %1$s", reason));
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2007-2010 - Marauroa                    *
+ *                   (C) Copyright 2007-2013 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -10,6 +10,8 @@
  *                                                                         *
  ***************************************************************************/
 package marauroa.client;
+
+import static marauroa.common.i18n.I18N._;
 
 /**
  * this exception is thrown if a connection to the server cannot be established
@@ -23,6 +25,6 @@ public class TimeoutException extends Exception {
 	 * creates a new TimeoutException
 	 */
 	public TimeoutException() {
-		super("Timeout happened while waiting server reply");
+		super(_("Timeout happened while waiting server reply."));
 	}
 }

@@ -19,6 +19,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import marauroa.common.i18n.I18N;
+
 /**
  * An asynchronous command queue.
  *
@@ -58,7 +60,7 @@ public final class DBCommandQueue {
 	 * @param command DBCommand to add to the queue
 	 */
 	public void enqueue(DBCommand command) {
-		pendingCommands.add(new DBCommandMetaData(command, null, Thread.currentThread(), false));
+		pendingCommands.add(new DBCommandMetaData(command, null, Thread.currentThread(), false, I18N.getLocale()));
 	}
 
 	/**
@@ -68,7 +70,7 @@ public final class DBCommandQueue {
 	 * @param handle ResultHandle
 	 */
 	public void enqueueAndAwaitResult(DBCommand command, ResultHandle handle) {
-		pendingCommands.add(new DBCommandMetaData(command, handle, Thread.currentThread(), true));
+		pendingCommands.add(new DBCommandMetaData(command, handle, Thread.currentThread(), true, I18N.getLocale()));
 	}
 
 	/**

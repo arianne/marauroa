@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
@@ -73,6 +74,9 @@ public class PlayerEntry {
 
 	/** The object of the player */
 	public RPObject object;
+
+	/** client locale */
+	public Locale locale = Locale.ENGLISH;
 
 	/**
 	 * We need to control if player is active because sometimes server changes its IP

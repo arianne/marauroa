@@ -12,6 +12,7 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 
 import marauroa.common.net.Channel;
@@ -32,6 +33,9 @@ public class MessageC2SCreateAccount extends Message {
 	/** email address for whatever thing it may be needed. */
 	private String email;
 
+	/** client language */
+	private String language = Locale.ENGLISH.getLanguage();
+
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SCreateAccount() {
 		super(MessageType.C2S_CREATEACCOUNT, null);
@@ -49,13 +53,16 @@ public class MessageC2SCreateAccount extends Message {
 	 *            desired password
 	 * @param email
 	 *            email of the player
+	 * @param language
+	 *            client language 
 	 */
 	public MessageC2SCreateAccount(Channel source, String username, String password,
-	        String email) {
+	        String email, String language) {
 		super(MessageType.C2S_CREATEACCOUNT, source);
 		this.username = username;
 		this.password = password;
 		this.email = email;
+		this.language = language;
 	}
 
 	/**
@@ -83,6 +90,15 @@ public class MessageC2SCreateAccount extends Message {
 	}
 
 	/**
+	 * gets the language
+	 *
+	 * @return language
+	 */
+	public String getLanguage() {
+		return language;
+	}
+
+	/**
 	 * This method returns a String that represent the object
 	 *
 	 * @return a string representing the object.
@@ -99,6 +115,7 @@ public class MessageC2SCreateAccount extends Message {
 		out.write(username);
 		out.write(password);
 		out.write(email);
+		out.write255LongString(language);
 	}
 
 	@Override
@@ -107,6 +124,9 @@ public class MessageC2SCreateAccount extends Message {
 		username = in.readString();
 		password = in.readString();
 		email = in.readString();
+		if (in.available() > 0) {
+			language = in.read255LongString();
+		}
 
 		if (type != MessageType.C2S_CREATEACCOUNT) {
 			throw new IOException();
@@ -124,6 +144,9 @@ public class MessageC2SCreateAccount extends Message {
 		}
 		if (in.get("e") != null) {
 			email = in.get("e").toString();
+		}
+		if (in.get("l") != null) {
+			language = in.get("l").toString();
 		}
 		if (type != MessageType.C2S_CREATEACCOUNT) {
 			throw new IOException();
