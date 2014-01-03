@@ -34,7 +34,7 @@ import org.junit.Test;
 
 /**
  * Test the secure login procedure in the same way.
- * 
+ *
  * @author miguel
  */
 public class SecureLoginTest {
@@ -43,31 +43,31 @@ public class SecureLoginTest {
 
 	/**
 	 * Initialize the container.
-	 * 
+	 *
 	 * @throws IOException
-	 * 
+	 *
 	 */
 	@BeforeClass
 	public static void setUp() throws IOException {
-		new DatabaseFactory().initializeDatabase();
+		new DatabaseFactory().initializeTestDatabase();
 		PlayerEntryContainer.getContainer();
 		loadRSAKey();
 	}
 
 	public static void loadRSAKey() {
-		key = new RSAKey(new BigInteger("2408376769632966826891253753617412746862686794740723175774423430043927850498085639220684795629747326949838501777926669337171495421818563824539329224927899179237"), 
-				new BigInteger("2247818318324102371765170170042918563738507675091341630722795201374332660464879838332237004076252849654527963214772652641735279016325354691167883850414929419335"), 
+		key = new RSAKey(new BigInteger("2408376769632966826891253753617412746862686794740723175774423430043927850498085639220684795629747326949838501777926669337171495421818563824539329224927899179237"),
+				new BigInteger("2247818318324102371765170170042918563738507675091341630722795201374332660464879838332237004076252849654527963214772652641735279016325354691167883850414929419335"),
 		        new BigInteger("15"));
 	}
 
 	/**
 	 * This method supposes that you have an account already created with
-	 * username testUsername and password password. 
-	 * 
+	 * username testUsername and password password.
+	 *
 	 * It test if verify works correctly with a correct account.
-	 * 
+	 *
 	 * @throws SQLException
-	 * @throws UnknownHostException 
+	 * @throws UnknownHostException
 	 */
 	@Test
 	public void testLogin() throws SQLException, UnknownHostException {
@@ -90,9 +90,9 @@ public class SecureLoginTest {
 	 * This method suppose that you have an account already created with
 	 * username testUsername and password password. It test if verify works
 	 * correctly with a bad password.
-	 * 
+	 *
 	 * @throws SQLException
-	 * @throws UnknownHostException 
+	 * @throws UnknownHostException
 	 */
 	@Test
 	public void testLoginFailure() throws SQLException, UnknownHostException {

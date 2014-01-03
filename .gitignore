@@ -10,3 +10,5 @@
 /classes
 /jacoco.exec
 /.sonar
+/repo
+/target

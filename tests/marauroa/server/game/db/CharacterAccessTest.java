@@ -20,7 +20,6 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
@@ -28,7 +27,6 @@ import marauroa.common.game.RPObject;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -53,27 +51,13 @@ public class CharacterAccessTest {
 	public static void createDatabase() throws Exception {
 		Log4J.init("marauroa/server/log4j.properties");
 
-		Properties props = new Properties();
-		props.put("jdbc_url", "jdbc:h2:~/marauroa/database/test;AUTO_RECONNECT=TRUE;DB_CLOSE_ON_EXIT=TRUE");
-		props.put("jdbc_class", "org.h2.Driver");
-		props.put("database_adapter", "marauroa.server.db.adapter.H2DatabaseAdapter");
+		new DatabaseFactory().initializeTestDatabase();
 
-		transactionPool = new TransactionPool(props);
+		transactionPool = TransactionPool.get();
 
 		accountDAO = DAORegister.get().get(AccountDAO.class);
 		characterDAO = DAORegister.get().get(CharacterDAO.class);
 	}
-
-	/**
-	 * Setup one time the database.
-	 *
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void closeDatabase() throws Exception {
-		transactionPool.close();
-	}
-
 
 	/**
 	 * Add a character to a player account and test it existence with

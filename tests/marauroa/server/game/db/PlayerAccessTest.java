@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
@@ -30,7 +29,6 @@ import marauroa.server.db.TransactionPool;
 import marauroa.server.game.container.SecureLoginTest;
 import marauroa.server.game.container.SecuredLoginInfo;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -54,27 +52,12 @@ public class PlayerAccessTest {
 	@BeforeClass
 	public static void createDatabase() throws Exception {
 		Log4J.init("marauroa/server/log4j.properties");
+		new DatabaseFactory().initializeTestDatabase();
 
-		Properties props = new Properties();
-		props.put("jdbc_url", "jdbc:h2:~/marauroa/database/test;AUTO_RECONNECT=TRUE;DB_CLOSE_ON_EXIT=TRUE");
-		props.put("jdbc_class", "org.h2.Driver");
-		props.put("database_adapter", "marauroa.server.db.adapter.H2DatabaseAdapter");
-		
-		transactionPool = new TransactionPool(props);
+		transactionPool = TransactionPool.get();
 		accountDAO = DAORegister.get().get(AccountDAO.class);
 		loginEventDAO = DAORegister.get().get(LoginEventDAO.class);
 	}
-
-	/**
-	 * Setup one time the accountDAO.
-	 *
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void closeDatabase() throws Exception {
-		transactionPool.close();
-	}
-
 
 	/**
 	 * Test if create a player account works by adding it and making sure that

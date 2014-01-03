@@ -82,7 +82,9 @@ public abstract class DBCommandWithCallback extends AbstractDBCommand {
 	 */
 	public void invokeCallback() {
 		if (callback != null) {
-			DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
+			if (DelayedEventHandlerThread.get() != null) {
+				DelayedEventHandlerThread.get().addDelayedEvent(callback, this);
+			}
 		}
 	}
 
