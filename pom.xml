@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sourceforge.arianne.marauroa</groupId>
     <artifactId>marauroa</artifactId>
-    <version>3.9.3-SNAPSHOT</version>
+    <version>3.9.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <parent>
@@ -26,25 +26,20 @@
     <developers>
         <developer>
             <id>kymara</id>
-            <!--<name>TODO</name>-->
+            <name>kymara</name>
             <roles>
                 <role>admin</role>
             </roles>
         </developer>
         <developer>
             <id>nhnb</id>
-            <!--<name>TODO</name>-->
+            <name>hendrik</name>
             <roles>
                 <role>admin</role>
             </roles>
         </developer>
     </developers>
     <licenses>
-        <license>
-            <name>Affero GNU Public License</name>
-            <url>http://www.gnu.org/licenses/agpl-3.0.txt</url>
-            <comments>Affero GNU Public License</comments>
-        </license>
         <license>
             <name>GNU General Public License V 2.0</name>
             <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.0.txt</url>
@@ -53,8 +48,8 @@
     </licenses>
     <scm>
         <url>git://arianne.git.sourceforge.net/gitroot/arianne/marauroa.git</url>
-        <connection>scm:git:git://arianne.git.sourceforge.net/gitroot/arianne/marauroa.git</connection>
-        <developerConnection>scm:git:ssh://arianne.git.sourceforge.net/gitroot/arianne/marauroa.git</developerConnection>
+        <connection>scm:git:git://git.code.sf.net/p/arianne/marauroa arianne-marauroa</connection>
+        <developerConnection>scm:git:ssh://nhnb@git.code.sf.net/p/arianne/marauroa</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <!-- TODO: Our mailing lists 
@@ -529,8 +524,7 @@
             <groupId>javax.jnlp</groupId>
             <artifactId>jnlp</artifactId>
             <version>5.0</version>
-            <scope>system</scope>
-            <systemPath>${java.home}/lib/javaws.jar</systemPath>
+            <type>jar</type>
         </dependency>
         <dependency>
             <artifactId>h2</artifactId>
