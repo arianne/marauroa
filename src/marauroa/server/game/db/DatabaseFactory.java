@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2013 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -11,7 +11,9 @@
  ***************************************************************************/
 package marauroa.server.game.db;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
@@ -29,28 +31,47 @@ public class DatabaseFactory {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(DatabaseFactory.class);
 
+	/**
+	 * initializes the database system for tests
+	 */
+	public void initializeTestDatabase() {
+		Properties props = new Properties();
+		props.put("jdbc_url", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;AUTO_RECONNECT=TRUE;DB_CLOSE_ON_EXIT=TRUE");
+		props.put("jdbc_class", "org.h2.Driver");
+		props.put("database_adapter", "marauroa.server.db.adapter.H2DatabaseAdapter");
+
+		internalInit(props);
+	}
 
 	/**
-	 * This method returns an instance of PlayerDatabase chosen using the
-	 * param.
+	 * initializes the database system
 	 *
 	 * @throws DatabaseConnectionException in case the database configuration is broken
 	 */
 	public void initializeDatabase() throws DatabaseConnectionException {
 		try {
+			internalInit(Configuration.getConfiguration().getAsProperties());
+		} catch (IOException e) {
+			logger.error("Failed to load configuration for database", e);
+			throw new DatabaseConnectionException(e);
+		}
+	}
+
+	private void internalInit(Properties configuration) {
+		try {
 			if (TransactionPool.get() == null) {
-				TransactionPool pool = new TransactionPool(Configuration.getConfiguration().getAsProperties());
+				TransactionPool pool = new TransactionPool(configuration);
 				pool.registerGlobally();
 				initializeDatabaseSchema();
 				DAORegister.get();
 				configureGameDatabaseAccess();
 			}
 		} catch (Exception e) {
-			logger.error("cannot get player database", e);
+			logger.error("Failed to initialize database", e);
 			throw new DatabaseConnectionException(e);
 		}
 	}
-	
+
 	private void initializeDatabaseSchema() {
 		final DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -61,13 +82,6 @@ public class DatabaseFactory {
 			logger.error(e, e);
 			TransactionPool.get().rollback(transaction);
 		}
-	}
-
-	/**
-	 * initializes the database access
-	 */
-	public void initialize() {
-		// empty
 	}
 
 	private void configureGameDatabaseAccess() {

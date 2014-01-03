@@ -12,9 +12,6 @@
 package marauroa.server.game.db;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.Properties;
-
 import marauroa.common.Log4J;
 import marauroa.common.game.RPClassTestHelper;
 import marauroa.common.game.RPEvent;
@@ -24,7 +21,6 @@ import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.game.rp.MarauroaRPZone;
 
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,25 +47,12 @@ public class RPZoneAccessTest {
 	@BeforeClass
 	public static void createDatabase() throws Exception {
 		Log4J.init("marauroa/server/log4j.properties");
+		new DatabaseFactory().initializeTestDatabase();
 
-		Properties props = new Properties();
-		props.put("jdbc_url", "jdbc:h2:~/marauroa/database/test;AUTO_RECONNECT=TRUE;DB_CLOSE_ON_EXIT=TRUE");
-		props.put("jdbc_class", "org.h2.Driver");
-		props.put("database_adapter", "marauroa.server.db.adapter.H2DatabaseAdapter");
-
-		transactionPool = new TransactionPool(props);
+		transactionPool = TransactionPool.get();
 		rpzoneDAO = DAORegister.get().get(RPZoneDAO.class);
 	}
 
-	/**
-	 * Setup one time the rpzoneDAO.
-	 *
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void closeDatabase() throws Exception {
-		transactionPool.close();
-	}
 	/**
 	 * Populates the zone with some objects.
 	 *
