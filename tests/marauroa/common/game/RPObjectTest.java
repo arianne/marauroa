@@ -235,6 +235,42 @@ public class RPObjectTest {
 		obj.clearVisible(false);
 		assertTrue(obj.isEmpty());
 	}
+	
+	/**
+	 * Test that clearVisible() does not remove private attributes.
+	 */
+	@Test
+	public void testClearVisibleAttributes() {
+		RPObject testObj = new RPObject();
+		RPClass tmpClass = new RPClass();
+		tmpClass.addAttribute("private_attr", Type.STRING, Definition.PRIVATE);
+		tmpClass.addAttribute("public_attr", Type.STRING);
+		testObj.setRPClass(tmpClass);
+		testObj.put("private_attr", "foo");
+		testObj.put("public_attr", "bar");
+		testObj.clearVisible(false);
+		assertFalse(testObj.isEmpty());
+		assertTrue("Private attributes should be kept when clearing visible data", testObj.has("private_attr"));
+		assertFalse("Public attributes should be removed when clearing visible data", testObj.has("public_attr"));
+	}
+	
+	/**
+	 * Test that clearVisible() does not remove private slots.
+	 */
+	@Test
+	public void testClearVisibleSlots() {
+		RPObject testObj = new RPObject();
+		RPClass tmpClass = new RPClass();
+		tmpClass.addRPSlot("private_slot", 1, Definition.PRIVATE);
+		tmpClass.addRPSlot("public_slot", 1);
+		testObj.setRPClass(tmpClass);
+		testObj.addSlot(new RPSlot("private_slot"));
+		testObj.addSlot(new RPSlot("public_slot"));
+		testObj.clearVisible(false);
+		assertFalse(testObj.isEmpty());
+		assertTrue("Private slot should be kept when clearing visible data", testObj.hasSlot("private_slot"));
+		assertFalse("Empty public slot should be removed when clearing visible data", testObj.hasSlot("public_slot"));
+	}
 
 	/**
 	 * Check that clear visible doesn't break Delta² information.

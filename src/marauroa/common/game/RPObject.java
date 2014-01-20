@@ -1454,9 +1454,11 @@ public class RPObject extends SlotOwner {
 
 			/*
 			 * Even if slot is empty client may be interested in knowing the slot.
-			 * So we don't remove the slot on sync type of clear visible.
+			 * So we don't remove the slot on sync type of clear visible. Also
+			 * don't remove the slot if it is itself not visible.
 			 */
-			if (!sync && slot.size() == 0) {
+			boolean isSlotVisible = getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName()).isVisible();
+			if (!sync && isSlotVisible && slot.size() == 0) {
 				slotit.remove();
 				if (addedSlots != null) {
 					addedSlots.remove(slot.getName());
