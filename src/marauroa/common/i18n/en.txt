@@ -1,0 +1,43 @@
+_localization_credits_marauroa=_localization_credits_marauroa
+
+# marauroa.client.*
+Your IP Address has been banned.=Your IP Address has been banned.
+Login failed: %1$s=Login failed: %1$s
+Timeout happened while waiting server reply.=Timeout happened while waiting server reply.
+
+# marauroa.common.*
+Account was created correctly.=Account was created correctly.
+Account was not created because one of the important parameters was missing.=Account was not created because one of the important parameters was missing.
+Account was not created because an invalid character (special letters, signs, numbers) was used.=Account was not created because an invalid character (special letters, signs, numbers) was used.
+Account was not created because any of the parameters are either too long or too short.=Account was not created because any of the parameters are either too long or too short.
+Account was not created because this account already exists.=Account was not created because this account already exists.
+Account was not created because there is already an account with this email address.=Account was not created because there is already an account with this email address.
+Account was not created because there was an unspecified exception.=Account was not created because there was an unspecified exception.
+Character was not created because this Character already exists.=Character was not created because this Character already exists.
+The template passed to the create character method is not valid because it fails to pass the RP rules.=The template passed to the create character method is not valid because it fails to pass the RP rules.
+Account was not created because at least one of the parameters was too short.=Account was not created because at least one of the parameters was too short.
+Account was not created because at least one of the parameters was too long.=Account was not created because at least one of the parameters was too long.
+Account was not created because the name is reserved (or contains a reserved name).=Account was not created because the name is reserved (or contains a reserved name).
+Account was not created because the password is too close to the username.=Account was not created because the password is too close to the username.
+Account was not created because the password is too weak.=Account was not created because the password is too weak.
+Account was not created because the account creation limit for your network was reached.\nPlease try again later.=Account was not created because the account creation limit for your network was reached.\nPlease try again later.
+Creation failed because the server is temporary not available. Please try again later.=Creation failed because the server is temporary not available. Please try again later.
+Accounts cannot be created on this server. Please create the account on the main server and wait a while.=Accounts cannot be created on this server. Please create the account on the main server and wait a while.
+=
+Username/Password incorrect.=Username/Password incorrect.
+There have been too many failed login attempts for your account or network. Please wait a couple of minutes or contact support.=There have been too many failed login attempts for your account or network. Please wait a couple of minutes or contact support.
+Account is banned.=Account is banned.
+Server is full.=Server is full.
+Server is running an incompatible version of game. Please update.=Server is running an incompatible version of game. Please update.
+You account has been marked as inactive, please contact support.=You account has been marked as inactive, please contact support.
+There have been too many failed login attempts for your account. Please wait a couple of minutes or contact support.=There have been too many failed login attempts for your account. Please wait a couple of minutes or contact support.
+There have been too many failed login attempts from your network. Please wait a couple of minutes or contact support.=There have been too many failed login attempts from your network. Please wait a couple of minutes or contact support.
+Login expired. Please click again on your character on the web page.=Login expired. Please click again on your character on the web page.
+This account was merged into another account. Please use the username of the other account to login or contact support.=This account was merged into another account. Please use the username of the other account to login or contact support.
+
+Your account is temporarily suspended until %1$s server time.=Your account is temporarily suspended until %1$s server time.
+Your account is banned.=Your account is banned.
+The reason given was: %1$s=The reason given was: %1$s
+Your account has been banned. Please contact support.=Your account has been banned. Please contact support.
+Your account has been flagged as inactive. Please contact support.=Your account has been flagged as inactive. Please contact support.
+Your account has been merged into another account.\nPlease login with that account or contact support.=Your account has been merged into another account.\nPlease login with that account or contact support.
