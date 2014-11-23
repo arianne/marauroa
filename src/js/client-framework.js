@@ -18,6 +18,8 @@
  * @author miguel, hendrik
  *
  */
+"use strict";
+
 marauroa.clientFramework = {
 	clientid: "-1",
 
@@ -90,7 +92,7 @@ marauroa.clientFramework = {
 			marauroa.log.debug("<--: ", msg);
 		}
 		if (msg.t == 9 || msg.t == 15) {
-			this.clientid = msg.c;
+			marauroa.clientFramework.clientid = msg.c;
 		}
 		if (typeof(msg) == "string") {
 			marauroa.log.error("JSON error on message: " + msg);
