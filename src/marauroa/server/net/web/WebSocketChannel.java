@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.HttpCookie;
 import java.net.InetSocketAddress;
 
+import javax.servlet.http.HttpSession;
+
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
@@ -45,7 +47,14 @@ public class WebSocketChannel extends WebSocketAdapter {
 	 */
 	private String extractUsernameFromSession(UpgradeRequest request) {
 
-	 	// TODO: first try java session
+		// first try java session
+		HttpSession session = (HttpSession) request.getSession();
+		if (session != null) {
+			String temp = (String) session.getAttribute("marauroa_authenticated_username");
+			if (temp != null) {
+				return temp;
+			}
+		}
 
 		// Jetty returns null instead of an empty list if there is no cookie header.
 		if (request.getCookies() == null) {
