@@ -14,14 +14,11 @@ package marauroa.server.net.web;
 
 import marauroa.common.Configuration;
 import marauroa.server.marauroad;
-import marauroa.server.net.IServerManager;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
-import com.glines.socketio.server.transport.FlashSocketTransport;
 
 /**
  * web socket server
@@ -66,16 +63,13 @@ public class WebSocketServer {
 		}
 
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-		ServletHolder holder = new ServletHolder(new WebSocketConnectionManager(
-				(IServerManager) marauroad.getMarauroa().getNetMan()));
-		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_SERVER_HOST_KEY, host);
-		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_DOMAIN_KEY, host);
-		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_PORTS_KEY, "" + conf.getInt("flash_port", port));
-		holder.setInitParameter("bufferSize", conf.get("http_buffer_size", "1000000"));
-//		context.addServlet(holder, "/socket.io/*");
+		server.setHandler(context);
+
+		ServletHolder holderEvents = new ServletHolder("ws", WebSocketServlet.class);
+		context.addServlet(holderEvents, "/ws/*");
+		
 		context.addServlet(new ServletHolder(new WebServletForStaticContent(marauroad.getMarauroa().getRPServerManager())), "/*");
 
-		server.setHandler(context);
 		server.start();
 	}
 }
