@@ -17,7 +17,7 @@ import marauroa.server.marauroad;
 import marauroa.server.net.IServerManager;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -58,10 +58,10 @@ public class WebSocketServer {
 		int port = -1;
 		if (conf.has("http_port")) {
 			port = conf.getInt("http_port", 8080);
-			SelectChannelConnector connector = new SelectChannelConnector();
+			ServerConnector connector = new ServerConnector(server);
 			connector.setHost(host);
 			connector.setPort(port);
-			connector.setForwarded(Boolean.parseBoolean(conf.get("http_forwarded", "false")));
+// TODO			connector.setForwarded(Boolean.parseBoolean(conf.get("http_forwarded", "false")));
 			server.addConnector(connector);
 		}
 
@@ -72,7 +72,7 @@ public class WebSocketServer {
 		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_DOMAIN_KEY, host);
 		holder.setInitParameter(FlashSocketTransport.FLASHPOLICY_PORTS_KEY, "" + conf.getInt("flash_port", port));
 		holder.setInitParameter("bufferSize", conf.get("http_buffer_size", "1000000"));
-		context.addServlet(holder, "/socket.io/*");
+//		context.addServlet(holder, "/socket.io/*");
 		context.addServlet(new ServletHolder(new WebServletForStaticContent(marauroad.getMarauroa().getRPServerManager())), "/*");
 
 		server.setHandler(context);

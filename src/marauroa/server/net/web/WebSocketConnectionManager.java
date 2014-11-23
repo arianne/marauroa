@@ -46,7 +46,8 @@ import marauroa.server.game.messagehandler.SendCharacterListHandler;
 import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.IServerManager;
 
-import org.eclipse.jetty.util.ajax.JSON;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONValue;
 
 import com.glines.socketio.server.SocketIOInbound;
 import com.glines.socketio.server.SocketIOServlet;
@@ -208,7 +209,9 @@ public class WebSocketConnectionManager extends SocketIOServlet implements Conne
 	@SuppressWarnings("unchecked")
 	public void onMessage(WebSocketChannel webSocketChannel, int messageType, String message) {
 		logger.debug("messageType: " + messageType + " message: " + message);
-		Map<String, Object> map = (Map<String, Object>) JSON.parse(message);
+		
+		
+		Map<String, Object> map = (Map<String, Object>) ((JSONArray) JSONValue.parse(message)).get(0);
 		try {
 			Message msg = MessageFactory.getFactory().getMessage(map);
 			serverManager.onMessage(this, webSocketChannel, msg);
