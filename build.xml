@@ -12,8 +12,9 @@
 		<pathelement path="${jython_jar}"/>
 		  <fileset dir="${libdir}">
 		    <include name="jetty*.jar"/>
+		    <include name="json-simple*.jar"/>
 		    <include name="servlet*.jar"/>
-		  	<include name="socketio*.jar" />
+		  	<include name="websocket*.jar" />
 		  </fileset>
 	</path>
 	
