@@ -12,7 +12,7 @@ public class WebSocketServlet extends org.eclipse.jetty.websocket.servlet.WebSoc
 
 	@Override
 	public void configure(WebSocketServletFactory factory) {
-		factory.register(WebSocketConnection.class);
+		factory.register(WebSocketChannel.class);
 	}
 
 }
