@@ -28,32 +28,21 @@ marauroa.clientFramework = {
 	 * @param port server port number
 	 */
 	connect: function(host, port) {
-		var options = {};
-		if (window.location.protocol == "https:") {
-			options.port = 443;
-			options.secure = true;
+		var protocol = "ws"
+		if (window.location.protocol === "https:") {
+			protocol = "wss";
 		}
-		if (typeof(port) != "undefined" && port != null) {
-			options.port = port;
+		if (host === null) {
+			host = window.location.hostname;
 		}
-		var socket = new io.Socket(host, options);
-		socket.setMessageParser(socket.JSON_MESSAGE, {
-			encode: function(obj) {
-				return JSON.stringify(obj);
-			},
-			decode: function(str) {
-				return JSON.parse(str);
-			}
-		});
-		socket.connect();
-		var temp = this;
-		socket.on('message', function(mtype, obj){
-			if (mtype == socket.JSON_MESSAGE) {
-				temp.onMessage(obj);
-			}
-		});
-		socket.on('connect', this.onConnect);
-		socket.on('disconnect', this.onDisonnect);
+		if (port === null) {
+			port = window.location.port;
+		}
+		var url = protocol + "://" + host + ":" + port + "/ws/";
+		var socket = new WebSocket(url);
+		socket.onmessage = this.onMessage;
+		socket.onopen = this.onConnect;
+		socket.onclose = this.onDisonnect;
 		this.socket = socket;
 	},
 
@@ -95,7 +84,8 @@ marauroa.clientFramework = {
 		marauroa.log.error("Login failed with reason " + reason + ": " + text);
 	},
 
-	onMessage: function(msg) {
+	onMessage: function(e) {
+		var msg = JSON.parse(e.data);
 		if (marauroa.debug.messages) {
 			marauroa.log.debug("<--: ", msg);
 		}
@@ -115,7 +105,7 @@ marauroa.clientFramework = {
 			"c": this.clientid, 
 			"s": "1"
 		};
-		io.util.merge(myMessage, msg);
+		marauroa.util.merge(myMessage, msg);
 		if (marauroa.debug.messages) {
 			marauroa.log.debug("-->: ", msg);
 		}
