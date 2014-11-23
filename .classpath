@@ -28,5 +28,6 @@
 	<classpathentry kind="lib" path="libs/websocket-server-9.2.5.v20141112.jar"/>
 	<classpathentry kind="lib" path="libs/websocket-servlet-9.2.5.v20141112.jar"/>
 	<classpathentry kind="lib" path="libs/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/javax-websocket-client-impl-9.2.5.v20141112.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
