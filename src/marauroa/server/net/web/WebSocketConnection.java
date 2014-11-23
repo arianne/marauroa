@@ -1,6 +1,19 @@
 package marauroa.server.net.web;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.HttpCookie;
+import java.net.InetSocketAddress;
+
+import marauroa.common.Configuration;
+import marauroa.common.Log4J;
+import marauroa.common.Logger;
+import marauroa.common.io.UnicodeSupportingInputStreamReader;
+
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.UpgradeRequest;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 /**
@@ -9,11 +22,86 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
  * @author hendrik
  */
 public class WebSocketConnection extends WebSocketAdapter {
+	private static Logger logger = Log4J.getLogger(WebSocketConnection.class);
+
+	
+	private String username;
+	private InetSocketAddress address; 
+	
 	@Override
 	public void onWebSocketConnect(Session sess) {
 		super.onWebSocketConnect(sess);
+		address = sess.getRemoteAddress();
+		username = extractUsernameFromSession(sess.getUpgradeRequest());
 		System.out.println("Socket Connected: " + sess);
-		System.out.println("Remote:" + sess.getRemoteAddress() + " " + sess.getUpgradeRequest().getCookies());
+	}
+
+	/**
+	 * extracts the username from the session, supporting both java and php sessions
+	 *
+	 * @param request HttpServletRequest
+	 * @return username
+	 */	
+	private String extractUsernameFromSession(UpgradeRequest request) {
+		 	
+	 	// TODO: first try java session
+
+		// Jetty returns null instead of an empty list if there is no cookie header.
+		if (request.getCookies() == null) {
+			return null;
+		}
+
+		// try php session
+		for (HttpCookie cookie : request.getCookies()) {
+			if (!cookie.getName().equals("PHPSESSID")) {
+				continue;
+			}
+
+			String sessionid = cookie.getValue();
+			if (!sessionid.matches("[A-Za-z0-9]+")) {
+				logger.warn("Invalid PHPSESSID=" + sessionid);
+				continue;
+			}
+
+			BufferedReader br = null;
+			try {
+				String prefix = Configuration.getConfiguration().get("php_session_file_prefix", "/var/lib/php5/sess_");
+				String filename = prefix + sessionid;
+				if (new File(filename).canRead()) {
+					br = new BufferedReader(new UnicodeSupportingInputStreamReader(new FileInputStream(filename)));
+					String line;
+					while ((line = br.readLine()) != null) {
+						int pos1 = line.indexOf("marauroa_authenticated_username|s:");
+						if (pos1 < 0) {
+							continue;
+						}
+
+						// logger.debug("phpsession-entry: " + line);
+						pos1 = line.indexOf("\"", pos1);
+						int pos2 = line.indexOf("\"", pos1 + 2);
+						if (pos1 > -1 && pos2 > -1) {
+							logger.debug("php session username: " + line.substring(pos1 + 1, pos2));
+							return line.substring(pos1 + 1, pos2);
+						}
+					}
+				} else {
+					logger.warn("Cannot read php session file: " + filename);
+				}
+			} catch (IOException e) {
+				logger.error(e, e);
+			} finally {
+				if (br != null) {
+					try {
+						br.close();
+					} catch (IOException e) {
+						logger.error(e, e);
+					}
+				}
+			}
+
+		}
+
+		return null;
 	}
 
 	@Override
@@ -34,5 +122,22 @@ public class WebSocketConnection extends WebSocketAdapter {
 		cause.printStackTrace(System.err);
 	}
 	
-	
+	/**
+	 * gets the ip-address and port
+	 *
+	 * @return address
+	 */
+	public InetSocketAddress getAddress() {
+		return address;
+	}
+
+	/**
+	 * gets the username
+	 *
+	 * @return username
+	 */
+	public String getUsername() {
+		return username;
+	}
+
 }
