@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.HttpCookie;
 import java.net.InetSocketAddress;
+import java.net.SocketTimeoutException;
 
 import javax.servlet.http.HttpSession;
 
@@ -130,6 +131,10 @@ public class WebSocketChannel extends WebSocketAdapter {
 	@Override
 	public void onWebSocketError(Throwable cause) {
 		super.onWebSocketError(cause);
+		if (cause instanceof SocketTimeoutException) {
+			onWebSocketClose(-1, "Timeout");
+			return;
+		}
 		logger.error(cause, cause);
 	}
 
