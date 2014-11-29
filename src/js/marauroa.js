@@ -44,13 +44,16 @@ marauroa.util = {
 		}
 	},
 
-	// http://jonathanfine.wordpress.com/2008/09/21/implementing-super-in-javascript/
-	fromProto: function(proto){
-		var f = function(){
+	fromProto: function(proto, def) {
+		var f = function() {
 			this.proto = proto;
 		};
 		f.prototype = proto;
-		return new f();
+		var obj = new f();
+		if (!def) {
+			return obj;
+		}
+		return marauroa.util.merge(obj, def);
 	},
 	
 	merge: function(a, b) {
