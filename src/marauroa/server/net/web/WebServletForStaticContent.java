@@ -79,21 +79,30 @@ public class WebServletForStaticContent extends HttpServlet {
 	 * @throws IOException in case of an input/output error
 	 */
 	private void sendFile(HttpServletResponse response, String filename) throws IOException {
-		if (filename.indexOf("..") > -1) {
-			throw new FileNotFoundException(filename);
+		String name = filename;
+
+		// prevent directory traversing
+		if (name.indexOf("..") > -1) {
+			throw new FileNotFoundException(name);
 		}
+
+		// optional marauroa path prefix
+		if (name.startsWith("/marauroa/")) {
+			name = name.substring(9);
+		}
+
 		InputStream is = null;
 		OutputStream os = null;
 		try {
-			is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("js/" + filename);
+			is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("js/" + name);
 			if (is == null) {
-				is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("srcjs/" + filename);
+				is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("srcjs/" + name);
 			}
 			if (is == null) {
-				is = rpMan.getResource(filename);
+				is = rpMan.getResource(name);
 			}
 			if (is == null) {
-				throw new FileNotFoundException(filename);
+				throw new FileNotFoundException(name);
 			}
 			os = response.getOutputStream();
 			byte[] buffer = new byte[8192];
