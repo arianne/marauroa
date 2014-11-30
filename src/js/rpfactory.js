@@ -34,12 +34,18 @@ marauroa.rpobjectFactory = new function(){
 		return marauroa.rpslotFactory.create(name);
 	}
 
+	this._default.init = function() {
+		// do nothing
+	}
+
 	this.create = function(rpclass) {
 		var ctor = this._default;
 		if (typeof(this[rpclass]) != "undefined") {
 			ctor = this[rpclass];
 		}
-		return marauroa.util.fromProto(ctor);
+		var temp = marauroa.util.fromProto(ctor);
+		temp.init();
+		return temp;
 	}
 }
 
