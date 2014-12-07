@@ -52,7 +52,7 @@ public class WebServletForStaticContent extends HttpServlet {
 		} else if (filename.endsWith(".html")) {
 			response.setContentType("text/html");
 		} else if (filename.endsWith(".css")) {
-			response.setCharacterEncoding("text/css");
+			response.setContentType("text/css");
 		} else if (filename.endsWith(".xml")) {
 			response.setContentType("text/xml");
 		} else {
