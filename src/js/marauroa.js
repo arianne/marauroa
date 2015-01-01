@@ -40,7 +40,9 @@ marauroa.util = {
 
 	first: function(obj) {
 		for (var i in obj) {
-			return obj[i];
+			if (obj.hasOwnProperty(i)) {
+				return obj[i];
+			}
 		}
 	},
 
