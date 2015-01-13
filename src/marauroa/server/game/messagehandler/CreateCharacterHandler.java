@@ -63,7 +63,8 @@ class CreateCharacterHandler extends MessageHandler {
 				String address = msg.getAddress().getHostAddress();
 
 				// verify event
-				if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE)) {
+				if (!isValidEvent(msg, entry, 
+                                        ClientState.GAME_BEGIN, ClientState.LOGIN_COMPLETE)) {
 					logger.warn("invalid create character event (client unknown, not logged in or wrong ip-address)");
 					return;
 				}
