@@ -78,7 +78,7 @@ abstract class MessageHandler {
 		if (!isInCorrectState) {
 			StringBuilder statesString = new StringBuilder();
 			for (ClientState state : states) {
-				statesString.append(state + " ");
+				statesString.append(state).append(" ");
 			}
 
 			logger.warn("Client(" + msg.getAddress() + ") is not in the required state ("
