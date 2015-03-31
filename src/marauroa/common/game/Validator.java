@@ -52,6 +52,10 @@ class Validator {
 		Float.parseFloat(value);
 	}
 
+	public void validateLong(String value) {
+		Long.parseLong(value);
+	}
+
 	public void validateInteger(String value) {
 		Integer.parseInt(value);
 	}

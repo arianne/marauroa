@@ -28,6 +28,7 @@ import marauroa.common.Log4J;
  *   - BYTE A 8 bits integer.
  *   - SHORT A 16 bits integer
  *   - INT A 32 bits integer
+ *   - LONG A 64 bits integer
  *   - FLAG A value that is set or not set.
  * - capacity of the slot
  * - flags to decide the visibility of the atttribute, event or slot. It must be one of the
@@ -78,6 +79,8 @@ public class Definition implements marauroa.common.net.Serializable {
 		STRING,
 		/** an float number of 32 bits */
 		FLOAT,
+		/** an integer of 64 bits */
+		LONG,
 		/** an integer of 32 bits */
 		INT,
 		/** an integer of 16 bits */
@@ -423,6 +426,8 @@ public class Definition implements marauroa.common.net.Serializable {
 				return in.read255LongString();
 			case FLOAT:
 				return Float.toString(in.readFloat());
+			case LONG:
+				return Long.toString(in.readLong());
 			case INT:
 				return Integer.toString(in.readInt());
 			case SHORT:
@@ -461,6 +466,9 @@ public class Definition implements marauroa.common.net.Serializable {
 	        		break;
 	        	case FLOAT:
 	        		out.write(Float.parseFloat(value));
+	        		break;
+	        	case LONG:
+	        		out.write(Long.parseLong(value));
 	        		break;
 	        	case INT:
 	        		out.write(Integer.parseInt(value));
@@ -511,6 +519,9 @@ public class Definition implements marauroa.common.net.Serializable {
 					break;
 				case FLOAT:
 					validator.validateFloat(value);
+					break;
+				case LONG:
+					validator.validateLong(value);
 					break;
 				case INT:
 					validator.validateInteger(value);

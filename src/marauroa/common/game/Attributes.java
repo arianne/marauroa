@@ -352,6 +352,23 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
+	 * This methods returns the long integer value of an attribute.
+	 *
+	 * @param attribute
+	 * 		The attribute we want to get
+	 * @return
+	 * 		The value of the attribute
+	 */
+	public long getLong(String attribute) {
+		String val = get(attribute);
+		if (val == null) {
+			throw new IllegalArgumentException("attribute '" + attribute + "' not found");
+		}
+
+		return Long.parseLong(val);
+	}
+
+	/**
 	 * This methods return the value of an attribute
 	 *
 	 * @param attribute
