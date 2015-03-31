@@ -285,7 +285,7 @@ public class marauroad extends Thread {
 
 		double startupTime = (System.currentTimeMillis() - startTime) / 1000.0;
 
-		logger.info("marauroa is up and running... (startup time: " + (long)(startupTime*10)/10. + " s)");
+		logger.info("marauroa " + VERSION + " is up and running... (startup time: " + (long)(startupTime*10)/10. + " s)");
 		while (!finish) {
 			try {
 				Statistics.getStatistics().print();
