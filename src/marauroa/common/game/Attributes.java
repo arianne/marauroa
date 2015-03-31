@@ -364,8 +364,9 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		if (val == null) {
 			throw new IllegalArgumentException("attribute '" + attribute + "' not found");
 		}
-
-		return Long.parseLong(val);
+		
+		// FIXME? Workaround to get past long parsing issues
+		return Double.doubleToLongBits(Double.parseDouble(val));
 	}
 
 	/**

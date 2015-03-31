@@ -468,7 +468,8 @@ public class Definition implements marauroa.common.net.Serializable {
 	        		out.write(Float.parseFloat(value));
 	        		break;
 	        	case LONG:
-	        		out.write(Long.parseLong(value));
+	        		// FIXME? Workaround to get past long parsing issues
+	        		out.write(Double.doubleToLongBits(Double.parseDouble(value)));
 	        		break;
 	        	case INT:
 	        		out.write(Integer.parseInt(value));
