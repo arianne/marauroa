@@ -351,6 +351,16 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	public int size() {
 		return objects.size();
 	}
+	
+	/**
+	 * Alias for (size() == 0).
+	 * 
+	 * @return
+	 * 		The slot is empty
+	 */
+	public boolean isEmpty() {
+		return (size() == 0);
+	}
 
 	/**
 	 * Returns the maximum amount of objects that can be stored at the slot.
