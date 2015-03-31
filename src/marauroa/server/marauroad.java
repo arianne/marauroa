@@ -408,4 +408,44 @@ public class marauroad extends Thread {
 		gameMan.finish();
 		DBCommandQueue.get().finish();
 	}
+	
+	/**
+	 * Get the entire version string.
+	 * 
+	 * @return
+	 * 		Version string
+	 */
+	public String getVersionString() {
+		return VERSION;
+	}
+	
+	/**
+	 * Get the major version number.
+	 * 
+	 * @return
+	 * 		Major version integer value
+	 */
+	public int getVersionMaj() {
+		return Integer.parseInt(VERSION.split(".")[0]);
+	}
+	
+	/**
+	 * Get the minor version number.
+	 * 
+	 * @return
+	 * 		Minor version integer value
+	 */
+	public int getVersionMin() {
+		return Integer.parseInt(VERSION.split(".")[1]);
+	}
+	
+	/**
+	 * Get the release number.
+	 * 
+	 * @return
+	 * 		Release integer value
+	 */
+	public int getVersionRel() {
+		return Integer.parseInt(VERSION.split(".")[2]);
+	}
 }
