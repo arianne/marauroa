@@ -68,6 +68,8 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/** Define the possible types of an attribute or event */
+	// Important to preserve compatibility:
+	// Add new entries at the end, do not delete entries, do not change order
 	public enum Type {
 		/** No type */
 		NOTYPE,
@@ -79,8 +81,6 @@ public class Definition implements marauroa.common.net.Serializable {
 		STRING,
 		/** an float number of 32 bits */
 		FLOAT,
-		/** an integer of 64 bits */
-		LONG,
 		/** an integer of 32 bits */
 		INT,
 		/** an integer of 16 bits */
@@ -90,7 +90,9 @@ public class Definition implements marauroa.common.net.Serializable {
 		/** an boolean attribute that either is present or not. */
 		FLAG,
 		/** a map attribute **/
-		MAP
+		MAP,
+		/** an integer of 64 bits */
+		LONG
 	}
 
 	/* Visibility of a attribute/event/slot */
@@ -152,7 +154,7 @@ public class Definition implements marauroa.common.net.Serializable {
 		this.clazz = clazz;
 		code = -1;
 	}
-	
+
 	@Override
 	public String toString() {
 		return clazz+": N="+name+" T="+type+" C="+code;
@@ -468,8 +470,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	        		out.write(Float.parseFloat(value));
 	        		break;
 	        	case LONG:
-	        		// FIXME? Workaround to get past long parsing issues
-	        		out.write(Double.doubleToLongBits(Double.parseDouble(value)));
+	        		out.write(Long.parseLong(value));
 	        		break;
 	        	case INT:
 	        		out.write(Integer.parseInt(value));
@@ -499,7 +500,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * validates 
+	 * validates
 	 *
 	 * @param value
 	 *            the value of the event/attribute
@@ -604,11 +605,11 @@ public class Definition implements marauroa.common.net.Serializable {
 
 		Definition def = (Definition) ot;
 
-		boolean result = clazz.equals(def.clazz) 
-				&& code == def.code 
+		boolean result = clazz.equals(def.clazz)
+				&& code == def.code
 				&& capacity == def.capacity
-		        && flags == def.flags 
-		        && name.equals(def.name) 
+		        && flags == def.flags
+		        && name.equals(def.name)
 		        && type == def.type;
 		if (result) {
 			if (value == null) {

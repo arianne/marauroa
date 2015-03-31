@@ -25,6 +25,8 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.game.Definition.Type;
+import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
 
 /**
@@ -283,6 +285,19 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		put(attribute, Integer.toString(value));
 	}
 
+
+	/**
+	 * This method set the value of an attribute
+	 *
+	 * @param attribute
+	 *			  the attribute to be set.
+	 * @param value
+	 *			  the value we want to set.
+	 */
+	public void put(String attribute, long value) {
+		put(attribute, Long.toString(value));
+	}
+
 	/**
 	 * This method set the value of an attribute
 	 *
@@ -364,9 +379,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		if (val == null) {
 			throw new IllegalArgumentException("attribute '" + attribute + "' not found");
 		}
-		
-		// FIXME? Workaround to get past long parsing issues
-		return Double.doubleToLongBits(Double.parseDouble(val));
+		return Long.parseLong(val);
 	}
 
 	/**
@@ -605,6 +618,11 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 				String key = entry.getKey();
 
 				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
+				if (def.getType() == Type.LONG) {
+					if (out.getProtocolVersion() < NetConst.FIRST_VERSION_WITH_TYPE_LONG) {
+						continue;
+					}
+				}
 
 				if (shouldSerialize(def, level)) {
 					boolean serializeKeyText = (level == DetailLevel.FULL) || (def.getCode() == -1);

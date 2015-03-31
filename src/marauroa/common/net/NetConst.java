@@ -55,8 +55,9 @@ public class NetConst {
 	 * 32 - Include RPObjects in S2CCharacterList
 	 * 33 - Added support for maps as attributes
 	 * 34 - Added hash on content transfer, empty perceptions are now omittable
+	 * 35 - Aded data type long
 	 */
-	public static final byte NETWORK_PROTOCOL_VERSION = 34;
+	public static final byte NETWORK_PROTOCOL_VERSION = 35;
 
 	/** Oldest supported protocol version */
 	public static final byte NETWORK_PROTOCOL_VERSION_MIN = 31;
@@ -86,4 +87,7 @@ public class NetConst {
 
 	/** longer reasons for bans */
 	public static final int FIRST_VERSION_WITH_LONG_BAN_MESSAGE = 34;
+
+	/** data type long */
+	public static final int FIRST_VERSION_WITH_TYPE_LONG = 35;
 }

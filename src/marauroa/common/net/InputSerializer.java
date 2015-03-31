@@ -217,10 +217,10 @@ public class InputSerializer {
 		result += (data[3] & 0xFF) << 24;
 		return result;
 	}
-	
+
 	/**
 	 * This method reads a long integer from Serializer.
-	 * 
+	 *
 	 * @return
 	 * 		The long integer serialized
 	 * @throws IOException
@@ -231,7 +231,7 @@ public class InputSerializer {
 		byte[] data = new byte[size];
 		int bytes_read_total = 0;
 		int bytes_read = 0;
-		
+
 		while ((bytes_read_total < size)
 				&& (bytes_read = in.read(data, bytes_read_total, size - bytes_read_total)) != -1) {
 			bytes_read_total += bytes_read;
@@ -241,16 +241,16 @@ public class InputSerializer {
 					+ " is not equal to actual read bytes count("
 					+ bytes_read_total + ")!");
 		}
-		
+
 		long result = data[0] & 0xFF;
-		
+
 		result += (data[1] & 0xFF) << 8;
 		result += (data[2] & 0xFF) << 16;
 		result += (data[3] & 0xFF) << 24;
 		result += (data[4] & 0xFF) << 32;
 		result += (data[5] & 0xFF) << 40;
 		result += (data[6] & 0xFF) << 48;
-		result += (data[6] & 0xFF) << 56;
+		result += (data[7] & 0xFF) << 56;
 		return result;
 	}
 

@@ -137,6 +137,29 @@ public class OutputSerializer {
 		out.write(tmp);
 	}
 
+
+	/**
+	 * Add the long to the serializer
+	 *
+	 * @param a
+	 *            the long to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
+	 */
+	public void write(long a) throws IOException {
+		byte[] tmp = new byte[] {
+				(byte) (a & 0xff),
+				(byte) (a >> 8 & 0xff),
+				(byte) (a >> 16 & 0xff),
+				(byte) (a >> 24 & 0xff),
+				(byte) (a >> 32 & 0xff),
+				(byte) (a >> 40 & 0xff),
+				(byte) (a >> 48 & 0xff),
+				(byte) (a >>> 56)
+				};
+		out.write(tmp);
+	}
+
 	/**
 	 * Add the float to the serializer
 	 *

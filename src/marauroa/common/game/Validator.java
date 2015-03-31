@@ -53,10 +53,7 @@ class Validator {
 	}
 
 	public void validateLong(String value) {
-		/* FIXME: The value string somehow is set to float and parseLong
-		 *        cannot handle it.
-		 */
-		Double.doubleToLongBits(Double.parseDouble(value));
+		Long.parseLong(value);
 	}
 
 	public void validateInteger(String value) {
