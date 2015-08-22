@@ -96,6 +96,12 @@
 				<include name="*.properties"/>
 			</fileset>
 		</copy>
+		<mkdir dir="${build-classes}/js" />
+		<copy todir="${build-classes}/js">
+			<fileset dir="src/js">
+				<include name="*"/>
+			</fileset>
+		</copy>
 	</target>
 
 
