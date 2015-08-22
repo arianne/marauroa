@@ -94,9 +94,9 @@ public class WebServletForStaticContent extends HttpServlet {
 		InputStream is = null;
 		OutputStream os = null;
 		try {
-			is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("js/" + name);
+			is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("js" + name);
 			if (is == null) {
-				is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("srcjs/" + name);
+				is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("srcjs" + name);
 			}
 			if (is == null) {
 				is = rpMan.getResource(name);
