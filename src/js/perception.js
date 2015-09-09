@@ -155,7 +155,7 @@ marauroa.perceptionHandler = {
 	},
 
 	/**
-	 * This method applys perceptions addedto the Map<RPObject::ID,RPObject>
+	 * This method applies perceptions addedto the Map<RPObject::ID,RPObject>
 	 * passed as argument. It clears the map if this is a sync perception
 	 * 
 	 * @param msg
@@ -386,7 +386,9 @@ marauroa.perceptionHandler = {
 						if (diff.s[i].hasOwnProperty(j)) {
 							var id = diff.s[i][j].a.id;
 							if (typeof(object[i][id]) == "undefined") {
-								object[i].add(id, marauroa.rpobjectFactory.create(diff.s[i][j].c));
+								var newObject = marauroa.rpobjectFactory.create(diff.s[i][j].c);
+								newObject._parent = object[i];
+								object[i].add(id, newObject);
 							}
 							this.addChanges(object[i][id], diff.s[i][j])
 						}

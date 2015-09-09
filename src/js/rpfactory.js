@@ -31,7 +31,9 @@ marauroa.rpobjectFactory = new function(){
 		// do nothing
 	}
 	this._default.createSlot = function(name) {
-		return marauroa.rpslotFactory.create(name);
+		var slot = marauroa.rpslotFactory.create(name);
+		slot._parent = this;
+		return slot;
 	}
 
 	this._default.init = function() {
@@ -102,6 +104,8 @@ marauroa.rpslotFactory = new function(){
 		if (typeof(this[name]) != "undefined") {
 			ctor = this[name];
 		}
-		return marauroa.util.fromProto(ctor);
+		var slot = marauroa.util.fromProto(ctor);
+		slot._name = name;
+		return slot;
 	}
 }
