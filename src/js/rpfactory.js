@@ -13,6 +13,10 @@ marauroa.rpobjectFactory = new function(){
 			}
 			event._rpclass = e.c;
 		}
+		// Event slots
+		for (var slot in e.s) {
+			event[slot] = e.s[slot];
+		}
 		event.execute(this);
 	}
 	this._default.set = function(key, value) {
