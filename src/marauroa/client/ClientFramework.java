@@ -11,6 +11,8 @@
  ***************************************************************************/
 package marauroa.client;
 
+import static marauroa.common.i18n.I18N._;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
@@ -20,6 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 
@@ -34,6 +37,7 @@ import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
+import marauroa.common.i18n.I18N;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
@@ -106,6 +110,7 @@ public abstract class ClientFramework {
 	public ClientFramework(String loggingProperties) {
 		Log4J.init(loggingProperties);
 		messages = new LinkedList<Message>();
+		I18N.init(Locale.getDefault());
 	}
 
 	/**
@@ -115,6 +120,7 @@ public abstract class ClientFramework {
 	public ClientFramework() {
 		Log4J.init();
 		messages = new LinkedList<Message>();
+		I18N.init(Locale.getDefault());
 	}
 
 	/**
@@ -184,7 +190,7 @@ public abstract class ClientFramework {
 		try {
 			uri = new URI("socket://" + quotedHost + ":" + port);
 		} catch (URISyntaxException e) {
-			IOException ioE = new IOException("Error, while discovering proxyserver: ");
+			IOException ioE = new IOException(_("Error while discovering proxyserver: %1$s", e.toString()));
 			ioE.initCause(e);
 			throw ioE;
 		}
@@ -324,25 +330,26 @@ public abstract class ClientFramework {
 					key = ((MessageS2CLoginSendKey) msg).getKey();
 
 					clientNonce = Hash.random(Hash.hashLength());
-					netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce)));
+					Locale locale = Locale.getDefault();
+					netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce), locale.getLanguage()));
 					break;
 				}
 					/* Server sends a random big integer */
 				case S2C_LOGIN_SENDNONCE: {
 					logger.debug("Received Server Nonce");
 					if (serverNonce != null) {
-						throw new LoginFailedException("Already received a serverNonce");
+						throw new LoginFailedException(_("Already received a serverNonce"));
 					}
 
 					serverNonce = ((MessageS2CLoginSendNonce) msg).getHash();
 					byte[] b1 = Hash.xor(clientNonce, serverNonce);
 					if (b1 == null) {
-						throw new LoginFailedException("Incorrect hash b1");
+						throw new LoginFailedException(_("Incorrect hash b1"));
 					}
 
 					byte[] b2 = Hash.xor(b1, Hash.hash(password));
 					if (b2 == null) {
-						throw new LoginFailedException("Incorrect hash b2");
+						throw new LoginFailedException(_("Incorrect hash b2"));
 					}
 
 					byte[] cryptedPassword = key.encodeByteArray(b2);
@@ -354,12 +361,12 @@ public abstract class ClientFramework {
 							logger.error(e, e);
 						}
 						if (bs.length != 16) {
-							throw new LoginFailedException("Seed has not the correct length.");
+							throw new LoginFailedException(_("Seed has not the correct length."));
 						}
 						byte[] b3 = null;
 						b3 = Hash.xor(b1, bs);
 						if (b3 == null) {
-							throw new LoginFailedException("Incorrect hash seed");
+							throw new LoginFailedException(_("Incorrect hash seed"));
 						}
 						byte[] cryptedSeed = key.encodeByteArray(b3);
 						netMan.addMessage(new MessageC2SLoginSendNonceNamePasswordAndSeed(null,
@@ -483,7 +490,8 @@ public abstract class ClientFramework {
 	 */
 	public synchronized AccountResult createAccount(String username, String password, String email)
 	        throws TimeoutException, InvalidVersionException, BannedAddressException {
-		Message msgCA = new MessageC2SCreateAccount(null, username, password, email);
+		Locale locale = Locale.getDefault();
+		Message msgCA = new MessageC2SCreateAccount(null, username, password, email, locale.getLanguage());
 
 		netMan.addMessage(msgCA);
 

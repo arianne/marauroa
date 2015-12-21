@@ -203,7 +203,7 @@ public class RPEvent extends SlotOwner {
 
 	@Override
 	public String toString() {
-		StringBuffer tmp = new StringBuffer("RPEvent " + name + " with ");
+		StringBuilder tmp = new StringBuilder("RPEvent " + name + " with ");
 		tmp.append(super.toString());
 		return tmp.toString();
 	}

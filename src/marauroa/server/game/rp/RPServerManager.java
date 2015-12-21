@@ -12,6 +12,7 @@
 package marauroa.server.game.rp;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.ConcurrentModificationException;
@@ -203,7 +204,7 @@ public class RPServerManager extends Thread {
 	public void finish() {
 		keepRunning = false;
 
-		while (isfinished == false) {
+		while (!isfinished) {
 			Thread.yield();
 		}
 
@@ -326,7 +327,7 @@ public class RPServerManager extends Thread {
 		IRPZone.ID id = new IRPZone.ID(entry.object.get("zoneid"));
 		IRPZone zone = world.getRPZone(id);
 
-		if (entry.requestedSync == false) {
+		if (!(entry.requestedSync)) {
 			perception = zone.getPerception(entry.object, Perception.DELTA);
 		} else {
 			entry.requestedSync = false;
@@ -406,7 +407,7 @@ public class RPServerManager extends Thread {
 			try {
 				// Before creating the perception we check the player is still there.
 				if(entry.isTimeout()) {
-					logger.info("Request (TIMEOUT) disconnection of Player " + entry.channel.socket().getRemoteSocketAddress());
+					logger.info("Request (TIMEOUT) disconnection of Player " + entry.getAddress());
 					playersToRemove.add(entry);
 					continue;
 				}
@@ -667,5 +668,26 @@ public class RPServerManager extends Thread {
 	 */
 	public ConnectionValidator getValidator() {
 		return netMan.getValidator();
+	}
+
+
+	/**
+	 * gets the content type for the requested resource
+	 *
+	 * @param resource name of resource
+	 * @return mime content/type or <code>null</code>
+	 */
+	public String getMimeTypeForResource(String resource) {
+		return ruleProcessor.getMimeTypeForResource(resource);
+	}
+
+	/**
+	 * gets an input stream to the requested resource
+	 *
+	 * @param resource name of resource
+	 * @return InputStream or <code>null</code>
+	 */
+	public InputStream getResource(String resource) {
+		return ruleProcessor.getResource(resource);
 	}
 }

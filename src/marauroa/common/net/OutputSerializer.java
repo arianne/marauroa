@@ -13,6 +13,10 @@ package marauroa.common.net;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collection;
+
+import marauroa.common.game.Attributes;
+import marauroa.common.game.DetailLevel;
 
 /**
  * OutputSerializer is used to serialize classes that implement the Serializable
@@ -21,7 +25,7 @@ import java.io.OutputStream;
  */
 public class OutputSerializer {
 
-	private OutputStream out;
+	private final OutputStream out;
 	private int protocolVersion = NetConst.NETWORK_PROTOCOL_VERSION;
 
 	/**
@@ -133,6 +137,29 @@ public class OutputSerializer {
 		out.write(tmp);
 	}
 
+
+	/**
+	 * Add the long to the serializer
+	 *
+	 * @param a
+	 *            the long to serialize
+	 * @throws IOException
+	 *            in case of an IO-error
+	 */
+	public void write(long a) throws IOException {
+		byte[] tmp = new byte[] {
+				(byte) (a & 0xff),
+				(byte) (a >> 8 & 0xff),
+				(byte) (a >> 16 & 0xff),
+				(byte) (a >> 24 & 0xff),
+				(byte) (a >> 32 & 0xff),
+				(byte) (a >> 40 & 0xff),
+				(byte) (a >> 48 & 0xff),
+				(byte) (a >>> 56)
+				};
+		out.write(tmp);
+	}
+
 	/**
 	 * Add the float to the serializer
 	 *
@@ -233,4 +260,61 @@ public class OutputSerializer {
 	public void setProtocolVersion(int protocolVersion) {
 		this.protocolVersion = protocolVersion;
 	}
+
+	/**
+	 * writes a json key-value-pair
+	 *
+	 * @param out buffer to write to
+	 * @param value value
+	 */
+	public static void writeJson(StringBuilder out, String value) {
+		out.append("\"");
+		// TODO: needs more escaping
+		out.append(value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n").replace("<", "\\u003c"));
+		out.append("\"");
+	}
+
+	/**
+	 * writes a json key-value-pair
+	 *
+	 * @param out buffer to write to
+	 * @param key key
+	 * @param value value
+	 */
+	public static void writeJson(StringBuilder out, String key, String value) {
+		out.append("\"");
+		// TODO: needs more escaping
+		out.append(key.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n").replace("<", "\\u003c"));
+		out.append("\":\"");
+		// TODO: needs more escaping
+		out.append(value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n").replace("<", "\\u003c"));
+		out.append("\"");
+	}
+
+	/**
+	 * converts a list of objects into a json fragment
+	 *
+	 * @param out output buffer
+	 * @param name trusted name of list (will not be escaped).
+	 * @param collection list of rpobjects
+	 * @param level serialization level
+	 */
+	public static void writeObjectCollectionToJson(StringBuilder out, String name, Collection<? extends Attributes> collection, DetailLevel level) {
+		out.append(",\"");
+		out.append(name);
+		out.append("\":[");
+		boolean first = true;
+		for (Attributes object : collection) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			out.append("{");
+			object.writeToJson(out, level);
+			out.append("}");
+		}
+		out.append("]");
+	}
+
 }

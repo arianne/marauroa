@@ -20,6 +20,7 @@ import static marauroa.common.net.message.Message.MessageType.C2S_LOGIN_REQUESTK
 import static marauroa.common.net.message.Message.MessageType.C2S_LOGIN_SENDNONCENAMEANDPASSWORD;
 import static marauroa.common.net.message.Message.MessageType.C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED;
 import static marauroa.common.net.message.Message.MessageType.C2S_LOGIN_SENDPROMISE;
+import static marauroa.common.net.message.Message.MessageType.C2S_LOGIN_SENDUSERNAMEANDPASSWORD;
 import static marauroa.common.net.message.Message.MessageType.C2S_LOGOUT;
 import static marauroa.common.net.message.Message.MessageType.C2S_OUTOFSYNC;
 import static marauroa.common.net.message.Message.MessageType.C2S_TRANSFER_ACK;
@@ -31,9 +32,11 @@ import java.util.Map;
 
 import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
+import marauroa.common.i18n.I18N;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.Message.MessageType;
 import marauroa.server.game.Statistics;
+import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
 import marauroa.server.game.rp.RPServerManager;
 import marauroa.server.net.INetworkServerManager;
@@ -47,7 +50,7 @@ public class MessageDispatcher {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(MessageDispatcher.class);
 
-	private Map<MessageType, MessageHandler> handlers = new HashMap<MessageType, MessageHandler>();
+	private final Map<MessageType, MessageHandler> handlers = new HashMap<MessageType, MessageHandler>();
 
 	/**
 	 * init the handlers map
@@ -57,6 +60,7 @@ public class MessageDispatcher {
 		handlers.put(C2S_LOGIN_SENDPROMISE, new LoginSendPromiseHandler());
 		handlers.put(C2S_LOGIN_SENDNONCENAMEANDPASSWORD, new SecuredLoginHandler());
 		handlers.put(C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED, new SecuredLoginHandler());
+		handlers.put(C2S_LOGIN_SENDUSERNAMEANDPASSWORD, new SecuredLoginHandler());
 		handlers.put(C2S_CHOOSECHARACTER, new ChooseCharacterHandler());
 		handlers.put(C2S_LOGOUT, new LogoutHandler());
 		handlers.put(C2S_ACTION, new ActionHandler());
@@ -99,10 +103,42 @@ public class MessageDispatcher {
 	 */
 	public void dispatchMessage(Message msg) {
 		logger.debug("Processing " + msg.getType());
+		MessageHandler handler = findMessageHandler(msg);
+		setThreadLanguage(msg);
+
+		try {
+
+			handler.process(msg);
+
+		} finally {
+			I18N.resetThreadLocale();
+		}
+	}
+
+	/**
+	 * finds the handler for this message type
+	 *
+	 * @param msg Message
+	 * @return MessageHandler
+	 */
+	private MessageHandler findMessageHandler(Message msg) {
 		MessageHandler handler = handlers.get(msg.getType());
 		if (handler == null) {
 			handler = new UnkownMessageHandler();
 		}
-		handler.process(msg);
+		return handler;
+	}
+
+	/**
+	 * sets the thread language for this client
+	 *
+	 * @param msg Message
+	 */
+	private void setThreadLanguage(Message msg) {
+		int clientid = msg.getClientID();
+		PlayerEntry entry = PlayerEntryContainer.getContainer().get(clientid);
+		if (entry != null) {
+			I18N.setThreadLocale(entry.locale);
+		}
 	}
 }

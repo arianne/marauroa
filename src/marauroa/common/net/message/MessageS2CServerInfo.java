@@ -14,12 +14,12 @@ package marauroa.common.net.message;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.zip.DeflaterOutputStream;
 
 import marauroa.common.Utility;
 import marauroa.common.game.RPClass;
+import marauroa.common.net.Channel;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
@@ -53,7 +53,7 @@ public class MessageS2CServerInfo extends Message {
 	 * @param contents
 	 *            the list of strings to describe the server.
 	 */
-	public MessageS2CServerInfo(SocketChannel source, String[] contents) {
+	public MessageS2CServerInfo(Channel source, String[] contents) {
 		super(MessageType.S2C_SERVERINFO, source);
 		this.contents = Utility.copy(contents);
 	}
@@ -75,7 +75,7 @@ public class MessageS2CServerInfo extends Message {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer text = new StringBuffer(" ");
+		StringBuilder text = new StringBuilder(" ");
 
 		for (int i = 0; i < contents.length; ++i) {
 			text.append("[" + contents[i] + "],");
@@ -141,4 +141,21 @@ public class MessageS2CServerInfo extends Message {
 			throw new IOException();
 		}
 	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"contents\":[");
+		boolean first = true;
+		for (String line : contents) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			OutputSerializer.writeJson(out, line);
+		}
+		out.append("]");
+	}
+
 }

@@ -11,6 +11,8 @@
  ***************************************************************************/
 package marauroa.server.game.db;
 
+import static marauroa.common.i18n.I18N._;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,7 +32,7 @@ import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.StringChecker;
 import marauroa.server.db.TransactionPool;
-import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.container.SecuredLoginInfo;
 
 /**
  * data access object for accounts
@@ -65,10 +67,11 @@ public class AccountDAO {
 			}
 
 			String query = "insert into account(username, password, status)"
-				+ " values('[username]','[password]', 'active')";
+				+ " values('[username]','[password]', '[status]')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			try {
+				params.put("status", Configuration.getConfiguration().get("account_creation_status", "active"));
 				if (Configuration.getConfiguration().get("password_hash", "sha512").equals("md5")) {
 					params.put("password", Hash.toHexString(passwordHash));
 				} else {
@@ -100,7 +103,7 @@ public class AccountDAO {
 	public String generatePlayer(String pattern) {
 		int length = pattern.length();
 		Random rand = new Random();
-		StringBuffer os = new StringBuffer();
+		StringBuilder os = new StringBuilder();
 
 		for (int i = 0; i < length; i++) {
 			char c = pattern.charAt(i);
@@ -310,17 +313,17 @@ public class AccountDAO {
 				String expire = result.getString("expire");
 				if (reason != null) {
 					if (expire != null) {
-						res = "Your account is temporarily suspended until " + expire + " server time.\r\n";
+						res = _("Your account is temporarily suspended until %1$s server time.", expire) + "\r\n";
 					} else {
-						res = "Your account is banned.\r\n";
+						res = _("Your account is banned.") + "\r\n";
 					}
-					res = res + "The reason given was: " + reason + "\r\n";
+					res = res + _("The reason given was: %1$s", reason) + "\r\n";
 				} else if ("banned".equals(status)) {
-					res = "Your account has been banned. Please contact support.\r\n";
+					res = _("Your account has been banned. Please contact support.") + "\r\n";
 				} else if ("inactive".equals(status)) {
-					res = "Your account has been flagged as inactive. Please contact support\r\n.";
+					res = _("Your account has been flagged as inactive. Please contact support.") + "\r\n";
 				} else if ("merged".equals(status)) {
-					res = "Your account has been merged into another account.\nPlease login with that account or contact support.\r\n";
+					res = _("Your account has been merged into another account.\nPlease login with that account or contact support.") + "\r\n";
 				}
 
 				if (((reason != null) || (!"active".equals(status))) && (!"merged".equals(status))) {
@@ -405,9 +408,9 @@ public class AccountDAO {
 	 * @return true, on success; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
-	public boolean verify(DBTransaction transaction, PlayerEntry.SecuredLoginInfo informations)
+	public boolean verify(DBTransaction transaction, SecuredLoginInfo informations)
 	        throws SQLException {
-		if (Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
+		if (informations.isUsingSecureChannel() && Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
 			logger.debug("Different hashs for client Nonce");
 			return false;
 		}
@@ -756,7 +759,7 @@ public class AccountDAO {
 	 * @return true, on success; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
-	public boolean verify(PlayerEntry.SecuredLoginInfo informations) throws SQLException {
+	public boolean verify(SecuredLoginInfo informations) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			boolean res = verify(transaction, informations);

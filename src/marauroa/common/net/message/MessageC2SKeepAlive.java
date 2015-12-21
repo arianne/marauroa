@@ -12,13 +12,15 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+import java.util.Map;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message is sent from client to server to indicate that he is still there
- * and that wants to be considered connected. 
+ * and that wants to be considered connected.
  * <p>
- * There are strange situations on TCP that cause a considerable amount of time to 
+ * There are strange situations on TCP that cause a considerable amount of time to
  * be ellapsed until the stack realized that a timeout happens.
  */
 public class MessageC2SKeepAlive extends Message {
@@ -34,7 +36,7 @@ public class MessageC2SKeepAlive extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageC2SKeepAlive(SocketChannel source) {
+	public MessageC2SKeepAlive(Channel source) {
 		super(MessageType.C2S_KEEPALIVE, source);
 	}
 
@@ -48,14 +50,19 @@ public class MessageC2SKeepAlive extends Message {
 		return "Message (C2S Keep Alive) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
-	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
-		super.writeObject(out);
-	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
+
+		if (type != MessageType.C2S_KEEPALIVE) {
+			throw new IOException();
+		}
+	}
+
+	@Override
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
 
 		if (type != MessageType.C2S_KEEPALIVE) {
 			throw new IOException();

@@ -12,6 +12,7 @@
 package marauroa.server.game.messagehandler;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
@@ -21,6 +22,7 @@ import marauroa.common.net.message.MessageC2SLoginSendPromise;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CLoginSendNonce;
 import marauroa.server.game.container.PlayerEntry;
+import marauroa.server.game.container.SecuredLoginInfo;
 
 /**
  * Receive the client hash promise of the password. Now
@@ -89,7 +91,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 				        + ") can't login. You may want to increase max_number_of_players in your server.init. Current value is: " + maxNumberOfPlayers);
 
 				/* Notify player of the event. */
-				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
+				MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getChannel(),
 				        MessageS2CLoginNACK.Reasons.SERVER_IS_FULL);
 				msgLoginNACK.setProtocolVersion(msg.getProtocolVersion());
 				netMan.sendMessage(msgLoginNACK);
@@ -98,17 +100,18 @@ class LoginSendPromiseHandler extends MessageHandler {
 
 			MessageC2SLoginSendPromise msgLoginSendPromise = (MessageC2SLoginSendPromise) msg;
 
-			PlayerEntry entry = playerContainer.add(msgLoginSendPromise.getSocketChannel());
+			PlayerEntry entry = playerContainer.add(msgLoginSendPromise.getChannel());
 			entry.setProtocolVersion(msg.getProtocolVersion());
+			entry.locale = new Locale(msgLoginSendPromise.getLanguage());
 
 			byte[] serverNonce = Hash.random(Hash.hashLength());
 			byte[] clientNonceHash = msgLoginSendPromise.getHash();
 
-			entry.loginInformations = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash,
+			entry.loginInformations = new SecuredLoginInfo(key, clientNonceHash,
 			        serverNonce, msgLoginSendPromise.getAddress());
 
 			MessageS2CLoginSendNonce msgLoginSendNonce = new MessageS2CLoginSendNonce(msg
-			        .getSocketChannel(), serverNonce);
+			        .getChannel(), serverNonce);
 			msgLoginSendNonce.setClientID(entry.clientid);
 			msgLoginSendNonce.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendNonce);

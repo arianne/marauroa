@@ -45,7 +45,7 @@ public class GameEventDAO {
 	 */
 	public void addGameEvent(DBTransaction transaction, String source, String event, String... params) throws SQLException {
 		String firstParam = (params.length > 0 ? params[0] : "");
-		StringBuffer param = new StringBuffer();
+		StringBuilder param = new StringBuilder();
 		if (params.length > 1) {
 			for (int i = 1; i < params.length; i++) {
 				param.append(params[i]);

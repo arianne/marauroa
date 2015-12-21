@@ -12,9 +12,11 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
+import marauroa.common.game.DetailLevel;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the client that the server has accepted its create
@@ -46,7 +48,7 @@ public class MessageS2CCreateCharacterACK extends Message {
 	 * @param template
 	 * 			  the avatar configuration.
 	 */
-	public MessageS2CCreateCharacterACK(SocketChannel source, String character, RPObject template) {
+	public MessageS2CCreateCharacterACK(Channel source, String character, RPObject template) {
 		super(MessageType.S2C_CREATECHARACTER_ACK, source);
 		this.character = character;
 		this.template = template;
@@ -97,5 +99,15 @@ public class MessageS2CCreateCharacterACK extends Message {
 		if (type != MessageType.S2C_CREATECHARACTER_ACK) {
 			throw new IOException();
 		}
+	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",");
+		OutputSerializer.writeJson(out, "charname", character);
+		out.append(",\"template\":{");
+		template.writeToJson(out, DetailLevel.PRIVATE);
+		out.append("}");
 	}
 }

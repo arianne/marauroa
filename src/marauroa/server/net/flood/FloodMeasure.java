@@ -11,7 +11,7 @@
  ***************************************************************************/
 package marauroa.server.net.flood;
 
-import java.nio.channels.SocketChannel;
+import marauroa.common.net.Channel;
 
 /**
  * Stores for each player the amount of messages and bytes sent since the last
@@ -22,7 +22,7 @@ import java.nio.channels.SocketChannel;
 public class FloodMeasure {
 
 	/** The socket channel associated. */
-	public SocketChannel channel;
+	public Channel channel;
 
 	/** The last timestamp when the flood was measured. */
 	public long lasttimestamp;
@@ -42,7 +42,7 @@ public class FloodMeasure {
 	 * @param channel
 	 *            the associated resource to this measure object.
 	 */
-	public FloodMeasure(SocketChannel channel) {
+	public FloodMeasure(Channel channel) {
 		this.channel = channel;
 		floodWarnings = 0;
 
@@ -126,7 +126,7 @@ public class FloodMeasure {
 
 	@Override
 	public String toString() {
-		StringBuffer os = new StringBuffer();
+		StringBuilder os = new StringBuilder();
 		os.append("[");
 		os.append(" time: " + sinceLastReset());
 		os.append(" send bytes: " + sendBytes);

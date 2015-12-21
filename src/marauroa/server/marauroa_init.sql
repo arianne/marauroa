@@ -52,7 +52,7 @@ create table if not exists loginEvent
   player_id integer not null,
   account_link_id integer,
   address varchar(64),
-  service char(10),
+  service char(20),
   seed varchar(120),
 
   timedate timestamp default CURRENT_TIMESTAMP,
@@ -70,7 +70,7 @@ create table if not exists passwordChange
   id integer auto_increment not null,
   player_id integer not null,
   address varchar(64),
-  service char(10),
+  service char(20),
 
   timedate timestamp default CURRENT_TIMESTAMP,
 

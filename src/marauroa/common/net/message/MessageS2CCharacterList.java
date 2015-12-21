@@ -12,13 +12,15 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import marauroa.common.game.DetailLevel;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 import marauroa.common.net.NetConst;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * The CharacterListMessage is sent from server to client to inform client about
@@ -43,7 +45,7 @@ public class MessageS2CCharacterList extends Message {
 	 * @param characters
 	 *            the list of characters of the player
 	 */
-	public MessageS2CCharacterList(SocketChannel source, String[] characters) {
+	public MessageS2CCharacterList(Channel source, String[] characters) {
 		super(MessageType.S2C_CHARACTERLIST, source);
 		this.characters = new LinkedHashMap<String, RPObject>();
 		for (String character : characters) {
@@ -61,12 +63,12 @@ public class MessageS2CCharacterList extends Message {
 	 * @param characters
 	 *            the list of characters of the player
 	 */
-	public MessageS2CCharacterList(SocketChannel source, Map<String, RPObject> characters) {
+	public MessageS2CCharacterList(Channel source, Map<String, RPObject> characters) {
 		super(MessageType.S2C_CHARACTERLIST, source);
 		this.characters = new LinkedHashMap<String, RPObject>(characters);
 	}
 
-	
+
 	/**
 	 * This method returns the list of characters that the player owns
 	 *
@@ -99,6 +101,29 @@ public class MessageS2CCharacterList extends Message {
 	}
 
 	@Override
+	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+		super.readObject(in);
+		String[] readCharacters = in.readStringArray();
+		this.characters = new LinkedHashMap<String, RPObject>();
+
+		// read the map or list, depending on protocol version
+		if (super.protocolVersion >= NetConst.FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST) {
+			Object[] objects = in.readObjectArray(RPObject.class);
+			for (int i = 0; i < readCharacters.length; i++) {
+				this.characters.put(readCharacters[i], (RPObject) objects[i]);
+			}
+		} else {
+			for (String character : readCharacters) {
+				this.characters.put(character, new RPObject());
+			}
+		}
+
+		if (type != MessageType.S2C_CHARACTERLIST) {
+			throw new IOException();
+		}
+	}
+
+	@Override
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(getCharacters());
@@ -113,25 +138,21 @@ public class MessageS2CCharacterList extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
-		super.readObject(in);
-		String[] characters = in.readStringArray();
-		this.characters = new LinkedHashMap<String, RPObject>();
-	
-		// read the map or list, depending on protocol version
-		if (super.protocolVersion >= NetConst.FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST) {
-			Object[] objects = in.readObjectArray(RPObject.class);
-			for (int i = 0; i < characters.length; i++) {
-				this.characters.put(characters[i], (RPObject) objects[i]);
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"characters\":{");
+		boolean first = true;
+		for (Map.Entry<String, RPObject> entry : characters.entrySet()) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
 			}
-		} else {
-			for (String character : characters) {
-				this.characters.put(character, new RPObject());
-			}
+			OutputSerializer.writeJson(out, entry.getKey());
+			out.append(":{");
+			entry.getValue().writeToJson(out, DetailLevel.NORMAL);
+			out.append("}");
 		}
-
-		if (type != MessageType.S2C_CHARACTERLIST) {
-			throw new IOException();
-		}
+		out.append("}");
 	}
 }

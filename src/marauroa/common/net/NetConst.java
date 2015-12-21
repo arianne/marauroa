@@ -11,32 +11,12 @@
  ***************************************************************************/
 package marauroa.common.net;
 
-import marauroa.common.Configuration;
-import marauroa.common.Log4J;
 
 /**
  * This class hosts several constants related to the network configuration of
  * Marauroa
  */
 public class NetConst {
-
-	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(NetConst.class);
-
-	/** Port that will use the server for listen to incoming packets */
-	@Deprecated
-	public static final int tcpPort;
-
-	static {
-		int myTcpPort = 3214;
-		try {
-			Configuration conf = Configuration.getConfiguration();
-			myTcpPort = Integer.parseInt(conf.get("tcp_port"));
-		} catch (Exception e) {
-			logger.warn("Using default port " + myTcpPort, e);
-		}
-		tcpPort = myTcpPort;
-	}
 
 	/**
 	 * Number of the protocol version.
@@ -75,8 +55,9 @@ public class NetConst {
 	 * 32 - Include RPObjects in S2CCharacterList
 	 * 33 - Added support for maps as attributes
 	 * 34 - Added hash on content transfer, empty perceptions are now omittable
+	 * 35 - Aded data type long
 	 */
-	public static final byte NETWORK_PROTOCOL_VERSION = 34;
+	public static final byte NETWORK_PROTOCOL_VERSION = 35;
 
 	/** Oldest supported protocol version */
 	public static final byte NETWORK_PROTOCOL_VERSION_MIN = 31;
@@ -107,4 +88,6 @@ public class NetConst {
 	/** longer reasons for bans */
 	public static final int FIRST_VERSION_WITH_LONG_BAN_MESSAGE = 34;
 
+	/** data type long */
+	public static final int FIRST_VERSION_WITH_TYPE_LONG = 35;
 }

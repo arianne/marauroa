@@ -12,9 +12,10 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+import java.util.Map;
 
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the server to create a character.
@@ -47,7 +48,7 @@ public class MessageC2SCreateCharacter extends Message {
 	 *            a RPObject that contains attributes that will be used on the
 	 *            created character.
 	 */
-	public MessageC2SCreateCharacter(SocketChannel source, String character, RPObject template) {
+	public MessageC2SCreateCharacter(Channel source, String character, RPObject template) {
 		super(MessageType.C2S_CREATECHARACTER, source);
 		this.character = character;
 		this.template = template;
@@ -94,6 +95,19 @@ public class MessageC2SCreateCharacter extends Message {
 		super.readObject(in);
 		character = in.readString();
 		template = (RPObject) in.readObject(new RPObject());
+
+		if (type != MessageType.C2S_CREATECHARACTER) {
+			throw new IOException();
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
+		character = (String) in.get("charname");
+		template = new RPObject();
+		template.readFromMap((Map<String, Object>) in.get("template"));
 
 		if (type != MessageType.C2S_CREATECHARACTER) {
 			throw new IOException();

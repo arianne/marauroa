@@ -16,6 +16,7 @@ import java.sql.SQLException;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
+import marauroa.common.i18n.I18N;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.game.dbcommand.DBCommandWithCallback;
@@ -98,14 +99,17 @@ class DBCommandQueueBackgroundThread implements Runnable {
 	private boolean executeDBAction(DBCommandMetaData metaData) {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
+			I18N.setThreadLocale(metaData.getLocale());
 			metaData.getCommand().execute(transaction);
 			TransactionPool.get().commit(transaction);
 		} catch (IOException e) {
 			logger.error(e, e);
+			I18N.resetThreadLocale();
 			TransactionPool.get().rollback(transaction);
 			metaData.getCommand().setException(e);
 		} catch (SQLException e) {
 			logger.error(e, e);
+			I18N.resetThreadLocale();
 			if (e.toString().contains("CommunicationsException") || e.toString().contains("Query execution was interrupted")) {
 				TransactionPool.get().killTransaction(transaction);
 				TransactionPool.get().refreshAvailableTransaction();
@@ -115,9 +119,11 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			metaData.getCommand().setException(e);
 		} catch (RuntimeException e) {
 			logger.error(e, e);
+			I18N.resetThreadLocale();
 			TransactionPool.get().rollback(transaction);
 			metaData.getCommand().setException(e);
 		}
+		I18N.resetThreadLocale();
 		return true;
 	}
 }

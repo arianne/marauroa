@@ -11,6 +11,8 @@
  ***************************************************************************/
 package marauroa.client.net;
 
+import static marauroa.common.i18n.I18N._;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,19 +48,19 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	 * Server will assign us a clientid, so we store it so that we remind it for
 	 * the messages we send to server. Client id is unique per session.
 	 */
-	private int clientid;
+	int clientid;
 
 	/** The server socket from where we receive the packets. */
-	private Socket socket;
+	Socket socket;
 
 	/** The TCP/IP address where the server is running. */
 	private final InetSocketAddress address;
 
 	/** While keepRunning is true, we keep receiving messages */
-	private boolean keepRunning;
+	boolean keepRunning;
 
 	/** isFinished is true when the thread has really exited. */
-	private boolean isfinished;
+	boolean isfinished;
 
 	/** A instance of the thread that read stuff from network and build messages. */
 	private final NetworkClientManagerRead readManager;
@@ -70,24 +72,24 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	 * List of already processed messages what the client will get using
 	 * getMessage method.
 	 */
-	private final BlockingQueue<Message> processedMessages;
+	final BlockingQueue<Message> processedMessages;
 
 	/**
 	 * An instance to the encoder class that will build a stream of bytes from a
 	 * Message.
 	 */
-	private final Encoder encoder;
+	final Encoder encoder;
 
 	/**
 	 * An instance of the decoder class that will recreate a message from a
 	 * stream of bytes.
 	 */
-	private final Decoder decoder;
+	final Decoder decoder;
 
 	/**
 	 * This is true as long as we are connected to server.
 	 */
-	private boolean connected = false;
+	boolean connected = false;
 
 	/**
 	 * already registered?
@@ -122,7 +124,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 		// check name (dns lookup)
 		if (address.getAddress() == null) {
-			throw new IOException("Unknown Host");
+			throw new IOException(_("Unknown Host"));
 		}
 
 		/* Create the socket */
@@ -172,7 +174,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 		readManager.interrupt();
 
-		while (isfinished == false) {
+		while (!isfinished) {
 			Thread.yield();
 		}
 
@@ -188,9 +190,9 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 		return address;
 	}
 
-	private boolean shouldThrowException;
+	boolean shouldThrowException;
 
-	private InvalidVersionException storedException;
+	InvalidVersionException storedException;
 
 	/*
 	 * (non-Javadoc)
@@ -422,7 +424,8 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 		/** An output stream that represents the socket. */
 		private OutputStream os = null;
-		private boolean loggedOut = false;
+		/** did we logout ? */
+		boolean loggedOut = false;
 
 		/**
 		 * Constructor
@@ -461,7 +464,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 			try {
 				if (keepRunning) {
 					/* We enforce the remote endpoint */
-					msg.setSocketChannel(null);
+					msg.setChannel(null);
 					msg.setClientID(clientid);
 
 					/*

@@ -12,9 +12,11 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
+
+import marauroa.common.net.Channel;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the client that the server has accepted its login
@@ -39,7 +41,7 @@ public class MessageS2CLoginACK extends Message {
 	 * @param events
 	 * 			  The list of previous logins.
 	 */
-	public MessageS2CLoginACK(SocketChannel source, List<String> events) {
+	public MessageS2CLoginACK(Channel source, List<String> events) {
 		super(MessageType.S2C_LOGIN_ACK, source);
 		previousLogins = events;
 	}
@@ -85,5 +87,21 @@ public class MessageS2CLoginACK extends Message {
 		if (type != MessageType.S2C_LOGIN_ACK) {
 			throw new IOException();
 		}
+	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"previousLogins\":[");
+		boolean first = true;
+		for (String line : previousLogins) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			OutputSerializer.writeJson(out, line);
+		}
+		out.append("]");
 	}
 }

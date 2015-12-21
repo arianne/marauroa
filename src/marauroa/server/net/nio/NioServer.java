@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import marauroa.common.Log4J;
-import marauroa.server.net.IDisconnectedListener;
 
 /**
  * This class is the basic schema for a nio server. It works in a pattern of
@@ -77,8 +76,6 @@ class NioServer extends Thread {
 	/** Maps a SocketChannel to a list of ByteBuffer instances */
 	private final Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
 
-	/** A list of the listeners to the onDisconnect event. */
-	private final List<IDisconnectedListener> listeners;
 
 	public NioServer(InetAddress hostAddress, int port, IWorker worker) throws IOException {
 		super("NioServer");
@@ -93,7 +90,6 @@ class NioServer extends Thread {
 		this.worker.setServer(this);
 
 		pendingClosed = new LinkedList<ChangeRequest>();
-		listeners = new LinkedList<IDisconnectedListener>();
 	}
 
 	/**
@@ -104,20 +100,14 @@ class NioServer extends Thread {
 	 *            the channel to close.
 	 */
 	public void close(SocketChannel channel) {
-		for (IDisconnectedListener listener : listeners) {
-			listener.onDisconnect(channel);
-		}
+		worker.onDisconnect(channel);
 
-		/*
-		 * We ask the server to close the channel
-		 */
+		// We ask the server to close the channel
 		synchronized (this.pendingClosed) {
-		  pendingClosed.add(new ChangeRequest(channel, ChangeRequest.CLOSE, 0));
+			pendingClosed.add(new ChangeRequest(channel, ChangeRequest.CLOSE, 0));
 		}
 
-		/*
-		 * Wake up to make the closure effective.
-		 */
+		// Wake up to make the closure effective.
 		selector.wakeup();
 	}
 
@@ -162,7 +152,7 @@ class NioServer extends Thread {
 
 		selector.wakeup();
 
-		while (isFinished == false) {
+		while (!(isFinished)) {
 			Thread.yield();
 		}
 
@@ -211,10 +201,10 @@ class NioServer extends Thread {
 
 									// Close the socket
 									change.socket.close();
-								} catch (Exception e) {
-									logger.info("Exception happened when closing socket", e);
-								}
-								break;
+									} catch (Exception e) {
+										logger.info("Exception happened when closing socket", e);
+									}
+									break;
 							}
 						} else {
 							logger.info("Closing a not connected socket");
@@ -365,12 +355,4 @@ class NioServer extends Thread {
 		return socketSelector;
 	}
 
-	/**
-	 * Register a listener to notify about disconnected events
-	 *
-	 * @param listener listener to add
-	 */
-	public void registerDisconnectedListener(IDisconnectedListener listener) {
-		this.listeners.add(listener);
-	}
 }

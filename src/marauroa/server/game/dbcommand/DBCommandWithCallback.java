@@ -11,8 +11,7 @@
  ***************************************************************************/
 package marauroa.server.game.dbcommand;
 
-import java.nio.channels.SocketChannel;
-
+import marauroa.common.net.Channel;
 import marauroa.server.db.command.AbstractDBCommand;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
 import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
@@ -24,7 +23,7 @@ import marauroa.server.game.messagehandler.DelayedEventHandlerThread;
  */
 public abstract class DBCommandWithCallback extends AbstractDBCommand {
 	private int clientid;
-	private SocketChannel channel;
+	private Channel channel;
 	private int protocolVersion;
 	/** a handler that will be informed about the result */
 	protected DelayedEventHandler callback;
@@ -44,7 +43,7 @@ public abstract class DBCommandWithCallback extends AbstractDBCommand {
 	 * @param channel optional parameter available to the callback
 	 * @param protocolVersion protocolVersion
 	 */
-	protected DBCommandWithCallback(DelayedEventHandler callback, int clientid, SocketChannel channel, int protocolVersion) {
+	protected DBCommandWithCallback(DelayedEventHandler callback, int clientid, Channel channel, int protocolVersion) {
 		this.callback = callback;
 		this.clientid = clientid;
 		this.channel = channel;
@@ -61,11 +60,11 @@ public abstract class DBCommandWithCallback extends AbstractDBCommand {
 	}
 
 	/**
-	 * gets the SocketChannel
+	 * gets the channel
 	 *
-	 * @return SocketChannel
+	 * @return channel
 	 */
-	public SocketChannel getChannel() {
+	public Channel getChannel() {
 		return channel;
 	}
 

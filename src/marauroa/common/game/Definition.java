@@ -28,6 +28,7 @@ import marauroa.common.Log4J;
  *   - BYTE A 8 bits integer.
  *   - SHORT A 16 bits integer
  *   - INT A 32 bits integer
+ *   - LONG A 64 bits integer
  *   - FLAG A value that is set or not set.
  * - capacity of the slot
  * - flags to decide the visibility of the atttribute, event or slot. It must be one of the
@@ -67,6 +68,8 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/** Define the possible types of an attribute or event */
+	// Important to preserve compatibility:
+	// Add new entries at the end, do not delete entries, do not change order
 	public enum Type {
 		/** No type */
 		NOTYPE,
@@ -87,7 +90,9 @@ public class Definition implements marauroa.common.net.Serializable {
 		/** an boolean attribute that either is present or not. */
 		FLAG,
 		/** a map attribute **/
-		MAP
+		MAP,
+		/** an integer of 64 bits */
+		LONG
 	}
 
 	/* Visibility of a attribute/event/slot */
@@ -149,7 +154,7 @@ public class Definition implements marauroa.common.net.Serializable {
 		this.clazz = clazz;
 		code = -1;
 	}
-	
+
 	@Override
 	public String toString() {
 		return clazz+": N="+name+" T="+type+" C="+code;
@@ -423,6 +428,8 @@ public class Definition implements marauroa.common.net.Serializable {
 				return in.read255LongString();
 			case FLOAT:
 				return Float.toString(in.readFloat());
+			case LONG:
+				return Long.toString(in.readLong());
 			case INT:
 				return Integer.toString(in.readInt());
 			case SHORT:
@@ -447,8 +454,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @throws IOException
 	 *             if there is any problem on the serialization
 	 */
-	public void serialize(String value, marauroa.common.net.OutputSerializer out)
-	        throws IOException {		
+	public void serialize(String value, marauroa.common.net.OutputSerializer out) throws IOException {
 		try {
 	        switch (type) {
 	        	case VERY_LONG_STRING:
@@ -463,6 +469,9 @@ public class Definition implements marauroa.common.net.Serializable {
 	        	case FLOAT:
 	        		out.write(Float.parseFloat(value));
 	        		break;
+	        	case LONG:
+	        		out.write(Long.parseLong(value));
+	        		break;
 	        	case INT:
 	        		out.write(Integer.parseInt(value));
 	        		break;
@@ -473,12 +482,10 @@ public class Definition implements marauroa.common.net.Serializable {
 	        		out.write(Byte.parseByte(value));
 	        		break;
 	        	case FLAG:
-	        		/*
-	        		 * It is empty because it is a flag and so, it is already present.
-	        		 */
+	        		// It is empty because it is a flag and so, it is already present.
 	        		break;
 	        	default:
-	        		/* NOTE: Must never happen */
+	        		// NOTE: Must never happen
 	        		logger.error("got unknown attribute(" + name + ") type:" + type);
 	        		break;
 	        }
@@ -493,7 +500,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/**
-	 * validates 
+	 * validates
 	 *
 	 * @param value
 	 *            the value of the event/attribute
@@ -514,6 +521,9 @@ public class Definition implements marauroa.common.net.Serializable {
 					break;
 				case FLOAT:
 					validator.validateFloat(value);
+					break;
+				case LONG:
+					validator.validateLong(value);
 					break;
 				case INT:
 					validator.validateInteger(value);
@@ -595,11 +605,11 @@ public class Definition implements marauroa.common.net.Serializable {
 
 		Definition def = (Definition) ot;
 
-		boolean result = clazz.equals(def.clazz) 
-				&& code == def.code 
+		boolean result = clazz.equals(def.clazz)
+				&& code == def.code
 				&& capacity == def.capacity
-		        && flags == def.flags 
-		        && name.equals(def.name) 
+		        && flags == def.flags
+		        && name.equals(def.name)
 		        && type == def.type;
 		if (result) {
 			if (value == null) {

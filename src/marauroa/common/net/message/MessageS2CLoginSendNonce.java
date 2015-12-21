@@ -12,9 +12,9 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
 import marauroa.common.crypto.Hash;
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the client the choosen server NONCE value by sending it a
@@ -38,7 +38,7 @@ public class MessageS2CLoginSendNonce extends MessageSendByteArray {
 	 * @param hash
 	 *            The nonce to send to the client.
 	 */
-	public MessageS2CLoginSendNonce(SocketChannel source, byte[] hash) {
+	public MessageS2CLoginSendNonce(Channel source, byte[] hash) {
 		super(MessageType.S2C_LOGIN_SENDNONCE, source, hash);
 	}
 

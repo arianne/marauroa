@@ -11,10 +11,12 @@
  ***************************************************************************/
 package marauroa.common.net.message;
 
-import java.io.IOException;
-import java.nio.channels.SocketChannel;
+import static marauroa.common.i18n.I18N._;
 
-import marauroa.common.net.NetConst;
+import java.io.IOException;
+
+import marauroa.common.net.Channel;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the client that the server has reject its login Message
@@ -24,19 +26,28 @@ import marauroa.common.net.NetConst;
 
 public class MessageS2CLoginNACK extends Message {
 
+	/**
+	 * reason for login failure
+	 */
 	public enum Reasons {
-		USERNAME_WRONG, 
+		/** the username or password is wrong */
+		USERNAME_WRONG,
 		/** @since will be replaced by TOO_MANY_TRIES_USERNAME and TOO_MANY_TRIES_IP in the future */
-		TOO_MANY_TRIES, 
-		USERNAME_BANNED, 
-		SERVER_IS_FULL, 
-		GAME_MISMATCH, 
-		PROTOCOL_MISMATCH, 
+		TOO_MANY_TRIES,
+		/** the account is banned
+		USERNAME_BANNED,
+		/** there are too many active clients */
+		SERVER_IS_FULL,
+		/** the client is for a different game than the server */
+		GAME_MISMATCH,
+		/** the protocol version is incompatible */
+		PROTOCOL_MISMATCH,
+		/** the nonce, which is used during setup of the encryption, is invalid
 		INVALID_NONCE,
 		/** @since 3.0 */
 		USERNAME_INACTIVE,
 		/** @since 3.0 */
-		TOO_MANY_TRIES_USERNAME, 
+		TOO_MANY_TRIES_USERNAME,
 		/** @since 3.0 */
 		TOO_MANY_TRIES_IP,
 		/** @since 3.7 */
@@ -52,8 +63,7 @@ public class MessageS2CLoginNACK extends Message {
 		    "Account is banned.",
 	        "Server is full.",
 	        "Server is running an incompatible version of game. Please update.",
-	        "marauroa.common.network Protocol invalid version: Running "
-	                + Integer.toString(NetConst.NETWORK_PROTOCOL_VERSION),
+	        "Invalid network protocol version.",
 	        "The hash you sent does not correspond to the nonce you sent.",
 	        "You account has been marked as inactive, please contact support.",
 	        "There have been too many failed login attempts for your account. "
@@ -80,7 +90,7 @@ public class MessageS2CLoginNACK extends Message {
 	 * @param resolution
 	 *            the reason to deny the login
 	 */
-	public MessageS2CLoginNACK(SocketChannel source, Reasons resolution) {
+	public MessageS2CLoginNACK(Channel source, Reasons resolution) {
 		super(MessageType.S2C_LOGIN_NACK, source);
 		reason = resolution;
 	}
@@ -101,7 +111,7 @@ public class MessageS2CLoginNACK extends Message {
 	 * @return a string representing the resolution.
 	 */
 	public String getResolution() {
-		return text[reason.ordinal()];
+		return _(text[reason.ordinal()]);
 	}
 
 	/**
@@ -130,4 +140,14 @@ public class MessageS2CLoginNACK extends Message {
 			throw new IOException();
 		}
 	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"reason\":\"");
+		out.append(reason.name());
+		out.append("\",\"text\":");
+		OutputSerializer.writeJson(out, text[reason.ordinal()]);
+	}
+
 }

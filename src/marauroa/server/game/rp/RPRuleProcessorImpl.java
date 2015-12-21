@@ -11,6 +11,7 @@
  ***************************************************************************/
 package marauroa.server.game.rp;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -100,7 +101,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 		return true;
 	}
 
-
+	
 	/**
 	 * Callback method called when a new player enters in the game
 	 *
@@ -229,4 +230,37 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 		object.put("name", character);
 		return object;
 	}
+
+
+	/**
+	 * gets the content type for the requested resource
+	 * 
+	 * @param resource name of resource
+	 * @return mime content/type or <code>null</code>
+	 */
+	public String getMimeTypeForResource(String resource) {
+		if (resource.endsWith(".tmx")) {
+			return "text/xml";
+		} else if (resource.endsWith(".tmx")) {
+			return "audio/ogg";
+		} else if (resource.endsWith(".png")) {
+			return "image/png";
+		} else if (resource.endsWith(".js")) {
+			return "text/javascript";
+		} else if (resource.endsWith(".css")) {
+			return "text/css";
+		}
+		return null;
+	}
+
+	/**
+	 * gets an input stream to the requested resource
+	 * 
+	 * @param resource name of resource
+	 * @return InputStream or <code>null</code>
+	 */
+	public InputStream getResource(String resource) {
+		return null;
+	}
+
 }

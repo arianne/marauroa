@@ -1,5 +1,8 @@
 Changelog
 ---------
+3.9.5
+- added support for HTML5
+
 3.9.3
 - retry database command on connection loss to the database server
 - marauroa can invoke an external command (email_command in server.ini) with the token and email-address on account creation

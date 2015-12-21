@@ -13,9 +13,9 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.nio.channels.SocketChannel;
+import java.util.Map;
 
+import marauroa.common.net.Channel;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
@@ -32,47 +32,83 @@ public class Message implements Serializable {
 
 	/** Type of message */
 	public enum MessageType {
-		C2S_ACTION, 
-		C2S_CHOOSECHARACTER, 
-		C2S_LOGIN_REQUESTKEY, 
-		C2S_LOGIN_SENDNONCENAMEANDPASSWORD, 
-		C2S_LOGIN_SENDPROMISE, 
-		C2S_LOGOUT, 
-		C2S_OUTOFSYNC, 
-		C2S_TRANSFER_ACK, 
+		/** client to server: player action */
+		C2S_ACTION,
+		/** client to server: character pick */
+		C2S_CHOOSECHARACTER,
+		/** client to server: request key to start login */
+		C2S_LOGIN_REQUESTKEY,
+		/** client to server: send nonce, username and encrypted password */
+		C2S_LOGIN_SENDNONCENAMEANDPASSWORD,
+		/** client to server: sends a promise to the server which is used to setup encryption of the passwrd */
+		C2S_LOGIN_SENDPROMISE,
+		/** client to server: requests a logout */
+		C2S_LOGOUT,
+		/** client to server: requests a full permission */
+		C2S_OUTOFSYNC,
+		/** client to server: acknowledge transfer of binary data (e. g. map information) */
+		C2S_TRANSFER_ACK,
+		/** client to server: tell the server, that we are still alive */
 		C2S_KEEPALIVE,
-		S2C_CHARACTERLIST, 
-		S2C_CHOOSECHARACTER_ACK, 
-		S2C_CHOOSECHARACTER_NACK, 
-		S2C_INVALIDMESSAGE, 
-		S2C_LOGIN_ACK, 
-		S2C_LOGIN_NACK, 
-		S2C_LOGIN_SENDKEY, 
-		S2C_LOGIN_SENDNONCE, 
-		S2C_LOGOUT_ACK, 
-		S2C_LOGOUT_NACK, 
-		S2C_PERCEPTION, 
-		S2C_SERVERINFO, 
-		S2C_TRANSFER, 
-		S2C_TRANSFER_REQ, 
-		C2S_CREATEACCOUNT, 
-		S2C_CREATEACCOUNT_ACK, 
-		S2C_CREATEACCOUNT_NACK, 
-		C2S_CREATECHARACTER, 
-		S2C_CREATECHARACTER_ACK, 
-		S2C_CREATECHARACTER_NACK, 
+		/** server to client: sends the character list */
+		S2C_CHARACTERLIST,
+		/** server to client: confirms a successful character choice */
+		S2C_CHOOSECHARACTER_ACK,
+		/** server to client: rejects a character choice */
+		S2C_CHOOSECHARACTER_NACK,
+		/** server to client: rejects the last message */
+		S2C_INVALIDMESSAGE,
+		/** server to client: confirms a successful login */
+		S2C_LOGIN_ACK,
+		/** server to client: rejects a login attempt */
+		S2C_LOGIN_NACK,
+		/** server to client: sends the public key */
+		S2C_LOGIN_SENDKEY,
+		/** server to client: sends a nonce as part of the encryption handshake */
+		S2C_LOGIN_SENDNONCE,
+		/** server to client: confirms a logout attempt */
+		S2C_LOGOUT_ACK,
+		/** server to client: rejects a logout attempt */
+		S2C_LOGOUT_NACK,
+		/** server to client: updates the client view of the world around it */
+		S2C_PERCEPTION,
+		/** server to client: submits server and RPClass information to the client */
+		S2C_SERVERINFO,
+		/** server to client: transfers content to the client */
+		S2C_TRANSFER,
+		/** server to client: offers content to the client */
+		S2C_TRANSFER_REQ,
+		/** client to server: requests an account creation */
+		C2S_CREATEACCOUNT,
+		/** server to client: confirms a successful character creation attempt */
+		S2C_CREATEACCOUNT_ACK,
+		/** server to client: rejects an account cration attempt */
+		S2C_CREATEACCOUNT_NACK,
+		/** client to server: requests a character creation */
+		C2S_CREATECHARACTER,
+		/** server to client: confirms a successful character creation attempt */
+		S2C_CREATECHARACTER_ACK,
+		/** server to client: rejects a character creation attempt */
+		S2C_CREATECHARACTER_NACK,
+		/** server to client: rejects a connection attempt */
 		S2C_CONNECT_NACK,
-		C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED, 
+		/** client to server: sends username, password and a seed (for single sign on) */
+		C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED,
+		/** server to client: reject a login attempt */
 		S2C_LOGIN_MESSAGE_NACK,
+		/** proxy to server: creates a character on behalf of a user */
 		P2S_CREATECHARACTER,
-		P2S_CREATEACCOUNT
+		/** proxy to server: creates an account on behalf of a user */
+		P2S_CREATEACCOUNT,
+		/** client to server: sends the username and password */
+		C2S_LOGIN_SENDUSERNAMEANDPASSWORD
 	}
 
 	/** Type of the message */
 	protected MessageType type;
 
 	/** Clientid of the player that generated the message */
-	protected int clientid;
+	protected int clientid = -1;
 
 	/** Timestamp about when the message was created */
 	protected int timestampMessage;
@@ -83,7 +119,7 @@ public class Message implements Serializable {
 	 * The socket channel that the message will use to be send or from where it
 	 * was received
 	 */
-	protected SocketChannel channel;
+	protected Channel channel;
 
 	private InetAddress inetAddres;
 
@@ -95,13 +131,12 @@ public class Message implements Serializable {
 	 * @param channel
 	 *            The TCP/IP address associated to this message
 	 */
-	protected Message(MessageType type, SocketChannel channel) {
+	protected Message(MessageType type, Channel channel) {
 		this.type = type;
 		this.clientid = CLIENTID_INVALID;
 		this.channel = channel;
 		if (channel != null) {
-			Socket socket = channel.socket();
-			inetAddres = socket.getInetAddress();
+			inetAddres = channel.getInetAddress();
 		}
 		timestampMessage = (int) (System.currentTimeMillis());
 	}
@@ -112,11 +147,10 @@ public class Message implements Serializable {
 	 * @param channel
 	 *            The TCP/IP socket associated to this message
 	 */
-	public void setSocketChannel(SocketChannel channel) {
+	public void setChannel(Channel channel) {
 		this.channel = channel;
 		if (channel != null) {
-			Socket socket = channel.socket();
-			inetAddres = socket.getInetAddress();
+			inetAddres = channel.getInetAddress();
 		} else {
 			inetAddres = null;
 		}
@@ -127,7 +161,7 @@ public class Message implements Serializable {
 	 *
 	 * @return the TCP/IP socket associatted with this message
 	 */
-	public SocketChannel getSocketChannel() {
+	public Channel getChannel() {
 		return channel;
 	}
 
@@ -179,13 +213,40 @@ public class Message implements Serializable {
 	}
 
 	/**
+	 * may this method be skipped?
+	 *
+	 * @return true, if this method may be skipped; false otherwise.
+	 */
+	public boolean isSkippable() {
+		return false;
+	}
+
+	/**
+	 * is this message a perception
+	 *
+	 * @return true, if this message is a perception; false otherwise
+	 */
+	public boolean isPerception() {
+		return false;
+	}
+
+	/**
+	 * does this message require a perception
+	 *
+	 * @return true, if this message requires a perception, false otherwise
+	 */
+	public boolean requiresPerception() {
+		return false;
+	}
+
+	/**
 	 * gets the protocol version
 	 *
 	 * @return protocol version
 	 */
 	public int getProtocolVersion() {
-    	return protocolVersion;
-    }
+		return protocolVersion;
+	}
 
 	/**
 	 * sets the protocol version, limited to the max supported version
@@ -193,8 +254,8 @@ public class Message implements Serializable {
 	 * @param protocolVersion protocol versoin
 	 */
 	public void setProtocolVersion(int protocolVersion) {
-    	this.protocolVersion = Math.min(NetConst.NETWORK_PROTOCOL_VERSION, protocolVersion);
-    }
+		this.protocolVersion = Math.min(NetConst.NETWORK_PROTOCOL_VERSION, protocolVersion);
+	}
 
 
 	/**
@@ -210,6 +271,21 @@ public class Message implements Serializable {
 		out.write((byte) type.ordinal());
 		out.write(clientid);
 		out.write(timestampMessage);
+	}
+
+	/**
+	 * Serialize the object to json
+	 *
+	 * @param out output buffer
+	 */
+	public void writeToJson(StringBuilder out) {
+		out.append("\"t\": \"");
+		out.append(type.ordinal());
+		out.append("\",\"c\": \"");
+		out.append(clientid);
+		out.append("\",\"s\": \"");
+		out.append(timestampMessage);
+		out.append("\"");
 	}
 
 	/**
@@ -230,6 +306,19 @@ public class Message implements Serializable {
 		type = MessageType.values()[in.readByte()];
 		clientid = in.readInt();
 		timestampMessage = in.readInt();
+	}
+
+	/**
+	 * reads a message from a map
+	 *
+	 * @param in Map to read from
+	 * @exception IOException
+	 *                if the serializations fails
+	 */
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		this.type = MessageType.values()[Byte.parseByte((String) in.get("t"))];
+		this.clientid = Integer.parseInt((String) in.get("c"));
+		this.timestampMessage = Integer.parseInt((String) in.get("s"));
 	}
 
 	/**
@@ -258,5 +347,5 @@ public class Message implements Serializable {
 		return sb.toString();
 	}
 
-	
+
 }

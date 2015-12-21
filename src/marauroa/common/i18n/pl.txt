@@ -1,0 +1,46 @@
+_localization_credits_marauroa=Translated to polish by edi18028
+
+# marauroa.client.*
+Your IP Address has been banned.=Tw\u00F3j adres IP zosta\u0142 zablokowany.
+Login failed: %1$s=B\u0142\u0105d logowania: %1$s
+Timeout happened while waiting server reply.=Up\u0142yn\u0105\u0142 czas oczekiwania na odpowied\u017A serwera.
+
+# marauroa.common.*
+Account was created correctly.=Konto zosta\u0142o utworzone. Odbierz e-mail, aby doko\u0144czy\u0107 rejestracj\u0119.
+Account was not created because one of the important parameters was missing.=Konto nie zota\u0142o utworzone poniewa\u017C brakuje jednego z wa\u017Cnych parametr\u00F3w.
+Account was not created because an invalid character (special letters, signs, numbers) was used.=Konto nie zosta\u0142o utworzone poniewa\u017C zosta\u0142y u\u017Cyte nieprawid\u0142owe znaki (litera, znak, numer).
+Account was not created because any of the parameters are either too long or too short.=Konto nie zosta\u0142o utworzone poniewa\u017C jakie\u015B parametry s\u0105 za kr\u00F3tkie lub za d\u0142ugie.
+Account was not created because this account already exists.=Konto nie zosta\u0142o utworzone poniewa\u017C ju\u017C istnieje.
+Account was not created because there is already an account with this email address.=Konto nie zosta\u0142o utworzone poniewa\u017C istnieje ju\u017C konto o podanym emailu.
+Account was not created because there was an unspecified exception.=Konto nie zosta\u0142o utworzone poniewa\u017C wyst\u0105pi\u0142 nieokre\u015Blony wyj\u0105tek.
+Character was not created because this Character already exists.=Konto nie zosta\u0142o utworzne poniewa\u017C ju\u017C istnieje.
+The template passed to the create character method is not valid because it fails to pass the RP rules.=Szablon wcze\u015Bniej u\u017Cyty do tworzenia postaci jest nieprawid\u0142owy poniewa\u017C nie zaliczy\u0142 zasad (formu\u0142y) zawartej w RP.
+Account was not created because at least one of the parameters was too short.=Konto nie zosta\u0142o utworzone poniewa\u017C jeden z parametr\u00F3w by\u0142 zbyt kr\u00F3tki.
+Account was not created because at least one of the parameters was too long.=Konto nie zosta\u0142o utworzone poniewa\u017C jeden z parametr\u00F3w jest zbyt d\u0142ugi.
+Account was not created because the name is reserved (or contains a reserved name).=Konto nie zosta\u0142o utworzone poniewa\u017C nazwa jest zarezerwowana (lub zawiera zarezerwowan\u0105 nazw\u0119).
+Account was not created because the password is too close to the username.=Konto nie zosta\u0142o utworzone poniewa\u017C has\u0142o jest zbyt podobne do loginu lub nazwy wojownika.
+Account was not created because the password is too weak.=Konto nie zosta\u0142o utworzone poniewa\u017C has\u0142o jest zbyt s\u0142abe.
+Account was not created because the account creation limit for your network was reached.\nPlease try again later.=Konto nie zosta\u0142o utworzone poniewa\u017C limit tworzenia konta dla Twojej sieci zosta\u0142 osi\u0105gni\u0119ty.\nSpr\u00F3buj p\u00F3\u017Aniej.
+Creation failed because the server is temporary not available. Please try again later.=Tworzenie nie powiod\u0142o si\u0119 poniewa\u017C serwer jest tymczasowo niedost\u0119pny. Spr\u00F3buj p\u00F3\u017Aniej.
+Accounts cannot be created on this server. Please create the account on the main server and wait a while.=Konta nie mog\u0105 zosta\u0107 utworzone na tym serwerze. Utw\u00F3rz konto na g\u0142\u00F3wnym serwerze i poczekaj chwil\u0119.
+
+Username/Password incorrect.=Niepoprawna nazwa u\u017Cytkownika/has\u0142a.
+There have been too many failed login attempts for your account or network. Please wait a couple of minutes or contact support.=Wyst\u0105pi\u0142o zbyt wiele niepoprawnych pr\u00F3b zalogowania do twojego konta lub z twojej sieci. Odczekaj kilka minut lub skontaktuj si\u0119 ze wsparciem.
+Account is banned.=Konto jest zablokowane.
+Server is full.=Serwer jest pe\u0142ny.
+Server is running an incompatible version of game. Please update.=Serwer dzia\u0142a na niekompatybilnej wersji gry. Zaktualizuj.
+Invalid network protocol version.= Nieprawid\u0142owa wersja protoko\u0142u
+The hash you sent does not correspond to the nonce you sent.=Hash, kt\u00F3ry wysy\u0142asz jest nie zgodny z tym co wys\u0142a\u0142e\u015B wcze\u015Bniej.
+#You account has been marked as inactive, please contact support.=Twoje konto jest nieaktywne. Musisz potwierdzi\u0107 utworzenie konta klikaj\u0105c na odno\u015Bnikprzes\u0142any w e-mailu. Je\u015Bli go nie otrzyma\u0142e\u015B to zaloguj si\u0119 na stronie inaci\u015Bnij na przycisk ponownego wys\u0142ania lub skontaktuj si\u0119 ze wsparciem. Masz 24 godziny na potwierdzenie utworzenia konta poniewa\u017Cpo tym czasie konto zostanie automatycznie usuni\u0119te.
+There have been too many failed login attempts for your account. Please wait a couple of minutes or contact support.=Wyst\u0105pi\u0142o zbyt wiele nieudanych pr\u00F3b zalogowania do twojego konta. Odczekaj kilka minut lub skontaktuj si\u0119 ze wsparciem.
+There have been too many failed login attempts from your network. Please wait a couple of minutes or contact support.=Wyst\u0105pi\u0142o zbyt wiele nieudanych pr\u00F3b zalogowania z twojej sieci. Odczekaj kilka minut lub skontaktuj si\u0119 ze wsparciem.
+Login expired. Please click again on your character on the web page.=Nie powid\u0142o si\u0119 wst\u0119pne uwierzytelnienie. Spr\u00F3buj ponownie.
+This account was merged into another account. Please use the username of the other account to login or contact support.=To konto zosta\u0142o po\u0142\u0105czone z innym kontem. U\u017Cyj loginu innego konta, aby zalogowa\u0107 lub skontaktuj si\u0119 ze wsparciem.
+
+Your account is temporarily suspended until %1$s server time.=Twoje konto zosta\u0142o zawieszone na %1$s wg czasu serwera.
+Your account is banned.=Twoje konto zosta\u0142o zablokowane.
+The reason given was: %1$s=Powodem by\u0142o: %1$s
+Your account has been banned. Please contact support.=Twoje konto zosta\u0142o zablokowane. Skontaktuj si\u0119 ze wsparciem.
+#Your account has been flagged as inactive. Please contact support.=Twoje konto jest jeszcze nieaktywne. Potwierd\u017A rejestracj\u0119 konta przez klikni\u0119cie na odno\u015Bnik znajduj\u0105cy si\u0119 w mailu, kt\u00F3ry zosta\u0142 wys\u0142any na adres podany podczas rejestracji. W razie problem\u00F3w skontaktuj si\u0119 ze wsparciem.
+Your account has been merged into another account.\nPlease login with that account or contact support.=Twoje konto zosta\u0142o po\u0142\u0105czone z innym.\nZaloguj si\u0119 na to konto lub skontaktuj si\u0119 ze wsparciem.
+

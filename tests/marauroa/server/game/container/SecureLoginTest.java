@@ -77,7 +77,7 @@ public class SecureLoginTest {
 		if (!exists) {
 			DAORegister.get().get(AccountDAO.class).addPlayer(username, Hash.hash(password), "example@example.com");
 		}
-		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin(username, password);
+		SecuredLoginInfo login = simulateSecureLogin(username, password);
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			assertTrue("Unable to verify login", login.verify(transaction));
@@ -98,7 +98,7 @@ public class SecureLoginTest {
 	public void testLoginFailure() throws SQLException, UnknownHostException {
 		String password = "badpassword";
 
-		PlayerEntry.SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
+		SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
 			assertFalse(login.verify(transaction));
@@ -107,13 +107,13 @@ public class SecureLoginTest {
 		}
 	}
 
-	public static PlayerEntry.SecuredLoginInfo simulateSecureLogin(String username, String password) throws UnknownHostException {
+	public static SecuredLoginInfo simulateSecureLogin(String username, String password) throws UnknownHostException {
 		byte[] serverNonce = Hash.random(Hash.hashLength());
 		byte[] clientNonce = Hash.random(Hash.hashLength());
 
 		byte[] clientNonceHash = Hash.hash(clientNonce);
 
-		PlayerEntry.SecuredLoginInfo login = new PlayerEntry.SecuredLoginInfo(key, clientNonceHash,
+		SecuredLoginInfo login = new SecuredLoginInfo(key, clientNonceHash,
 		        serverNonce, InetAddress.getLocalHost());
 
 		byte[] b1 = Hash.xor(clientNonce, serverNonce);

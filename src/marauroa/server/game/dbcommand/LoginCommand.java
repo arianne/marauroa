@@ -12,14 +12,14 @@
 package marauroa.server.game.dbcommand;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import marauroa.common.net.Channel;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.server.db.DBTransaction;
-import marauroa.server.game.container.PlayerEntry.SecuredLoginInfo;
+import marauroa.server.game.container.SecuredLoginInfo;
 import marauroa.server.game.db.AccountDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.LoginEventDAO;
@@ -55,7 +55,7 @@ public class LoginCommand extends DBCommandWithCallback {
 	 * @param protocolVersion protocolVersion
 	 */
 	public LoginCommand(SecuredLoginInfo info, DelayedEventHandler callback, int clientid,
-			SocketChannel channel, int protocolVersion) {
+			Channel channel, int protocolVersion) {
 		super(callback, clientid, channel, protocolVersion);
 		this.info = info;
 	}

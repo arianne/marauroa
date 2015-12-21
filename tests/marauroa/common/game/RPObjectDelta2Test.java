@@ -638,6 +638,8 @@ public class RPObjectDelta2Test {
 	/**
 	 * This test try to show a problem that could happen if you delete and add
 	 * an object on the same turn. It should work correctly.
+	 *
+	 * @throws Exception on en unexpected error
 	 */
 	@Test
 	public void testApplyDifferences() throws Exception {

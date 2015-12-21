@@ -12,7 +12,9 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+import java.util.Map;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the server what of the available characters is chosen
@@ -41,7 +43,7 @@ public class MessageC2SChooseCharacter extends Message {
 	 *            the returned by the marauroa.common.net.MessageS2CCharacters
 	 * @see marauroa.common.net.message.MessageS2CCharacterList
 	 */
-	public MessageC2SChooseCharacter(SocketChannel source, String character) {
+	public MessageC2SChooseCharacter(Channel source, String character) {
 		super(MessageType.C2S_CHOOSECHARACTER, source);
 		this.character = character;
 	}
@@ -76,6 +78,16 @@ public class MessageC2SChooseCharacter extends Message {
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
 		super.readObject(in);
 		character = in.readString();
+
+		if (type != MessageType.C2S_CHOOSECHARACTER) {
+			throw new IOException();
+		}
+	}
+
+	@Override
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
+		character = (String) in.get("character");
 
 		if (type != MessageType.C2S_CHOOSECHARACTER) {
 			throw new IOException();

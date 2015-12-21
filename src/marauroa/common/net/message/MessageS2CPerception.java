@@ -15,7 +15,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +28,7 @@ import marauroa.common.game.DetailLevel;
 import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
@@ -37,21 +37,20 @@ import org.apache.log4j.NDC;
 /**
  * This message indicate the client the objects that the server has determined
  * that this client is able to see.
- * 
+ *
  * @see marauroa.common.net.message.Message
  * @see marauroa.common.game.IRPZone
  */
 public class MessageS2CPerception extends Message {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J
-	        .getLogger(MessageS2CPerception.class);
+	static final marauroa.common.Logger logger = Log4J.getLogger(MessageS2CPerception.class);
 
-	private byte typePerception;
+	byte typePerception;
 
 	private int timestampPerception;
 
-	private IRPZone.ID zoneid;
+	IRPZone.ID zoneid;
 
 	private List<RPObject> addedRPObjects;
 
@@ -75,13 +74,13 @@ public class MessageS2CPerception extends Message {
 	/**
 	 * Constructor with a TCP/IP source/destination of the message and
 	 * perception to send.
-	 * 
+	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 * @param perception
 	 *            the perception we are going to send.
 	 */
-	public MessageS2CPerception(SocketChannel source, Perception perception) {
+	public MessageS2CPerception(Channel source, Perception perception) {
 		super(MessageType.S2C_PERCEPTION, source);
 
 		typePerception = perception.type;
@@ -92,38 +91,74 @@ public class MessageS2CPerception extends Message {
 		deletedRPObjects = perception.deletedList;
 	}
 
+	/**
+	 * sets the added and deleted information for the destination player
+	 *
+	 * @param added   added information
+	 * @param deleted deleted information
+	 */
 	public void setMyRPObject(RPObject added, RPObject deleted) {
 		myRPObjectModifiedAdded = added;
 		myRPObjectModifiedDeleted = deleted;
 	}
 
+	/**
+	 * gets the added information for the personal object
+	 *
+	 * @return added information to the personal object
+	 */
 	public RPObject getMyRPObjectAdded() {
 		return myRPObjectModifiedAdded;
 	}
 
+	/**
+	 * gets the deleted information for the personal object
+	 *
+	 * @return deleted information from the personal object
+	 */
 	public RPObject getMyRPObjectDeleted() {
 		return myRPObjectModifiedDeleted;
 	}
 
+	/**
+	 * sets the timestamp of this perception
+	 *
+	 * @param ts counter
+	 */
 	public void setPerceptionTimestamp(int ts) {
 		timestampPerception = ts;
 	}
 
+	/**
+	 * gets the timestamp of this perception
+	 *
+	 * @return counter
+	 */
 	public int getPerceptionTimestamp() {
 		return timestampPerception;
 	}
 
+	/**
+	 * gets the type of this perception
+	 *
+	 * @return full or delta
+	 */
 	public byte getPerceptionType() {
 		return typePerception;
 	}
 
+	/**
+	 * gets the id of the zone, this perception is for
+	 *
+	 * @return IRPZone.ID
+	 */
 	public IRPZone.ID getRPZoneID() {
 		return zoneid;
 	}
 
 	/**
 	 * This method returns the list of modified objects
-	 * 
+	 *
 	 * @return List<RPObject> of added objects
 	 */
 	public List<RPObject> getAddedRPObjects() {
@@ -132,7 +167,7 @@ public class MessageS2CPerception extends Message {
 
 	/**
 	 * This method returns the list of modified objects
-	 * 
+	 *
 	 * @return List<RPObject> of modified objects that has attributes added
 	 */
 	public List<RPObject> getModifiedAddedRPObjects() {
@@ -141,7 +176,7 @@ public class MessageS2CPerception extends Message {
 
 	/**
 	 * This method returns the list of modified objects
-	 * 
+	 *
 	 * @return List<RPObject> of modified objects that has attributes removed
 	 */
 	public List<RPObject> getModifiedDeletedRPObjects() {
@@ -150,7 +185,7 @@ public class MessageS2CPerception extends Message {
 
 	/**
 	 * This method returns the list of deleted objects
-	 * 
+	 *
 	 * @return List<RPObject> of deleted objects
 	 */
 	public List<RPObject> getDeletedRPObjects() {
@@ -159,7 +194,7 @@ public class MessageS2CPerception extends Message {
 
 	/**
 	 * This method returns a String that represent the object
-	 * 
+	 *
 	 * @return a string representing the object.
 	 */
 	@Override
@@ -330,11 +365,11 @@ public class MessageS2CPerception extends Message {
 
 		static class CacheKey {
 
-			private byte type;
+			private final byte type;
 
-			private IRPZone.ID zoneid;
+			private final IRPZone.ID zoneid;
 
-			private int protocolVersion;
+			private final int protocolVersion;
 
 			public CacheKey(byte type, IRPZone.ID zoneid, int protocolVersion) {
 				this.type = type;
@@ -360,7 +395,7 @@ public class MessageS2CPerception extends Message {
 			}
 		}
 
-		private Map<CacheKey, byte[]> cachedContent;
+		private final Map<CacheKey, byte[]> cachedContent;
 
 		private CachedCompressedPerception() {
 			cachedContent = new HashMap<CacheKey, byte[]>();
@@ -403,6 +438,9 @@ public class MessageS2CPerception extends Message {
 		}
 	}
 
+	/**
+	 * clears the cached perceptions to start the next turn fresh.
+	 */
 	public static void clearPrecomputedPerception() {
 		cache.clear();
 	}
@@ -434,7 +472,7 @@ public class MessageS2CPerception extends Message {
 		return array.toByteArray();
 	}
 
-	private void computeStaticPartPerception(OutputSerializer ser) throws IOException {
+	void computeStaticPartPerception(OutputSerializer ser) throws IOException {
 		ser.write(typePerception);
 		ser.write(zoneid);
 
@@ -458,4 +496,79 @@ public class MessageS2CPerception extends Message {
 			ser.write(object);
 		}
 	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",");
+		OutputSerializer.writeJson(out, "zoneid", zoneid.getID());
+		out.append(",");
+		OutputSerializer.writeJson(out, "sync");
+		out.append(":");
+		if (typePerception == Perception.SYNC) {
+			out.append("true");
+		} else {
+			out.append("false");
+		}
+
+		// public
+		if ((addedRPObjects != null) && !addedRPObjects.isEmpty()) {
+			OutputSerializer.writeObjectCollectionToJson(out, "aO", addedRPObjects, DetailLevel.NORMAL);
+		}
+		if ((modifiedAddedAttribsRPObjects != null) && !modifiedAddedAttribsRPObjects.isEmpty()) {
+			OutputSerializer.writeObjectCollectionToJson(out, "aA", modifiedAddedAttribsRPObjects, DetailLevel.NORMAL);
+		}
+		if ((modifiedDeletedAttribsRPObjects != null) && !modifiedDeletedAttribsRPObjects.isEmpty()) {
+			OutputSerializer.writeObjectCollectionToJson(out, "dA", modifiedDeletedAttribsRPObjects, DetailLevel.NORMAL);
+		}
+		if ((deletedRPObjects != null) && !deletedRPObjects.isEmpty()) {
+			OutputSerializer.writeObjectCollectionToJson(out, "dO", deletedRPObjects, DetailLevel.NORMAL);
+		}
+
+		// private
+		if ((myRPObjectModifiedAdded != null)) {
+			out.append(",\"aM\":{");
+			myRPObjectModifiedAdded.writeToJson(out, DetailLevel.PRIVATE);
+			out.append("}");
+		}
+		if ((myRPObjectModifiedDeleted != null)) {
+			out.append(",\"dM\":{");
+			myRPObjectModifiedDeleted.writeToJson(out, DetailLevel.PRIVATE);
+			out.append("}");
+		}
+	}
+
+	@Override
+	public boolean isSkippable() {
+		if ((addedRPObjects != null) && !addedRPObjects.isEmpty()) {
+			return false;
+		}
+		if ((modifiedAddedAttribsRPObjects != null) && !modifiedAddedAttribsRPObjects.isEmpty()) {
+			return false;
+		}
+		if ((modifiedDeletedAttribsRPObjects != null) && !modifiedDeletedAttribsRPObjects.isEmpty()) {
+			return false;
+		}
+		if ((deletedRPObjects != null) && !deletedRPObjects.isEmpty()) {
+			return false;
+		}
+		if ((myRPObjectModifiedAdded != null)) {
+			return false;
+		}
+		if ((myRPObjectModifiedDeleted != null)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * is this message a perception
+	 *
+	 * @return true, if this message is a perception; false otherwise
+	 */
+	@Override
+	public boolean isPerception() {
+		return true;
+	}
+
 }

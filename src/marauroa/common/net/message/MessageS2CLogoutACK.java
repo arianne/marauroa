@@ -12,7 +12,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the client that the server has accepted its Logout
@@ -33,7 +34,7 @@ public class MessageS2CLogoutACK extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageS2CLogoutACK(SocketChannel source) {
+	public MessageS2CLogoutACK(Channel source) {
 		super(MessageType.S2C_LOGOUT_ACK, source);
 	}
 
@@ -47,10 +48,6 @@ public class MessageS2CLogoutACK extends Message {
 		return "Message (S2C Logout ACK) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
-	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
-		super.writeObject(out);
-	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {

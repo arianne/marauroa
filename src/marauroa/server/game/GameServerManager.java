@@ -11,12 +11,12 @@
  ***************************************************************************/
 package marauroa.server.game;
 
-import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 
 import marauroa.common.Log4J;
 import marauroa.common.crypto.RSAKey;
+import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.container.PlayerEntryContainer;
@@ -225,7 +225,7 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 		delayedEventHandler.setKeepRunning(false);
 
 
-		while (isfinished == false) {
+		while (!isfinished) {
 			Thread.yield();
 		}
 	}
@@ -290,8 +290,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 	 * @param channel
 	 *            the channel that was closed.
 	 */
-	public void onDisconnect(SocketChannel channel) {
-		logger.info("GAME Disconnecting " + channel.socket().getRemoteSocketAddress());
+	public void onDisconnect(Channel channel) {
+		logger.info("GAME Disconnecting " + channel.getInetSocketAddress());
 		delayedEventHandler.addDelayedEvent(disconnectHandler, channel);
 	}
 

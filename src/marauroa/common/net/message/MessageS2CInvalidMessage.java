@@ -12,7 +12,9 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.Channel;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicates the client that it is running an incompatible version
@@ -39,7 +41,7 @@ public class MessageS2CInvalidMessage extends Message {
 	 * @param reason
 	 *            Explains why the message is tagged as invalid.
 	 */
-	public MessageS2CInvalidMessage(SocketChannel source, String reason) {
+	public MessageS2CInvalidMessage(Channel source, String reason) {
 		super(MessageType.S2C_INVALIDMESSAGE, source);
 		this.reason = reason;
 	}
@@ -68,6 +70,12 @@ public class MessageS2CInvalidMessage extends Message {
 	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(reason);
+	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		OutputSerializer.writeJson(out, "reason", reason);
 	}
 
 	@Override

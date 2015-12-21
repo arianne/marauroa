@@ -11,10 +11,9 @@
  ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
-import java.nio.channels.SocketChannel;
-
 import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SChooseCharacter;
 import marauroa.common.net.message.MessageS2CChooseCharacterACK;
@@ -103,7 +102,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 	 * @param entry PlayerEntry
 	 */
 	private void loadAndPlaceInWorld(MessageC2SChooseCharacter msg, int clientid, PlayerEntry entry) {
-		DBCommand command = new LoadActiveCharacterCommand(entry.username, entry.character, this, clientid, msg.getSocketChannel(), msg.getProtocolVersion());
+		DBCommand command = new LoadActiveCharacterCommand(entry.username, entry.character, this, clientid, msg.getChannel(), msg.getProtocolVersion());
 		DBCommandQueue.get().enqueue(command);
 	}
 
@@ -138,7 +137,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 	}
 
 	private void completeLoadingCharacterIntoWorld(RPServerManager rpMan,
-			int clientid, SocketChannel channel, PlayerEntry entry, RPObject object) {
+			int clientid, Channel channel, PlayerEntry entry, RPObject object) {
 
 		if (object != null) {
 			object.put("#clientid", clientid);
@@ -167,11 +166,11 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 	 * If the account doesn't own the character OR if the rule processor rejected it.
 	 * So we return it back to login complete stage.
 	 *
-	 * @param channel SocketChannel
+	 * @param channel Channel
 	 * @param clientid clientid
 	 * @param entry PlayerEntry
 	 */
-	private void rejectClient(SocketChannel channel, int clientid, PlayerEntry entry) {
+	private void rejectClient(Channel channel, int clientid, PlayerEntry entry) {
 		entry.state = ClientState.LOGIN_COMPLETE;
 
 		/* Error: There is no such character */

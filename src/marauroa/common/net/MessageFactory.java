@@ -13,7 +13,6 @@ package marauroa.common.net;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +29,7 @@ import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
+import marauroa.common.net.message.MessageC2SLoginSendUsernameAndPassword;
 import marauroa.common.net.message.MessageC2SLogout;
 import marauroa.common.net.message.MessageC2SOutOfSync;
 import marauroa.common.net.message.MessageC2STransferACK;
@@ -138,6 +138,7 @@ public class MessageFactory {
 		register(Message.MessageType.S2C_LOGIN_MESSAGE_NACK, MessageS2CLoginMessageNACK.class);
 		register(Message.MessageType.P2S_CREATECHARACTER, MessageP2SCreateCharacter.class);
 		register(Message.MessageType.P2S_CREATEACCOUNT, MessageP2SCreateAccount.class);
+		register(Message.MessageType.C2S_LOGIN_SENDUSERNAMEANDPASSWORD, MessageC2SLoginSendUsernameAndPassword.class);
 	}
 
 	/**
@@ -154,17 +155,15 @@ public class MessageFactory {
 	 *
 	 * @param data
 	 *            the serialized data
-	 * @param channel
-	 *            the source of the message needed to build the object.
 	 * @return a message of the right class
 	 * @throws IOException
 	 *             in case of problems with the message
 	 * @throws InvalidVersionException
 	 *             if the message version doesn't match
 	 */
-	public Message getMessage(byte[] data, SocketChannel channel) throws IOException,
+	public Message getMessage(byte[] data) throws IOException,
 	        InvalidVersionException {
-		return getMessage(data, channel, 0);
+		return getMessage(data, 0);
 	}
 
 	/**
@@ -172,8 +171,6 @@ public class MessageFactory {
 	 *
 	 * @param data
 	 *            the serialized data
-	 * @param channel
-	 *            the source of the message needed to build the object.
 	 * @param offset
 	 *            where to start reading in the data-array.
 	 * @return a message of the right class
@@ -182,7 +179,7 @@ public class MessageFactory {
 	 * @throws InvalidVersionException
 	 *             if the message version doesn't match
 	 */
-	public Message getMessage(byte[] data, SocketChannel channel, int offset) throws IOException,
+	public Message getMessage(byte[] data, int offset) throws IOException,
 	        InvalidVersionException {
 		/*
 		 * Check the version of the network protocol.
@@ -214,8 +211,38 @@ public class MessageFactory {
 				s.setProtocolVersion(networkProtocolVersion);
 
 				tmp.readObject(s);
-				tmp.setSocketChannel(channel);
 				s.close();
+				return tmp;
+			} catch (Exception e) {
+				logger.error("error in getMessage", e);
+				throw new IOException(e.getMessage());
+			}
+		} else {
+			logger.warn("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
+			throw new IOException("Message type [" + messageTypeIndex + "] is not registered in the MessageFactory");
+		}
+	}
+
+	/**
+	 * Returns a object of the right class from a stream of serialized data.
+	 *
+	 * @param in
+	 *            the serialized data
+	 * @return a message of the right class
+	 * @throws IOException
+	 *             in case of problems with the message
+	 */
+	public Message getMessage(Map<String, Object> in) throws IOException {
+		int messageTypeIndex = Byte.parseByte((String) in.get("t"));
+		/*
+		 * Now we check if we have this message class implemented.
+		 */
+		if (factoryArray.containsKey(messageTypeIndex)) {
+			Message tmp = null;
+			try {
+				Class<?> messageType = factoryArray.get(messageTypeIndex);
+				tmp = (Message) messageType.newInstance();
+				tmp.readFromMap(in);
 				return tmp;
 			} catch (Exception e) {
 				logger.error("error in getMessage", e);

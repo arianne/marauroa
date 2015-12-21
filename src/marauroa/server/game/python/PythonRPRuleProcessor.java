@@ -11,6 +11,7 @@
  ***************************************************************************/
 package marauroa.server.game.python;
 
+import java.io.InputStream;
 import java.util.List;
 
 import marauroa.common.Log4J;
@@ -109,5 +110,13 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
 		pythonRP.onTimeout(object);
+	}
+
+	public String getMimeTypeForResource(String resource) {
+		return null;
+	}
+
+	public InputStream getResource(String resource) {
+		return null;
 	}
 }

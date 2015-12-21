@@ -50,7 +50,7 @@ class CreateAccountHandler extends MessageHandler {
 				}
 				return;
 			}
-			
+
 			String username = null;
 			String pasword = null;
 			String email = null;
@@ -88,7 +88,7 @@ class CreateAccountHandler extends MessageHandler {
 				 */
 				logger.debug("Account (" + username + ") created.");
 				MessageS2CCreateAccountACK msgCreateAccountACK = new MessageS2CCreateAccountACK(
-						message.getSocketChannel(), val.getUsername());
+						message.getChannel(), val.getUsername());
 				msgCreateAccountACK.setProtocolVersion(message.getProtocolVersion());
 				netMan.sendMessage(msgCreateAccountACK);
 			} else {
@@ -97,7 +97,7 @@ class CreateAccountHandler extends MessageHandler {
 				 * failure.
 				 */
 				MessageS2CCreateAccountNACK msgCreateAccountNACK = new MessageS2CCreateAccountNACK(
-						message.getSocketChannel(), result);
+						message.getChannel(), username, result);
 				msgCreateAccountNACK.setProtocolVersion(message.getProtocolVersion());
 				netMan.sendMessage(msgCreateAccountNACK);
 			}

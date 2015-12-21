@@ -12,10 +12,10 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
 import marauroa.common.Utility;
 import marauroa.common.crypto.Hash;
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the server that the client wants to login and send the
@@ -50,7 +50,7 @@ public class MessageC2SLoginSendNonceNamePasswordAndSeed extends MessageSendByte
 	 * @param seed
 	 *            the seed
 	 */
-	public MessageC2SLoginSendNonceNamePasswordAndSeed(SocketChannel source, byte[] nonce,
+	public MessageC2SLoginSendNonceNamePasswordAndSeed(Channel source, byte[] nonce,
 	        String username, byte[] password, byte[] seed) {
 		super(MessageType.C2S_LOGIN_SENDNONCENAMEPASSWORDANDSEED, source, nonce);
 		this.username = username;

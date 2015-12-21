@@ -12,8 +12,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
+import marauroa.common.net.Channel;
 import marauroa.common.net.OutputSerializer;
 
 /**
@@ -29,20 +29,33 @@ public class MessageC2SLoginRequestKey extends Message {
 	/** Version of the game that the client is running */
 	private String version;
 
+	/** skip the game version check */
+	private boolean skip = false;
+
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SLoginRequestKey() {
 		super(MessageType.C2S_LOGIN_REQUESTKEY, null);
 	}
 
 	/**
+	 * Constructor for allowing creation of an empty messag
+	 *
+	 * @param source The TCP/IP address associated to this message
+	 * @param skip game version check
+	 */
+	public MessageC2SLoginRequestKey(Channel source, boolean skip) {
+		super(MessageType.C2S_LOGIN_REQUESTKEY, source);
+		this.skip = skip;
+	}
+
+	/**
 	 * Constructor with a TCP/IP source/destination of the message and game name and version.
 	 *
-	 * @param source
-	 *            The TCP/IP address associated to this message
+	 * @param source The TCP/IP address associated to this message
 	 * @param game the game name
 	 * @param version the version of the game.
 	 */
-	public MessageC2SLoginRequestKey(SocketChannel source, String game, String version) {
+	public MessageC2SLoginRequestKey(Channel source, String game, String version) {
 		super(MessageType.C2S_LOGIN_REQUESTKEY, source);
 		this.game = game;
 		this.version = version;
@@ -62,6 +75,16 @@ public class MessageC2SLoginRequestKey extends Message {
 	 */
 	public String getVersion() {
 		return version;
+	}
+
+
+	/**
+	 * Should the game version check be skipped?
+	 *
+	 * @return true, if the game version check should be skipped
+	 */
+	public boolean skipGameVersionCheck() {
+		return skip;
 	}
 
 	/**

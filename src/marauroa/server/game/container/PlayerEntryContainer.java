@@ -12,7 +12,6 @@
 package marauroa.server.game.container;
 
 import java.net.InetAddress;
-import java.nio.channels.SocketChannel;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,6 +23,7 @@ import java.util.Random;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.RPObject;
+import marauroa.common.net.Channel;
 import marauroa.server.RWLock;
 import marauroa.server.game.Statistics;
 
@@ -47,10 +47,10 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(PlayerEntryContainer.class);
 
 	/** A reader/writers lock for controlling the access */
-	private RWLock lock;
+	private final RWLock lock;
 
 	/** A random number generator instance. */
-	private Random rand;
+	private final Random rand;
 
 	/** This map store player entry for fast access using clientid */
 	Map<Integer, PlayerEntry> clientidMap;
@@ -58,7 +58,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	private static PlayerEntryContainer playerEntryContainer;
 
 	/** Statistics about actions runs */
-	private Statistics stats = Statistics.getStatistics();
+	private final Statistics stats = Statistics.getStatistics();
 
 	/** Constructor */
 	protected PlayerEntryContainer() {
@@ -144,7 +144,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 *            the socket channel to check
 	 * @return the PlayerEntry or null if it is not found.
 	 */
-	public PlayerEntry get(SocketChannel channel) {
+	public PlayerEntry get(Channel channel) {
 		synchronized (clientidMap) {
 			for (PlayerEntry entry : clientidMap.values()) {
 				if (entry.channel == channel) {
@@ -244,7 +244,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 	 *            the socket channel associated with the client
 	 * @return client id resulting
 	 */
-	public PlayerEntry add(SocketChannel channel) {
+	public PlayerEntry add(Channel channel) {
 		/* We create an entry */
 		PlayerEntry entry = new PlayerEntry(channel);
 		entry.clientid = generateClientID();
@@ -303,7 +303,7 @@ public class PlayerEntryContainer implements Iterable<PlayerEntry> {
 		logger.debug("PlayerEntryContainer size: " + counter);
 		stats.set("Players online", counter);
 		stats.set("Ips online", addresses.size());
-	}	
+	}
 
 	/**
 	 * a string representation useful for debugging.

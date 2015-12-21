@@ -62,12 +62,11 @@ public class Decoder {
 		 * Try to build the message for the channel using the existing parts or
 		 * return null if it is not completed yet.
 		 *
-		 * @param channel SocketChannel to read from
 		 * @return Message read message
 		 * @throws IOException in case of an input / output error
 		 * @throws InvalidVersionException in case the protocol version is not supported
 		 */
-		public Message build(SocketChannel channel) throws IOException, InvalidVersionException {
+		public Message build() throws IOException, InvalidVersionException {
 			int length = 0;
 			for (byte[] p : parts) {
 				length += p.length;
@@ -126,7 +125,7 @@ public class Decoder {
 				}
 			}
 
-			Message msg = msgFactory.getMessage(data, channel, 4);
+			Message msg = msgFactory.getMessage(data, 4);
 			return msg;
 		}
 
@@ -157,10 +156,10 @@ public class Decoder {
 	}
 
 	/** We map each channel with the sent content */
-	private Map<SocketChannel, MessageParts> content;
+	private Map<Object, MessageParts> content;
 
 	/** MessageFactory */
-	private MessageFactory msgFactory;
+	MessageFactory msgFactory;
 
 	/** singleton instance */
 	private static Decoder instance;
@@ -183,7 +182,7 @@ public class Decoder {
 	 *
 	 */
 	private Decoder() {
-		content = new HashMap<SocketChannel, MessageParts>();
+		content = new HashMap<Object, MessageParts>();
 		msgFactory = MessageFactory.getFactory();
 	}
 
@@ -215,7 +214,7 @@ public class Decoder {
 	 * @throws InvalidVersionException
 	 *             if the message version mismatch the expected version
 	 */
-	public List<Message> decode(SocketChannel channel, byte[] data) throws IOException,
+	public List<Message> decode(Object channel, byte[] data) throws IOException,
 	        InvalidVersionException {
 		MessageParts buffers = content.get(channel);
 
@@ -237,7 +236,7 @@ public class Decoder {
 
 			if (data.length == size) {
 				/* If we have the full data build the message */
-				Message msg = msgFactory.getMessage(data, channel, 4);
+				Message msg = msgFactory.getMessage(data, 4);
 				List<Message> list=new LinkedList<Message>();
 				list.add(msg);
 				
@@ -256,7 +255,7 @@ public class Decoder {
 		List<Message> list = new LinkedList<Message>();
 
 		while (!buffers.isEmpty()) {
-			Message msg = buffers.build(channel);
+			Message msg = buffers.build();
 
 			if (msg != null) {
 				list.add(msg);

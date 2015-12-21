@@ -25,6 +25,9 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.game.Definition.Type;
+import marauroa.common.net.NetConst;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This class hosts a list of Attributes stored as pairs String=String. There
@@ -282,6 +285,19 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		put(attribute, Integer.toString(value));
 	}
 
+
+	/**
+	 * This method set the value of an attribute
+	 *
+	 * @param attribute
+	 *			  the attribute to be set.
+	 * @param value
+	 *			  the value we want to set.
+	 */
+	public void put(String attribute, long value) {
+		put(attribute, Long.toString(value));
+	}
+
 	/**
 	 * This method set the value of an attribute
 	 *
@@ -348,6 +364,22 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 		}
 
 		return Integer.parseInt(val);
+	}
+
+	/**
+	 * This methods returns the long integer value of an attribute.
+	 *
+	 * @param attribute
+	 * 		The attribute we want to get
+	 * @return
+	 * 		The value of the attribute
+	 */
+	public long getLong(String attribute) {
+		String val = get(attribute);
+		if (val == null) {
+			throw new IllegalArgumentException("attribute '" + attribute + "' not found");
+		}
+		return Long.parseLong(val);
 	}
 
 	/**
@@ -460,20 +492,44 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @return a string representing the object.
 	 */
 	public String toAttributeString() {
-		StringBuffer tmp = new StringBuffer();
+		StringBuilder tmp = new StringBuilder();
 
 		synchronized(content) {
 			for (Map.Entry<String, String> entry : content.entrySet()) {
 				tmp.append("[" + entry.getKey());
-				tmp.append("=" + entry.getValue().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\]", "\\\\]") + "]");
+				tmp.append('=');
+				escapeAttributeString(tmp, entry.getValue());
+				tmp.append(']');
 			}
 		}
-
 		return tmp.toString();
 	}
 
+	/**
+	 * escape \ and ] in attributes. This method is faster that String.replaceAll(),
+	 * which may cause significant turn overflows, if there are several debug
+	 * messages within one turn. String.replaceAll() uses regular expressions,
+	 * but this is not necessary here.
+	 *
+	 * @param target target
+	 * @param source string to escape.
+	 */
+	private static void escapeAttributeString(StringBuilder target, String source) {
+		int start = 0;
+		for (int i = 0; i < source.length(); i++) {
+			char chr = source.charAt(i);
+			if (chr == '\\' || chr == ']') {
+				target.append(source.substring(start, i));
+				target.append('\\');
+				start = i;
+			}
+		}
+		target.append(source.substring(start, source.length()));
+	}
+
+
 	private static String listToString(List<String> list) {
-		StringBuffer buffer = new StringBuffer("[");
+		StringBuilder buffer = new StringBuilder("[");
 
 		for (Iterator<?> it = list.iterator(); it.hasNext();) {
 			String value = (String) it.next();
@@ -562,6 +618,11 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 				String key = entry.getKey();
 
 				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
+				if (def.getType() == Type.LONG) {
+					if (out.getProtocolVersion() < NetConst.FIRST_VERSION_WITH_TYPE_LONG) {
+						continue;
+					}
+				}
 
 				if (shouldSerialize(def, level)) {
 					boolean serializeKeyText = (level == DetailLevel.FULL) || (def.getCode() == -1);
@@ -578,6 +639,36 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 			}
 		}
 	}
+
+	/**
+	 * This method serialize the object with the given level of detail.
+	 *
+	 * @param out
+	 *			  the output buffer
+	 * @param level
+	 *			  the level of Detail
+	 */
+	public void writeToJson(StringBuilder out, DetailLevel level) {
+		OutputSerializer.writeJson(out, "c", rpClass.getName());
+		out.append(",\"a\":{");
+		synchronized(content) {
+			boolean first = true;
+			for (Map.Entry<String, String> entry : content.entrySet()) {
+				String key = entry.getKey();
+				Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
+				if (shouldSerialize(def, level)) {
+					if (first) {
+						first = false;
+					} else {
+						out.append(",");
+					}
+					OutputSerializer.writeJson(out, key, entry.getValue());
+				}
+			}
+		}
+		out.append("}");
+	}
+
 
 	/**
 	 * Returns true if the element should be serialized.
@@ -621,8 +712,8 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	/**
 	 * Fills this object with the data that has been serialized.
 	 *
-	 * @param in
-	 *			  the input serializer
+	 * @param in the input serializer
+	 * @throws IOException in case of unexpected attributes
 	 */
 	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
 		modified = true;
@@ -658,11 +749,47 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	}
 
 	/**
+	 * Fills this object with the data that has been serialized into a map.
+	 *
+	 * @param in
+	 *			  the input map
+	 * @throws IOException in case of unexpected attributes
+	 */
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		modified = true;
+		String rpClassName = (String) in.get("_rpclass");
+		if (rpClassName == null) {
+			rpClassName = "";
+		}
+		rpClass = RPClass.getRPClass(rpClassName);
+
+		content.clear();
+
+		for (Map.Entry<String, Object> entry : in.entrySet()) {
+
+			String key = entry.getKey();
+			if (key.startsWith("_")) {
+				continue;
+			}
+
+			Definition def = rpClass.getDefinition(DefinitionClass.ATTRIBUTE, key);
+
+			if (def != null) {
+				if (entry.getValue() instanceof String) {
+					content.put(key, (String) entry.getValue());
+				}
+			} else {
+				throw new IOException("RPClass("+rpClass+") definition for attribute not found: " + key);
+			}
+		}
+	}
+
+	/**
 	 * Removes all the visible attributes
 	 *
 	 * @param sync ignored
 	 */
-	public void clearVisible(boolean sync) {
+	public void clearVisible(@SuppressWarnings("unused") boolean sync) {
 		synchronized(content) {
 
 			Iterator<Map.Entry<String, String>> it = content.entrySet().iterator();

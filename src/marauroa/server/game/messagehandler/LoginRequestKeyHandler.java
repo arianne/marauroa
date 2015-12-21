@@ -40,16 +40,17 @@ class LoginRequestKeyHandler extends MessageHandler {
 
 		/*
 		 * Check game version with data suplied by client. The RP may decide to
-		 * deny login to this player.
+		 * deny login to this player, unless the check should be skipped
 		 */
-		if (rpMan.checkGameVersion(msgRequest.getGame(), msgRequest.getVersion())) {
+		if (msgRequest.skipGameVersionCheck()
+			||	rpMan.checkGameVersion(msgRequest.getGame(), msgRequest.getVersion())) {
 			/*
 			 * If this is correct we send player the server key so it can sign
 			 * the password.
 			 */
 			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg
-			        .getSocketChannel(), key);
-			msgLoginSendKey.setClientID(Message.CLIENTID_INVALID);
+			        .getChannel(), key);
+			msgLoginSendKey.setClientID(msg.getClientID());
 			msgLoginSendKey.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendKey);
 		} else {
@@ -58,7 +59,7 @@ class LoginRequestKeyHandler extends MessageHandler {
 			        + msg.getAddress().toString() + ") can't login");
 
 			/* Notify player of the event by denying the login. */
-			MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getSocketChannel(),
+			MessageS2CLoginNACK msgLoginNACK = new MessageS2CLoginNACK(msg.getChannel(),
 			        MessageS2CLoginNACK.Reasons.GAME_MISMATCH);
 			msgLoginNACK.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginNACK);

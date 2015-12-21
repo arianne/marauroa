@@ -12,9 +12,10 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
+
+import marauroa.common.net.Channel;
 
 /**
  * Prior to transfer we send client a transfer offer so it can decide whenever to ACK it and have it
@@ -37,7 +38,7 @@ public class MessageS2CTransferREQ extends Message {
 	 * @param source   socket channel
 	 * @param contents content offered for transfer
 	 */
-	public MessageS2CTransferREQ(SocketChannel source, List<TransferContent> contents) {
+	public MessageS2CTransferREQ(Channel source, List<TransferContent> contents) {
 		super(MessageType.S2C_TRANSFER_REQ, source);
 
 		this.contents = contents;
@@ -52,10 +53,20 @@ public class MessageS2CTransferREQ extends Message {
 		return contents;
 	}
 
+	/**
+	 * does this message require a perception
+	 *
+	 * @return true, if this message requires a perception, false otherwise
+	 */
+	@Override
+	public boolean requiresPerception() {
+		return true;
+	}
+
 	@Override
 	public String toString() {
-		StringBuffer st = new StringBuffer("Message (S2C Transfer REQ) from (" + getAddress()
-		        + ") CONTENTS: (");
+		StringBuilder st = new StringBuilder("Message (S2C Transfer REQ) from (" + getAddress()
+				+ ") CONTENTS: (");
 		for (TransferContent content : contents) {
 			st.append("[");
 			st.append(content.name);
@@ -78,6 +89,22 @@ public class MessageS2CTransferREQ extends Message {
 		for (TransferContent content : contents) {
 			content.writeREQ(out);
 		}
+	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"contents\":[");
+		boolean first = true;
+		for (TransferContent content : contents) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			content.writeREQToJson(out);
+		}
+		out.append("]");
 	}
 
 	@Override

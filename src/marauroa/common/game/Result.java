@@ -11,6 +11,8 @@
  ***************************************************************************/
 package marauroa.common.game;
 
+import static marauroa.common.i18n.I18N._;
+
 /**
  * This enum represent the possible values returned by the create account
  * process. Caller should verify that the process ended in OK_ACCOUNT_CREATED.
@@ -140,6 +142,6 @@ public enum Result {
 	 * @return a textual description of the result.
 	 */
 	public String getText() {
-		return text;
+		return _(text);
 	}
 }

@@ -4,12 +4,18 @@
 
 	<property name="jarname" value="marauroa-${version}.jar"/>
 	<property name="jarname_client" value="marauroa-client-only-${version}.jar"/>
-	
+
 	<path id="compile-classpath">
 		<pathelement path="${log4j_jar}"/>
 		<pathelement path="${junit_jar}"/>
 		<pathelement path="${jnlp_jar}"/>
 		<pathelement path="${jython_jar}"/>
+		  <fileset dir="${libdir}">
+		    <include name="jetty*.jar"/>
+		    <include name="json-simple*.jar"/>
+		    <include name="servlet*.jar"/>
+		  	<include name="websocket*.jar" />
+		  </fileset>
 	</path>
 	
 	<path id="compile-tests-classpath">
@@ -23,7 +29,7 @@
 		<pathelement path="${build-tests}" />
 		<pathelement path="."/>
 	</path>
-
+	
 	<!-- Clears the instalation -->
 	<target name="clean">
 		<delete dir="${build}"/>
@@ -60,6 +66,18 @@
 			</not>
 		</condition>
 
+		<!-- exclude.web -->
+		<condition property="exclude.web" value="**/web/*.*">
+			<or>
+				<not>
+					<available file="${servletapi_jar}"/>
+				</not>
+				<not>
+					<available file="${socketio_jar}"/>
+				</not>
+			</or>
+		</condition>
+		
 		<!-- Update version number. -->
 		<replaceregexp file="${src}/marauroa/server/marauroad.java"
                    match="private static final String VERSION = &quot;.*&quot;;"
@@ -67,7 +85,7 @@
                    byline="true"/>
 
 		<!-- Compile it -->
-		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${build-classes}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+		<javac srcdir="${src}" source="1.5" target="1.5" destdir="${build-classes}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit};${exclude.web}" includeantruntime="false">
 			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-classpath" />
 		</javac>
@@ -76,6 +94,12 @@
 			<fileset dir="${src}/marauroa/server">
 				<include name="*.sql"/>
 				<include name="*.properties"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${build-classes}/js" />
+		<copy todir="${build-classes}/js">
+			<fileset dir="src/js">
+				<include name="*"/>
 			</fileset>
 		</copy>
 	</target>
@@ -97,6 +121,7 @@
 			</classpath>
 		</javac>
 	</target>
+
 
 	<!-- Generate Java docs -->
 	<target name="docs" depends="compile">
@@ -133,12 +158,11 @@
 	<target name="dist_binary" depends="jar">
 		<replaceregexp file="${extras}/marauroad.bat"
                    match="set LOCALCLASSPATH=.*"
-                   replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${h2_jar};${connectorJ_jar};${log4j_jar}"
+                   replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${h2_jar};${connectorJ_jar};${log4j_jar};${servlet_jar};${socketio_jar};${jetty_client_jar};${jetty_continuation_jar};${jetty_http_jar};${jetty_io_jar};${jetty_security_jar};${jetty_server_jar};${jetty_servlet_jar};${jetty_util_jar};${jetty_webapp_jar};${jetty_websocket_jar};${jetty_xml_jar}"
                    byline="true"/>
-
 		<replaceregexp file="${extras}/marauroad"
 	    	       match="export LOCALCLASSPATH=.*"
-    	    	   replace="export LOCALCLASSPATH=.:libs/marauroa-${version}.jar:{jython_jar}:${h2_jar}:${connectorJ_jar}:${log4j_jar}"
+    	    	   replace="export LOCALCLASSPATH=.:libs/marauroa-${version}.jar:${jython_jar}:${h2_jar}:${connectorJ_jar}:${log4j_jar}:${servlet_jar}:${socketio_jar}:${jetty_client_jar}:${jetty_continuation_jar}:${jetty_http_jar}:${jetty_io_jar}:${jetty_security_jar}:${jetty_server_jar}:${jetty_servlet_jar}:${jetty_util_jar}:${jetty_webapp_jar}:${jetty_websocket_jar}:${jetty_xml_jar}"
                    byline="true"/>
 
 		<mkdir dir="marauroa-${version}"/>
@@ -242,7 +266,7 @@
 		</junit>
 		<delete file="./server.ini" />
 	</target>
-	
+
 	<target name="coverage" depends="compile-tests">
 		<jacoco:coverage>
 			<junit printsummary="yes" fork="yes">

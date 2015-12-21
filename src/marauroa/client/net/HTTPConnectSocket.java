@@ -11,6 +11,8 @@
  ***************************************************************************/
 package marauroa.client.net;
 
+import static marauroa.common.i18n.I18N._;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,7 +68,7 @@ public class HTTPConnectSocket extends Socket {
 		*/
 
 		OutputStream os = super.getOutputStream();
-		StringBuffer connect = new StringBuffer("CONNECT ");
+		StringBuilder connect = new StringBuilder("CONNECT ");
 		connect.append(server.getHostName());
 		connect.append(":");
 		connect.append(server.getPort());
@@ -91,7 +93,7 @@ public class HTTPConnectSocket extends Socket {
 		// read the status code
 		byte[] data = new byte[HTTP_PREFIX.length()];
 		if (is.read(data) < data.length) {
-			throw new IOException("Unexpected end of stream while reading proxy answer.");
+			throw new IOException(_("Unexpected end of stream while reading proxy answer."));
 		}
 
 		// verify the server response part 1: Was it a http-connect proxy?
@@ -100,7 +102,7 @@ public class HTTPConnectSocket extends Socket {
 			data = new byte[4096];
 			int size = is.read(data);
 			String error = answer + new String(data, 0, size, "US-ASCII");
-			throw new IOException("Proxy connection failed. It does not seem to be a valid http-proxy because I did not understand this response: " + error);
+			throw new IOException(_("Proxy connection failed. It does not seem to be a valid http-proxy because this response is unexpected: %1%s", error));
 		}
 
 		// verify the server response part 2: Did the connection succeed?
@@ -108,7 +110,7 @@ public class HTTPConnectSocket extends Socket {
 			BufferedReader br = new BufferedReader(new InputStreamReader(is, "US-ASCII"));
 			String error = answer.substring(answer.length() - 3) + br.readLine();
 			br.close();
-			throw new IOException("Proxy connection failed: " + error);
+			throw new IOException(_("Proxy connection failed: %1$s", error));
 		}
 
 		// OK, the status code of the proxy was 200 Connection established
@@ -118,7 +120,7 @@ public class HTTPConnectSocket extends Socket {
 		while (startTime + TIMEOUT * 1000 > System.currentTimeMillis()) {
 			int b = is.read();
 			if (b < 0) {
-				throw new IOException("Unexpected end of stream while reading proxy preload.");
+				throw new IOException(_("Unexpected end of stream while reading proxy preload."));
 			}
 
 			// Check whether this byte is expected in the byte sequence
@@ -135,7 +137,7 @@ public class HTTPConnectSocket extends Socket {
 		}
 
 		// TODO: include server response here
-		throw new IOException("Timeout while reading proxy preload");
+		throw new IOException(_("Timeout while reading proxy preload"));
 	}
 
 

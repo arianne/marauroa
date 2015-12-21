@@ -1,0 +1,43 @@
+_localization_credits_marauroa=Переклад українською: Кос Іванцов
+
+# marauroa.client.*
+Your IP Address has been banned.=Вашу IP-адреса було заблоковано.
+Login failed: %1$s=Не вдалося увійти: %1$s
+Timeout happened while waiting server reply.=Перевищено час очікування відповіді від сервера.
+
+# marauroa.common.*
+Account was created correctly.=Обліковий запис успішно створено.
+Account was not created because one of the important parameters was missing.=Обліковий запис не було створено через пропущений важливий параметр.
+Account was not created because an invalid character (special letters, signs, numbers) was used.=Обліковий запис не було створено через вжитий неправильний символ (особливі літери, знаки, цифри).
+Account was not created because any of the parameters are either too long or too short.=Обліковий запис не було створено через задовгу чи закоротку довжину одного з параметрів.
+Account was not created because this account already exists.=Обліковий запис не було створено, оскільки такий обліковий запис уже існує.
+Account was not created because there is already an account with this email address.=Обліковий запис не було створено, оскільки уже існує обліковий запис із вказаною адресою електронної пошти.
+Account was not created because there was an unspecified exception.=Обліковий запис не було створено, оскільки сталася невизначена помилка.
+Character was not created because this Character already exists.=Персонаж не було створено, оскільки такий персонаж уже існує.
+The template passed to the create character method is not valid because it fails to pass the RP rules.=Шаблон, що було подано для створення персонажу, є недопустимим, оскільки він не проходить перевірку за правилами RP.
+Account was not created because at least one of the parameters was too short.=Обліковий запис не було створено, оскільки щонайменше один із параметрів є закоротким.
+Account was not created because at least one of the parameters was too long.=Обліковий запис не було створено, оскільки щонайменше один із параметрів є задовгим.
+Account was not created because the name is reserved (or contains a reserved name).=Обліковий запис не було створено, оскільки таке ім'я є зарезервованим словом (або містить у собі зарезервоване слово).
+Account was not created because the password is too close to the username.=Обліковий запис не було створено, оскільки пароль є дуже подібним до ім'я користувача.
+Account was not created because the password is too weak.=Обліковий запис не було створено, оскільки пароль є дуже слабким.
+Account was not created because the account creation limit for your network was reached.\nPlease try again later.=Обліковий запис не було створено, оскільки досягнута гранична кількість створених облікових записів для вашої мережі.\nПовторіть спробу пізніше.
+Creation failed because the server is temporary not available. Please try again later.=Створення було невдалим, оскільки сервер тимчасово не доступний. Повторіть спробу пізніше.
+Accounts cannot be created on this server. Please create the account on the main server and wait a while.=Обліковий запис не може бути створено на цьому сервері. Створіть обліковий запис на головному сервері і зачекайте.
+=
+Username/Password incorrect.=Неправильні ім'я користувача та/або пароль.
+There have been too many failed login attempts for your account or network. Please wait a couple of minutes or contact support.=Сталося занадто багато невдалих спроб входу з вашого облікового запису чи мережі. Зачекайте кілька хвилин або зверніться до служби підтримки.
+Account is banned.=Обліковий запис заблоковано.
+Server is full.=Сервер повний.
+Server is running an incompatible version of game. Please update.=На сервері запущено несумісну версію гри. Оновіть програму.
+You account has been marked as inactive, please contact support.=Ваш обліковий запис було позначено як неактивний, зверніться в службу підтримки.
+There have been too many failed login attempts for your account. Please wait a couple of minutes or contact support.=Було зроблено забагато невдалих спроб входу у ваш обліковий запис. Зачекайте кілька хвилин або зверніться до служби підтримки.
+There have been too many failed login attempts from your network. Please wait a couple of minutes or contact support.=Із вашої мережі було зроблено забагато невдалих спроб входу. Зачекайте кілька хвилин або зверніться до служби підтримки.
+Login expired. Please click again on your character on the web page.=Закінчився термін сесії. Натисніть ще раз на вашому персонажі на веб-сторінці.
+This account was merged into another account. Please use the username of the other account to login or contact support.=Цей обліковий запис було злито з іншим обліковим записом. Для входу вкажіть ім'я користувача з іншого облікового запису або зверніться до служби підтримки.
+
+Your account is temporarily suspended until %1$s server time.=Ваш обліковий запис тимчасово призупинено до %1$s (час на сервері).
+Your account is banned.=Ваш обліковий запис заблоковано.
+The reason given was: %1$s=Причина: %1$s
+Your account has been banned. Please contact support.=Ваш обліковий запис було заблоковано. Зверніться в службу підтримки.
+Your account has been flagged as inactive. Please contact support.=Ваш обліковий запис було позначено як неактивний. Зверніться в службу підтримки.
+Your account has been merged into another account.\nPlease login with that account or contact support.=Ваш обліковий запис було злито з іншим обліковим записом.\nУвійдіть за допомогою того облікового запису або зверніться до служби підтримки.

@@ -90,11 +90,11 @@ class LogoutHandler extends MessageHandler {
 
 			if (shouldLogout) {
 				stats.add("Players logout", 1);
-				logger.info("Logging out correctly channel: " + entry.channel.socket().getRemoteSocketAddress());
+				logger.info("Logging out correctly channel: " + entry.getInetSocketAddress());
 				playerContainer.remove(clientid);
 
 				/* Send Logout ACK message */
-				MessageS2CLogoutACK msgLogout = new MessageS2CLogoutACK(msg.getSocketChannel());
+				MessageS2CLogoutACK msgLogout = new MessageS2CLogoutACK(msg.getChannel());
 
 				msgLogout.setClientID(clientid);
 				msgLogout.setProtocolVersion(msg.getProtocolVersion());
@@ -102,7 +102,7 @@ class LogoutHandler extends MessageHandler {
 
 				entry.state = ClientState.LOGOUT_ACCEPTED;
 			} else {
-				MessageS2CLogoutNACK msgLogout = new MessageS2CLogoutNACK(msg.getSocketChannel());
+				MessageS2CLogoutNACK msgLogout = new MessageS2CLogoutNACK(msg.getChannel());
 				msgLogout.setClientID(clientid);
 				msgLogout.setProtocolVersion(msg.getProtocolVersion());
 				netMan.sendMessage(msgLogout);

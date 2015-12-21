@@ -301,6 +301,42 @@ public abstract class SlotOwner extends Attributes {
 	}
 
 
+	/**
+	 * This method serialize the object with the given level of detail.
+	 *
+	 * @param out
+	 *            the output buffer
+	 * @param level
+	 *            the level of Detail
+	 */
+	@Override
+	public void writeToJson(StringBuilder out, DetailLevel level) {
+		super.writeToJson(out, level);
+		if (slots == null || slots.isEmpty()) {
+			return;
+		}
+
+		boolean first = true;
+		out.append(",\"s\":{");
+		for (RPSlot slot : slots) {
+			if (slot.isEmpty()) {
+				continue;
+			}
+			Definition def = getRPClass().getDefinition(DefinitionClass.RPSLOT, slot.getName());
+			if (!shouldSerialize(def, level)) {
+				continue;
+			}
+
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			slot.writeToJson(out, level);
+		}
+		out.append("}");
+	}
+
 	protected void deserializeRPSlots(marauroa.common.net.InputSerializer in)
 			throws IOException {
 		/*
@@ -325,7 +361,7 @@ public abstract class SlotOwner extends Attributes {
 
 	@Override
 	public String toString() {
-		StringBuffer tmp = new StringBuffer();
+		StringBuilder tmp = new StringBuilder();
 		tmp.append(super.toString());
 
 		if (slots != null) {

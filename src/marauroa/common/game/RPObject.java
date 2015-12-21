@@ -27,6 +27,7 @@ import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
 import marauroa.common.net.NetConst;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This class implements an Object.
@@ -1000,7 +1001,7 @@ public class RPObject extends SlotOwner {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer tmp = new StringBuffer("RPObject with ");
+		StringBuilder tmp = new StringBuilder("RPObject with ");
 
 		tmp.append(super.toString());
 
@@ -1159,6 +1160,81 @@ public class RPObject extends SlotOwner {
 			}
 		} else {
 			out.write(0);
+		}
+	}
+
+	/**
+	 * This method serialize the object with the given level of detail.
+	 *
+	 * @param out
+	 *            the output buffer
+	 * @param level
+	 *            the level of Detail
+	 */
+	@Override
+	public void writeToJson(StringBuilder out, DetailLevel level) {
+		super.writeToJson(out, level);
+
+		// now we write the maps
+		if (maps != null && !maps.isEmpty()) {
+			out.append(",\"m\":{");
+			boolean first = true;
+			for (Map.Entry<String, Attributes> entry : maps.entrySet()) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.ATTRIBUTE, entry.getKey());
+				if (shouldSerialize(def, level)) {
+					if (first) {
+						first = false;
+					} else {
+						out.append(",");
+					}
+					OutputSerializer.writeJson(out, entry.getKey());
+					out.append(":{");
+					entry.getValue().writeToJson(out, level);
+					out.append("}");
+				}
+			}
+			out.append("}");
+		}
+
+		// Now write links.
+		if (links != null && !links.isEmpty()) {
+			out.append(",\"l\":{");
+			boolean first = true;
+			for (RPLink link : links) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPLINK, link.getName());
+				if (shouldSerialize(def, level)) {
+					if (first) {
+						first = false;
+					} else {
+						out.append(",");
+					}
+					OutputSerializer.writeJson(out, link.getName());
+					out.append(":{");
+					link.getObject().writeToJson(out, level);
+					out.append("}");
+				}
+			}
+			out.append("}");
+		}
+
+		// Now write events
+		if (events != null && !events.isEmpty()) {
+			out.append(",\"e\":[");
+			boolean first = true;
+			for (RPEvent event : events) {
+				Definition def = getRPClass().getDefinition(DefinitionClass.RPEVENT, event.getName());
+				if (shouldSerialize(def, level)) {
+					if (first) {
+						first = false;
+					} else {
+						out.append(",");
+					}
+					out.append("{");
+					event.writeToJson(out, level);
+					out.append("}");
+				}
+			}
+			out.append("]");
 		}
 	}
 

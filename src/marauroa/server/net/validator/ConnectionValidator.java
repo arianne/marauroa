@@ -12,8 +12,6 @@
 package marauroa.server.net.validator;
 
 import java.net.InetAddress;
-import java.net.Socket;
-import java.nio.channels.SocketChannel;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,10 +20,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import marauroa.common.Log4J;
+import marauroa.common.net.Channel;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.dbcommand.LoadBanListCommand;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
 import marauroa.server.game.rp.RPServerManager;
+
+
 
 /**
  * The ConnectionValidator validates the ariving connections, currently it can
@@ -46,7 +47,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>, DelayedEv
 	private static final marauroa.common.Logger logger = Log4J.getLogger(ConnectionValidator.class);
 
 	/** Permanent bans are stored inside the database. */
-	private List<InetAddressMask> permanentBans;
+	private final List<InetAddressMask> permanentBans;
 
 	/**
 	 * Temporal bans are added using the API and are lost on each server reset.
@@ -55,7 +56,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>, DelayedEv
 	List<InetAddressMask> temporalBans;
 
 	/** A timer to remove ban when it is done. */
-	private Timer timer;
+	private final Timer timer;
 
 	/* timestamp of last reload */
 	private long lastLoadTS;
@@ -89,7 +90,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>, DelayedEv
 	 */
 	private class RemoveBan extends TimerTask {
 
-		private InetAddressMask mask;
+		private final InetAddressMask mask;
 
 		/**
 		 * Constructor
@@ -114,8 +115,8 @@ public class ConnectionValidator implements Iterable<InetAddressMask>, DelayedEv
 	 * @param time
 	 *            how many seconds to ban.
 	 */
-	public void addBan(SocketChannel channel, int time) {
-		addBan(channel.socket().getInetAddress().getHostAddress(), "255.255.255.255", time);
+	public void addBan(Channel channel, int time) {
+		addBan(channel.getInetAddress().getHostAddress(), "255.255.255.255", time);
 
 	}
 
@@ -182,18 +183,6 @@ public class ConnectionValidator implements Iterable<InetAddressMask>, DelayedEv
 		}
 
 		return false;
-	}
-
-	/**
-	 * Check if a socket that has a InetAddress associated is banned.
-	 *
-	 * @param socket
-	 *            the socket we want to check if it is banned or not.
-	 * @return true if it is banned.
-	 */
-	public synchronized boolean checkBanned(Socket socket) {
-		InetAddress address = socket.getInetAddress();
-		return checkBanned(address);
 	}
 
 	public void handleDelayedEvent(RPServerManager rpMan, Object data) {

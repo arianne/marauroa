@@ -12,9 +12,11 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message is for confirming server the content we want to be transfered to
@@ -41,7 +43,7 @@ public class MessageC2STransferACK extends Message {
 	 * @param content
 	 * 			  the list of contents to confirm to server.
 	 */
-	public MessageC2STransferACK(SocketChannel source, List<TransferContent> content) {
+	public MessageC2STransferACK(Channel source, List<TransferContent> content) {
 		super(MessageType.C2S_TRANSFER_ACK, source);
 
 		this.contents = content;
@@ -90,4 +92,39 @@ public class MessageC2STransferACK extends Message {
 			throw new IOException();
 		}
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
+
+		contents = new LinkedList<TransferContent>();
+		Map<String, Object> contentsMap = (Map<String, Object>) in.get("contents");
+		for (Map.Entry<String, Object> entry : contentsMap.entrySet()) {
+			TransferContent content = new TransferContent();
+			content.readACKFromMap(entry.getKey(), entry.getValue());
+			contents.add(content);
+		}
+
+		if (type != MessageType.C2S_TRANSFER_ACK) {
+			throw new IOException();
+		}
+	}
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",\"contents\":{");
+		boolean first = true;
+		for (TransferContent content : contents) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			content.writeACKToJson(out);
+		}
+		out.append("}");
+	}
+
 }

@@ -11,13 +11,12 @@
  ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
-import java.nio.channels.SocketChannel;
-
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
+import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SCreateCharacter;
 import marauroa.common.net.message.MessageP2SCreateCharacter;
@@ -28,7 +27,6 @@ import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
 import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;
-
 /**
  * This is a create character request. It require that
  * client has correctly logged to server. Once client
@@ -51,7 +49,7 @@ class CreateCharacterHandler extends MessageHandler {
 		try {
 			int clientid = message.getClientID();
 			int protocolVersion = message.getProtocolVersion();
-			SocketChannel channel = message.getSocketChannel();
+			Channel channel = message.getChannel();
 
 			if (message instanceof MessageC2SCreateCharacter) {
 				MessageC2SCreateCharacter msg = (MessageC2SCreateCharacter) message;
@@ -71,7 +69,7 @@ class CreateCharacterHandler extends MessageHandler {
 				int maxNumberOfCharacters = Configuration.getConfiguration().getInt("limit_characters_per_account", Integer.MAX_VALUE);
 				if (entry.characterCounter >= maxNumberOfCharacters) {
 					Result result = Result.FAILED_TOO_MANY;
-					MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(channel, result);
+					MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(channel, character, result);
 					msgCreateCharacterNACK.setClientID(clientid);
 					msgCreateCharacterNACK.setProtocolVersion(protocolVersion);
 					netMan.sendMessage(msgCreateCharacterNACK);
@@ -103,15 +101,16 @@ class CreateCharacterHandler extends MessageHandler {
 	}
 
 	private void createCharacter(String username, String character, RPObject template,
-			int clientid, String address, SocketChannel channel, int protocolVersion,
-			boolean sendListOfCharacters) {
-		/*
-		 * We request the creation of an character for a logged player. It
-		 * will also return a result of the character that we must forward to
-		 * player.
-		 */
-		CharacterResult val = rpMan.createCharacter(username, character, template, address);
-		Result result = val.getResult();
+            int clientid, String address, Channel channel, int protocolVersion,
+            boolean sendListOfCharacters) {
+	    /*
+	     * We request the creation of an character for a logged player. It
+	     * will also return a result of the character that we must forward to
+	     * player.
+	     */
+	    CharacterResult val = rpMan.createCharacter(username, character,
+	    		template, address);
+	    Result result = val.getResult();
 
 		if (result == Result.OK_CREATED) {
 			/*
@@ -140,7 +139,7 @@ class CreateCharacterHandler extends MessageHandler {
 			 * to player.
 			 */
 			MessageS2CCreateCharacterNACK msgCreateCharacterNACK = new MessageS2CCreateCharacterNACK(
-					channel, result);
+					channel, character, result);
 			msgCreateCharacterNACK.setClientID(clientid);
 			msgCreateCharacterNACK.setProtocolVersion(protocolVersion);
 			netMan.sendMessage(msgCreateCharacterNACK);

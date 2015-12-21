@@ -20,6 +20,7 @@ import java.util.List;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This class represent a slot in an object
@@ -46,7 +47,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	private LinkedRPObjectList deleted;
 
 	/**
-	 * Constructor for deserialization. Please use {@link RPSlot#RPSlot(String)}. 
+	 * Constructor for deserialization. Please use {@link RPSlot#RPSlot(String)}.
 	 */
 	public RPSlot() {
 		name = null;
@@ -222,7 +223,9 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return the object or null if it is not found.
 	 */
 	public RPObject remove(RPObject.ID id) {
-		if (id == null) return null;
+		if (id == null) {
+			return null;
+		}
 		int oid = id.getObjectID();
 
 		Iterator<RPObject> it = objects.iterator();
@@ -303,7 +306,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		return objects.hasByIDIgnoringZone(id);
 	}
 
-	
+
 	/**
 	 * Traverses up the container tree to see if the slot is owned by object
 	 * or by one of its parents
@@ -313,14 +316,14 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @return true if this slot is owned (at any depth) by id or false
 	 *         otherwise.
 	 */
-	// This signature with an RPObject as parameter is here for binary 
+	// This signature with an RPObject as parameter is here for binary
 	// compatibilty. Changing the parameter to the parent type SlotOwner
 	// is an incompatible change at binary level (although it is source
 	// compatible)
 	public boolean hasAsAncestor(RPObject object) {
 		return hasAsAncestor((SlotOwner) object);
 	}
-	
+
 	/**
 	 * Traverses up the container tree to see if the slot is owned by object
 	 * or by one of its parents
@@ -331,14 +334,14 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 *         otherwise.
 	 */
 	public boolean hasAsAncestor(SlotOwner object) {
-		SlotOwner owner = getOwner();
+		SlotOwner slotOwner = getOwner();
 		// traverse the owner tree
-		while (owner != null) {
+		while (slotOwner != null) {
 			// NOTE: We compare pointers.
-			if (owner == object) {
+			if (slotOwner == object) {
 				return true;
 			}
-			owner = owner.getContainerOwner();
+			slotOwner = slotOwner.getContainerOwner();
 		}
 		return false;
 	}
@@ -350,16 +353,6 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 */
 	public int size() {
 		return objects.size();
-	}
-	
-	/**
-	 * Alias for (size() == 0).
-	 * 
-	 * @return
-	 * 		The slot is empty
-	 */
-	public boolean isEmpty() {
-		return (size() == 0);
 	}
 
 	/**
@@ -394,6 +387,15 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 */
 	public boolean isFull() {
 		return size() == capacity;
+	}
+
+	/**
+	 * Is this slot empty?
+	 *
+	 * @return true if there are no objects in this slot
+	 */
+	public boolean isEmpty() {
+		return objects.isEmpty();
 	}
 
 	/**
@@ -498,6 +500,31 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 				object.writeObject(out, level);
 			}
 		}
+	}
+
+	/**
+	 * This method serialize the object with the given level of detail.
+	 *
+	 * @param out
+	 *            the output buffer
+	 * @param level
+	 *            the level of Detail
+	 */
+	public void writeToJson(StringBuilder out, DetailLevel level) {
+		OutputSerializer.writeJson(out, this.getName());
+		out.append(":[");
+		boolean first = true;
+		for (RPObject rpobject : this) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			out.append("{");
+			rpobject.writeToJson(out, level);
+			out.append("}");
+		}
+		out.append("]");
 	}
 
 	/**
@@ -655,4 +682,5 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		}
 
 	}
+
 }

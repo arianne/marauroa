@@ -28,7 +28,7 @@ class TransferACKHandler extends MessageHandler {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(TransferACKHandler.class);
 
 
-	
+
 	/**
 	 * This message is send from client to server to notify server which of the
 	 * proposed transfer has to be done.
@@ -55,7 +55,7 @@ class TransferACKHandler extends MessageHandler {
 			 */
 			for (TransferContent content : msg.getContents()) {
 				TransferContent contentToTransfer = entry.getContent(content.name);
-				if (content.ack == true) {
+				if (content.ack) {
 					logger.debug("Trying transfer content " + content);
 
 					/*

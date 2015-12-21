@@ -16,7 +16,7 @@ import java.nio.channels.SocketChannel;
 /**
  * This interface should be implemented by all the classes that are added as
  * workers to NIOServer
- * 
+ *
  * @author miguel
  */
 public interface IWorker {
@@ -28,15 +28,15 @@ public interface IWorker {
 	 */
 	public void setServer(NioServer server);
 
-	/** 
-	 * This is a callback method that is called onConnect
+	/**
+	 * This is a callback method that is called onConnect.
 	 *
 	 * @param channel SocketChannel
 	 */
 	public void onConnect(SocketChannel channel);
 
 	/**
-	 * This method is called when data is received from a socket channel
+	 * This method is called when data is received from a socket channel.
 	 *
 	 * @param server NioServer
 	 * @param channel SocketChannel
@@ -44,4 +44,11 @@ public interface IWorker {
 	 * @param count number of bytes used in the provided array
 	 */
 	public void onData(NioServer server, SocketChannel channel, byte[] data, int count);
+
+	/**
+	 * This method is called when a connection to a client is closed.
+	 *
+	 * @param channel channel that was disconnected
+	 */
+	public void onDisconnect(SocketChannel channel);
 }

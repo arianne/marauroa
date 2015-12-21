@@ -12,7 +12,8 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+
+import marauroa.common.net.Channel;
 
 /**
  * This message indicate the client that the server has rejected its connection
@@ -36,7 +37,7 @@ public class MessageS2CConnectNACK extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageS2CConnectNACK(SocketChannel source) {
+	public MessageS2CConnectNACK(Channel source) {
 		super(MessageType.S2C_CONNECT_NACK, source);
 	}
 
@@ -50,10 +51,6 @@ public class MessageS2CConnectNACK extends Message {
 		return "Message (S2C Connnect NACK) from (" + getAddress() + ") CONTENTS: ()";
 	}
 
-	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
-		super.writeObject(out);
-	}
 
 	@Override
 	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {

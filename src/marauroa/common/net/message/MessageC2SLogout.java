@@ -12,13 +12,19 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
+import java.util.Map;
+
+import marauroa.common.net.Channel;
+
+import org.apache.log4j.Logger;
 
 /**
  * The Logout Message is sent from client to server to indicate that it wants to
  * finish the session.
  */
 public class MessageC2SLogout extends Message {
+	private static Logger logger = Logger.getLogger(MessageC2SLogout.class);
+
 	private int reason = 0;
 
 	/** Constructor for allowing creation of an empty message */
@@ -42,7 +48,7 @@ public class MessageC2SLogout extends Message {
 	 * @param source
 	 *            The TCP/IP address associated to this message
 	 */
-	public MessageC2SLogout(SocketChannel source) {
+	public MessageC2SLogout(Channel source) {
 		super(MessageType.C2S_LOGOUT, source);
 	}
 
@@ -83,6 +89,23 @@ public class MessageC2SLogout extends Message {
 
 		if (in.available() >= 4) {
 			reason = in.readInt();
+		}
+	}
+
+	@Override
+	public void readFromMap(Map<String, Object> in) throws IOException {
+		super.readFromMap(in);
+		Object temp = in.get("reason");
+		try {
+			if (temp != null) {
+				reason = Integer.parseInt(temp.toString());
+			}
+		} catch (NumberFormatException e) {
+			logger.warn(e, e);
+		}
+
+		if (type != MessageType.C2S_LOGOUT) {
+			throw new IOException();
 		}
 	}
 }

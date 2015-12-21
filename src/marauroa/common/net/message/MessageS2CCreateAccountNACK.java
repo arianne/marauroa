@@ -12,11 +12,12 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.game.Result;
+import marauroa.common.net.Channel;
+import marauroa.common.net.OutputSerializer;
 
 
 /**
@@ -27,6 +28,7 @@ import marauroa.common.game.Result;
 public class MessageS2CCreateAccountNACK extends Message {
 	private static Logger logger = Log4J.getLogger(MessageS2CCreateAccountNACK.class);
 
+	private String username;
 	private Result reason;
 
 	/** Constructor for allowing creation of an empty message */
@@ -40,12 +42,15 @@ public class MessageS2CCreateAccountNACK extends Message {
 	 *
 	 * @param source
 	 *            The TCP/IP address associated to this message
+	 * @param username
+	 *            username of the failed account creation attempt
 	 * @param resolution
 	 *            the reason to deny the create account
 	 */
-	public MessageS2CCreateAccountNACK(SocketChannel source, Result resolution) {
+	public MessageS2CCreateAccountNACK(Channel source, String username, Result resolution) {
 		super(MessageType.S2C_CREATEACCOUNT_NACK, source);
-		reason = resolution;
+		this.username = username;
+		this.reason = resolution;
 	}
 
 	/**
@@ -97,5 +102,20 @@ public class MessageS2CCreateAccountNACK extends Message {
 		if (type != MessageType.S2C_CREATEACCOUNT_NACK) {
 			throw new IOException();
 		}
+	}
+
+
+	@Override
+	public void writeToJson(StringBuilder out) {
+		super.writeToJson(out);
+		out.append(",");
+		OutputSerializer.writeJson(out, "username", username);
+		out.append(",\"reason\": {");
+		OutputSerializer.writeJson(out, "code", Integer.toString(reason.ordinal()));
+		out.append(",");
+		OutputSerializer.writeJson(out, "name", reason.name());
+		out.append(",");
+		OutputSerializer.writeJson(out, "text", reason.getText());
+		out.append("}");
 	}
 }

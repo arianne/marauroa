@@ -12,9 +12,9 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 
 import marauroa.common.Utility;
+import marauroa.common.net.Channel;
 
 /**
  * This message is a generic message that send a byte array.
@@ -44,7 +44,7 @@ public class MessageSendByteArray extends Message {
 	 * @param hash
 	 *            The byte array you want to send.
 	 */
-	public MessageSendByteArray(MessageType type, SocketChannel source, byte[] hash) {
+	public MessageSendByteArray(MessageType type, Channel source, byte[] hash) {
 		super(type, source);
 		this.hash = Utility.copy(hash);
 	}
