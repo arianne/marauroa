@@ -251,8 +251,8 @@
 		<copy file="${test-server-ini}" tofile="./server.ini" />
 	</target>
 	
-	<target name="run-tests" depends="compile-tests">
-		<junit printsummary="yes" fork="yes">
+	<target name="test" depends="compile-tests">
+		<junit printsummary="yes" fork="yes" forkmode="once" haltonerror="true" haltonfailure="true">
 			<jvmarg value="-Djava.awt.headless=true"/>
 			<classpath refid="run-tests-classpath" />
 			<formatter type="plain" usefile="false"/>
