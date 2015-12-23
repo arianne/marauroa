@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2015 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -587,6 +587,47 @@ public class CharacterDAO {
 			throw e;
 		}
 	}
+    
+	/**
+	 * Modifies a character status.
+	 * 
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param character name of character
+	 * @param status status to set
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
+	public void setCharacterStatus(DBTransaction transaction, String username, String character, String status) throws SQLException, IOException {
+		if(hasCharacter(transaction, username, character)) {
+			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
+			String query = "select object_id from characters where charname='[character]' and player_id=[player_id]";
+			logger.debug("loadCharacter is executing query " + query);
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("player_id", id);
+			params.put("character", character);
+
+			ResultSet result = transaction.query(query, params);
+
+			if (result.next()) {
+				int object_id = result.getInt("object_id");
+				query = "update characters set status ='" + status + "' "
+				+ "where object_id = '" + object_id + "' "
+				+ "and player_id = '" + id + "'";
+				params.clear();
+				params.put("player_id", id);
+				params.put("object_id", object_id);
+				params.put("character", character);
+				logger.debug("setCharacterStatus is executing query " + query);
+				transaction.execute(query, params);
+			} else {
+				logger.warn("No object for character " + character + " on account " + id + " username " + username);
+			}
+			result.close();
+		} else {
+			throw new SQLException("User: " + username + " doesn't have character: " + character);
+		}
+	}
 
 
 	/**
@@ -856,4 +897,21 @@ public class CharacterDAO {
 		}
 	}
 
+ 	/**
+	 * Modifies a character status.
+	 *
+	 * @param username username
+	 * @param character name of character
+	 * @param status status to set
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
+	public void setCharacterStatus(String username, String character, String status) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			setCharacterStatus(transaction, username, character, status);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
 }
