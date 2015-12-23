@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2015 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -71,11 +71,12 @@ public class CharacterDAO {
 			int object_id = DAORegister.get().get(RPObjectDAO.class).storeRPObject(transaction, player);
 
 			String query = "insert into characters(player_id, charname, object_id, status)"
-				+ "values([player_id], '[character]', [object_id], DEFAULT)";
+				+ "values([player_id], '[character]', [object_id], '[status]')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
 			params.put("object_id", Integer.valueOf(object_id));
 			params.put("character", character);
+			params.put("status", Configuration.getConfiguration().get("character_creation_status", "active"));
 			logger.debug("addCharacter is executing query " + query);
 			logger.debug("Character: " + player);
 
@@ -587,6 +588,33 @@ public class CharacterDAO {
 			throw e;
 		}
 	}
+    
+	/**
+	 * Modifies a character status.
+	 * 
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param character name of character
+	 * @param status status to set
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
+	public void setCharacterStatus(DBTransaction transaction, String username, String character, String status) throws SQLException, IOException {
+		if (hasCharacter(transaction, username, character)) {
+			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
+			Map<String, Object> params = new HashMap<String, Object>();
+			String query = "update characters set status ='[status]' "
+				+ "where charname = '[character]'"
+				+ "and player_id = [player_id]";
+			params.put("player_id", id);
+			params.put("character", character);
+			params.put("status", status);
+			logger.debug("setCharacterStatus is executing query " + query);
+			transaction.execute(query, params);
+		} else {
+			throw new SQLException("User: " + username + " doesn't have character: " + character);
+		}
+	}
 
 
 	/**
@@ -856,4 +884,21 @@ public class CharacterDAO {
 		}
 	}
 
+ 	/**
+	 * Modifies a character status.
+	 *
+	 * @param username username
+	 * @param character name of character
+	 * @param status status to set
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
+	public void setCharacterStatus(String username, String character, String status) throws SQLException, IOException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			setCharacterStatus(transaction, username, character, status);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
 }

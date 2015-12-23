@@ -218,4 +218,33 @@ public class CharacterAccessTest {
 		}
 	}
 
+	/**
+	 * Changes status of a character.
+	 *
+	 * @throws java.sql.SQLException if the status change fails.
+	 * @throws java.io.IOException
+	 */
+	@Test
+	public void changeCharacterStatus() throws SQLException, IOException {
+		//First create a character
+		String username = "testUserCA2";
+		String character = "testCharacterCA2";
+		RPObject player = new RPObject();
+
+		DBTransaction transaction = transactionPool.beginWork();
+		try {
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			assertTrue(accountDAO.hasPlayer(transaction, username));
+			characterDAO.addCharacter(transaction, username, character, player);
+			assertTrue(characterDAO.hasCharacter(transaction, username, character));
+			assertTrue(characterDAO.hasActiveCharacter(transaction, username, character));
+			//Now change the status
+			characterDAO.setCharacterStatus(transaction, username, character, "inactive");
+			//Check again
+			assertFalse(characterDAO.hasActiveCharacter(transaction, username, character));
+		} finally {
+			transactionPool.rollback(transaction);
+		}
+	}
+
 }
