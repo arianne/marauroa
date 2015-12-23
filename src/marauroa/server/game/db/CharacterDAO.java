@@ -71,11 +71,12 @@ public class CharacterDAO {
 			int object_id = DAORegister.get().get(RPObjectDAO.class).storeRPObject(transaction, player);
 
 			String query = "insert into characters(player_id, charname, object_id, status)"
-				+ "values([player_id], '[character]', [object_id], DEFAULT)";
+				+ "values([player_id], '[character]', [object_id], '[status]')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
 			params.put("object_id", Integer.valueOf(object_id));
 			params.put("character", character);
+			params.put("status", Configuration.getConfiguration().get("character_creation_status", "active"));
 			logger.debug("addCharacter is executing query " + query);
 			logger.debug("Character: " + player);
 
