@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2012 - Marauroa                    *
+ *                   (C) Copyright 2003-2015 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -288,9 +288,9 @@ public class marauroad extends Thread {
 	public boolean init(String[] args) {
 		long startTime = System.currentTimeMillis();
 
-		System.out.println("Starting Marauroa http://arianne.sf.net/engine/marauroa.html");
+		System.out.println("Starting Marauroa https://arianne-project.org/engine/marauroa.html");
 		System.out.println("Arianne's open source multiplayer online framework for game development");
-		System.out.println("Marauroa is released under the Gnu General Public License: LICENSE.txt");
+		System.out.println("Marauroa is released under the GNU General Public License: LICENSE.txt");
 		System.out.println();
 
 		// Initialize Loggging
