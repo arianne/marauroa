@@ -385,12 +385,13 @@ marauroa.perceptionHandler = {
 					for (var j in diff.s[i]) {
 						if (diff.s[i].hasOwnProperty(j)) {
 							var id = diff.s[i][j].a.id;
-							if (typeof(object[i][id]) == "undefined") {
+							if (typeof(object[i].get(id)) == "undefined") {
 								var newObject = marauroa.rpobjectFactory.create(diff.s[i][j].c);
 								newObject._parent = object[i];
-								object[i].add(id, newObject);
+								newObject.id = id;
+								object[i].add(newObject);
 							}
-							this.addChanges(object[i][id], diff.s[i][j])
+							this.addChanges(object[i].get(id), diff.s[i][j])
 						}
 					}
 				} 

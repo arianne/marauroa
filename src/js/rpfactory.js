@@ -88,19 +88,49 @@ marauroa.rpeventFactory = new function(){
  * use the rpclass name as attribute name for a prototype object
  */
 marauroa.rpslotFactory = new function(){
-	this._default = function() {};
-	this._default.add = function(key, value) {
-		this[key] = value;
+	this._default = function() {
+		// this method is never called?!
+		this._objects = [];
+	};
+	this._default.add = function(value) {
+		if (value && value.id) {
+			this._objects.push(value);
+		}
 	}
-	this._default.del = function(key) {
-		delete this[key];
+	this._default.get = function(key) {
+		var idx = this.getIndex(key);
+		if (idx > -1) {
+			return this._objects[idx];
+		}
+		return undefined;
 	}
-	this._default.first = function() {
-		for (var i in this) {
-			if (!isNaN(i)) {
-				return this[i];
+	this._default.getByIndex = function(idx) {
+		return this._objects[idx];
+	}
+	this._default.count = function() {
+		return this._objects.length;
+	}
+	this._default.getIndex = function(key) {
+		var i;
+		var c = this._objects.length;
+		for (i = 0; i < c; i++) {
+			if (this._objects[i].id === key) {
+				return i;
 			}
 		}
+		return -1;
+	}
+	this._default.del = function(key) {
+		var idx = this.getIndex(key);
+		if (idx > -1) {
+			this._objects.splice(idx, 1);
+		}
+	}
+	this._default.first = function() {
+		if (this._objects.length > 0) {
+			return this._objects[0];
+		}
+		return undefined;
 	}
 
 	this.create = function(name) {
@@ -110,6 +140,7 @@ marauroa.rpslotFactory = new function(){
 		}
 		var slot = marauroa.util.fromProto(ctor);
 		slot._name = name;
+		slot._objects = [];
 		return slot;
 	}
 }
