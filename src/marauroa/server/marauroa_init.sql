@@ -10,9 +10,6 @@ create table if not exists account
   unique index i_account_username (username)
   );
 
-/* create index i_account_password ON account(password); */
-/* create index i_account_email ON account(email); */
-
 
 create table if not exists characters
   (
@@ -27,7 +24,8 @@ create table if not exists characters
    unique index i_characters_charname (charname)
   );
 
-/* create index i_characters_player_id ON characters(player_id); */
+create index if not exists i_characters_player_id ON characters(player_id);
+create index if not exists i_characters_charname ON characters(charname);
 
 create table if not exists rpobject
   (
@@ -61,8 +59,9 @@ create table if not exists loginEvent
   primary key(id)
   );
 
-/*create index i_loginEvent_player_id_timedate ON loginEvent(player_id, timedate);*/
-/*create index i_loginEvent_address_timedate ON loginEvent(address, timedate);*/
+create index if not exists i_loginEvent_player_id_timedate ON loginEvent(player_id, timedate);
+create index if not exists i_loginEvent_address_timedate ON loginEvent(address, timedate);
+create index if not exists i_loginEvent_timedate ON loginEvent(timedate);
 
 
 create table if not exists passwordChange
@@ -71,16 +70,14 @@ create table if not exists passwordChange
   player_id integer not null,
   address varchar(64),
   service char(20),
-
   timedate timestamp default CURRENT_TIMESTAMP,
-
   oldpassword varchar(255),
   result tinyint,
   primary key(id)
   );
 
-/* create index i_passwordChange_player_id ON passwordChange(player_id);*/
-/* create index i_passwordChange_address ON passwordChange(address);*/
+create index if not exists i_passwordChange_player_id ON passwordChange(player_id);
+create index if not exists i_passwordChange_address ON passwordChange(address);
 
 create table if not exists statistics
   (
@@ -100,6 +97,8 @@ create table if not exists statistics
   PRIMARY KEY(id)
   );
 
+create index if not exists i_statistics_timedate ON statistics(timedate);
+
 create table if not exists gameEvents
   (
   id integer auto_increment not null,
@@ -111,11 +110,14 @@ create table if not exists gameEvents
   PRIMARY KEY(id)
   );
   
-/*create index i_gameEvents_timedate ON gameEvents(timedate);*/
-/*create index i_gameEvents_source ON gameEvents(source);*/
-/*create index i_gameEvents_event  ON gameEvents(event);*/
-/*create index i_gameEvents_param1 ON gameEvents(param1);*/
-/*create index i_gameEvents_param2 ON gameEvents(param2);*/
+create index if not exists i_gameEvents_timedate ON gameEvents(timedate);
+create index if not exists i_gameEvents_param1 ON gameEvents(param1);
+create index if not exists i_gameEvents_param2 ON gameEvents(param2);
+create index if not exists i_gameEvents_source_event ON gameEvents(source, event);
+create index if not exists i_gameEvents_event_param1 ON gameEvents(event, param1);
+create index if not exists i_gameEvents_source_timedate ON gameEvents(source, timedate);
+create index if not exists i_gameEvents_event_timedate ON gameEvents(event, timedate);
+
 
 create table if not exists loginseed
   (
@@ -129,8 +131,8 @@ create table if not exists loginseed
   primary key(id)
   );
 
-/*create unique index i_loginseed on loginseed(seed); */
-/*create index i_loginseed_player_id on loginseed(player_id);*/
+create unique index if not exists i_loginseed_seed on loginseed(seed);
+create index if not exists i_loginseed_player_id on loginseed(player_id);
 
 create table if not exists banlist
   (
@@ -151,7 +153,7 @@ create table if not exists accountban
   PRIMARY KEY(id)
   );
 
-/*create index i_accountban_player_id ON accountban(player_id);*/
+create index if not exists i_accountban_player_id ON accountban(player_id);
 
 
 
@@ -167,8 +169,8 @@ create table if not exists accountLink
   PRIMARY KEY(id)
   );
 
-/*create index i_accountLink_player_id ON accountLink(player_id);*/
-/*create index i_accountLink_username ON accountLink(username);*/
+create index if not exists i_accountLink_player_id ON accountLink(player_id);
+create index if not exists i_accountLink_username ON accountLink(username);
 
 
 create table if not exists email
@@ -183,5 +185,5 @@ create table if not exists email
   primary key(id)
   );
 
-/* create index i_email_email_timedate ON email(email, timedate); */
-/* create index i_email_player_id ON email(player_id); */
+create index if not exists i_email_email_timedate ON email(email, timedate);
+create index if not exists i_email_player_id ON email(player_id);
