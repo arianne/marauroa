@@ -276,8 +276,9 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 	 *
 	 * @param sql original SQL statement
 	 * @return modified SQL statement
+	 * @throws SQLException in case of a database error
 	 */
-	protected String rewriteSql(String sql) {
+	protected String rewriteSql(String sql) throws SQLException {
 		return sql;
 	}
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2007-2010 - Marauroa                    *
+ *                   (C) Copyright 2007-2015 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -14,6 +14,8 @@ package marauroa.server.db.adapter;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.sql.SQLException;
+
 import org.junit.Test;
 
 /**
@@ -23,8 +25,13 @@ import org.junit.Test;
  */
 public class MySQLDatabaseAdapterTest {
 
+	/**
+	 * tests for rewrite sql
+	 *
+	 * @throws SQLException
+	 */
 	@Test
-	public void testRewriteSql() {
+	public void testRewriteSql() throws SQLException {
 		MySQLDatabaseAdapter adapter = new MySQLDatabaseAdapter();
 		assertThat(adapter.rewriteSql(""), equalTo(""));
 		assertThat(adapter.rewriteSql("cReaTe Table foo(bla VARCHAR(1));"), equalTo("cReaTe Table foo(bla VARCHAR(1)) TYPE=InnoDB;"));
