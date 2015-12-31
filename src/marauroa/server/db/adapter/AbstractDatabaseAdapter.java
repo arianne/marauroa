@@ -126,6 +126,10 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 
 	public int execute(String sql) throws SQLException {
 		String mySql = rewriteSql(sql);
+		if ((mySql == null) || mySql.equals("")) {
+			return -3;
+		}
+
 		int res = -2;
 		Statement statement = connection.createStatement();
 		try {
