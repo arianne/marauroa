@@ -46,8 +46,30 @@ class CreateIndexStatementParser {
 		columns = m.group(4);
 	}
 
-	@Override
-	public String toString() {
+	/**
+	 * gets the name of the index
+	 *
+	 * @return name of index
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * gets the name of the table
+	 *
+	 * @return table name
+	 */
+	public String getTable() {
+		return table;
+	}
+
+	/**
+	 * creates a CREATE INDEX statement, without "IF NOT EXISTS" clause.
+	 *
+	 * @return sql
+	 */
+	public String toSqlWithoutIf() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE ");
 		if (unique) {
@@ -59,5 +81,10 @@ class CreateIndexStatementParser {
 		sb.append(table);
 		sb.append(columns);
 		return sb.toString();
+	}
+
+	@Override
+	public String toString() {
+		return toSqlWithoutIf();
 	}
 }

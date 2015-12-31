@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2007-2011 - Marauroa                    *
+ *                   (C) Copyright 2007-2015 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -20,6 +20,7 @@ import java.util.Properties;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.server.db.DatabaseConnectionException;
+import marauroa.server.db.StringChecker;
 
 /**
  * abstracts from MySQL specifications
@@ -78,20 +79,56 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	}
 
 	/**
+	 * checks whether the specified index exists
+	 * 
+	 * @param table name of table
+	 * @param index name of index
+	 * @return true, if the index exists; false otherwise
+	 * @throws SQLException in case of a database error
+	 */
+	private boolean doesIndexExist(String table, String index) throws SQLException {
+		String sql = "SELECT count(1) FROM information_schema.statistics"
+				+ " WHERE table_schema = database()"
+				+ " AND table_name = '" + StringChecker.escapeSQLString(table) + "'"
+				+ " AND index_name = '" + StringChecker.escapeSQLString(index) + "'";
+		
+		return querySingleCellInt(sql) == 1;
+	}
+
+	/**
 	 * rewrites CREATE TABLE statements to add TYPE=InnoDB
 	 *
 	 * @param sql original SQL statement
 	 * @return modified SQL statement
+	 * @throws SQLException in case of a database error
 	 */
 	@Override
-	protected String rewriteSql(String sql) {
+	protected String rewriteSql(String sql) throws SQLException {
 		String mySql = sql.trim();
-		if (mySql.toLowerCase(Locale.ENGLISH).startsWith("create table")) {
-			if (this.majorVersion >= 5) {
-				mySql = sql.substring(0, sql.length() - 1) + " ENGINE=InnoDB;";
-			} else {
-				mySql = sql.substring(0, sql.length() - 1) + " TYPE=InnoDB;";
-			}
+		String lowerCase = mySql.toLowerCase(Locale.ENGLISH);
+		if (lowerCase.startsWith("create table")) {
+			mySql = rewriteSqlCreateTable(mySql);
+		} else if (lowerCase.startsWith("create index")) {
+			mySql = rewriteSqlCreateIndex(mySql);
+		}
+		return mySql;
+	}
+
+	private String rewriteSqlCreateIndex(String sql) throws SQLException {
+		CreateIndexStatementParser parser = new CreateIndexStatementParser(sql);
+		boolean exists = doesIndexExist(parser.getTable(), parser.getName());
+		if (exists) {
+			return "";
+		}
+		return parser.toSqlWithoutIf();
+	}
+
+	private String rewriteSqlCreateTable(String sql) {
+		String mySql;
+		if (this.majorVersion >= 5) {
+			mySql = sql.substring(0, sql.length() - 1) + " ENGINE=InnoDB;";
+		} else {
+			mySql = sql.substring(0, sql.length() - 1) + " TYPE=InnoDB;";
 		}
 		return mySql;
 	}
