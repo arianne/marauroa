@@ -1,7 +1,24 @@
 Changelog
 ---------
-3.9.5
+3.9.5 BETA
+
 - added support for HTML5
+
+- smaller features
+  - database indexes are created automatically on database creation or update
+  - added data type long
+  - support character creation while in game
+  - added multilanguage support (en, de, pl, uk)
+  - initial status of account and characters can be configured in server.ini
+
+- code
+  - converted CVS to Git
+  - https://github.com/arianne/marauroa
+  - junit tests use in memory database
+  - various performance and memory usage improvements
+  - fixed compiler warnings and improved code comments
+  - code cleanup and refactorings
+
 
 3.9.3
 - retry database command on connection loss to the database server
