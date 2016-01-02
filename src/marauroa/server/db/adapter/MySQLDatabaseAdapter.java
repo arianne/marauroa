@@ -108,7 +108,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 		String lowerCase = mySql.toLowerCase(Locale.ENGLISH);
 		if (lowerCase.startsWith("create table")) {
 			mySql = rewriteSqlCreateTable(mySql);
-		} else if (lowerCase.startsWith("create index")) {
+		} else if (lowerCase.startsWith("create index") || lowerCase.startsWith("create unique index")) {
 			mySql = rewriteSqlCreateIndex(mySql);
 		}
 		return mySql;
