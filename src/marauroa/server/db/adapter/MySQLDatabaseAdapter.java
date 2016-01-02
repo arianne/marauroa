@@ -92,7 +92,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 				+ " AND table_name = '" + StringChecker.escapeSQLString(table) + "'"
 				+ " AND index_name = '" + StringChecker.escapeSQLString(index) + "'";
 		
-		return querySingleCellInt(sql) == 1;
+		return querySingleCellInt(sql) > 0;
 	}
 
 	/**
