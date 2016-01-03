@@ -43,6 +43,18 @@ public class MessageS2CTransfer extends Message {
 	 * Creates a new MessageS2CTransfer
 	 *
 	 * @param source  socket channel
+	 */
+	public MessageS2CTransfer(Channel source) {
+		super(MessageType.S2C_TRANSFER, source);
+
+		this.contents = new LinkedList<TransferContent>();
+	}
+
+
+	/**
+	 * Creates a new MessageS2CTransfer
+	 *
+	 * @param source  socket channel
 	 * @param content content to transfer
 	 */
 	public MessageS2CTransfer(Channel source, TransferContent content) {
@@ -52,6 +64,24 @@ public class MessageS2CTransfer extends Message {
 		contents.add(content);
 	}
 
+	/**
+	 * adds content to the Message
+	 *
+	 * @param content TransferContent
+	 */
+	public void addContent(TransferContent content) {
+		contents.add(content);
+	}
+
+	/**
+	 * does this method contain no content?
+	 *
+	 * @return true, if there is no content; false otherwise
+	 */
+	public boolean isEmpty() {
+		return contents.isEmpty();
+	}
+	
 	/**
 	 * The list if contents to transfer.
 	 * @return The list if contents to transfer.

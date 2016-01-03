@@ -49,6 +49,10 @@ class TransferACKHandler extends MessageHandler {
 				return;
 			}
 
+			MessageS2CTransfer msgTransfer = new MessageS2CTransfer(entry.channel);
+			msgTransfer.setClientID(clientid);
+			msgTransfer.setProtocolVersion(msg.getProtocolVersion());
+
 			/*
 			 * Handle Transfer ACK here. We iterate over the contents and send
 			 * them to client for those of them which client told us ACK.
@@ -67,12 +71,7 @@ class TransferACKHandler extends MessageHandler {
 						stats.add("Tranfer content size", contentToTransfer.data.length);
 
 						logger.debug("Transfering content " + contentToTransfer);
-
-						MessageS2CTransfer msgTransfer = new MessageS2CTransfer(entry.channel,
-								contentToTransfer);
-						msgTransfer.setClientID(clientid);
-						msgTransfer.setProtocolVersion(msg.getProtocolVersion());
-						netMan.sendMessage(msgTransfer);
+						msgTransfer.addContent(contentToTransfer);
 					} else {
 						logger.warn("Cannot transfer content (" + content.name
 						        + ") because it is null");
@@ -85,6 +84,12 @@ class TransferACKHandler extends MessageHandler {
 					entry.removeContent(contentToTransfer);
 				}
 			}
+
+			// send message, unless there is no content
+			if (!msgTransfer.isEmpty()) {
+				netMan.sendMessage(msgTransfer);
+			}
+			
 		} catch (Exception e) {
 			logger.error("error while processing TransferACK", e);
 		}
