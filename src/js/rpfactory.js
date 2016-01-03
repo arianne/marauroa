@@ -67,7 +67,7 @@ marauroa.rpeventFactory = new function(){
 	this._default = function() {};
 	this._default.execute = function(rpobject) {
 		if (marauroa.debug.unknownEvents) {
-			marauroa.log.debug("Unhandled event: ", this, " on ", rpobject);
+			console.log("Unhandled event: ", this, " on ", rpobject);
 		}
 	}
 

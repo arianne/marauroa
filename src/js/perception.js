@@ -113,7 +113,7 @@ marauroa.perceptionListener = {
 	 *            the message that causes the problem
 	 */
 	onException: function(exception, perception) {
-		marauroa.log.error(exception, perception);
+		console.error(exception, perception);
 	}
 }
 marauroa.currentZone = {
@@ -349,7 +349,7 @@ marauroa.perceptionHandler = {
 		for (var i in diff.a) {
 			if (diff.a.hasOwnProperty(i)) {
 				if (typeof(object.set) == "undefined") {
-					marauroa.log.warn("Object missing set(key, value)-function", object, diff.a);
+					console.warn("Object missing set(key, value)-function", object, diff.a);
 					object[i] = diff.a[i]
 				} else {
 					object.set(i, diff.a[i]);

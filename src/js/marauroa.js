@@ -1,3 +1,5 @@
+"use strict";
+
 var marauroa = new function() {}
 
 marauroa.debug = {
@@ -6,6 +8,16 @@ marauroa.debug = {
 }
 
 marauroa.log = {};
+
+if (!window.console) {
+	window.console = {};
+}
+if (!window.console.log) {
+	window.console.log = function() {};
+	window.console.info = function() {};
+	window.console.warn = function() {};
+	window.console.error = function(text) {alert(text)};
+}
 
 if ((typeof(console) != "undefined") && (typeof(console.debug) != "undefined")) {
 	marauroa.log.debug = function () { console.debug.apply(console, arguments); };
