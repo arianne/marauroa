@@ -7,8 +7,6 @@ marauroa.debug = {
 	unknownEvents: true
 }
 
-marauroa.log = {};
-
 if (!window.console) {
 	window.console = {};
 }
@@ -17,18 +15,6 @@ if (!window.console.log) {
 	window.console.info = function() {};
 	window.console.warn = function() {};
 	window.console.error = function(text) {alert(text)};
-}
-
-if ((typeof(console) != "undefined") && (typeof(console.debug) != "undefined")) {
-	marauroa.log.debug = function () { console.debug.apply(console, arguments); };
-	marauroa.log.info = function () { console.info.apply(console, arguments); };
-	marauroa.log.warn = function () { console.warn.apply(console, arguments); };
-	marauroa.log.error = function () { console.error.apply(console, arguments); };
-} else {
-	marauroa.log.debug = function(text) {};
-	marauroa.log.info = function(text) {};
-	marauroa.log.warn = function(text) {};
-	marauroa.log.error = function(text) {alert(text)};
 }
 
 marauroa.util = {
