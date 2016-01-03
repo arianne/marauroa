@@ -50,14 +50,14 @@ marauroa.clientFramework = {
 
 	onConnect: function(reason, error) {
 		if (typeof(error) == "undefined") {
-			marauroa.log.debug("connected");
+			console.log("connected");
 		} else {
-			marauroa.log.error("onConnect: " + reason + " error: " + error);
+			console.error("onConnect: " + reason + " error: " + error);
 		}
 	},
 
 	onDisconnect: function(reason, error) {
-		marauroa.log.debug("onDisconnect: " + reason + " error: " + error);
+		console.log("onDisconnect: " + reason + " error: " + error);
 	},
 
 	onLoginRequired: function() {
@@ -75,27 +75,27 @@ marauroa.clientFramework = {
 	},
 
 	onServerInfo: function(contents) {
-		marauroa.log.debug("ServerInfo", contents);
+		console.log("ServerInfo", contents);
 	},
 
 	onPreviousLogins: function(previousLogins) {
-		marauroa.log.debug("Previous Logins", previousLogins);
+		console.log("Previous Logins", previousLogins);
 	},
 
 	onLoginFailed: function(reason, text) {
-		marauroa.log.error("Login failed with reason " + reason + ": " + text);
+		console.error("Login failed with reason " + reason + ": " + text);
 	},
 
 	onMessage: function(e) {
 		var msg = JSON.parse(e.data);
 		if (marauroa.debug.messages) {
-			marauroa.log.debug("<--: ", msg);
+			console.log("<--: ", msg);
 		}
 		if (msg.t == 9 || msg.t == 15) {
 			marauroa.clientFramework.clientid = msg.c;
 		}
 		if (typeof(msg) == "string") {
-			marauroa.log.error("JSON error on message: " + msg);
+			console.error("JSON error on message: " + msg);
 		} else {
 			marauroa.messageFactory.addDispatchMethod(msg);
 			msg.dispatch();
@@ -109,7 +109,7 @@ marauroa.clientFramework = {
 		};
 		marauroa.util.merge(myMessage, msg);
 		if (marauroa.debug.messages) {
-			marauroa.log.debug("-->: ", msg);
+			console.log("-->: ", msg);
 		}
 		this.socket.send(JSON.stringify(myMessage));
 	},
@@ -139,7 +139,7 @@ marauroa.clientFramework = {
 	},
 
 	onChooseCharacterNack: function() {
-		marauroa.log.error("Server rejected your character.");
+		console.error("Server rejected your character.");
 	},
 
 	/**
@@ -175,11 +175,11 @@ marauroa.clientFramework = {
 	},
 	
 	onLogoutOutAck: function() {
-		marauroa.log.debug("Server accepted logout request");
+		console.log("Server accepted logout request");
 	},
 
 	onLogoutOutNack: function() {
-		marauroa.log.debug("Server rejected logout request");
+		console.log("Server rejected logout request");
 	},
 
 	/**
@@ -222,7 +222,7 @@ marauroa.clientFramework = {
 	 * @return the list of approved and rejected items.
 	 */
 	onTransferREQ: function(items) {
-		marauroa.log.debug("onTransferREQ: ", items);
+		console.log("onTransferREQ: ", items);
 	},
 
 	/**
@@ -232,7 +232,7 @@ marauroa.clientFramework = {
 	 *            the transfered items.
 	 */
 	onTransfer: function(items) {
-		marauroa.log.debug("onTransfer: ", items);
+		console.log("onTransfer: ", items);
 	},
 
 
@@ -243,11 +243,11 @@ marauroa.clientFramework = {
 	 *            the characters we have available at this account.
 	 */
 	onAvailableCharacterDetails: function(characters) {
-		marauroa.log.debug("onAvailableCharacterDetails: ", characters);
+		console.log("onAvailableCharacterDetails: ", characters);
 
 		// create a character if there is none
 		if (marauroa.util.isEmpty(characters)) {
-			marauroa.log.debug("No character found, creating a character with the username (redefine onAvailableCharacterDetails to prevent this).");
+			console.log("No character found, creating a character with the username (redefine onAvailableCharacterDetails to prevent this).");
 			this.createCharacter(this.username, {});
 			return;
 		}
@@ -271,11 +271,11 @@ marauroa.clientFramework = {
 	},
 
 	onCreateAccountAck: function(username) {
-		marauroa.log.debug("Account \"" + username + "\" created successfully.");
+		console.log("Account \"" + username + "\" created successfully.");
 	},
 
 	onCreateAccountNack: function(username, reason) {
-		marauroa.log.debug("Creating Account \"" + username + "\" failed: ", reason);
+		console.log("Creating Account \"" + username + "\" failed: ", reason);
 		alert(reason.text);
 	},
 
@@ -289,11 +289,11 @@ marauroa.clientFramework = {
 	},
 
 	onCreateCharacterAck: function(charname, template) {
-		marauroa.log.debug("Character \"" + charname + "\" created successfully.");
+		console.log("Character \"" + charname + "\" created successfully.");
 	},
 
 	onCreateCharacterNack: function(charname, reason) {
-		marauroa.log.debug("Creating Character \"" + charname + "\" failed: ", reason);
+		console.log("Creating Character \"" + charname + "\" failed: ", reason);
 		alert(reason.text);
 	}
 }

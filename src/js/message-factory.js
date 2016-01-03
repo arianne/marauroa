@@ -23,12 +23,12 @@ marauroa.messageFactory = new function() {
 
 	// Message S2C ChoooseCharacterACK
 	this.t10 = function() {
-		marauroa.log.debug("Entering world");
+		console.log("Entering world");
 	}
 
 	// Message S2C ChoooseCharacterNACK
 	this.t11 = function() {
-		marauroa.log.debug("Character selection rejected");
+		console.log("Character selection rejected");
 		marauroa.clientFramework.onChooseCharacterNack();
 	}
 
@@ -39,7 +39,7 @@ marauroa.messageFactory = new function() {
 
 	// Message S2C Send Key
 	this.t15 = function() {
-		marauroa.log.debug("Server send key: ", this);
+		console.log("Server send key: ", this);
 		marauroa.clientFramework.onLoginRequired();
 	}
 	
@@ -100,7 +100,7 @@ marauroa.messageFactory = new function() {
 	// handle unexpected unknown messages
 	this.unknownMessage = function() {
 		// do nothing
-		marauroa.log.debug("Unknown message: " + JSON.stringify(this));
+		console.log("Unknown message: " + JSON.stringify(this));
 	}
 
 	this.addDispatchMethod = function(msg) {
