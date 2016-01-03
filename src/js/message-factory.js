@@ -55,7 +55,7 @@ marauroa.messageFactory = new function() {
 
 	// Message S2C Transfer
 	this.t21 = function() {
-		alert(this);
+		marauroa.clientFramework.onTransfer(this.contents);
 	}
 
 	// Message S2C TransferREQ

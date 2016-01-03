@@ -13,6 +13,8 @@ package marauroa.common.net.message;
 
 import java.io.IOException;
 
+import javax.xml.bind.DatatypeConverter;
+
 import marauroa.common.Utility;
 import marauroa.common.crypto.Hash;
 import marauroa.common.net.NetConst;
@@ -212,6 +214,26 @@ public class TransferContent {
 			out.write(getHash());
 		}
 		out.write((byte) (cacheable ? 1 : 0));
+	}
+
+	/**
+	 * Write the content data to the server
+	 *
+	 * @param out output
+	 */
+	public void writeFullToJson(StringBuilder out) {
+		out.append("{\"name\":");
+		OutputSerializer.writeJson(out, name);
+		out.append(",\"timestamp\":");
+		OutputSerializer.writeJson(out, Integer.toString(timestamp));
+		out.append(",\"hash\":");
+		OutputSerializer.writeJson(out, Hash.toHexString(getHash()));
+		out.append(",\"cachable\":");
+		out.append(cacheable ? "true" : "false");
+		out.append(",\"data\":\"");
+		out.append(DatatypeConverter.printBase64Binary(data));
+		out.append("\"}");
+		
 	}
 
 	/**
