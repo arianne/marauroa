@@ -140,7 +140,7 @@
 			<arg value="--js_output_file"/>
 			<arg value="src/js/marauroa.compiled.js"/>
 			<arg value="--compilation_level"/>
-			<arg value="WHITESPACE_ONLY"/>
+			<arg value="SIMPLE_OPTIMIZATIONS"/>
        </java>
 	</target>
 
