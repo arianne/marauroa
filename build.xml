@@ -138,7 +138,7 @@
 			<arg value="--js"/>
 			<arg value="src/js/perception.js"/>
 			<arg value="--js_output_file"/>
-			<arg value="src/js/marauroa.compiled.js"/>
+			<arg value="${build-classes}/js/marauroa.compiled.js"/>
 			<arg value="--compilation_level"/>
 			<arg value="SIMPLE_OPTIMIZATIONS"/>
        </java>
