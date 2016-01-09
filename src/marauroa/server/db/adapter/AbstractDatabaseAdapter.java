@@ -260,7 +260,7 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 
 	public boolean doesColumnExist(String table, String column) throws SQLException {
 		DatabaseMetaData meta = connection.getMetaData();
-		ResultSet result = meta.getColumns(null, null, table, column);
+		ResultSet result = meta.getColumns(connection.getCatalog(), "%", table, column);
 		boolean res = result.next();
 		result.close();
 		return res;

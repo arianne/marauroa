@@ -62,6 +62,14 @@ public class PostgresDatabaseAdapter extends AbstractDatabaseAdapter {
 		return con;
 	}
 
+	@Override
+	public boolean doesColumnExist(String table, String column) throws SQLException {
+		DatabaseMetaData meta = connection.getMetaData();
+		ResultSet result = meta.getColumns(connection.getCatalog(), "%", table.toLowerCase(Locale.ENGLISH), column.toLowerCase(Locale.ENGLISH));
+		boolean res = result.next();
+		result.close();
+		return res;
+	}
 	/**
 	 * checks whether the specified index exists
 	 * 
