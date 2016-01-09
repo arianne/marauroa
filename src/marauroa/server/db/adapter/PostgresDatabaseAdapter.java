@@ -112,7 +112,9 @@ public class PostgresDatabaseAdapter extends AbstractDatabaseAdapter {
 
 	private String rewriteSqlCreateTable(String sql) {
 		String pattern = "(?i) int(?:eger)?[ ]+auto_increment";
-		return sql.replaceAll(pattern, " SERIAL ");
+		return sql.replaceAll(pattern, " SERIAL ")
+				.replaceAll("(\\W)blob(\\W)", "$1bytea$2")
+				.replaceAll("(\\W)tinyint(\\W)", "$1integer$2");
 	}
 
 }
