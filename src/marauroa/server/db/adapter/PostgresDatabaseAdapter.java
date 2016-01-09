@@ -91,6 +91,23 @@ public class PostgresDatabaseAdapter extends AbstractDatabaseAdapter {
 	}
 
 	/**
+	 * gets the id of the last insert. Note: The table and idcolumn parameters
+	 * <b>must</b> match the last insert statement. This is because on some
+	 * database systems a SELECT IDENTITY is performed and on other database
+	 * systems a SELECT curval(table_idcolumn_seq).
+	 *
+	 * @param table  name of table on which the last insert was done
+	 * @param idcolumn name autoincrement serial column of that table
+	 * @return generated id
+	 * @throws SQLException in case of an database error
+	 */
+	@Override
+	public int getLastInsertId(String table, String idcolumn) throws SQLException {
+		return querySingleCellInt("SELECT currval('" + StringChecker.escapeSQLString(table + "_" + idcolumn + "_seq") +  "')");
+	}
+
+
+	/**
 	 * rewrites CREATE TABLE statements to add TYPE=InnoDB
 	 *
 	 * @param sql original SQL statement
