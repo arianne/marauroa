@@ -6,9 +6,10 @@ create table if not exists account
   timedate timestamp default CURRENT_TIMESTAMP,
   status char(8) not null default 'active',
 
-  primary key(id),
-  unique index i_account_username (username)
+  primary key(id)
   );
+
+create unique index if not exists i_account_username on account(username);
 
 
 create table if not exists characters
@@ -20,12 +21,11 @@ create table if not exists characters
   timedate timestamp default CURRENT_TIMESTAMP,
   status char(8) not null default 'active',
 
-  PRIMARY KEY(id),
-   unique index i_characters_charname (charname)
+  PRIMARY KEY(id)
   );
 
+create unique index if not exists i_characters_charname ON characters(charname);
 create index if not exists i_characters_player_id ON characters(player_id);
-create index if not exists i_characters_charname ON characters(charname);
 
 create table if not exists rpobject
   (
