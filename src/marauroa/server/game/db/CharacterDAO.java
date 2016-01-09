@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2015 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -12,7 +12,6 @@
 package marauroa.server.game.db;
 
 import java.io.IOException;
-import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -400,7 +399,7 @@ public class CharacterDAO {
 			while (result.next()) {
 				int objectid = result.getInt("object_id");
 				String name = result.getString("charname");
-				Blob data = result.getBlob("data");
+				byte[] data = result.getBytes("data");
 				int protocolVersion = NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT - 1;
 				Object temp = result.getObject("protocol_version");
 				if (temp != null) {
