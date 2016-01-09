@@ -93,10 +93,27 @@ public class PostgresDatabaseAdapter extends AbstractDatabaseAdapter {
 	protected String rewriteSql(String sql) throws SQLException {
 		String mySql = sql.trim();
 		String lowerCase = mySql.toLowerCase(Locale.ENGLISH);
-		if (lowerCase.startsWith("create table")) {
+		if (lowerCase.startsWith("alter table")) {
+			mySql = rewriteSqlAlterTable(mySql);
+		} else if (lowerCase.startsWith("create table")) {
 			mySql = rewriteSqlCreateTable(mySql);
 		} else if (lowerCase.startsWith("create index") || lowerCase.startsWith("create unique index")) {
 			mySql = rewriteSqlCreateIndex(mySql);
+		}
+		return mySql;
+	}
+	
+	private String rewriteSqlAlterTable(String sql) {
+		String mySql = sql;
+		String mySqlLower = sql.toLowerCase(Locale.ENGLISH);
+		if (mySqlLower.startsWith("alter table")) {
+			int posColumn = mySqlLower.indexOf(" column");
+			if (posColumn > -1) {
+				int posBracket = mySql.indexOf("(", posColumn);
+				int posClose = mySql.lastIndexOf(")");
+				mySql = mySql.substring(0, posColumn + 1)
+						+ mySql.substring(posBracket + 1, posClose) + ";";
+			}
 		}
 		return mySql;
 	}
