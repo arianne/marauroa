@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -15,7 +15,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -86,7 +85,7 @@ public class RPObjectDAO {
 		ResultSet resultSet = transaction.query(query, params);
 
 		if (resultSet.next()) {
-		    Blob data = resultSet.getBlob("data");
+		    byte[] data = resultSet.getBytes("data");
 			int protocolVersion = NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT - 1;
 			Object temp = resultSet.getObject("protocol_version");
 			if (temp != null) {
@@ -111,8 +110,8 @@ public class RPObjectDAO {
 	 * @throws IOException in case of an input/output error
 	 * @throws SQLException in case of an database error
 	 */
-	public RPObject readRPObject(int objectid, Blob data, int protocolVersion, boolean transform) throws SQLException, IOException {
-	    InputStream input = data.getBinaryStream();
+	public RPObject readRPObject(int objectid, byte[] data, int protocolVersion, boolean transform) throws SQLException, IOException {
+	    InputStream input = new ByteArrayInputStream(data);
 	    ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 	    // set read buffer size

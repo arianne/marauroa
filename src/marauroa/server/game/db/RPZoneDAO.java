@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -15,7 +15,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -75,8 +74,8 @@ public class RPZoneDAO {
 		ResultSet resultSet = transaction.query(query, params);
 
 		if (resultSet.next()) {
-			Blob data = resultSet.getBlob("data");
-			InputStream input = data.getBinaryStream();
+			byte[] data = resultSet.getBytes("data");
+			InputStream input = new ByteArrayInputStream(data);
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 			// set read buffer size
