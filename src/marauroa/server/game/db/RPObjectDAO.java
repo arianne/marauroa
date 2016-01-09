@@ -229,7 +229,7 @@ public class RPObjectDAO {
 
 		// If object is new, get the objectid we gave it.
 		if (object_id == -1) {
-			object_id = transaction.getLastInsertId("rpobject", "id");
+			object_id = transaction.getLastInsertId("rpobject", "object_id");
 
 			// We alter the original object to add the proper db_id
 			object.put("#db_id", object_id);
