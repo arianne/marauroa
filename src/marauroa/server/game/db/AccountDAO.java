@@ -298,7 +298,7 @@ public class AccountDAO {
 	 */
 	public String getAccountBanMessage(DBTransaction transaction, String username) throws SQLException {
 		try {
-			String query = "SELECT account.status As status, accountban.reason As reason, accountban.expire As expire FROM account LEFT JOIN accountban ON (account.id=accountban.player_id AND (accountban.expire > CURRENT_TIMESTAMP OR accountban.expire IS NULL)) WHERE username='[username]' order by ifnull(expire,'9999-12-31') desc limit 1 ";
+			String query = "SELECT account.status As status, accountban.reason As reason, accountban.expire As expire FROM account LEFT JOIN accountban ON (account.id=accountban.player_id AND (accountban.expire > CURRENT_TIMESTAMP OR accountban.expire IS NULL)) WHERE username='[username]' order by COALESCE(expire,'9999-12-31') desc limit 1 ";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 
