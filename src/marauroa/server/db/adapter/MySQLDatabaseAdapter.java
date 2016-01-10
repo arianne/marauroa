@@ -13,6 +13,7 @@ package marauroa.server.db.adapter;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Properties;
@@ -79,6 +80,29 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	}
 
 	/**
+	 * checks whether the specified table is a real table and not a view
+	 * 
+	 * @param table name of table
+	 * @return true, if the table is a base table; false otherwise
+	 * @throws SQLException in case of a database error
+	 */
+	private boolean isBaseTable(String table) throws SQLException {
+		boolean res = false;
+		String sql = "show full tables LIKE '" + StringChecker.escapeSQLString(table) + "'";
+
+		ResultSet result = query(sql);
+		try {
+			res = result.next();
+			if (res) {
+				res = "BASE TABLE".equals(result.getString(2));
+			}
+		} finally {
+			result.close();
+		}
+		return res;
+	}
+
+	/**
 	 * checks whether the specified index exists
 	 * 
 	 * @param table name of table
@@ -116,8 +140,8 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 
 	private String rewriteSqlCreateIndex(String sql) throws SQLException {
 		CreateIndexStatementParser parser = new CreateIndexStatementParser(sql);
-		boolean exists = doesIndexExist(parser.getTable(), parser.getName());
-		if (exists) {
+		boolean skip = !isBaseTable(parser.getTable()) || doesIndexExist(parser.getTable(), parser.getName());
+		if (skip) {
 			return "";
 		}
 		return parser.toSqlWithoutIf();
