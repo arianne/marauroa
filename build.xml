@@ -274,24 +274,12 @@
 	</target>
 	
 	<target name="test" depends="compile-tests">
-		<junit printsummary="yes" fork="yes" forkmode="once" haltonerror="true" haltonfailure="true">
-			<jvmarg value="-Djava.awt.headless=true"/>
-			<classpath refid="run-tests-classpath" />
-			<formatter type="plain" usefile="false"/>
-			<formatter type="xml"/>
-			<batchtest todir="${build-tests-report}">
-				<fileset dir="${src-test}">
-					<include name="**/*Test.java"/>
-					<include name="**/Test*.java"/>
-				</fileset>
-			</batchtest>
-		</junit>
-		<delete file="./server.ini" />
-	</target>
-
-	<target name="coverage" depends="compile-tests">
-		<jacoco:coverage>
-			<junit printsummary="yes" fork="yes">
+		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+			<classpath path="buildtools/jacoco/jacocoant.jar"/>
+		</taskdef>
+		
+		<jacoco:coverage destfile="build/jacoco.exec" append="false">
+			<junit printsummary="yes" fork="yes" forkmode="once" haltonerror="true" haltonfailure="true">
 				<jvmarg value="-Djava.awt.headless=true"/>
 				<classpath refid="run-tests-classpath" />
 				<formatter type="plain" usefile="false"/>
@@ -304,13 +292,9 @@
 				</batchtest>
 			</junit>
 		</jacoco:coverage>
-		<delete file="./server.ini" />
-	</target>
-	
-	<target name="coverage-report" depends="coverage">
 	    <jacoco:report>
 	        <executiondata>
-	            <file file="jacoco.exec" />
+	            <file file="build/jacoco.exec" />
 	        </executiondata>
 	        <structure name="${ant.project.name}">
 	            <classfiles>
@@ -320,7 +304,6 @@
 	                <fileset dir="${src}" />
 	            </sourcefiles>
 	        </structure>
-	        <html destdir="${build-coverage}" />
 	    	<xml destfile="${build-coverage}/jacoco.xml" />
 	    </jacoco:report>
 	</target>
