@@ -20,9 +20,16 @@ import marauroa.common.net.message.TransferContent;
 import marauroa.helper.ResetMarauroaSingleton;
 import marauroa.server.marauroad;
 
+/**
+ * tests for the marauroa network stack
+ */
 public class ClientConnectTest {
 
-
+	/**
+	 * starts a marauroa server
+	 * 
+	 * @throws Exception in case of an unexpected error
+	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		String filename = "./functional_tests/marauroa/clientconnect/testserver.ini";
@@ -32,12 +39,25 @@ public class ClientConnectTest {
 		Thread.sleep(1000);
 	}
 
+	/**
+	 * cleanup marauroa
+	 *
+	 * @throws SecurityException in case of a security error
+	 * @throws NoSuchFieldException in cases of an unexpected refactoring
+	 * @throws IllegalArgumentException in case of an illegal argument
+	 * @throws IllegalAccessException in case of a security error
+	 */
 	@AfterClass
 	public static void afterclass() throws IllegalArgumentException, SecurityException,
 			IllegalAccessException, NoSuchFieldException {
 		ResetMarauroaSingleton.sysoutthreads();
 	}
 
+	/**
+	 * tests connecting to a marauroa server and executing commands
+	 *
+	 * @throws Exception in case of an exception
+	 */
 	@Test
 	public void clientconnectTest() throws Exception {
 		ClientFramework cl = new MinimalClient();
@@ -50,7 +70,11 @@ public class ClientConnectTest {
 		cl.logout();
 	}
 
-
+	/**
+	 * tests rejection on wrong password
+	 *
+	 * @throws Exception in cae of an unexpected error
+	 */
 	@Test (expected=LoginFailedException.class)
 	public void wrongPwTest() throws Exception {
 		ClientFramework cl = new MinimalClient();
@@ -61,6 +85,11 @@ public class ClientConnectTest {
 		cl.logout();
 	}
 
+	/**
+	 * tests creation of characters
+	 *
+	 * @throws Exception in case of an unexpected error
+	 */
 	@Test
 	public void createCharacterTest() throws Exception {
 		ClientFramework cl = new MinimalClient();
