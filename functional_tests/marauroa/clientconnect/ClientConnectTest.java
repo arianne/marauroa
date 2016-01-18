@@ -6,6 +6,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.List;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import marauroa.client.ClientFramework;
 import marauroa.client.LoginFailedException;
 import marauroa.common.game.AccountResult;
@@ -16,36 +20,22 @@ import marauroa.common.net.message.TransferContent;
 import marauroa.helper.ResetMarauroaSingleton;
 import marauroa.server.marauroad;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
-@Ignore
 public class ClientConnectTest {
 
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		File db = new File("./functional_tests/marauroa/clientconnect/clientconnect.h2.db");
-		if (db.exists()) {
-			db.delete();
-		}
-
-
-		String filename = "./functional_tests/marauroa/clientconnect/clientconnect.ini";
+		String filename = "./functional_tests/marauroa/clientconnect/testserver.ini";
 		assertTrue(new File(filename).exists());
 		String[] args = new String[] { "-c", filename };
 		marauroad.main(args);
 		Thread.sleep(1000);
-
 	}
 
 	@AfterClass
 	public static void afterclass() throws IllegalArgumentException, SecurityException,
 			IllegalAccessException, NoSuchFieldException {
 		ResetMarauroaSingleton.sysoutthreads();
-
 	}
 
 	@Test
@@ -80,8 +70,7 @@ public class ClientConnectTest {
 
 		cl.login("character", "pw2");
 		assertEquals(Result.OK_CREATED,cl.createCharacter("jack", new RPObject()).getResult());
-		//XXX shouldnt this be Result.FAILED_CHARACTER_EXISTS?
-		assertEquals(Result.FAILED_PLAYER_EXISTS,cl.createCharacter("jack", new RPObject()).getResult());
+		assertEquals(Result.FAILED_CHARACTER_EXISTS, cl.createCharacter("jack", new RPObject()).getResult());
 
 		cl.logout();
 	}

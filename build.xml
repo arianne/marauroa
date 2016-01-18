@@ -263,6 +263,10 @@
 			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-tests-classpath" />
 		</javac>
+		<javac srcdir="functional_tests" source="1.5" target="1.5" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+			<compilerarg line="-encoding utf-8"/>
+			<classpath refid="compile-tests-classpath" />
+		</javac>
 		<copy todir="${build-tests}">
 			<fileset dir="${src-test}">
 				<include name="**/*.*" />
@@ -286,6 +290,10 @@
 				<formatter type="xml"/>
 				<batchtest todir="${build-tests-report}">
 					<fileset dir="${src-test}">
+						<include name="**/*Test.java"/>
+						<include name="**/Test*.java"/>
+					</fileset>
+					<fileset dir="functional_tests">
 						<include name="**/*Test.java"/>
 						<include name="**/Test*.java"/>
 					</fileset>
