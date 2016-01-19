@@ -6,6 +6,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.List;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import marauroa.client.ClientFramework;
 import marauroa.client.LoginFailedException;
 import marauroa.common.game.AccountResult;
@@ -16,38 +20,44 @@ import marauroa.common.net.message.TransferContent;
 import marauroa.helper.ResetMarauroaSingleton;
 import marauroa.server.marauroad;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
-@Ignore
+/**
+ * tests for the marauroa network stack
+ */
 public class ClientConnectTest {
 
-
+	/**
+	 * starts a marauroa server
+	 * 
+	 * @throws Exception in case of an unexpected error
+	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		File db = new File("./functional_tests/marauroa/clientconnect/clientconnect.h2.db");
-		if (db.exists()) {
-			db.delete();
-		}
-
-
-		String filename = "./functional_tests/marauroa/clientconnect/clientconnect.ini";
+		String filename = "./functional_tests/marauroa/clientconnect/testserver.ini";
 		assertTrue(new File(filename).exists());
 		String[] args = new String[] { "-c", filename };
 		marauroad.main(args);
 		Thread.sleep(1000);
-
 	}
 
+	/**
+	 * cleanup marauroa
+	 *
+	 * @throws SecurityException in case of a security error
+	 * @throws NoSuchFieldException in cases of an unexpected refactoring
+	 * @throws IllegalArgumentException in case of an illegal argument
+	 * @throws IllegalAccessException in case of a security error
+	 */
 	@AfterClass
 	public static void afterclass() throws IllegalArgumentException, SecurityException,
 			IllegalAccessException, NoSuchFieldException {
 		ResetMarauroaSingleton.sysoutthreads();
-
 	}
 
+	/**
+	 * tests connecting to a marauroa server and executing commands
+	 *
+	 * @throws Exception in case of an exception
+	 */
 	@Test
 	public void clientconnectTest() throws Exception {
 		ClientFramework cl = new MinimalClient();
@@ -60,7 +70,11 @@ public class ClientConnectTest {
 		cl.logout();
 	}
 
-
+	/**
+	 * tests rejection on wrong password
+	 *
+	 * @throws Exception in cae of an unexpected error
+	 */
 	@Test (expected=LoginFailedException.class)
 	public void wrongPwTest() throws Exception {
 		ClientFramework cl = new MinimalClient();
@@ -71,6 +85,11 @@ public class ClientConnectTest {
 		cl.logout();
 	}
 
+	/**
+	 * tests creation of characters
+	 *
+	 * @throws Exception in case of an unexpected error
+	 */
 	@Test
 	public void createCharacterTest() throws Exception {
 		ClientFramework cl = new MinimalClient();
@@ -80,8 +99,7 @@ public class ClientConnectTest {
 
 		cl.login("character", "pw2");
 		assertEquals(Result.OK_CREATED,cl.createCharacter("jack", new RPObject()).getResult());
-		//XXX shouldnt this be Result.FAILED_CHARACTER_EXISTS?
-		assertEquals(Result.FAILED_PLAYER_EXISTS,cl.createCharacter("jack", new RPObject()).getResult());
+		assertEquals(Result.FAILED_CHARACTER_EXISTS, cl.createCharacter("jack", new RPObject()).getResult());
 
 		cl.logout();
 	}

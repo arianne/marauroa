@@ -16,12 +16,19 @@ import marauroa.server.game.Statistics;
 /**
  * resets the static private reference to the daemon thread in marauroa,
  * which follows singleton pattern.
- *
  */
 public class ResetMarauroaSingleton {
 
+	/**
+	 * Resets Marauroa for the next batch of tests
+	 *
+	 * @throws SecurityException in case of a security error
+	 * @throws NoSuchFieldException in cases of an unexpected refactoring
+	 * @throws IllegalArgumentException in case of an illegal argument
+	 * @throws IllegalAccessException in cae of a security error
+	 */
 	public static void resetMarauroa() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-	Field field = marauroad.class.getDeclaredField("marauroa");
+		Field field = marauroad.class.getDeclaredField("marauroa");
 		field.setAccessible(true);
 		field.set(null, null);
 		field.setAccessible(false);
@@ -52,10 +59,17 @@ public class ResetMarauroaSingleton {
 		field.set(null, null);
 	}
 
+	/**
+	 * resets marauroa
+	 *
+	 * @throws SecurityException in case of a security error
+	 * @throws NoSuchFieldException in cases of an unexpected refactoring
+	 * @throws IllegalArgumentException in case of an illegal argument
+	 * @throws IllegalAccessException in cae of a security error
+	 */
 	public static void sysoutthreads() throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException {
-		  marauroad.getMarauroa().finish();
-		  resetMarauroa();
-
+		 marauroad.getMarauroa().finish();
+		 resetMarauroa();
 		 System.out.println("done");
 	}
 
