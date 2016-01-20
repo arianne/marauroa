@@ -1,6 +1,5 @@
-/* $Id: ClientFramework.java,v 1.68 2010/11/26 20:07:27 martinfuchs Exp $ */
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2011-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -15,10 +14,11 @@
  * It is a wrapper over all the things that the client should do. You should
  * extend this class at your game.
  *
- * @author miguel, hendrik
+ * @author hendrik
  *
  */
 "use strict";
+var marauroa = window.marauroa || {}
 
 marauroa.clientFramework = {
 	clientid: "-1",
@@ -30,7 +30,7 @@ marauroa.clientFramework = {
 	 * @param port server port number
 	 */
 	connect: function(host, port) {
-		var protocol = "ws"
+		var protocol = "ws";
 		if (window.location.protocol === "https:") {
 			protocol = "wss";
 		}
@@ -91,10 +91,10 @@ marauroa.clientFramework = {
 		if (marauroa.debug.messages) {
 			console.log("<--: ", msg);
 		}
-		if (msg.t == 9 || msg.t == 15) {
+		if (msg.t === 9 || msg.t === 15) {
 			marauroa.clientFramework.clientid = msg.c;
 		}
-		if (typeof(msg) == "string") {
+		if (typeof(msg) === "string") {
 			console.error("JSON error on message: " + msg);
 		} else {
 			marauroa.messageFactory.addDispatchMethod(msg);
@@ -189,15 +189,6 @@ marauroa.clientFramework = {
 		this.socket.close();
 	},
 
-	/*
-	 * Are we connected to the server?
-	 *
-	 * @return true unless it is sure that we are disconnected
-	 */
-	/*getConnectionState: function() {
-		// TODO: return netMan.getConnectionState();
-	},*/
-
 	/**
 	 * It is called when a perception arrives so you can choose how to apply the
 	 * perception.
@@ -253,7 +244,7 @@ marauroa.clientFramework = {
 		}
 
 		// automatically select the first one
-		for (key in characters) {
+		for (var key in characters) {
 			if (characters.hasOwnProperty(key)) {
 				this.chooseCharacter(key);
 			}
@@ -271,7 +262,7 @@ marauroa.clientFramework = {
 	},
 
 	onCreateAccountAck: function(username) {
-		console.log("Account \"" + username + "\" created successfully.");
+		console.log("Account \"" + username + "\" created successfully");
 	},
 
 	onCreateAccountNack: function(username, reason) {
@@ -289,7 +280,7 @@ marauroa.clientFramework = {
 	},
 
 	onCreateCharacterAck: function(charname, template) {
-		console.log("Character \"" + charname + "\" created successfully.");
+		console.log("Character \"" + charname + "\" created successfully", template);
 	},
 
 	onCreateCharacterNack: function(charname, reason) {

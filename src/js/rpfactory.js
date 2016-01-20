@@ -1,3 +1,17 @@
+/***************************************************************************
+ *                   (C) Copyright 2011-2016 - Marauroa                    *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
+var marauroa = window.marauroa || {}
+
 /**
  * creates RPObjects
  *
@@ -15,7 +29,9 @@ marauroa.rpobjectFactory = new function(){
 		}
 		// Event slots
 		for (var slot in e.s) {
-			event[slot] = e.s[slot];
+			if (e.s.hasOwnProperty(slot)) {
+				event[slot] = e.s[slot];
+			}
 		}
 		event.execute(this);
 	}

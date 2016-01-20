@@ -1,6 +1,18 @@
+/***************************************************************************
+ *                   (C) Copyright 2011-2016 - Marauroa                    *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+
 "use strict";
 
-var marauroa = new function() {}
+var marauroa = window.marauroa || {}
 
 marauroa.debug = {
 	messages: false,
@@ -29,7 +41,7 @@ marauroa.util = {
 
 	isEmptyExceptId: function(obj) {
 		for (var i in obj) {
-			if (i != "id" && obj.hasOwnProperty(i)) {
+			if (i !== "id" && obj.hasOwnProperty(i)) {
 				return false;
 			}
 		}
