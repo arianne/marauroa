@@ -1,6 +1,5 @@
-/* $Id: ClientFramework.java,v 1.68 2010/11/26 20:07:27 martinfuchs Exp $ */
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2011-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -15,10 +14,11 @@
  * It is a wrapper over all the things that the client should do. You should
  * extend this class at your game.
  *
- * @author miguel, hendrik
+ * @author hendrik
  *
  */
 "use strict";
+var marauroa = window.marauroa || {}
 
 marauroa.clientFramework = {
 	clientid: "-1",

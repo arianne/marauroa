@@ -9,6 +9,11 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+"use strict";
+
+var marauroa = window.marauroa || {}
+
 marauroa.messageFactory = new function() {
 
 	// Message S2C Login NACK
