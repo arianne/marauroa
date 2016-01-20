@@ -29,7 +29,9 @@ marauroa.rpobjectFactory = new function(){
 		}
 		// Event slots
 		for (var slot in e.s) {
-			event[slot] = e.s[slot];
+			if (e.s.hasOwnProperty(slot)) {
+				event[slot] = e.s[slot];
+			}
 		}
 		event.execute(this);
 	}
