@@ -91,7 +91,7 @@ marauroa.clientFramework = {
 		if (marauroa.debug.messages) {
 			console.log("<--: ", msg);
 		}
-		if (msg.t === 9 || msg.t === 15) {
+		if (msg.t === "9" || msg.t === "15") {
 			marauroa.clientFramework.clientid = msg.c;
 		}
 		if (typeof(msg) === "string") {
