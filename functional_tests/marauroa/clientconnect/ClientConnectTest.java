@@ -13,6 +13,7 @@ import org.junit.Test;
 import marauroa.client.ClientFramework;
 import marauroa.client.LoginFailedException;
 import marauroa.common.game.AccountResult;
+import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.net.message.MessageS2CPerception;
@@ -95,16 +96,55 @@ public class ClientConnectTest {
 		ClientFramework cl = new MinimalClient();
 
 		cl.connect("localhost", 12300);
-		assertEquals(new AccountResult(Result.OK_CREATED,"character").toString(),cl.createAccount("character", "pw2", "emil").toString());
+		assertEquals(new AccountResult(Result.OK_CREATED,"character").toString(),
+			cl.createAccount("character", "pw2", "emil").toString());
 
 		cl.login("character", "pw2");
-		assertEquals(Result.OK_CREATED,cl.createCharacter("jack", new RPObject()).getResult());
-		assertEquals(Result.FAILED_CHARACTER_EXISTS, cl.createCharacter("jack", new RPObject()).getResult());
+		assertEquals(Result.OK_CREATED,
+			cl.createCharacter("jack", new RPObject()).getResult());
+		assertEquals(Result.FAILED_CHARACTER_EXISTS,
+			cl.createCharacter("jack", new RPObject()).getResult());
 
 		cl.logout();
 	}
 
+
+	/**
+	 * tests joining the game
+	 *
+	 * @throws Exception in case of an unexpected error
+	 */
+	@Test
+	public void joinGame() throws Exception {
+		MinimalClient cl = new MinimalClient();
+
+		cl.connect("localhost", 12300);
+		assertEquals(new AccountResult(Result.OK_CREATED, "joiner").toString(),
+			cl.createAccount("joiner", "pw2", "emil").toString());
+		cl.login("joiner", "pw2");
+		assertEquals(Result.OK_CREATED,
+			cl.createCharacter("joiner", new RPObject()).getResult());
+		cl.logout();
+
+		
+		cl.connect("localhost", 12300);
+		cl.login("joiner", "pw2");
+		assertTrue("previousLogins", cl.previousLogins);
+		assertTrue("availableCharacters", cl.availableCharacters);
+
+		cl.chooseCharacter("joiner");
+		assertTrue("serverInfo", cl.serverInfo);
+
+		cl.send(new RPAction());
+	}
+
+	
 	final class MinimalClient extends ClientFramework {
+		boolean serverInfo = false;
+		boolean previousLogins = false;
+		boolean perception = false;
+		boolean availableCharacters = false;
+
 		@Override
 		protected List<TransferContent> onTransferREQ(List<TransferContent> items) {
 			return null;
@@ -117,22 +157,22 @@ public class ClientConnectTest {
 
 		@Override
 		protected void onServerInfo(String[] info) {
-			// ignored
+			serverInfo = true;
 		}
 
 		@Override
-		protected void onPreviousLogins(List<String> previousLogins) {
-			// ignored
+		protected void onPreviousLogins(List<String> previousLoginList) {
+			previousLogins = true;
 		}
 
 		@Override
 		protected void onPerception(MessageS2CPerception message) {
-			// ignored
+			perception = true;
 		}
 
 		@Override
 		protected void onAvailableCharacters(String[] characters) {
-			// ignored
+			availableCharacters = true;
 		}
 
 		@Override
