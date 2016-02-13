@@ -130,6 +130,12 @@
 			<arg value="--js"/>
 			<arg value="src/js/marauroa.js"/>
 			<arg value="--js"/>
+			<arg value="src/js/inflate.js"/>
+			<arg value="--js"/>
+			<arg value="src/js/encoding.js"/>
+			<arg value="--js"/>
+			<arg value="src/js/deserializer.js"/>
+			<arg value="--js"/>
 			<arg value="src/js/client-framework.js"/>
 			<arg value="--js"/>
 			<arg value="src/js/message-factory.js"/>
