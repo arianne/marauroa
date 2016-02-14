@@ -134,3 +134,20 @@ marauroa.Deserializer = function(buffer) {
 		return res;
 	}
 }
+
+/**
+ * created a deserializer from an deflated data stream that was encoded using base64.
+ *
+ * @param base64 base64 string
+ * @return Deserializer
+ */
+marauroa.Deserializer.fromDeflatedBase64 = function(base64) {
+    var d = window.atob(base64)
+    var binary_string = RawDeflate.inflate(d.substring(2, d.length - 4));
+    var len = binary_string.length;
+    var bytes = new Uint8Array( len );
+    for (var i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return new marauroa.Deserializer(bytes.buffer);
+};
