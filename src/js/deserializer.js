@@ -133,6 +133,28 @@ marauroa.Deserializer = function(buffer) {
 		}
 		return res;
 	}
+
+	this.readAttributes = function(obj) {
+		var clazz = this.readString();
+		var size = this.readInt();
+		for (var i = 0; i < size; i++) {
+			var code = this.readShort();
+			if (code != -1) {
+				console.error("RPClass not supported, yet.");
+				return obj;
+			}
+			var key = this.readString();
+			var value = this.readString();
+			obj[key] = value;
+		}
+		return obj;
+	}
+
+	this.readRPObject = function(obj) {
+		this.readAttributes(obj);
+		
+		return obj;
+	}
 }
 
 /**

@@ -37,6 +37,11 @@ function dumpCollision(input) {
 	console.log("            layer: ", a, b, c, d);
 }
 
+function dumpObject(input) {
+	var obj = {};
+	console.log("            object:", input.readAttributes(obj));
+}
+
 function dumpTilesets(input) {
 	var size = input.readInt();
 	for (var i = 0; i < size; i++) {
@@ -46,12 +51,13 @@ function dumpTilesets(input) {
 		console.log("            tileset:", name, source, gid);
 	}
 }
-	
+
 function main() {
 	for (var i = 0; i < d.length; i++) {
 		console.log(d[i].name);
 		if (d[i].name === "data_map") {
-			console.log("            todo");
+			var input = marauroa.Deserializer.fromBase64(d[i].data);
+			dumpObject(input)
 		} else if (d[i].name === "tilesets") {
 			var input = marauroa.Deserializer.fromBase64(d[i].data);
 			dumpTilesets(input);
