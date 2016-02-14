@@ -136,18 +136,39 @@ marauroa.Deserializer = function(buffer) {
 }
 
 /**
- * created a deserializer from an deflated data stream that was encoded using base64.
+ * created a deserializer from a deflated data stream that was encoded using base64.
  *
  * @param base64 base64 string
  * @return Deserializer
  */
 marauroa.Deserializer.fromDeflatedBase64 = function(base64) {
     var d = window.atob(base64)
-    var binary_string = RawDeflate.inflate(d.substring(2, d.length - 4));
-    var len = binary_string.length;
+    var binary = RawDeflate.inflate(d.substring(2, d.length - 4));
+    return marauroa.Deserializer.fromBinaryString(binary);
+};
+
+/**
+ * created a deserializer from a data stream that was encoded using base64.
+ *
+ * @param base64 base64 string
+ * @return Deserializer
+ */
+marauroa.Deserializer.fromBase64 = function(base64) {
+    return marauroa.Deserializer.fromBinaryString(atob(base64));
+};
+
+
+/**
+ * created a deserializer from a data stream
+ *
+ * @param binary binary string
+ * @return Deserializer
+ */
+marauroa.Deserializer.fromBinaryString = function(binary) {
+    var len = binary.length;
     var bytes = new Uint8Array( len );
     for (var i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
+        bytes[i] = binary.charCodeAt(i);
     }
     return new marauroa.Deserializer(bytes.buffer);
 };
