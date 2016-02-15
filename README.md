@@ -1,13 +1,3 @@
--------------------------------------------------------------------------------
-| This program is free software; you can redistribute it and/or modify it under
-| the terms of the GNU General Public License as published by the Free Software
-| Foundation.
-|
-| This program is distributed in the hope that it will be useful, but WITHOUT
-| ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-| FOR A PARTICULAR PURPOSE.  See the file LICENSE for more details.
--------------------------------------------------------------------------------
-
 Marauroa
 --------
 Marauroa is Arianne's Multiplayer Online Engine, that you can use to build
@@ -48,15 +38,13 @@ In order to get it working with MySQL you will also need:
 
 Build
 -----
-Make sure ant ( http://ant.apache.org/ ) is installed.
+Make sure [ant](http://ant.apache.org/) is installed.
 Now just write:
+  `ant jar`
 
-  ant jar
 
 Or for a complete package release write:
-
-  ant
-
+  `ant`
 
 
 You need to grab a game package in order to be able to play it.
@@ -75,14 +63,15 @@ https://arianne-project.org instead.
 
 Bugs
 ----
-Please report bugs to http://sourceforge.net/tracker/?group_id=1111&atid=101111
+Please report bugs to [http://sourceforge.net/tracker/?group_id=1111&atid=101111](http://sourceforge.net/tracker/?group_id=1111&atid=101111)
 
 
 Testing
 -------
 
 Run 
-  ant test
+    `ant test`
+
   
 to execute the test suite.
 
@@ -92,5 +81,6 @@ Legal
 -----
 Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2007
 arianne_rpg at users dot sourceforge dot net
+
 Marauroa(c) is copyright of the Arianne Project, 2006-2015
 arianne-general at lists dot sourceforge dot net
