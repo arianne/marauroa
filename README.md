@@ -1,8 +1,8 @@
 Marauroa
 --------
 Marauroa is Arianne's Multiplayer Online Engine, that you can use to build
-your own online games using Marauroa for object management, database persistence
-and perception based client-server communication.
+your own online games. Marauroa handles client-server communication and 
+object persistence in a database.
 
 
 Extended Description
@@ -15,72 +15,58 @@ by developers.
 Marauroa is based on a philosophy we call Action/Perception, on each turn a
 perception is sent to clients explaining them what they perceive and clients
 can ask server to do any action in their names using actions.
+
 Marauroa is totally game agnostic and makes very little assumptions about what
 are you trying to do, allowing a great freedom to create whatever type of game
 you want.
 
 You can find the latest version of Marauroa at:
-http://arianne.sourceforge.net
+[https://arianne-project.org](https://arianne-project.org)
 
 
-Requirements
-------------
-To actually compile Marauroa you will need:
-- Java SDK 1.5 http://java.sun.com
-- Ant 1.6 http://ant.apache.org
+Games based on Marauroa
+-----------------------
 
-In order to get it working with MySQL you will also need:
-- MySQL Connector/J http://www.mysql.com/downloads/api-jdbc-stable.html
+Games and tools based on Marauroa:
 
-- JUnit 4.4 in order to run test cases.
-- Jython for Python support.
+[![Marboard](https://arianne-project.org/screens/marboard/THM_marboard_dot.png)](https://arianne-project.org/tool/marboard.html)
+[![jMaPacman](https://arianne-project.org/screens/jmapacman/THM_20050702_jmapacman.jpg)](https://arianne-project.org/game/jmapacman.html)
+[![Stendhal](https://arianne-project.org/screens/stendhal/THM_Stendhal98.jpg)](https://arianne-project.org/game/stendhal.html)
 
 
-Build
------
-Make sure [ant](http://ant.apache.org/) is installed.
-Now just write:
-  `ant jar`
+Developing with Marauroa
+-------------------------
+Please check out the tutorial on the [Marauroa Wiki](https://stendhalgame.org/wiki/Marauroa).
 
 
-Or for a complete package release write:
-  `ant`
+Building Marauroa
+-----------------
+To compile Marauroa you will need:
 
+- [Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
+- [Ant](https://ant.apache.org)
+
+Now just write: `ant dist`
 
 You need to grab a game package in order to be able to play it.
 
 
-Running
--------
-Ok, you have compiled Marauroa. Now what to do?
-
-Well, if you have built a Marauroa server it is because you
-want to play with the server either because you want to run your own
-game server or because you are a developer wanting to develop your own game.
-If you don't understand the above it is likely that you are looking for
-https://arianne-project.org instead.
-
 
 Bugs
 ----
-Please report bugs to [http://sourceforge.net/tracker/?group_id=1111&atid=101111](http://sourceforge.net/tracker/?group_id=1111&atid=101111)
+Please report bugs to [https://sourceforge.net/p/arianne/bugs/](https://sourceforge.net/p/arianne/bugs/)
 
 
 Testing
 -------
 
-Run 
-    `ant test`
-
-  
-to execute the test suite.
-
+Run `ant test` to execute the test suite.
 
 
 Legal
 -----
-Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2007
+Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2007,
 arianne_rpg at users dot sourceforge dot net
 
-Marauroa(c) is copyright of the Arianne Project, 2006-2015
+Marauroa(c) is copyright of the Arianne Project, 2006-2016,
 arianne-general at lists dot sourceforge dot net
