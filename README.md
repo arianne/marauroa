@@ -1,4 +1,4 @@
-Marauroa
+Marauroa &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Travis](https://img.shields.io/travis/arianne/marauroa.svg)](https://travis-ci.org/arianne/marauroa) &nbsp;[![Codacy Badge](https://img.shields.io/codacy/c4048896aea4460ca6b866133c5f2f6a.svg)](https://www.codacy.com/app/arianne/marauroa)&nbsp;[![SourceForge](https://img.shields.io/sourceforge/dt/arianne.svg)](https://arianne-project.org/download/marauroa.zip) &nbsp;[![License GPL](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/arianne/marauroa/blob/master/LICENSE.txt) 
 --------
 Marauroa is Arianne's Multiplayer Online Engine, that you can use to build
 your own online games. Marauroa handles client-server communication and 
