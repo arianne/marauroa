@@ -10,7 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
-var marauroa = window.marauroa || {}
+var marauroa = window.marauroa || {};
 
 /**
  * creates RPObjects

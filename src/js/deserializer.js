@@ -12,7 +12,7 @@
 
 "use strict";
 
-var marauroa = window.marauroa || {}
+var marauroa = window.marauroa || {};
 
 marauroa.Deserializer = function(buffer) {
 	var offset = 0;
@@ -134,12 +134,18 @@ marauroa.Deserializer = function(buffer) {
 		return res;
 	}
 
+	/**
+	 * reads an Attributes-object from the stream
+	 *
+	 * @param obj object to read into
+	 * @return obj
+	 */
 	this.readAttributes = function(obj) {
-		var clazz = this.readString();
+		this.readString();
 		var size = this.readInt();
 		for (var i = 0; i < size; i++) {
 			var code = this.readShort();
-			if (code != -1) {
+			if (code !== -1) {
 				console.error("RPClass not supported, yet.");
 				return obj;
 			}
@@ -164,8 +170,8 @@ marauroa.Deserializer = function(buffer) {
  * @return Deserializer
  */
 marauroa.Deserializer.fromDeflatedBase64 = function(base64) {
-    var d = window.atob(base64)
-    var binary = RawDeflate.inflate(d.substring(2, d.length - 4));
+    var d = window.atob(base64);
+    var binary = window.RawDeflate.inflate(d.substring(2, d.length - 4));
     return marauroa.Deserializer.fromBinaryString(binary);
 };
 

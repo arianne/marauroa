@@ -12,7 +12,7 @@
 
 "use strict";
 
-var marauroa = window.marauroa || {}
+var marauroa = window.marauroa || {};
 
 /**
  * The IPerceptionListener interface provides methods that are called while

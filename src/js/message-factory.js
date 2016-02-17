@@ -12,7 +12,7 @@
 
 "use strict";
 
-var marauroa = window.marauroa || {}
+var marauroa = window.marauroa || {};
 
 marauroa.messageFactory = new function() {
 

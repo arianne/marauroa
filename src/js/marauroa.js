@@ -12,7 +12,7 @@
 
 "use strict";
 
-var marauroa = window.marauroa || {}
+var marauroa = window.marauroa || {};
 
 marauroa.debug = {
 	messages: false,
@@ -26,7 +26,9 @@ if (!window.console.log) {
 	window.console.log = function() {};
 	window.console.info = function() {};
 	window.console.warn = function() {};
-	window.console.error = function(text) {alert(text)};
+	window.console.error = function(text) {
+		alert(text);
+	};
 }
 
 marauroa.util = {
@@ -57,11 +59,11 @@ marauroa.util = {
 	},
 
 	fromProto: function(proto, def) {
-		var f = function() {
+		var F = function() {
 			this.proto = proto;
 		};
-		f.prototype = proto;
-		var obj = new f();
+		F.prototype = proto;
+		var obj = new F();
 		if (!def) {
 			return obj;
 		}
@@ -74,8 +76,4 @@ marauroa.util = {
 		}
 		return a;
 	}
-}
-
-String.prototype.trim = function() {
-	return this.replace(/^\s+|\s+$/g, "");
 };
