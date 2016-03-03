@@ -208,7 +208,7 @@
 		<copy todir="marauroa-${version}" file="AUTHORS.txt"/>
 		<copy todir="marauroa-${version}" file="CHANGES.txt"/>
 		<copy todir="marauroa-${version}" file="LICENSE.txt"/>
-		<copy todir="marauroa-${version}" file="README.txt"/>
+		<copy todir="marauroa-${version}" file="README.md"/>
 		<zip destfile="${dist}/marauroa-${version}.zip" basedir="marauroa-${version}"/>
 		<delete dir="marauroa-${version}"/>
 	</target>
@@ -221,7 +221,7 @@
 		<copy todir="marauroa-${version}" file="AUTHORS.txt"/>
 		<copy todir="marauroa-${version}" file="CHANGES.txt"/>
 		<copy todir="marauroa-${version}" file="LICENSE.txt"/>
-		<copy todir="marauroa-${version}" file="README.txt"/>
+		<copy todir="marauroa-${version}" file="README.md"/>
 		<zip destfile="${dist}/marauroa-${version}-docs.zip" basedir="marauroa-${version}"/>
 		<delete dir="marauroa-${version}"/>
 	</target>
@@ -249,7 +249,7 @@
 		<copy todir="marauroa-${version}" file="AUTHORS.txt"/>
 		<copy todir="marauroa-${version}" file="CHANGES.txt"/>
 		<copy todir="marauroa-${version}" file="LICENSE.txt"/>
-		<copy todir="marauroa-${version}" file="README.txt"/>
+		<copy todir="marauroa-${version}" file="README.md"/>
 
 		<tar destfile="${dist}/marauroa-${version}-src.tar.gz" compression="gzip">
 			<tarfileset dir="marauroa-${version}" prefix="marauroa-${version}">
