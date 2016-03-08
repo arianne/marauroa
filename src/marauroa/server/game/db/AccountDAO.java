@@ -437,6 +437,20 @@ public class AccountDAO {
 	}
 
 	/**
+	 * verifies the account username and password
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param password password
+	 * @return true on success, false if the account does not exists or the password does not match
+	 * @throws SQLException in case of an database error
+	 */
+	public boolean verifyPassword(DBTransaction transaction, String username, String password) throws SQLException {
+		return verifyUsingDB(transaction, username, Hash.hash(password));
+	}
+
+
+	/**
 	 * verifies the account credentials using the database
 	 *
 	 * @param transaction DBTransaction
@@ -769,6 +783,24 @@ public class AccountDAO {
 		}
 	}
 
+	/**
+	 * verifies the account username and password
+	 *
+	 * @param username username
+	 * @param password password
+	 * @return true on success, false if the account does not exists or the password does not match
+	 * @throws SQLException in case of an database error
+	 */
+	public boolean verifyPassword(String username, String password) throws SQLException {
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		try {
+			return verifyPassword(transaction, username, password);
+		} finally {
+			TransactionPool.get().commit(transaction);
+		}
+	}
+
+	
 	/**
 	 * deletes an account from the database
 	 *
