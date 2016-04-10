@@ -88,14 +88,19 @@ public class DelayedEventHandlerThread extends Thread {
 	public void run() {
 		try {
 			while (true) {
-				// Wait for up to one second for a delayed command. If no command is pending, check for a possible shutdown 
-				Pair<DelayedEventHandler, Object> entry = queue.poll(1, TimeUnit.SECONDS);
-				if (entry == null) {
-					if (!keepRunning) {
-						break;
+				try {
+
+					// Wait for up to one second for a delayed command. If no command is pending, check for a possible shutdown 
+					Pair<DelayedEventHandler, Object> entry = queue.poll(1, TimeUnit.SECONDS);
+					if (entry == null) {
+						if (!keepRunning) {
+							break;
+						}
+					} else {
+						entry.first().handleDelayedEvent(rpMan, entry.second());
 					}
-				} else {
-					entry.first().handleDelayedEvent(rpMan, entry.second());
+				} catch (RuntimeException e) {
+					logger.error(e, e);
 				}
 			}
 		} catch (InterruptedException e1) {
