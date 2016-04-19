@@ -102,4 +102,10 @@ public class Channel {
 	public void setWaitingForPerception(boolean waitingForPerception) {
 		this.waitingForPerception = waitingForPerception;
 	}
+
+	@Override
+	public String toString() {
+		return "Channel [internalChannel=" + internalChannel + ", address=" + address + "]";
+	}
+
 }

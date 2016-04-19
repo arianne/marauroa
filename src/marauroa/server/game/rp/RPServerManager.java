@@ -14,6 +14,7 @@ package marauroa.server.game.rp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -425,6 +426,16 @@ public class RPServerManager extends Thread {
 
 		for (PlayerEntry entry : playersToRemove) {
 			logger.warn("RP Disconnecting entry: " + entry);
+			
+			// Workaround for closed timeout
+			Object c = entry.channel.getInternalChannel();
+			if (c instanceof SocketChannel) {
+				if (!((SocketChannel) c).isOpen()) {
+					logger.warn("Timeout of closed socket");
+					playerContainer.remove(entry.clientid);
+				}
+			}
+			
 			netMan.disconnectClient(entry.channel);
 		}
 	}
