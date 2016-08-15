@@ -13,7 +13,11 @@
  */
 package marauroa.server;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.math.BigInteger;
 import java.util.Calendar;
@@ -319,6 +323,41 @@ public class marauroad extends Thread {
             marauroa = new marauroad();
         }
 
+        return marauroa;
+    }
+
+    /**
+     * returns the marauroad object
+     *
+     * @param conf custom configuration
+     * @return marauroad
+     */
+    public static marauroad getMarauroa(Properties conf) {
+        if (marauroa == null) {
+            OutputStream out = null;
+            try {
+                //This is a workaround to prevent the configuration from the local file be used.
+                //Create a temporary configuration file
+                File f = new File("server.properties");
+                f.deleteOnExit();
+                out = new FileOutputStream(f);
+                conf.store(out, "Temporary properties file");
+                Configuration.setConfigurationFile(f.getAbsolutePath());
+                marauroa = new marauroad(conf);
+            } catch (FileNotFoundException ex) {
+                logger.error(null, ex);
+            } catch (IOException ex) {
+                logger.error(null, ex);
+            } finally {
+                try {
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException ex) {
+                    logger.error(null, ex);
+                }
+            }
+        }
         return marauroa;
     }
 
