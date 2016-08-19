@@ -310,7 +310,7 @@ public class marauroad extends Thread {
         } catch (IOException ex) {
             logger.error("error retrieving configuration file", ex);
         }
-        startup();
+        init(new String[]{});
     }
 
     /**
@@ -369,6 +369,7 @@ public class marauroad extends Thread {
      * @return true, in case the startup was successful, false otherwise
      */
     public boolean init(String[] args) {
+        printCopyright();
         long startTime = System.currentTimeMillis();
 
         System.out.println("Starting Marauroa https://arianne-project.org/engine/marauroa.html");
@@ -507,46 +508,6 @@ public class marauroad extends Thread {
         netMan.finish();
         gameMan.finish();
         DBCommandQueue.get().finish();
-    }
-
-    /**
-     * Common activities to perform during start up.
-     */
-    private static void startup() {
-        printCopyright();
-        String log4jConfiguration = null;
-
-        try {
-            Configuration conf = Configuration.getConfiguration();
-            log4jConfiguration = conf.get("log4j_url");
-        } catch (IOException e) {
-            System.out.println("ERROR: Marauroa can't find configuration file.");
-            System.out.println("Run game configuration to get a valid \"server.ini\" file");
-            System.exit(1);
-        }
-
-        if (log4jConfiguration == null) {
-            log4jConfiguration = "marauroa/server/log4j.properties";
-        }
-
-        // Initialize Loggging
-        try {
-            Log4J.init(log4jConfiguration);
-        } catch (Exception e) {
-            System.out.println("ERROR: Marauroa can't initialize logging.");
-            System.out.println("Verify you have created log/ directory.");
-            System.exit(1);
-        }
-
-        // Check access to database is possible.
-        try {
-            new DatabaseFactory().initializeDatabase();
-        } catch (DatabaseConnectionException e) {
-            System.out.println("ERROR: Marauroa can't connect to database");
-            System.out.println("Verify \"server.ini\" file to make sure access to database is possible.");
-            System.exit(1);
-        }
-        marauroad.getMarauroa().start();
     }
 
     private static void printCopyright() {
