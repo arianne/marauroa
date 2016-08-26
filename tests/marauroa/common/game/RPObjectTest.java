@@ -11,6 +11,13 @@
  ***************************************************************************/
 package marauroa.common.game;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
+import marauroa.common.game.Definition.Type;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -19,16 +26,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
-
-import marauroa.common.game.Definition.Type;
-import marauroa.common.net.InputSerializer;
-import marauroa.common.net.OutputSerializer;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,6 +38,7 @@ import org.junit.Test;
 public class RPObjectTest {
 
 	private RPObject obj;
+        private int slotSize = 10;
 
 	/**
 	 * Set up method to create an object that contains some attributes, slots
@@ -59,6 +57,10 @@ public class RPObjectTest {
 
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
+                
+                RPSlot slot = new RPSlot("test slot");
+                slot.setCapacity(slotSize);
+                obj.addSlot(slot);
 
 		RPObject buddy = new RPObject();
 		buddy.put("pepe", "");
@@ -111,6 +113,8 @@ public class RPObjectTest {
 
 		assertTrue(obj.hasSlot("lhand"));
 		assertTrue(obj.hasSlot("rhand"));
+                assertTrue(obj.hasSlot("test slot"));
+                assertEquals(slotSize, obj.getSlot("test slot").getCapacity());
 
 		for (Iterator<RPEvent> it = obj.eventsIterator(); it.hasNext();) {
 			RPEvent event = it.next();
