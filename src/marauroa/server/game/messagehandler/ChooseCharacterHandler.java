@@ -57,7 +57,8 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 			 * verify event so that we can trust that it comes from our player
 			 * and that it has completed the login stage.
 			 */
-			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE)) {
+			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE, 
+                                ClientState.GAME_BEGIN)) {
 				return;
 			}
 
