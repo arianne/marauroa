@@ -85,7 +85,7 @@ public class AccountDAO {
 			transaction.execute(query, params);
 
 			// save email address
-			if ((email != null) && (!email.trim().equals(""))) {
+			if (!email.trim().equals("")) {
 				changeEmail(transaction, username, email);
 			}
 		} catch (SQLException e) {
