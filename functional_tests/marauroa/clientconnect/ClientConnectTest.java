@@ -81,7 +81,8 @@ public class ClientConnectTest {
 		ClientFramework cl = new MinimalClient();
 
 		cl.connect("localhost", 12300);
-		assertEquals(new AccountResult(Result.OK_CREATED,"haxor").toString(),cl.createAccount("haxor", "goodpw", "emil").toString());
+		assertEquals(new AccountResult(Result.OK_CREATED,"haxor").toString(),
+				cl.createAccount("haxor", "goodpw", "emil").toString());
 		cl.login("haxor", "badpw");
 		cl.logout();
 	}

@@ -3,21 +3,23 @@ Current Maintainer
 Hendrik Brummermann      nhnb at users.sf.net
 
 Marauroa is a part of the Arianne Project
-led by Katie Russel      kymara at users.sf.net
-
 
 
 Active Authors
 ==============
 - Hendrik Brummermann    nhnb at users.sf.net
-- Katie Russel           kymara at users.sf.net
 - Markus Keunecke        madmetzger at users.sf.net
 - Kimmo Rundelin         kiheru at users.sf.net
 
 
 The best way to reach the team is the chat channel
-#arianne on irc.freenode.net or the forum/bugtracker
+#arianne on irc.freenode.net or the tracker
 on http://sourceforge.net/projects/arianne
+
+
+Major Contributors
+==================
+- Javier A. Ortiz
 
 
 Translators
@@ -28,11 +30,12 @@ Translators
 Past Authors
 ============
 - Miguel Angel Blanch Lardin  (inactive)
-- Waldemar Tribus  (inactive)
-- Benjamin Lerman  (inactive)
-- Martin Fuchs     (inactive)
-- Matthias Totz    (inactive)
-- Daniel Herding   (inactive)
+- Katie Russel          (inactive)
+- Waldemar Tribus       (inactive)
+- Benjamin Lerman       (inactive)
+- Martin Fuchs          (inactive)
+- Matthias Totz         (inactive)
+- Daniel Herding        (inactive)
 - Jo S. aka intensifly  (inactive)
 - Stephen Ierodiaconou  (inactive)
 
