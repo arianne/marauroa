@@ -60,6 +60,10 @@ public class RPObjectTest {
 		obj.addSlot("lhand");
 		obj.addSlot("rhand");
 
+		RPSlot slot = new RPSlot("capacity test slot");
+		slot.setCapacity(10);
+		obj.addSlot(slot);
+
 		RPObject buddy = new RPObject();
 		buddy.put("pepe", "");
 		buddy.put("john", "");
@@ -111,6 +115,8 @@ public class RPObjectTest {
 
 		assertTrue(obj.hasSlot("lhand"));
 		assertTrue(obj.hasSlot("rhand"));
+		assertTrue(obj.hasSlot("capacity test slot"));
+		assertEquals(10, obj.getSlot("capacity test slot").getCapacity());
 
 		for (Iterator<RPEvent> it = obj.eventsIterator(); it.hasNext();) {
 			RPEvent event = it.next();

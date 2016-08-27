@@ -83,7 +83,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		/*
 		 * Compute now the capacity of the slot
 		 */
-		if (name != null) {
+		if ((name != null) && (capacity == -1)) {
 			capacity = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
 		}
 	}
@@ -411,6 +411,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/**
 	 * Returns true if both objects are equal
 	 *
+	 * @param object to compare against
 	 * @return true if both objects are equal
 	 */
 	@Override
