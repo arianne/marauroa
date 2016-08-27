@@ -124,7 +124,7 @@ public class I18N {
 	 * @param args optional arguments
 	 * @return     translated text
 	 */
-	public static String _(String key, Object... args) {
+	public static String translate(String key, Object... args) {
 		Locale locale = getLocale();
 		String value = null;
 		Map<String, String> dictionary = dictionaries.get(locale.getLanguage());

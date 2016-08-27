@@ -11,7 +11,7 @@
  ***************************************************************************/
 package marauroa.common.game;
 
-import static marauroa.common.i18n.I18N._;
+import static marauroa.common.i18n.I18N.translate;
 
 /**
  * This enum represent the possible values returned by the create account
@@ -142,6 +142,6 @@ public enum Result {
 	 * @return a textual description of the result.
 	 */
 	public String getText() {
-		return _(text);
+		return translate(text);
 	}
 }

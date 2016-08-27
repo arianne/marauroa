@@ -11,7 +11,7 @@
  ***************************************************************************/
 package marauroa.common.net.message;
 
-import static marauroa.common.i18n.I18N._;
+import static marauroa.common.i18n.I18N.translate;
 
 import java.io.IOException;
 
@@ -112,7 +112,7 @@ public class MessageS2CLoginNACK extends Message {
 	 * @return a string representing the resolution.
 	 */
 	public String getResolution() {
-		return _(text[reason.ordinal()]);
+		return translate(text[reason.ordinal()]);
 	}
 
 	/**

@@ -11,7 +11,7 @@
  ***************************************************************************/
 package marauroa.client;
 
-import static marauroa.common.i18n.I18N._;
+import static marauroa.common.i18n.I18N.translate;
 import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
 
 /**
@@ -28,7 +28,7 @@ public class LoginFailedException extends Exception {
 	 * @param reason a human readable error message
 	 */
 	public LoginFailedException(String reason) {
-		super(_("Login failed: %1$s", reason));
+		super(translate("Login failed: %1$s", reason));
 	}
 
 	/**
