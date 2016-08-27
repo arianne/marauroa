@@ -46,7 +46,7 @@ public class InputSerializer {
 	 * @throws java.io.IOException
 	 *             if there is an IO error
 	 */
-	public Object readObject(marauroa.common.net.Serializable obj) throws IOException {
+	public Object readObject(Serializable obj) throws IOException {
 		obj.readObject(this);
 		return obj;
 	}

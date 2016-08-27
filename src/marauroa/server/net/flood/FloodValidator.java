@@ -36,10 +36,10 @@ public class FloodValidator implements IDisconnectedListener, Iterable<FloodMeas
 	private INetworkServerManager netMan;
 
 	/** Stores the connections */
-	Map<Channel, FloodMeasure> connections;
+	private Map<Channel, FloodMeasure> connections;
 
 	/** This interface implements the flood checking. */
-	IFloodCheck floodCheck;
+	private IFloodCheck floodCheck;
 
 	/**
 	 * Constructor

@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -236,6 +236,7 @@ public class AttributesTest {
 		OutputSerializer os = new OutputSerializer(out);
 
 		os.write(attr);
+		assertTrue("Output is not empty", out.size() > 0);
 	}
 
 	/**

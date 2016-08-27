@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -14,6 +14,9 @@ package marauroa.common.game;
 import java.io.IOException;
 
 import marauroa.common.Log4J;
+import marauroa.common.Logger;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This class stores the definition of an attributes, event or rpslot. This
@@ -44,7 +47,7 @@ import marauroa.common.Log4J;
 public class Definition implements marauroa.common.net.Serializable {
 
 	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(Definition.class);
+	private static final Logger logger = Log4J.getLogger(Definition.class);
 
 	private static final Validator validator = new Validator();
 
@@ -415,10 +418,10 @@ public class Definition implements marauroa.common.net.Serializable {
 	 * @param in
 	 *            the input serializer
 	 * @return the value
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *             if there is any problem deserializing the object
 	 */
-	public String deserialize(marauroa.common.net.InputSerializer in) throws java.io.IOException {
+	public String deserialize(InputSerializer in) throws IOException {
 		switch (type) {
 			case VERY_LONG_STRING:
 				return in.readString();
@@ -551,7 +554,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/** Serialize the object into the output */
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		out.write((byte) clazz.ordinal());
 		out.write(code);
 		out.write(name);
@@ -570,7 +573,7 @@ public class Definition implements marauroa.common.net.Serializable {
 	}
 
 	/** Fill the object from data deserialized from the serializer */
-	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		clazz = DefinitionClass.values()[in.readByte()];
 		code = in.readShort();
 		name = in.readString();

@@ -236,7 +236,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see marauroa.client.net.NetworkClientManagerInterface#addMessage(marauroa.common.net.Message)
+	 * @see marauroa.client.net.NetworkClientManagerInterface#addMessage(Message)
 	 */
 	public void addMessage(Message msg) {
 		connected = writeManager.write(msg);

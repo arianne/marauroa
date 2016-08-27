@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -109,7 +109,7 @@ public class RPEvent extends SlotOwner {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
+	public void writeObject(OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
 

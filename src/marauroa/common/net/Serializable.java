@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2007 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -25,7 +25,7 @@ public interface Serializable {
 	 * @param out OutputSerializer to write the object to
 	 * @throws IOException in case of an IO-error
 	 */
-	void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException;
+	void writeObject(OutputSerializer out) throws IOException;
 
 	/** 
 	 * Method to build the object from a stream of bytes
@@ -33,5 +33,5 @@ public interface Serializable {
 	 * @param in InputSerializer to read from
 	 * @throws IOException in case of an IO-error
 	 */
-	void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException;
+	void readObject(InputSerializer in) throws IOException;
 }

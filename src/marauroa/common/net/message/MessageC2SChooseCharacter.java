@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the server what of the available characters is chosen
@@ -69,13 +71,13 @@ public class MessageC2SChooseCharacter extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(character);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		character = in.readString();
 

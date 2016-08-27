@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2007 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import marauroa.common.crypto.Hash;
 import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
 /**
@@ -65,7 +66,7 @@ public class MessageC2SLoginSendPromise extends MessageSendByteArray {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		if (in.available() > 0) {
 			language = in.read255LongString();

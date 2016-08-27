@@ -117,7 +117,7 @@ public class MessageS2CTransfer extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
 
 		ByteArrayOutputStream array = new ByteArrayOutputStream();
@@ -154,7 +154,7 @@ public class MessageS2CTransfer extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		ByteArrayInputStream array = new ByteArrayInputStream(in.readByteArray());

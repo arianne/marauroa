@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2007 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -16,6 +16,8 @@ import java.math.BigInteger;
 
 import marauroa.common.crypto.RSAPublicKey;
 import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the server that the client wants to login and send the
@@ -67,14 +69,14 @@ public class MessageS2CLoginSendKey extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(key.getN().toByteArray());
 		out.write(key.getE().toByteArray());
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		BigInteger n = new BigInteger(in.readByteArray());
 		BigInteger e = new BigInteger(in.readByteArray());

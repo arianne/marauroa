@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -19,6 +19,7 @@ import java.util.Map;
 import marauroa.common.game.DetailLevel;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
 
@@ -101,7 +102,7 @@ public class MessageS2CCharacterList extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		String[] readCharacters = in.readStringArray();
 		this.characters = new LinkedHashMap<String, RPObject>();
@@ -124,7 +125,7 @@ public class MessageS2CCharacterList extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(getCharacters());
 		if (super.protocolVersion >= NetConst.FIRST_VERSION_WITH_DETAILS_IN_CHARACTER_LIST) {
