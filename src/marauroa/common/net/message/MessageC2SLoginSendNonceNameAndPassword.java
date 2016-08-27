@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -16,6 +16,8 @@ import java.io.IOException;
 import marauroa.common.Utility;
 import marauroa.common.crypto.Hash;
 import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the server that the client wants to login and send the
@@ -86,14 +88,14 @@ public class MessageC2SLoginSendNonceNameAndPassword extends MessageSendByteArra
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(username);
 		out.write(password);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		username = in.readString();
 		password = in.readByteArray();

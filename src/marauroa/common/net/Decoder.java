@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -33,6 +33,15 @@ public class Decoder {
 
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(Decoder.class);
+
+	/** We map each channel with the sent content */
+	private Map<Object, MessageParts> content;
+
+	/** MessageFactory */
+	MessageFactory msgFactory;
+
+	/** singleton instance */
+	private static Decoder instance;
 
 	/**
 	 * This class handles incomplete messages.
@@ -154,15 +163,6 @@ public class Decoder {
 			return getSizeOfMessage(size);
 		}
 	}
-
-	/** We map each channel with the sent content */
-	private Map<Object, MessageParts> content;
-
-	/** MessageFactory */
-	MessageFactory msgFactory;
-
-	/** singleton instance */
-	private static Decoder instance;
 
 	/**
 	 * Returns an unique instance of decoder

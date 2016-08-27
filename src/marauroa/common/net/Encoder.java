@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -24,15 +24,15 @@ import marauroa.common.net.message.Message;
  */
 public class Encoder {
 
+	/** the singleton instance */
+	private static Encoder instance;
+
 	/**
 	 * Constructor
 	 */
 	private Encoder() {
 		// hide constructor, this is a Singleton
 	}
-
-	/** the singleton instance */
-	private static Encoder instance;
 
 	/**
 	 * Returns an unique instance of encoder

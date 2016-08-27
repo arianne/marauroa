@@ -34,9 +34,9 @@ public class RWLock {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(RWLock.class);
 
-	private volatile int givenLocks;
+	private int givenLocks;
 
-	private volatile int waitingWriters;
+	private int waitingWriters;
 
 	private Object mutex;
 

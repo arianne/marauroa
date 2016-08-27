@@ -161,7 +161,7 @@ marauroa.Deserializer = function(buffer) {
 		
 		return obj;
 	}
-}
+};
 
 /**
  * created a deserializer from a deflated data stream that was encoded using base64.

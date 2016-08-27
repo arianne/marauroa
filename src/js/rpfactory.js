@@ -159,4 +159,4 @@ marauroa.rpslotFactory = new function(){
 		slot._objects = [];
 		return slot;
 	}
-}
+};

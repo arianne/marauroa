@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -26,6 +26,7 @@ import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
+import marauroa.common.net.InputSerializer;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
 
@@ -1037,7 +1038,7 @@ public class RPObject extends SlotOwner {
 	 *            the output serializer
 	 */
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		try {
 			writeObject(out, DetailLevel.NORMAL);
 		} catch (NullPointerException e) {
@@ -1055,8 +1056,8 @@ public class RPObject extends SlotOwner {
 	 *            the level of Detail
 	 */
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level)
-			throws java.io.IOException {
+	public void writeObject(OutputSerializer out, DetailLevel level)
+			throws IOException {
 		super.writeObject(out, level);
 
 		if (level == DetailLevel.FULL) {
@@ -1245,7 +1246,7 @@ public class RPObject extends SlotOwner {
 	 *            the input serializer
 	 */
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		modified = true;
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2007 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import marauroa.common.crypto.Hash;
 import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
 
 /**
  * This message indicate the client the choosen server NONCE value by sending it a
@@ -49,7 +50,7 @@ public class MessageS2CLoginSendNonce extends MessageSendByteArray {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		if (type != MessageType.S2C_LOGIN_SENDNONCE) {
 			throw new IOException();

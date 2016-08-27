@@ -11,7 +11,7 @@
  ***************************************************************************/
 package marauroa.client;
 
-import static marauroa.common.i18n.I18N._;
+import static marauroa.common.i18n.I18N.translate;
 
 /**
  * this acception is thrown when the ip-address is banned.
@@ -24,6 +24,6 @@ public class BannedAddressException extends Exception {
 	 * created a new BannedAddressException.
 	 */
 	public BannedAddressException() {
-		super(_("Your IP Address has been banned."));
+		super(translate("Your IP Address has been banned."));
 	}
 }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2007 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -12,6 +12,9 @@
 package marauroa.common.game;
 
 import java.util.Iterator;
+
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * Interface for managing the objects in a RPZone. An RPZone is a storage for
@@ -87,13 +90,13 @@ public interface IRPZone extends Iterable<RPObject> {
 		}
 
 		/** Serialize the object into a stream of bytes. */
-		public void writeObject(marauroa.common.net.OutputSerializer out)
+		public void writeObject(OutputSerializer out)
 		        throws java.io.IOException {
 			out.write(id);
 		}
 
 		/** Deserialize the object and fills this object with the data */
-		public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
+		public void readObject(InputSerializer in) throws java.io.IOException {
 			id = in.readString();
 		}
 	}

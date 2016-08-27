@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -25,17 +25,8 @@ import marauroa.server.game.rp.RPServerManager;
  * You must extend this class.
  * 
  * @author miguel
- * 
  */
 public class PythonRP {
-
-	/**
-	 * Constructor
-	 * 
-	 */
-	public PythonRP() {
-		// default constructor
-	}
 
 	/** instance of rp manager */
 	private RPServerManager rpMan;
@@ -43,6 +34,8 @@ public class PythonRP {
 	/**
 	 * This method is called by PythonRPRuleProcessor to make us know which is
 	 * the RP Manager instance.
+	 *
+	 * @param rpMan RPServerManager
 	 */
 	void setRPManager(RPServerManager rpMan) {
 		this.rpMan = rpMan;

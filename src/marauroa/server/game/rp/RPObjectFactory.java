@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -31,8 +31,11 @@ import marauroa.server.game.db.DatabaseFactory;
  *
  */
 public class RPObjectFactory {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(DatabaseFactory.class);
+
+	private static RPObjectFactory singleton;
 
 	/**
 	 * This method returns an instance of RPObjectFactory choosen using the
@@ -77,8 +80,6 @@ public class RPObjectFactory {
         	throw new NoFactoryConfException(e);
         }
 	}
-
-	private static RPObjectFactory singleton;
 
 	/**
 	 * gets the ObjectFactory, creating a default one in case it does not exist already

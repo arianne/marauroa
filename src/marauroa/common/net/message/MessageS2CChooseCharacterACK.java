@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -14,6 +14,7 @@ package marauroa.common.net.message;
 import java.io.IOException;
 
 import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
 
 /**
  * This message indicate the client that the server has accepted its
@@ -50,7 +51,7 @@ public class MessageS2CChooseCharacterACK extends Message {
 
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		if (type != MessageType.S2C_CHOOSECHARACTER_ACK) {

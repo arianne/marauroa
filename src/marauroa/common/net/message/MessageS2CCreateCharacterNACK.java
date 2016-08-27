@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -17,6 +17,7 @@ import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.game.Result;
 import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
 /**
@@ -86,13 +87,13 @@ public class MessageS2CCreateCharacterNACK extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write((byte) reason.ordinal());
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		try {
 			reason = Result.values()[in.readByte()];

@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -11,11 +11,11 @@
  ***************************************************************************/
 package marauroa.server.game.python;
 
-import marauroa.common.Configuration;
-import marauroa.server.game.rp.RPWorld;
-
 import org.python.core.PyInstance;
 import org.python.util.PythonInterpreter;
+
+import marauroa.common.Configuration;
+import marauroa.server.game.rp.RPWorld;
 
 /**
  * This class is a wrapper for calling python in a better way. All the jython
@@ -40,6 +40,8 @@ class GameScript {
 	/** an instance of the Marauroa configuration system */
 	private Configuration conf;
 
+	private static GameScript gameScript = null;
+
 	/**
 	 * Constructor (singleton)
 	 *
@@ -50,8 +52,6 @@ class GameScript {
 		interpreter = new PythonInterpreter();
 		interpreter.execfile(conf.get("python_script"));
 	}
-
-	private static GameScript gameScript = null;
 
 	/**
 	 * Gets an instance of the GameScript

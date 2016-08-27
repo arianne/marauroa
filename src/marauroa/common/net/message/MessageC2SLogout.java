@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -14,9 +14,11 @@ package marauroa.common.net.message;
 import java.io.IOException;
 import java.util.Map;
 
-import marauroa.common.net.Channel;
-
 import org.apache.log4j.Logger;
+
+import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * The Logout Message is sent from client to server to indicate that it wants to
@@ -72,7 +74,7 @@ public class MessageC2SLogout extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		if (reason != 0) {
 			out.write(reason);
@@ -80,7 +82,7 @@ public class MessageC2SLogout extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		if (type != MessageType.C2S_LOGOUT) {

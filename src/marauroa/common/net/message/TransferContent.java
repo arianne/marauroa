@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2012 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -17,6 +17,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import marauroa.common.Utility;
 import marauroa.common.crypto.Hash;
+import marauroa.common.net.InputSerializer;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
 
@@ -117,7 +118,7 @@ public class TransferContent {
 	 * @param out
 	 * @throws IOException
 	 */
-	public void writeREQ(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeREQ(OutputSerializer out) throws IOException {
 		out.write(name);
 		out.write(timestamp);
 		if (out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_CONTENT_HASH) {
@@ -148,7 +149,7 @@ public class TransferContent {
 	 * @param in
 	 * @throws IOException
 	 */
-	public void readREQ(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readREQ(InputSerializer in) throws IOException {
 		name = in.readString();
 		timestamp = in.readInt();
 		if (in.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_CONTENT_HASH) {
@@ -162,7 +163,7 @@ public class TransferContent {
 	 * @param out
 	 * @throws IOException
 	 */
-	public void writeACK(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeACK(OutputSerializer out) throws IOException {
 		out.write(name);
 		out.write((byte) (ack ? 1 : 0));
 	}
@@ -181,7 +182,7 @@ public class TransferContent {
 	 * @param in
 	 * @throws IOException
 	 */
-	public void readACK(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readACK(InputSerializer in) throws IOException {
 		name = in.readString();
 		ack = (in.readByte() == 1);
 	}
@@ -206,7 +207,7 @@ public class TransferContent {
 	 * @param out
 	 * @throws IOException
 	 */
-	public void writeFULL(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeFULL(OutputSerializer out) throws IOException {
 		out.write(name);
 		out.write(data);
 		out.write(timestamp);
@@ -241,7 +242,7 @@ public class TransferContent {
 	 * @param in
 	 * @throws IOException
 	 */
-	public void readFULL(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readFULL(InputSerializer in) throws IOException {
 		name = in.readString();
 		data = in.readByteArray();
 		timestamp = in.readInt();
