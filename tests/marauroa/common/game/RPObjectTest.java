@@ -1,4 +1,4 @@
-/***************************************************************************
+/** *************************************************************************
  *                   (C) Copyright 2003-2012 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
@@ -8,9 +8,16 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
- ***************************************************************************/
+ ************************************************************************** */
 package marauroa.common.game;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
+import marauroa.common.game.Definition.Type;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -19,16 +26,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
-
-import marauroa.common.game.Definition.Type;
-import marauroa.common.net.InputSerializer;
-import marauroa.common.net.OutputSerializer;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,390 +37,394 @@ import org.junit.Test;
  */
 public class RPObjectTest {
 
-	private RPObject obj;
+    private RPObject obj;
+    private int slotSize = 10;
 
-	/**
-	 * Set up method to create an object that contains some attributes, slots
-	 * and events.
-	 *
-	 */
-	@Before
-	public void createObject() {
-		obj = new RPObject();
-		obj.setRPClass(RPClass.getBaseRPObjectDefault());
+    /**
+     * Set up method to create an object that contains some attributes, slots
+     * and events.
+     *
+     */
+    @Before
+    public void createObject() {
+        obj = new RPObject();
+        obj.setRPClass(RPClass.getBaseRPObjectDefault());
 
-		obj.put("a", 1);
-		obj.put("b", "1");
-		obj.put("c", 2.0);
-		obj.put("d", "string of text");
+        obj.put("a", 1);
+        obj.put("b", "1");
+        obj.put("c", 2.0);
+        obj.put("d", "string of text");
 
-		obj.addSlot("lhand");
-		obj.addSlot("rhand");
+        obj.addSlot("lhand");
+        obj.addSlot("rhand");
 
-		RPSlot slot = new RPSlot("capacity test slot");
-		slot.setCapacity(10);
-		obj.addSlot(slot);
+        RPSlot slot = new RPSlot("test slot");
+        slot.setCapacity(slotSize);
+        obj.addSlot(slot);
 
-		RPObject buddy = new RPObject();
-		buddy.put("pepe", "");
-		buddy.put("john", "");
-		buddy.put("anton", "");
+        slot.setCapacity(10);
+        obj.addSlot(slot);
 
-		RPClassTestHelper.generateRPClasses();
-		obj.addLink("buddy", buddy);
+        RPObject buddy = new RPObject();
+        buddy.put("pepe", "");
+        buddy.put("john", "");
+        buddy.put("anton", "");
 
-		RPEvent chat = new RPEvent("chat");
-		chat.put("text", "Hi there");
-		obj.addEvent(chat);
+        RPClassTestHelper.generateRPClasses();
+        obj.addLink("buddy", buddy);
 
-		chat = new RPEvent("chat");
-		chat.put("text", "Does this work?");
-		obj.addEvent(chat);
+        RPEvent chat = new RPEvent("chat");
+        chat.put("text", "Hi there");
+        obj.addEvent(chat);
 
-		RPSlot lhand = obj.getSlot("lhand");
+        chat = new RPEvent("chat");
+        chat.put("text", "Does this work?");
+        obj.addEvent(chat);
 
-		RPObject pocket = new RPObject();
-		pocket.put("size", 1);
-		pocket.addSlot("container");
-		lhand.add(pocket);
+        RPSlot lhand = obj.getSlot("lhand");
 
-		RPSlot container = pocket.getSlot("container");
+        RPObject pocket = new RPObject();
+        pocket.put("size", 1);
+        pocket.addSlot("container");
+        lhand.add(pocket);
 
-		RPObject coin = new RPObject();
-		coin.put("euro", 100);
-		coin.put("value", 100);
-		container.add(coin);
-	}
+        RPSlot container = pocket.getSlot("container");
 
-	/**
-	 * Do some basic test on has and get methods over attributes, slots and
-	 * events. This test that adding attributes, slots and events works as
-	 * expected.
-	 *
-	 */
-	@Test
-	public void testRPObject() {
-		assertNotNull(obj);
+        RPObject coin = new RPObject();
+        coin.put("euro", 100);
+        coin.put("value", 100);
+        container.add(coin);
+    }
 
-		assertTrue(obj.has("a"));
-		assertEquals(1, obj.getInt("a"));
-		assertTrue(obj.has("b"));
-		assertEquals("1", obj.get("b"));
-		assertTrue(obj.has("c"));
-		assertEquals(2.0, obj.getDouble("c"), 0.1f);
-		assertFalse(obj.has("e"));
+    /**
+     * Do some basic test on has and get methods over attributes, slots and
+     * events. This test that adding attributes, slots and events works as
+     * expected.
+     *
+     */
+    @Test
+    public void testRPObject() {
+        assertNotNull(obj);
 
-		assertTrue(obj.hasSlot("lhand"));
-		assertTrue(obj.hasSlot("rhand"));
-		assertTrue(obj.hasSlot("capacity test slot"));
-		assertEquals(10, obj.getSlot("capacity test slot").getCapacity());
+        assertTrue(obj.has("a"));
+        assertEquals(1, obj.getInt("a"));
+        assertTrue(obj.has("b"));
+        assertEquals("1", obj.get("b"));
+        assertTrue(obj.has("c"));
+        assertEquals(2.0, obj.getDouble("c"), 0.1f);
+        assertFalse(obj.has("e"));
 
-		for (Iterator<RPEvent> it = obj.eventsIterator(); it.hasNext();) {
-			RPEvent event = it.next();
-			assertEquals("chat", event.getName());
-		}
-	}
+        assertTrue(obj.hasSlot("lhand"));
+        assertTrue(obj.hasSlot("rhand"));
+        assertTrue(obj.hasSlot("test slot"));
+        assertEquals(slotSize, obj.getSlot("test slot").getCapacity());
 
-	/**
-	 * Test that RPSlot works by retriving the object added to the container. It
-	 * test it by ensuring that the id numering is correct.
-	 *
-	 */
-	@Test
-	public void testRPSlots() {
-		RPObject expected = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
-		assertEquals(1, expected.getInt("id"));
-	}
+        for (Iterator<RPEvent> it = obj.eventsIterator(); it.hasNext();) {
+            RPEvent event = it.next();
+            assertEquals("chat", event.getName());
+        }
+    }
 
-	@Test
-	public void testHasAsParent() {
-		RPObject p = obj.getSlot("lhand").getFirst();
+    /**
+     * Test that RPSlot works by retriving the object added to the container. It
+     * test it by ensuring that the id numering is correct.
+     *
+     */
+    @Test
+    public void testRPSlots() {
+        RPObject expected = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+        assertEquals(1, expected.getInt("id"));
+    }
 
-		assertTrue(obj.getSlot("lhand").hasAsAncestor(obj));
-		assertTrue(p.getSlot("container").hasAsAncestor(obj));
-	}
+    @Test
+    public void testHasAsParent() {
+        RPObject p = obj.getSlot("lhand").getFirst();
 
-	@Test(expected = SlotIsFullException.class)
-	public void testSlotCapacity() {
-		RPClass clazz = new RPClass("object");
-		clazz.addAttribute("a", Type.BYTE);
-		clazz.addRPSlot("cont", 1);
+        assertTrue(obj.getSlot("lhand").hasAsAncestor(obj));
+        assertTrue(p.getSlot("container").hasAsAncestor(obj));
+    }
 
-		obj = new RPObject();
-		obj.setRPClass("object");
-		obj.addSlot("cont");
+    @Test(expected = SlotIsFullException.class)
+    public void testSlotCapacity() {
+        RPClass clazz = new RPClass("object");
+        clazz.addAttribute("a", Type.BYTE);
+        clazz.addRPSlot("cont", 1);
 
-		RPSlot s = obj.getSlot("cont");
-		s.add(new RPObject());
+        obj = new RPObject();
+        obj.setRPClass("object");
+        obj.addSlot("cont");
 
-		s.add(new RPObject());
-		fail("Object added");
-	}
+        RPSlot s = obj.getSlot("cont");
+        s.add(new RPObject());
 
-	/**
-	 * Test the rp link feature by adding a link and testing some methods
-	 * over it.
-	 */
-	@Test
-	public void testRPLink() {
-		assertTrue(obj.hasLink("buddy"));
-		assertFalse(obj.hasLink("pals"));
+        s.add(new RPObject());
+        fail("Object added");
+    }
 
-		RPObject buddy = obj.getLinkedObject("buddy");
-		assertNotNull(buddy);
-		assertEquals(buddy, obj.getLink("buddy").getObject());
-		assertEquals("buddy", obj.getLink("buddy").getName());
+    /**
+     * Test the rp link feature by adding a link and testing some methods over
+     * it.
+     */
+    @Test
+    public void testRPLink() {
+        assertTrue(obj.hasLink("buddy"));
+        assertFalse(obj.hasLink("pals"));
 
-		assertTrue(buddy.has("pepe"));
-		assertFalse(buddy.has("miguel"));
-	}
+        RPObject buddy = obj.getLinkedObject("buddy");
+        assertNotNull(buddy);
+        assertEquals(buddy, obj.getLink("buddy").getObject());
+        assertEquals("buddy", obj.getLink("buddy").getName());
 
-	/**
-	 * Tests serialization of the RPObject by serializing it and then
-	 * deserializing it from the stream back again.
-	 *
-	 * @throws IOException
-	 */
-	@Test
-	public void testSerialization() throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		OutputSerializer os = new OutputSerializer(out);
+        assertTrue(buddy.has("pepe"));
+        assertFalse(buddy.has("miguel"));
+    }
 
-		os.write(obj);
+    /**
+     * Tests serialization of the RPObject by serializing it and then
+     * deserializing it from the stream back again.
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testSerialization() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        OutputSerializer os = new OutputSerializer(out);
 
-		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-		InputSerializer is = new InputSerializer(in);
+        os.write(obj);
 
-		RPObject result = (RPObject) is.readObject(new RPObject());
+        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        InputSerializer is = new InputSerializer(in);
 
-		assertEquals(obj, result);
+        RPObject result = (RPObject) is.readObject(new RPObject());
 
-		RPSlot inslot = result.getSlot("lhand");
-		for ( RPObject contained : inslot) {
-			assertTrue(contained.isContained());
-		}
-	}
+        assertEquals(obj, result);
 
-	/**
-	 * Test the base container method that should return the base container of
-	 * any contained object. The base container is the container of a object
-	 * that is not contained by anyone.
-	 *
-	 */
-	@Test
-	public void testBaseContainer() {
-		RPObject coin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
-		assertEquals(obj, coin.getBaseContainer());
-	}
+        RPSlot inslot = result.getSlot("lhand");
+        for (RPObject contained : inslot) {
+            assertTrue(contained.isContained());
+        }
+    }
 
-	/**
-	 * Test that the getFromSlots method returns the proper object and returns null
-	 * when it is not found.
-	 *
-	 */
-	@Test
-	public void testGetObjectFromSlots() {
-		RPObject coin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+    /**
+     * Test the base container method that should return the base container of
+     * any contained object. The base container is the container of a object
+     * that is not contained by anyone.
+     *
+     */
+    @Test
+    public void testBaseContainer() {
+        RPObject coin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
+        assertEquals(obj, coin.getBaseContainer());
+    }
 
-		RPObject coinfromslot = obj.getFromSlots(coin.getInt("id"));
-		assertEquals(coin, coinfromslot);
+    /**
+     * Test that the getFromSlots method returns the proper object and returns
+     * null when it is not found.
+     *
+     */
+    @Test
+    public void testGetObjectFromSlots() {
+        RPObject coin = obj.getSlot("lhand").getFirst().getSlot("container").getFirst();
 
-		assertNull(obj.getFromSlots(-1));
-	}
+        RPObject coinfromslot = obj.getFromSlots(coin.getInt("id"));
+        assertEquals(coin, coinfromslot);
 
-	/**
-	 * Test clear visible by removing all the visible attributes, slots and
-	 * events. The object should be empty afterwards.
-	 *
-	 */
-	@Test
-	public void testClearVisible() {
-		obj.clearVisible(false);
-		assertTrue(obj.isEmpty());
-	}
-	
-	/**
-	 * Test that clearVisible() does not remove private attributes.
-	 */
-	@Test
-	public void testClearVisibleAttributes() {
-		RPObject testObj = new RPObject();
-		RPClass tmpClass = new RPClass();
-		tmpClass.addAttribute("private_attr", Type.STRING, Definition.PRIVATE);
-		tmpClass.addAttribute("public_attr", Type.STRING);
-		testObj.setRPClass(tmpClass);
-		testObj.put("private_attr", "foo");
-		testObj.put("public_attr", "bar");
-		testObj.clearVisible(false);
-		assertFalse(testObj.isEmpty());
-		assertTrue("Private attributes should be kept when clearing visible data", testObj.has("private_attr"));
-		assertFalse("Public attributes should be removed when clearing visible data", testObj.has("public_attr"));
-	}
-	
-	/**
-	 * Test that clearVisible() does not remove private slots.
-	 */
-	@Test
-	public void testClearVisibleSlots() {
-		RPObject testObj = new RPObject();
-		RPClass tmpClass = new RPClass();
-		tmpClass.addRPSlot("private_slot", 1, Definition.PRIVATE);
-		tmpClass.addRPSlot("public_slot", 1);
-		testObj.setRPClass(tmpClass);
-		testObj.addSlot(new RPSlot("private_slot"));
-		testObj.addSlot(new RPSlot("public_slot"));
-		testObj.clearVisible(false);
-		assertFalse(testObj.isEmpty());
-		assertTrue("Private slot should be kept when clearing visible data", testObj.hasSlot("private_slot"));
-		assertFalse("Empty public slot should be removed when clearing visible data", testObj.hasSlot("public_slot"));
-	}
+        assertNull(obj.getFromSlots(-1));
+    }
 
-	/**
-	 * Check that clear visible doesn't break Delta² information.
-	 *
-	 * @throws Exception
-	 */
-	@Test
-	public void testClearVisibleDelta2() throws Exception {
-		obj.clearVisible(false);
+    /**
+     * Test clear visible by removing all the visible attributes, slots and
+     * events. The object should be empty afterwards.
+     *
+     */
+    @Test
+    public void testClearVisible() {
+        obj.clearVisible(false);
+        assertTrue(obj.isEmpty());
+    }
 
-		RPObject oadded = new RPObject();
-		RPObject odeleted = new RPObject();
+    /**
+     * Test that clearVisible() does not remove private attributes.
+     */
+    @Test
+    public void testClearVisibleAttributes() {
+        RPObject testObj = new RPObject();
+        RPClass tmpClass = new RPClass();
+        tmpClass.addAttribute("private_attr", Type.STRING, Definition.PRIVATE);
+        tmpClass.addAttribute("public_attr", Type.STRING);
+        testObj.setRPClass(tmpClass);
+        testObj.put("private_attr", "foo");
+        testObj.put("public_attr", "bar");
+        testObj.clearVisible(false);
+        assertFalse(testObj.isEmpty());
+        assertTrue("Private attributes should be kept when clearing visible data", testObj.has("private_attr"));
+        assertFalse("Public attributes should be removed when clearing visible data", testObj.has("public_attr"));
+    }
 
-		obj.getDifferences(oadded, odeleted);
+    /**
+     * Test that clearVisible() does not remove private slots.
+     */
+    @Test
+    public void testClearVisibleSlots() {
+        RPObject testObj = new RPObject();
+        RPClass tmpClass = new RPClass();
+        tmpClass.addRPSlot("private_slot", 1, Definition.PRIVATE);
+        tmpClass.addRPSlot("public_slot", 1);
+        testObj.setRPClass(tmpClass);
+        testObj.addSlot(new RPSlot("private_slot"));
+        testObj.addSlot(new RPSlot("public_slot"));
+        testObj.clearVisible(false);
+        assertFalse(testObj.isEmpty());
+        assertTrue("Private slot should be kept when clearing visible data", testObj.hasSlot("private_slot"));
+        assertFalse("Empty public slot should be removed when clearing visible data", testObj.hasSlot("public_slot"));
+    }
 
-		System.out.println(oadded);
-		System.out.println(odeleted);
+    /**
+     * Check that clear visible doesn't break Delta² information.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testClearVisibleDelta2() throws Exception {
+        obj.clearVisible(false);
 
-		assertTrue(oadded.isEmpty());
-		assertTrue(odeleted.isEmpty());
-	}
+        RPObject oadded = new RPObject();
+        RPObject odeleted = new RPObject();
 
-	/**
-	 * Checks that passing <code>null</code> does not throw a NPE.
-	 */
-	@Test
-	public void testhasSlot() {
-		RPObject localobj = new RPObject();
-		String slotname = "slotname";
-		assertFalse(localobj.hasSlot(slotname));
-		assertFalse(localobj.hasSlot(slotname + "blabla"));
-		assertFalse(localobj.hasSlot(null));
+        obj.getDifferences(oadded, odeleted);
 
-		localobj.addSlot(slotname);
-		assertTrue(localobj.hasSlot(slotname));
-		assertFalse(localobj.hasSlot(slotname + "blabla"));
-		assertFalse(localobj.hasSlot(null));
+        System.out.println(oadded);
+        System.out.println(odeleted);
 
-	}
+        assertTrue(oadded.isEmpty());
+        assertTrue(odeleted.isEmpty());
+    }
 
-	/**
-	 * Test cloning an RPObject
-	 */
-	@Test
-	public void testClone() {
-		RPObject obj1 = new RPObject();
-		Object obj2 =  obj1.clone();
-		assertFalse(obj1==obj2);
-		assertTrue(obj2.getClass() == obj1.getClass());
-		assertEquals(obj1, obj2);
+    /**
+     * Checks that passing <code>null</code> does not throw a NPE.
+     */
+    @Test
+    public void testhasSlot() {
+        RPObject localobj = new RPObject();
+        String slotname = "slotname";
+        assertFalse(localobj.hasSlot(slotname));
+        assertFalse(localobj.hasSlot(slotname + "blabla"));
+        assertFalse(localobj.hasSlot(null));
 
-		RPObject subobj1 = new SubRPObject();
-		Object subObj2 = subobj1.clone();
-		assertFalse(subobj1==subObj2);
-		assertTrue(subObj2.getClass() == SubRPObject.class);
+        localobj.addSlot(slotname);
+        assertTrue(localobj.hasSlot(slotname));
+        assertFalse(localobj.hasSlot(slotname + "blabla"));
+        assertFalse(localobj.hasSlot(null));
 
-		assertTrue(subObj2.getClass() == subobj1.getClass());
-		assertEquals(subobj1, subObj2);
+    }
 
-	}
+    /**
+     * Test cloning an RPObject
+     */
+    @Test
+    public void testClone() {
+        RPObject obj1 = new RPObject();
+        Object obj2 = obj1.clone();
+        assertFalse(obj1 == obj2);
+        assertTrue(obj2.getClass() == obj1.getClass());
+        assertEquals(obj1, obj2);
 
-	@Test
-	public void testPutInMapAttribute() {
-		RPClass cls = new RPClass("testmaps");
-		cls.addAttribute("testmap", Type.MAP);
-		RPObject rpo = new RPObject();
-		rpo.setRPClass(cls);
-		try {
-			rpo.put("testmap", "testvalue");
-			fail("An IllegalArgumentException should have been thrown.");
-		} catch (IllegalArgumentException e) {
-			// should just be caught
-		}
-	}
+        RPObject subobj1 = new SubRPObject();
+        Object subObj2 = subobj1.clone();
+        assertFalse(subobj1 == subObj2);
+        assertTrue(subObj2.getClass() == SubRPObject.class);
 
-	@Test
-	public void testPutInMapAttributeNotBeingMap() {
-		RPClass cls = new RPClass("testmaps-2");
-		cls.addAttribute("testmap", Type.STRING);
-		RPObject rpo = new RPObject();
-		rpo.setRPClass(cls);
-		try {
-			rpo.put("testmap", "testkey", "testvalue");
-			fail("An IllegalArgumentException should have been thrown.");
-		} catch (IllegalArgumentException e) {
-			// should just be caught
-		}
-	}
+        assertTrue(subObj2.getClass() == subobj1.getClass());
+        assertEquals(subobj1, subObj2);
 
-	@Test
-	public void testMapSerialization() throws IOException {
-		RPClass cls = new RPClass("testmaps-serialization");
-		cls.addAttribute("map1", Type.MAP);
-		RPObject rpo = new RPObject();
-		rpo.setRPClass(cls);
-		rpo.put("map1", "key11", "value11");
-		rpo.put("map1", "key12", "value12");
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		OutputSerializer os = new OutputSerializer(out);
-		os.write(rpo);
-		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-		InputSerializer is = new InputSerializer(in);
-		RPObject result = (RPObject) is.readObject(new RPObject());
-		assertEquals(rpo, result);
-	}
+    }
 
-	@Test
-	public void testMapSerializationTwoMaps() throws IOException {
-		RPClass cls = new RPClass("testmaps-serialization-2");
-		cls.addAttribute("map1", Type.MAP);
-		cls.addAttribute("map2", Type.MAP);
-		RPObject rpo = new RPObject();
-		rpo.setRPClass(cls);
-		rpo.put("map1", "key11", "value11");
-		rpo.put("map1", "key12", "value12");
-		rpo.put("map2", "key21", "value21");
-		rpo.put("map2", "key22", "value22");
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		OutputSerializer os = new OutputSerializer(out);
-		os.write(rpo);
-		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-		InputSerializer is = new InputSerializer(in);
-		RPObject result = (RPObject) is.readObject(new RPObject());
-		assertEquals(rpo, result);
-	}
+    @Test
+    public void testPutInMapAttribute() {
+        RPClass cls = new RPClass("testmaps");
+        cls.addAttribute("testmap", Type.MAP);
+        RPObject rpo = new RPObject();
+        rpo.setRPClass(cls);
+        try {
+            rpo.put("testmap", "testvalue");
+            fail("An IllegalArgumentException should have been thrown.");
+        } catch (IllegalArgumentException e) {
+            // should just be caught
+        }
+    }
 
-	class SubRPObject extends RPObject{
-		// just subclass of RPObject used for testing for of the
-		// Object.clone() contract
-	}
+    @Test
+    public void testPutInMapAttributeNotBeingMap() {
+        RPClass cls = new RPClass("testmaps-2");
+        cls.addAttribute("testmap", Type.STRING);
+        RPObject rpo = new RPObject();
+        rpo.setRPClass(cls);
+        try {
+            rpo.put("testmap", "testkey", "testvalue");
+            fail("An IllegalArgumentException should have been thrown.");
+        } catch (IllegalArgumentException e) {
+            // should just be caught
+        }
+    }
 
-	/**
-	 * Tests for writing an RPObject to JSON
-	 */
-	@Test
-	public void testWriteToJson() {
-		RPObject rpobject = new RPObject();
-		rpobject.put("mykey", "myvalue");
-		rpobject.addSlot(new RPSlot("empty"));
-		RPSlot slot = new RPSlot("myslot");
-		rpobject.addSlot(slot);
-		slot.add(new RPObject());
-		RPObject child = new RPObject();
-		child.put("mychildkey", "mychildvalue");
-		slot.add(child);
-		StringBuilder out = new StringBuilder();
-		rpobject.writeToJson(out, DetailLevel.NORMAL);
-		assertThat(out.toString(), equalTo("\"c\":\"\",\"a\":{\"mykey\":\"myvalue\"},\"s\":{\"myslot\":[{\"c\":\"\",\"a\":{\"id\":\"0\"}},{\"c\":\"\",\"a\":{\"id\":\"1\",\"mychildkey\":\"mychildvalue\"}}]}"));
-	}
+    @Test
+    public void testMapSerialization() throws IOException {
+        RPClass cls = new RPClass("testmaps-serialization");
+        cls.addAttribute("map1", Type.MAP);
+        RPObject rpo = new RPObject();
+        rpo.setRPClass(cls);
+        rpo.put("map1", "key11", "value11");
+        rpo.put("map1", "key12", "value12");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        OutputSerializer os = new OutputSerializer(out);
+        os.write(rpo);
+        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        InputSerializer is = new InputSerializer(in);
+        RPObject result = (RPObject) is.readObject(new RPObject());
+        assertEquals(rpo, result);
+    }
+
+    @Test
+    public void testMapSerializationTwoMaps() throws IOException {
+        RPClass cls = new RPClass("testmaps-serialization-2");
+        cls.addAttribute("map1", Type.MAP);
+        cls.addAttribute("map2", Type.MAP);
+        RPObject rpo = new RPObject();
+        rpo.setRPClass(cls);
+        rpo.put("map1", "key11", "value11");
+        rpo.put("map1", "key12", "value12");
+        rpo.put("map2", "key21", "value21");
+        rpo.put("map2", "key22", "value22");
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        OutputSerializer os = new OutputSerializer(out);
+        os.write(rpo);
+        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        InputSerializer is = new InputSerializer(in);
+        RPObject result = (RPObject) is.readObject(new RPObject());
+        assertEquals(rpo, result);
+    }
+
+    class SubRPObject extends RPObject {
+        // just subclass of RPObject used for testing for of the
+        // Object.clone() contract
+    }
+
+    /**
+     * Tests for writing an RPObject to JSON
+     */
+    @Test
+    public void testWriteToJson() {
+        RPObject rpobject = new RPObject();
+        rpobject.put("mykey", "myvalue");
+        rpobject.addSlot(new RPSlot("empty"));
+        RPSlot slot = new RPSlot("myslot");
+        rpobject.addSlot(slot);
+        slot.add(new RPObject());
+        RPObject child = new RPObject();
+        child.put("mychildkey", "mychildvalue");
+        slot.add(child);
+        StringBuilder out = new StringBuilder();
+        rpobject.writeToJson(out, DetailLevel.NORMAL);
+        assertThat(out.toString(), equalTo("\"c\":\"\",\"a\":{\"mykey\":\"myvalue\"},\"s\":{\"myslot\":[{\"c\":\"\",\"a\":{\"id\":\"0\"}},{\"c\":\"\",\"a\":{\"id\":\"1\",\"mychildkey\":\"mychildvalue\"}}]}"));
+    }
 }
