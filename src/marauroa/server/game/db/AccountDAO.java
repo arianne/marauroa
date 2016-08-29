@@ -11,7 +11,7 @@
  ***************************************************************************/
 package marauroa.server.game.db;
 
-import static marauroa.common.i18n.I18N._;
+import static marauroa.common.i18n.I18N.translate;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -85,7 +85,7 @@ public class AccountDAO {
 			transaction.execute(query, params);
 
 			// save email address
-			if ((email != null) && (!email.trim().equals(""))) {
+			if (!email.trim().equals("")) {
 				changeEmail(transaction, username, email);
 			}
 		} catch (SQLException e) {
@@ -313,17 +313,17 @@ public class AccountDAO {
 				String expire = result.getString("expire");
 				if (reason != null) {
 					if (expire != null) {
-						res = _("Your account is temporarily suspended until %1$s server time.", expire) + "\r\n";
+						res = translate("Your account is temporarily suspended until %1$s server time.", expire) + "\r\n";
 					} else {
-						res = _("Your account is banned.") + "\r\n";
+						res = translate("Your account is banned.") + "\r\n";
 					}
-					res = res + _("The reason given was: %1$s", reason) + "\r\n";
+					res = res + translate("The reason given was: %1$s", reason) + "\r\n";
 				} else if ("banned".equals(status)) {
-					res = _("Your account has been banned. Please contact support.") + "\r\n";
+					res = translate("Your account has been banned. Please contact support.") + "\r\n";
 				} else if ("inactive".equals(status)) {
-					res = _("Your account has been flagged as inactive. Please contact support.") + "\r\n";
+					res = translate("Your account has been flagged as inactive. Please contact support.") + "\r\n";
 				} else if ("merged".equals(status)) {
-					res = _("Your account has been merged into another account.\nPlease login with that account or contact support.") + "\r\n";
+					res = translate("Your account has been merged into another account.\nPlease login with that account or contact support.") + "\r\n";
 				}
 
 				if (((reason != null) || (!"active".equals(status))) && (!"merged".equals(status))) {

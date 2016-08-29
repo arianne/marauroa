@@ -11,7 +11,7 @@
  ***************************************************************************/
 package marauroa.client;
 
-import static marauroa.common.i18n.I18N._;
+import static marauroa.common.i18n.I18N.translate;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -190,7 +190,7 @@ public abstract class ClientFramework {
 		try {
 			uri = new URI("socket://" + quotedHost + ":" + port);
 		} catch (URISyntaxException e) {
-			IOException ioE = new IOException(_("Error while discovering proxyserver: %1$s", e.toString()));
+			IOException ioE = new IOException(translate("Error while discovering proxyserver: %1$s", e.toString()));
 			ioE.initCause(e);
 			throw ioE;
 		}
@@ -338,18 +338,18 @@ public abstract class ClientFramework {
 				case S2C_LOGIN_SENDNONCE: {
 					logger.debug("Received Server Nonce");
 					if (serverNonce != null) {
-						throw new LoginFailedException(_("Already received a serverNonce"));
+						throw new LoginFailedException(translate("Already received a serverNonce"));
 					}
 
 					serverNonce = ((MessageS2CLoginSendNonce) msg).getHash();
 					byte[] b1 = Hash.xor(clientNonce, serverNonce);
 					if (b1 == null) {
-						throw new LoginFailedException(_("Incorrect hash b1"));
+						throw new LoginFailedException(translate("Incorrect hash b1"));
 					}
 
 					byte[] b2 = Hash.xor(b1, Hash.hash(password));
 					if (b2 == null) {
-						throw new LoginFailedException(_("Incorrect hash b2"));
+						throw new LoginFailedException(translate("Incorrect hash b2"));
 					}
 
 					byte[] cryptedPassword = key.encodeByteArray(b2);
@@ -361,12 +361,12 @@ public abstract class ClientFramework {
 							logger.error(e, e);
 						}
 						if (bs.length != 16) {
-							throw new LoginFailedException(_("Seed has not the correct length."));
+							throw new LoginFailedException(translate("Seed has not the correct length."));
 						}
 						byte[] b3 = null;
 						b3 = Hash.xor(b1, bs);
 						if (b3 == null) {
-							throw new LoginFailedException(_("Incorrect hash seed"));
+							throw new LoginFailedException(translate("Incorrect hash seed"));
 						}
 						byte[] cryptedSeed = key.encodeByteArray(b3);
 						netMan.addMessage(new MessageC2SLoginSendNonceNamePasswordAndSeed(null,

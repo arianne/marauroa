@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -26,6 +26,7 @@ import marauroa.common.Logger;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
+import marauroa.common.net.InputSerializer;
 import marauroa.common.net.NetConst;
 import marauroa.common.net.OutputSerializer;
 
@@ -575,7 +576,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param out
 	 *			  the output serializer
 	 */
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
 
@@ -589,7 +590,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @throws IOException
 	 *			  in case of an IO error
 	 */
-	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level)
+	public void writeObject(OutputSerializer out, DetailLevel level)
 			throws IOException {
 		/*
 		 * Obtains the number of attributes to serialize removing hidden and
@@ -715,7 +716,7 @@ public class Attributes implements marauroa.common.net.Serializable, Iterable<St
 	 * @param in the input serializer
 	 * @throws IOException in case of unexpected attributes
 	 */
-	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		modified = true;
 		rpClass = RPClass.getRPClass(in.readString());
 		int size = in.readInt();

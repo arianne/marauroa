@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import marauroa.common.crypto.Hash;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the server that the client wants to login. This message
@@ -65,14 +67,14 @@ public class MessageC2SLoginSendUsernameAndPassword extends MessageSendByteArray
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(username);
 		out.write(password);
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		username = in.readString();
 		password = Hash.hash(in.readString());

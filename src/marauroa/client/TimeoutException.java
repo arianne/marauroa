@@ -11,7 +11,7 @@
  ***************************************************************************/
 package marauroa.client;
 
-import static marauroa.common.i18n.I18N._;
+import static marauroa.common.i18n.I18N.translate;
 
 /**
  * this exception is thrown if a connection to the server cannot be established
@@ -25,6 +25,6 @@ public class TimeoutException extends Exception {
 	 * creates a new TimeoutException
 	 */
 	public TimeoutException() {
-		super(_("Timeout happened while waiting server reply."));
+		super(translate("Timeout happened while waiting server reply."));
 	}
 }

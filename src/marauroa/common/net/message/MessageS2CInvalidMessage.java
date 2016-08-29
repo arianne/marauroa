@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -14,6 +14,7 @@ package marauroa.common.net.message;
 import java.io.IOException;
 
 import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
 /**
@@ -67,7 +68,7 @@ public class MessageS2CInvalidMessage extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		out.write(reason);
 	}
@@ -79,7 +80,7 @@ public class MessageS2CInvalidMessage extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		reason = in.readString();
 

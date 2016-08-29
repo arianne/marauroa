@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -20,6 +20,7 @@ import java.util.List;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
 
 /**
@@ -83,7 +84,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		/*
 		 * Compute now the capacity of the slot
 		 */
-		if (name != null) {
+		if ((name != null) && (capacity == -1)) {
 			capacity = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
 		}
 	}
@@ -411,6 +412,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/**
 	 * Returns true if both objects are equal
 	 *
+	 * @param object to compare against
 	 * @return true if both objects are equal
 	 */
 	@Override
@@ -447,7 +449,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @param out
 	 *            the output serializer
 	 */
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
+	public void writeObject(OutputSerializer out) throws java.io.IOException {
 		writeObject(out, DetailLevel.NORMAL);
 	}
 
@@ -461,7 +463,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * @throws IOException
 	 *            in case of an IO error
 	 */
-	public void writeObject(marauroa.common.net.OutputSerializer out, DetailLevel level)
+	public void writeObject(OutputSerializer out, DetailLevel level)
 	        throws java.io.IOException {
 		RPClass rpClass = owner.getRPClass();
 
@@ -530,7 +532,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	/**
 	 * Fills this object with the data that has been serialized.
 	 */
-	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
+	public void readObject(InputSerializer in) throws java.io.IOException {
 		short code = in.readShort();
 		if (code == -1) {
 			name = in.readString();

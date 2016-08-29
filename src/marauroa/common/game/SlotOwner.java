@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -21,6 +21,8 @@ import java.util.List;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * interface for RP-classes that own slots
@@ -270,7 +272,7 @@ public abstract class SlotOwner extends Attributes {
 
 	abstract SlotOwner getContainerBaseOwner();
 
-	protected void serializeRPSlots(marauroa.common.net.OutputSerializer out,
+	protected void serializeRPSlots(OutputSerializer out,
 			DetailLevel level) throws IOException {
 		/*
 		 * We compute the amount of slots to serialize first. We don't serialize
@@ -337,7 +339,7 @@ public abstract class SlotOwner extends Attributes {
 		out.append("}");
 	}
 
-	protected void deserializeRPSlots(marauroa.common.net.InputSerializer in)
+	protected void deserializeRPSlots(InputSerializer in)
 			throws IOException {
 		/*
 		 * First we load slots

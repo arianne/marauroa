@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2010-2012 - Marauroa                    *
+ *                   (C) Copyright 2010-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -14,8 +14,9 @@ package marauroa.common.net.message;
 import java.io.IOException;
 
 import marauroa.common.net.Channel;
-
+import marauroa.common.net.InputSerializer;
 import marauroa.common.net.NetConst;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the client that the server has reject its login Message
@@ -66,7 +67,7 @@ public class MessageS2CLoginMessageNACK extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
 		if (out.getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_LONG_BAN_MESSAGE) {
 			out.write65536LongString(reason);
@@ -80,7 +81,7 @@ public class MessageS2CLoginMessageNACK extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 		if (getProtocolVersion() >= NetConst.FIRST_VERSION_WITH_LONG_BAN_MESSAGE) {
 			reason = in.read65536LongString();

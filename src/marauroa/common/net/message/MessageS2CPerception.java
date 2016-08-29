@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.DeflaterOutputStream;
 
+import org.apache.log4j.NDC;
+
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.Utility;
@@ -31,8 +33,6 @@ import marauroa.common.game.RPObject;
 import marauroa.common.net.Channel;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
-
-import org.apache.log4j.NDC;
 
 /**
  * This message indicate the client the objects that the server has determined
@@ -233,7 +233,7 @@ public class MessageS2CPerception extends Message {
 	}
 
 	@Override
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws IOException {
+	public void writeObject(OutputSerializer out) throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("writing Object: [" + this + "]");
 		}
@@ -256,7 +256,7 @@ public class MessageS2CPerception extends Message {
 	}
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		byte[] byteArray = in.readByteArray();

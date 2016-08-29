@@ -11,7 +11,7 @@
  ***************************************************************************/
 package marauroa.client.net;
 
-import static marauroa.common.i18n.I18N._;
+import static marauroa.common.i18n.I18N.translate;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,7 +124,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 
 		// check name (dns lookup)
 		if (address.getAddress() == null) {
-			throw new IOException(_("Unknown Host"));
+			throw new IOException(translate("Unknown Host"));
 		}
 
 		/* Create the socket */
@@ -236,7 +236,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see marauroa.client.net.NetworkClientManagerInterface#addMessage(marauroa.common.net.Message)
+	 * @see marauroa.client.net.NetworkClientManagerInterface#addMessage(Message)
 	 */
 	public void addMessage(Message msg) {
 		connected = writeManager.write(msg);

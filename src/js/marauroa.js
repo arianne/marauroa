@@ -17,7 +17,7 @@ var marauroa = window.marauroa || {};
 marauroa.debug = {
 	messages: false,
 	unknownEvents: true
-}
+};
 
 if (!window.console) {
 	window.console = {};

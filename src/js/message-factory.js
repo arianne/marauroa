@@ -115,4 +115,4 @@ marauroa.messageFactory = new function() {
 			msg.dispatch = marauroa.messageFactory.unknownMessage;
 		}
 	}
-}
+};

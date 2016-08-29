@@ -131,16 +131,18 @@ marauroa.perceptionListener = {
 	onException: function(exception, perception) {
 		console.error(exception, perception);
 	}
-}
+};
+
 marauroa.currentZone = {
 	clear: function() {
 		for (var i in this) {
-			if (this.hasOwnProperty(i) && typeof(this[i]) != "function") {
+			if (this.hasOwnProperty(i) && typeof(this[i]) !== "function") {
 				delete this[i];
 			}
 		}
 	}
-}
+};
+
 marauroa.perceptionHandler = {
 
 	/**
@@ -225,7 +227,7 @@ marauroa.perceptionHandler = {
 		if (msg.dA) {
 			for (var i in msg.dA) {
 				if (msg.dA.hasOwnProperty(i)) {
-					if (typeof(marauroa.currentZone[msg.dA[i].a.id]) != "undefined") {
+					if (typeof(marauroa.currentZone[msg.dA[i].a.id]) !== "undefined") {
 						var o = marauroa.currentZone[msg.dA[i].a.id];
 						if (!marauroa.perceptionListener.onModifiedDeleted(msg.dA[i])) {
 							this.deleteChanges(o, msg.dA[i]);
@@ -239,7 +241,7 @@ marauroa.perceptionHandler = {
 		if (msg.aA) {
 			for (var i in msg.aA) {
 				if (msg.aA.hasOwnProperty(i)) {
-					if (typeof(marauroa.currentZone[msg.aA[i].a.id]) != "undefined") {
+					if (typeof(marauroa.currentZone[msg.aA[i].a.id]) !== "undefined") {
 						var o = marauroa.currentZone[msg.aA[i].a.id];
 						if (!marauroa.perceptionListener.onModifiedAdded(o, msg.aA[i])) {
 							this.addChanges(o, msg.aA[i]);
@@ -261,15 +263,15 @@ marauroa.perceptionHandler = {
 
 		if (!marauroa.perceptionListener.onMyRPObject(msg.aM, msg.dM)) {
 			var id;
-			if (typeof(msg.aM) != "undefined") {
+			if (typeof(msg.aM) !== "undefined") {
 				id = msg.aM.a.id;
 			}
 
-			if (typeof(msg.dM) != "undefined") {
+			if (typeof(msg.dM) !== "undefined") {
 				id = msg.dM.a.id;
 			}
 
-			if (typeof(id) == "undefined") {
+			if (typeof(id) === "undefined") {
 				return;
 			}
 
@@ -287,11 +289,11 @@ marauroa.perceptionHandler = {
 	 * @param added added changes of my object
 	 */
 	addMyRPObjectToWorldIfPrivate: function(id, added) {
-		if (typeof(marauroa.currentZone[id]) != "undefined") {
+		if (typeof(marauroa.currentZone[id]) !== "undefined") {
 			return;
 		}
 		if (!marauroa.perceptionListener.onAdded(added)) {
-			if (typeof(added) == "undefined") {
+			if (typeof(added) === "undefined") {
 				marauroa.currentZone[id] = {};
 				return;
 			}
@@ -302,21 +304,21 @@ marauroa.perceptionHandler = {
 	},
 
 	deleteChanges: function(object, diff) {
-		if (typeof(diff) == "undefined") {
+		if (typeof(diff) === "undefined") {
 			return;
 		}
 
 		// delete attributes
-		if (typeof(diff.a) != "undefined") {
+		if (typeof(diff.a) !== "undefined") {
 			for (var i in diff.a) {
-				if (diff.a.hasOwnProperty(i) && i != "id" && i != "zoneid") {
+				if (diff.a.hasOwnProperty(i) && i !== "id" && i !== "zoneid") {
 					object.unset(i);
 				}
 			}
 		}
 
 		// delete slots and/or their content
-		if (typeof(diff.s) != "undefined") {
+		if (typeof(diff.s) !== "undefined") {
 			for (var i in diff.s) {
 				if (!diff.s.hasOwnProperty(i)) {
 					continue;
@@ -336,7 +338,7 @@ marauroa.perceptionHandler = {
 		}
 
 		// delete maps and/or their content
-		if (typeof(diff.m) != "undefined") {
+		if (typeof(diff.m) !== "undefined") {
 			for (var i in diff.m) {
 				if (!diff.m.hasOwnProperty(i)) {
 					continue;
@@ -356,7 +358,7 @@ marauroa.perceptionHandler = {
 	},
 
 	addChanges: function(object, diff) {
-		if (typeof(diff) == "undefined") {
+		if (typeof(diff) === "undefined") {
 			return;
 		}
 		object._rpclass = diff.c;
@@ -364,9 +366,9 @@ marauroa.perceptionHandler = {
 		// attributes
 		for (var i in diff.a) {
 			if (diff.a.hasOwnProperty(i)) {
-				if (typeof(object.set) == "undefined") {
+				if (typeof(object.set) === "undefined") {
 					console.warn("Object missing set(key, value)-function", object, diff.a);
-					object[i] = diff.a[i]
+					object[i] = diff.a[i];
 				} else {
 					object.set(i, diff.a[i]);
 				}
@@ -374,14 +376,14 @@ marauroa.perceptionHandler = {
 		}
 
 		// maps
-		if (typeof(diff.m) != "undefined") {
+		if (typeof(diff.m) !== "undefined") {
 			for (var i in diff.m) {
 				if (diff.m.hasOwnProperty(i)) {
-					if (typeof(object[i]) == "undefined") {
+					if (typeof(object[i]) === "undefined") {
 						object[i] = {};
 					}
 					for (var j in diff.m[i].a) {
-						if (j != "zoneid" && j != "id" && diff.m[i].a.hasOwnProperty(j)) {
+						if (j !== "zoneid" && j !== "id" && diff.m[i].a.hasOwnProperty(j)) {
 							object.setMapEntry(i, j, diff.m[i].a[j]);
 						}
 					}
@@ -390,18 +392,18 @@ marauroa.perceptionHandler = {
 		}
 
 		// slots
-		if (typeof(diff.s) != "undefined") {
+		if (typeof(diff.s) !== "undefined") {
 			for (var i in diff.s) {
 				if (diff.s.hasOwnProperty(i)) {
 					// add slot itself, it it does not exist
-					if (typeof(object[i]) == "undefined") {
+					if (typeof(object[i]) === "undefined") {
 						object[i] = object.createSlot(i);
 					}
 					// for all slot members
 					for (var j in diff.s[i]) {
 						if (diff.s[i].hasOwnProperty(j)) {
 							var id = diff.s[i][j].a.id;
-							if (typeof(object[i].get(id)) == "undefined") {
+							if (typeof(object[i].get(id)) === "undefined") {
 								var newObject = marauroa.rpobjectFactory.create(diff.s[i][j].c);
 								newObject._parent = object[i];
 								newObject.id = id;
@@ -415,7 +417,7 @@ marauroa.perceptionHandler = {
 		}
 
 		// events
-		if (typeof(diff.e) != "undefined" && typeof(object.onEvent) != "undefined") {
+		if (typeof(diff.e) !== "undefined" && typeof(object.onEvent) !== "undefined") {
 			for (var i in diff.e) {
 				if (diff.e.hasOwnProperty(i)) {
 					object.onEvent(diff.e[i]);

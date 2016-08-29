@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2008 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -19,13 +19,6 @@ package marauroa.server.game.python;
  * @author miguel
  */
 public class PythonWorld {
-
-	/**
-	 * Constructor 
-	 */
-	public PythonWorld() {
-		// default constructor
-	}
 
 	/**
 	 * Called on server start up

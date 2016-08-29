@@ -287,4 +287,4 @@ marauroa.clientFramework = {
 		console.log("Creating Character \"" + charname + "\" failed: ", reason);
 		alert(reason.text);
 	}
-}
+};

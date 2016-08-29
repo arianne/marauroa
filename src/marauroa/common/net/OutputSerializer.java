@@ -47,7 +47,7 @@ public class OutputSerializer {
 	 * @throws IOException
 	 *            in case of an IO-error
 	 */
-	public void write(marauroa.common.net.Serializable obj) throws IOException {
+	public void write(Serializable obj) throws IOException {
 		obj.writeObject(this);
 	}
 
@@ -236,7 +236,7 @@ public class OutputSerializer {
 	 * @throws IOException
 	 *            in case of an IO-error
 	 */
-	public void write(marauroa.common.net.Serializable[] objs) throws IOException {
+	public void write(Serializable[] objs) throws IOException {
 		write(objs.length);
 		for (int i = 0; i < objs.length; i++) {
 			write(objs[i]);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2012 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -22,6 +22,8 @@ import java.util.Map;
 import marauroa.common.Log4J;
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * An RPClass is a entity that define the attributes, events and slots of an
@@ -74,6 +76,11 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 	/** Stores static attributes definition */
 	private Map<String, Definition> staticattributes;
+
+	private short lastCode = 0;
+
+	private List<String> definitions = new LinkedList<String>();
+
 
 	/**
 	 * Stores attributes definition. The main difference between static and
@@ -261,10 +268,6 @@ public class RPClass implements marauroa.common.net.Serializable {
 	public RPClass getParent() {
 		return parent;
 	}
-
-	private short lastCode = 0;
-
-	private List<String> definitions = new LinkedList<String>();
 
 	private short getValidCode(DefinitionClass clazz, String name) {
 		if (definitions.contains(name)) {
@@ -712,7 +715,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @throws IOException
 	 *             if there is any problem serializing.
 	 */
-	public void writeObject(marauroa.common.net.OutputSerializer out) throws java.io.IOException {
+	public void writeObject(OutputSerializer out) throws java.io.IOException {
 		out.write(name);
 
 		if (parent == null) {
@@ -745,7 +748,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 	 * @throws IOException
 	 *             if there is any problem in the serialization.
 	 */
-	public void readObject(marauroa.common.net.InputSerializer in) throws java.io.IOException {
+	public void readObject(InputSerializer in) throws java.io.IOException {
 		name = in.readString();
 
 		byte parentPresent = in.readByte();

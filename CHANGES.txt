@@ -1,8 +1,9 @@
 Changelog
 ---------
+
 3.9.5 BETA
 
-- added support for HTML5
+- added support for HTML clients
 
 - smaller features
   - database indexes are created automatically on database creation or update

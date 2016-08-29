@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2016 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
 
 /**
  * This message is sent from client to server to indicate that he is still there
@@ -52,7 +53,7 @@ public class MessageC2SKeepAlive extends Message {
 
 
 	@Override
-	public void readObject(marauroa.common.net.InputSerializer in) throws IOException {
+	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
 
 		if (type != MessageType.C2S_KEEPALIVE) {
