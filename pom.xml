@@ -14,21 +14,42 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
                 <executions>
                     <execution>
-                        <id>add-test-source</id>
-                        <phase>generate-test-sources</phase>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>add-test-source</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <sources>
-                                <source>tests</source>
-                                <source>functional_tests</source>
-                            </sources>
+                            <outputDirectory>${basedir}/libs</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <excludeTransitive>true</excludeTransitive>
+                            <stripClassifier>true</stripClassifier>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.9</version>
+                <executions>
+                    <execution>
+                        <id>download-licenses</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>download-licenses</goal>
+                        </goals>
+                        <configuration>
+                            <licensesOutputDirectory>${basedir}/libs</licensesOutputDirectory>
+                            <licensesOutputFile>${basedir}/libs/licenses.xml</licensesOutputFile>
                         </configuration>
                     </execution>
                 </executions>
