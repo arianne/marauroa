@@ -10,8 +10,5 @@ notifications:
     skip_join: false
 before_install:
   - pip install --user codecov
-#TODO: Read from the actual file instead. (build.ant.properties:test-server-ini)
-before_script:
-  - cp functional_tests/marauroa/clientconnect/testserver.ini server.ini
 after_success:
   - codecov
