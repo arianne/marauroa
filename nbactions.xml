@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-OSS Deploy</actionName>
+        <displayName>OSS Deploy</displayName>
+        <preAction>build-with-dependencies</preAction>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+            <goal>deploy:deploy</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>release</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-OOSS Release Prepare</actionName>
+        <displayName>OSS Release Prepare</displayName>
+        <goals>
+            <goal>release:clean</goal>
+            <goal>release:prepare</goal>
+        </goals>
+        <properties>
+            <pushChanges>false</pushChanges>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>release</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-OOSS Release Rollback</actionName>
+        <displayName>OSS Release Rollback</displayName>
+        <goals>
+            <goal>release:rollback</goal>
+        </goals>
+        <properties>
+            <pushChanges>false</pushChanges>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>release</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-OOSS Release Perform</actionName>
+        <displayName>OSS Release Perform</displayName>
+        <goals>
+            <goal>release:perform</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>release</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-Create Site</actionName>
+        <displayName>Create Site</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>site:site</goal>
+        </goals>
+    </action>
+    <action>
+            <actionName>CUSTOM-Stage Site</actionName>
+            <displayName>Stage Site</displayName>
+            <goals>
+                <goal>site:stage</goal>
+            </goals>
+        </action>
+</actions>
