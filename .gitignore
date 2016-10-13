@@ -11,3 +11,4 @@
 /.sonar
 /repo
 /target
+!/repo/
