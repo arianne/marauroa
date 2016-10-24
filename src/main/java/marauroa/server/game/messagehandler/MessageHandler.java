@@ -81,8 +81,10 @@ abstract class MessageHandler {
 				statesString.append(state).append(" ");
 			}
 
-			logger.warn("Client(" + msg.getAddress() + ") is not in the required state ("
-				+ statesString.toString() + ")");
+			logger.warn("Client(" + msg.getAddress() + 
+                                ") is not in the required state ("
+				+ statesString.toString() + "). "+
+                                "Client state: " + entry.state);
 			return false;
 		}
 
