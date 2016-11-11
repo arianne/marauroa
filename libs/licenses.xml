@@ -15,11 +15,23 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.192</version>
+      <version>1.4.193</version>
       <licenses>
         <license>
           <name>MPL 2.0 or EPL 1.0</name>
           <url>http://h2database.com/html/license.html</url>
+          <distribution>repo</distribution>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.6</version>
+      <licenses>
+        <license>
+          <name>The Apache Software License, Version 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
           <distribution>repo</distribution>
         </license>
       </licenses>
@@ -72,7 +84,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-client</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -87,7 +99,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-continuation</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -102,7 +114,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-http</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -117,7 +129,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-io</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -132,7 +144,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-security</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -147,7 +159,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -162,7 +174,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -177,7 +189,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-util</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -192,7 +204,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-webapp</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -207,7 +219,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-xml</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -222,7 +234,7 @@
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-api</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -237,7 +249,7 @@
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-client</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -252,7 +264,7 @@
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-common</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -267,7 +279,7 @@
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-server</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>
@@ -282,7 +294,7 @@
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-servlet</artifactId>
-      <version>9.3.11.v20160721</version>
+      <version>9.3.14.v20161028</version>
       <licenses>
         <license>
           <name>Apache Software License - Version 2.0</name>

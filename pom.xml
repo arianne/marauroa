@@ -9,7 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
-        <jetty.version>9.3.11.v20160721</jetty.version>
+        <jetty.version>9.3.14.v20161028</jetty.version>
     </properties>
     <distributionManagement>
         <snapshotRepository>
@@ -21,7 +21,7 @@
         <repository>
             <id>project.local</id>
             <name>project</name>
-            <url>file:${project.basedir}/repo</url>
+            <url>file:/repo</url>
         </repository>
     </repositories>
     <build>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.192</version>
+            <version>1.4.193</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -202,6 +202,12 @@
             <artifactId>websocket-servlet</artifactId>
             <version>${jetty.version}</version>
             <type>jar</type>
+        </dependency>
+        <!-- commons lang dependency -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
         </dependency>
     </dependencies>
 </project>
