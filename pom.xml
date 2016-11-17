@@ -17,13 +17,6 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-    <repositories>
-        <repository>
-            <id>project.local</id>
-            <name>project</name>
-            <url>file:/repo</url>
-        </repository>
-    </repositories>
     <build>
         <plugins>
             <plugin>
@@ -79,8 +72,9 @@
         <dependency>
             <groupId>javax.jnlp</groupId>
             <artifactId>jnlp-api</artifactId>
-            <version>1.5</version>
-            <type>jar</type>
+            <version>7.0</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/lib/javaws.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.python</groupId>
