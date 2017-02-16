@@ -114,7 +114,7 @@
             <artifactId>jnlp-api</artifactId>
             <version>7.0</version>
             <scope>system</scope>
-            <systemPath>${java.home}/lib/javaws.jar</systemPath>
+            <systemPath>${project.basedir}/libs/jnlp-api.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.python</groupId>
