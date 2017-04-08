@@ -1,6 +1,5 @@
-/* $Id: INetworkServerManager.java,v 1.12 2007/12/04 20:00:10 martinfuchs Exp $ */
 /***************************************************************************
- *                   (C) Copyright 2010-2011 - Marauroa                    *
+ *                   (C) Copyright 2010-2017 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -47,28 +46,52 @@ public class WebServletForStaticContent extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String filename = request.getPathInfo();
 		filename = filename.substring(request.getContextPath().length());
-		if (filename.endsWith("js")) {
-			response.setContentType("text/javascript");
-		} else if (filename.endsWith(".html")) {
-			response.setContentType("text/html");
-		} else if (filename.endsWith(".css")) {
-			response.setContentType("text/css");
-		} else if (filename.endsWith(".xml")) {
-			response.setContentType("text/xml");
-		} else {
-			String contentType = rpMan.getMimeTypeForResource(filename);
-			if (contentType == null) {
-				contentType = "application/octet-stream";
-			}
-			response.setContentType(contentType);
-		}
+		String contentType = guessContentType(filename);
+		response.setContentType(contentType);
 
 		Configuration conf = Configuration.getConfiguration();
 		if (conf.has("debug_fake_web_username")) {
 			request.getSession().setAttribute("marauroa_authenticated_username", conf.get("debug_fake_web_username"));
 		}
 
+		String csp = "default-src 'none'; script-src 'self'; connect-src 'self' ws://* wss://*; img-src * data: blob: filesystem:; style-src 'self'; frame-ancestors 'none'; sandbox allow-forms allow-same-origin allow-scripts allow-popups allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-top-navigation";
+		if (conf.has("content_security_policy")) {
+			csp = conf.get("content_security_policy");
+		}
+		response.setHeader("Content-Security-Policy", csp);
+
+		if (filename.endsWith(".css") || filename.endsWith(".html") || filename.endsWith(".js") || filename.endsWith(".json")) {
+			response.setHeader("Cache-Control", "no-store, must-revalidate");
+		}
+
 		sendFile(response, filename);
+	}
+
+	/**
+	 * guesses the Content-Type header based on filename extension
+	 *
+	 * @param filename filename
+	 * @return Content-Type
+	 */
+	private String guessContentType(String filename) {
+		String contentType = null;
+		if (filename.endsWith("js")) {
+			contentType = "text/javascript";
+		} else if (filename.endsWith("json")) {
+			contentType = "application/json";
+		} else if (filename.endsWith(".html")) {
+			contentType = "text/html";
+		} else if (filename.endsWith(".css")) {
+			contentType = "text/css";
+		} else if (filename.endsWith(".xml")) {
+			contentType = "text/xml";
+		} else {
+			contentType = rpMan.getMimeTypeForResource(filename);
+			if (contentType == null) {
+				contentType = "application/octet-stream";
+			}
+		}
+		return contentType;
 	}
 
 	/**
