@@ -18,7 +18,8 @@
  *
  */
 "use strict";
-var marauroa = window.marauroa || {};
+
+var marauroa = window.marauroa = window.marauroa || {};
 
 marauroa.clientFramework = {
 	clientid: "-1",

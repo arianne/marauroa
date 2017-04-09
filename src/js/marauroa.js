@@ -12,7 +12,7 @@
 
 "use strict";
 
-var marauroa = window.marauroa || {};
+var marauroa = window.marauroa = window.marauroa || {};
 
 marauroa.debug = {
 	messages: false,

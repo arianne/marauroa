@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2010-2015 - Marauroa                    *
+ *                   (C) Copyright 2010-2017 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -12,7 +12,7 @@
 
 "use strict";
 
-var marauroa = window.marauroa || {};
+var marauroa = window.marauroa = window.marauroa || {};
 
 marauroa.messageFactory = new function() {
 
