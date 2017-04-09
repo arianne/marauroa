@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2011-2016 - Marauroa                    *
+ *                   (C) Copyright 2011-2017 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -135,9 +135,9 @@ marauroa.perceptionListener = {
 
 marauroa.currentZone = {
 	clear: function() {
-		for (var i in this) {
-			if (this.hasOwnProperty(i) && typeof(this[i]) !== "function") {
-				delete this[i];
+		for (var i in marauroa.currentZone) {
+			if (marauroa.currentZone.hasOwnProperty(i) && typeof(marauroa.currentZone[i]) !== "function") {
+				delete marauroa.currentZone[i];
 			}
 		}
 	}
@@ -163,10 +163,10 @@ marauroa.perceptionHandler = {
 		}
 
 		// apply perception
-		this.applyPerceptionAddedRPObjects(msg);
-		this.applyPerceptionModifiedRPObjects(msg);
-		this.applyPerceptionDeletedRPObjects(msg);
-		this.applyPerceptionMyRPObject(msg);
+		marauroa.perceptionHandler.applyPerceptionAddedRPObjects(msg);
+		marauroa.perceptionHandler.applyPerceptionModifiedRPObjects(msg);
+		marauroa.perceptionHandler.applyPerceptionDeletedRPObjects(msg);
+		marauroa.perceptionHandler.applyPerceptionMyRPObject(msg);
 
 		// done, tell marauroa.perceptionListener
 		marauroa.perceptionListener.onPerceptionEnd(msg.sync, msg.s);
@@ -185,7 +185,7 @@ marauroa.perceptionHandler = {
 				if (msg.aO.hasOwnProperty(i)) {
 					if (!marauroa.perceptionListener.onAdded(msg.aO[i])) {
 						var o = marauroa.rpobjectFactory.create(msg.aO[i].c);
-						this.addChanges(o, msg.aO[i]);
+						marauroa.perceptionHandler.addChanges(o, msg.aO[i]);
 						marauroa.currentZone[msg.aO[i].a.id] = o;
 					}
 				}
@@ -230,7 +230,7 @@ marauroa.perceptionHandler = {
 					if (typeof(marauroa.currentZone[msg.dA[i].a.id]) !== "undefined") {
 						var o = marauroa.currentZone[msg.dA[i].a.id];
 						if (!marauroa.perceptionListener.onModifiedDeleted(msg.dA[i])) {
-							this.deleteChanges(o, msg.dA[i]);
+							marauroa.perceptionHandler.deleteChanges(o, msg.dA[i]);
 						}
 					}
 				}
@@ -244,7 +244,7 @@ marauroa.perceptionHandler = {
 					if (typeof(marauroa.currentZone[msg.aA[i].a.id]) !== "undefined") {
 						var o = marauroa.currentZone[msg.aA[i].a.id];
 						if (!marauroa.perceptionListener.onModifiedAdded(o, msg.aA[i])) {
-							this.addChanges(o, msg.aA[i]);
+							marauroa.perceptionHandler.addChanges(o, msg.aA[i]);
 						}
 					}
 				}
@@ -275,11 +275,11 @@ marauroa.perceptionHandler = {
 				return;
 			}
 
-			this.addMyRPObjectToWorldIfPrivate(id, msg.aM);
+			marauroa.perceptionHandler.addMyRPObjectToWorldIfPrivate(id, msg.aM);
 			var o = marauroa.currentZone[id];
 			marauroa.me = o;
-			this.deleteChanges(o, msg.dM);
-			this.addChanges(o, msg.aM);
+			marauroa.perceptionHandler.deleteChanges(o, msg.dM);
+			marauroa.perceptionHandler.addChanges(o, msg.aM);
 		}
 	},
 
@@ -299,7 +299,7 @@ marauroa.perceptionHandler = {
 			}
 			var o = marauroa.rpobjectFactory.create(added.c);
 			marauroa.currentZone[id] = o;
-			this.addChanges(o, added);
+			marauroa.perceptionHandler.addChanges(o, added);
 		}
 	},
 
@@ -409,7 +409,7 @@ marauroa.perceptionHandler = {
 								newObject.id = id;
 								object[i].add(newObject);
 							}
-							this.addChanges(object[i].get(id), diff.s[i][j])
+							marauroa.perceptionHandler.addChanges(object[i].get(id), diff.s[i][j])
 						}
 					}
 				} 
