@@ -115,6 +115,7 @@ public class MessageC2SAction extends Message {
 		super.readFromMap(in);
 		action = new RPAction();
 		action.readFromMap((Map<String, Object>) in.get("a"));
+		priority = Byte.parseByte((String) in.get("p"));
 
 		if (type != MessageType.C2S_ACTION) {
 			throw new IOException();

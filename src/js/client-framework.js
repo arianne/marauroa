@@ -92,8 +92,8 @@ marauroa.clientFramework = {
 		if (marauroa.debug.messages) {
 			console.log("<--: ", msg);
 		}
-		if (msg.t === "9" || msg.t === "15") {
-			marauroa.clientFramework.clientid = msg.c;
+		if (msg["t"] === "9" || msg["t"] === "15") {
+			marauroa.clientFramework.clientid = msg["c"];
 		}
 		if (typeof(msg) === "string") {
 			console.error("JSON error on message: " + msg);
@@ -109,9 +109,6 @@ marauroa.clientFramework = {
 			"s": "1"
 		};
 		marauroa.util.merge(myMessage, msg);
-		if (marauroa.debug.messages) {
-			console.log("-->: ", msg);
-		}
 		marauroa.clientFramework.socket.send(JSON.stringify(myMessage));
 	},
 
@@ -150,9 +147,14 @@ marauroa.clientFramework = {
 	 *            the action to send to server.
 	 */
 	sendAction: function(action) {
+		var priority = -1;
+		if (document.visibilityState) {
+			priority = (document.visibilityState === "visible" ? 0 : 1);
+		}
 		var msg = {
 			"t": "0",
-			"a": action
+			"a": action,
+			"p": priority
 		};
 		marauroa.clientFramework.sendMessage(msg);
 	},
