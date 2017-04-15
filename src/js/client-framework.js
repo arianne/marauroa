@@ -41,7 +41,10 @@ marauroa.clientFramework = {
 		if (port === null) {
 			port = window.location.port;
 		}
-		var url = protocol + "://" + host + ":" + port + "/ws/";
+		if (port != "") {
+			port = ":" + port;
+		}
+		var url = protocol + "://" + host + port + "/ws/";
 		var socket = new WebSocket(url);
 		socket.onmessage = marauroa.clientFramework.onMessage;
 		socket.onopen = marauroa.clientFramework.onConnect;
