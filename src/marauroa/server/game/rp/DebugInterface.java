@@ -98,4 +98,14 @@ public class DebugInterface {
 	public void onMessage(@SuppressWarnings("unused") Message msg) {
 		return;
 	}
+
+	/**
+	 * This method is called, when a message is received
+	 *
+	 * @param msg message
+	 * @return msg
+	 */
+	public String onMessage(String msg) {
+		return msg;
+	}
 }

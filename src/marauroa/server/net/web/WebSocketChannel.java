@@ -10,14 +10,15 @@ import java.net.SocketTimeoutException;
 
 import javax.servlet.http.HttpSession;
 
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.UpgradeRequest;
+import org.eclipse.jetty.websocket.api.WebSocketAdapter;
+
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.io.UnicodeSupportingInputStreamReader;
-
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.api.WebSocketAdapter;
+import marauroa.server.game.rp.DebugInterface;
 
 /**
  * a websocket connection to a client
@@ -117,8 +118,9 @@ public class WebSocketChannel extends WebSocketAdapter {
 
 	@Override
 	public void onWebSocketText(String message) {
-		super.onWebSocketText(message);
-		webSocketServerManager.onMessage(this, message);
+		String msg = DebugInterface.get().onMessage(message);
+		super.onWebSocketText(msg);
+		webSocketServerManager.onMessage(this, msg);
 	}
 
 	@Override
@@ -169,12 +171,9 @@ public class WebSocketChannel extends WebSocketAdapter {
 		}
 	}
 
-	/**
-	 * closes the socket
-	 */
 	public void close() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }
