@@ -30,13 +30,16 @@ public class WebSocketChannel extends WebSocketAdapter {
 
 	private static WebSocketConnectionManager webSocketServerManager = WebSocketConnectionManager.get();
 	private String username;
+	private String useragent;
 	private InetSocketAddress address;
 
 	@Override
 	public void onWebSocketConnect(Session sess) {
 		super.onWebSocketConnect(sess);
 		address = sess.getRemoteAddress();
-		username = extractUsernameFromSession(sess.getUpgradeRequest());
+		UpgradeRequest upgradeRequest = sess.getUpgradeRequest();
+		useragent = upgradeRequest.getHeader("User-Agent");
+		username = extractUsernameFromSession(upgradeRequest);
 		webSocketServerManager.onConnect(this);
 		logger.debug("Socket Connected: " + sess);
 	}
@@ -118,7 +121,7 @@ public class WebSocketChannel extends WebSocketAdapter {
 
 	@Override
 	public void onWebSocketText(String message) {
-		String msg = DebugInterface.get().onMessage(message);
+		String msg = DebugInterface.get().onMessage(useragent, message);
 		super.onWebSocketText(msg);
 		webSocketServerManager.onMessage(this, msg);
 	}

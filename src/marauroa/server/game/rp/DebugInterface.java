@@ -102,10 +102,11 @@ public class DebugInterface {
 	/**
 	 * This method is called, when a message is received
 	 *
+	 * @param useragent browser and version 
 	 * @param msg message
 	 * @return msg
 	 */
-	public String onMessage(String msg) {
+	public String onMessage(@SuppressWarnings("unused") String useragent, String msg) {
 		return msg;
 	}
 }
