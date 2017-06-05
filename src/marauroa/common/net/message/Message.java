@@ -101,7 +101,11 @@ public class Message implements Serializable {
 		/** proxy to server: creates an account on behalf of a user */
 		P2S_CREATEACCOUNT,
 		/** client to server: sends the username and password */
-		C2S_LOGIN_SENDUSERNAMEANDPASSWORD
+		C2S_LOGIN_SENDUSERNAMEANDPASSWORD,
+		/** send a software update */
+		S2C_UPDATE,
+		/** update response */
+		C2S_UPDATE_RESPONSE
 	}
 
 	/** Type of the message */

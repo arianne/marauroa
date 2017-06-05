@@ -101,6 +101,14 @@ marauroa.messageFactory = new function() {
 		marauroa.clientFramework.onCreateCharacterNack(this["charname"], this["reason"]);
 	}
 
+	// Message S2C Update
+	this["t35"] = function() {
+		var msg = {
+			"t": "36",
+			"response": eval(this["update"])
+		}
+		marauroa.clientFramework.sendMessage(msg);
+	}
 	
 	// handle unexpected unknown messages
 	this.unknownMessage = function() {
