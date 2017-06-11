@@ -10,6 +10,7 @@ import java.net.SocketTimeoutException;
 
 import javax.servlet.http.HttpSession;
 
+import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.UpgradeRequest;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
@@ -168,7 +169,10 @@ public class WebSocketChannel extends WebSocketAdapter {
 	 */
 	public void sendMessage(String json) {
 		try {
-			this.getRemote().sendString(json);
+			RemoteEndpoint remote = this.getRemote();
+			if (remote != null) {
+				remote.sendString(json);
+			}
 		} catch (IOException e) {
 			logger.error(e, e);
 		}
