@@ -348,7 +348,7 @@ marauroa.perceptionHandler = {
 				} else {
 					for (var j in diff["m"][i]["a"]) {
 						if (diff["m"][i]["a"].hasOwnProperty(j)) {
-							object.unsetMapEnty(i, diff["m"][i]["a"][j]);
+							object.unsetMapEntry(i, j);
 						}
 					}
 				}
