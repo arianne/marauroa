@@ -2,7 +2,6 @@ Changelog
 ---------
 
 3.9.5
-
 - fixed a race condition allowing double login which may result in item duplication (thanks to pepsz for the report)
 
 - added support for HTML clients
