@@ -65,9 +65,20 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 			entry.character = msg.getCharacter();
 
 			PlayerEntry oldEntry = playerContainer.getOldEntry(entry);
-			if ((oldEntry != null) && (oldEntry.state == ClientState.GAME_BEGIN)) {
-				reownOldEntry(oldEntry, entry);
-				return;
+			if (oldEntry != null) {
+				if (oldEntry.state == ClientState.GAME_BEGIN) {
+					reownOldEntry(oldEntry, entry);
+					return;
+				} else {
+					logger.warn("Old PlayerEntry exists but is not in state GAME_BEGIN: " + oldEntry);
+					rejectClient(msg.getChannel(), clientid, entry);
+					playerContainer.getLock().requestWriteLock();
+					logger.debug("Disconnecting " + entry.channel + " with " + entry + " because there is a unexpected old entry.");
+					netMan.disconnectClient(entry.channel);
+					playerContainer.remove(entry.clientid);
+					playerContainer.getLock().releaseLock();
+					return;
+				}
 			}
 
 			loadAndPlaceInWorld(msg, clientid, entry);
@@ -130,6 +141,19 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 			return;
 		}
 
+		PlayerEntry oldEntry = playerContainer.getOldEntry(entry);
+		if (oldEntry != null) {
+			logger.warn("Old PlayerEntry exists but is not in state GAME_BEGIN: " + oldEntry);
+			rejectClient(entry.channel, clientid, entry);
+			playerContainer.getLock().requestWriteLock();
+			logger.debug("Disconnecting " + entry.channel + " with " + entry + " because there is a unexpected old entry.");
+			netMan.disconnectClient(entry.channel);
+			playerContainer.remove(entry.clientid);
+			playerContainer.getLock().releaseLock();
+			return;
+		}
+
+		
 		/* We restore back the character to the world */
 		playerContainer.getLock().requestWriteLock();
 		completeLoadingCharacterIntoWorld(rpMan, clientid, cmd.getChannel(), entry, object);
