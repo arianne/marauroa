@@ -203,6 +203,35 @@ public class RPObjectDelta2Test {
 		assertEquals(obj.get("id"), result.get("id"));
 		assertEquals("test", result.get("zoneid"));
 	}
+	
+	/**
+	 * Test modifying an object after it's been removed. This is a valid situation when the object
+	 * is moved to another zone.
+	 */
+	@Test
+	public void testRemoveObjectFromZoneAndModify() {
+		zone.assignRPObjectID(obj);
+		zone.add(obj);
+		// Next turn. We want to clear Delta^2 data.
+		zone.nextTurn();
+		// Change the object on the zone so that it should be added to the modified list...
+		obj.put("a", "42");
+		zone.modify(obj);
+		// then remove it
+		zone.remove(obj.getID());
+		
+		// Change ID as usually happens during zone changes. This ensures that the object is no
+		// longer found by its id at the zones removed list. It also is a modification that gets
+		// to the objects change map.
+		obj.put("id", obj.getID().getObjectID() + 1);
+
+		Perception expected = zone.getPerception(obj, Perception.DELTA);
+		assertTrue(expected.addedList.isEmpty());
+		assertTrue("Modification added to perception after object removed from zone", 
+				expected.modifiedAddedList.isEmpty());
+		assertTrue(expected.modifiedDeletedList.isEmpty());
+	}
+
 
 	/**
 	 * Test if adding an attribute to an object works as expected in Delta². The

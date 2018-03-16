@@ -11,6 +11,7 @@
  ***************************************************************************/
 package marauroa.common.game;
 
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -424,6 +425,9 @@ public class RPObjectTest {
 		slot.add(child);
 		StringBuilder out = new StringBuilder();
 		rpobject.writeToJson(out, DetailLevel.NORMAL);
-		assertThat(out.toString(), equalTo("\"c\":\"\",\"a\":{\"mykey\":\"myvalue\"},\"s\":{\"myslot\":[{\"c\":\"\",\"a\":{\"id\":\"0\"}},{\"c\":\"\",\"a\":{\"id\":\"1\",\"mychildkey\":\"mychildvalue\"}}]}"));
+		assertThat(out.toString(), anyOf(
+				equalTo("\"c\":\"\",\"a\":{\"mykey\":\"myvalue\"},\"s\":{\"myslot\":[{\"c\":\"\",\"a\":{\"id\":\"0\"}},{\"c\":\"\",\"a\":{\"id\":\"1\",\"mychildkey\":\"mychildvalue\"}}]}"),
+				equalTo("\"c\":\"\",\"a\":{\"mykey\":\"myvalue\"},\"s\":{\"myslot\":[{\"c\":\"\",\"a\":{\"id\":\"0\"}},{\"c\":\"\",\"a\":{\"mychildkey\":\"mychildvalue\",\"id\":\"1\"}}]}")
+				));
 	}
 }

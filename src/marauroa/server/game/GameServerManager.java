@@ -267,10 +267,8 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 				Message msg = netMan.getMessage();
 
 				if (msg != null) {
-//					playerContainer.getLock().requestWriteLock();
 					DebugInterface.get().onMessage(msg);
 					messageDispatcher.dispatchMessage(msg);
-//					playerContainer.getLock().releaseLock();
 				}
 
 				// Finally store stats about logged players.

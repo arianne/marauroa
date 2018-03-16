@@ -246,16 +246,10 @@ public class RPWorld implements Iterable<IRPZone> {
 	 *            the player object
 	 */
 	public void requestSync(RPObject object) {
-		/* A player object will have always the clientid attribute. */
-		if (object.has("#clientid")) {
-			/*
-			 * So if object has the attribute, we request a sync perception as
-			 * we have entered a new zone.
-			 */
-			PlayerEntry entry = playerContainer.get(object);
-			if (entry != null) {
-				entry.requestSync();
-			}
+		// If object is a player, we request a sync perception as we have entered a new zone.
+		PlayerEntry entry = playerContainer.get(object);
+		if (entry != null) {
+			entry.requestSync();
 		}
 	}
 

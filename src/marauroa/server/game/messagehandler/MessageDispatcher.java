@@ -24,6 +24,7 @@ import static marauroa.common.net.message.Message.MessageType.C2S_LOGIN_SENDUSER
 import static marauroa.common.net.message.Message.MessageType.C2S_LOGOUT;
 import static marauroa.common.net.message.Message.MessageType.C2S_OUTOFSYNC;
 import static marauroa.common.net.message.Message.MessageType.C2S_TRANSFER_ACK;
+import static marauroa.common.net.message.Message.MessageType.C2S_UPDATE_RESPONSE;
 import static marauroa.common.net.message.Message.MessageType.P2S_CREATEACCOUNT;
 import static marauroa.common.net.message.Message.MessageType.P2S_CREATECHARACTER;
 
@@ -69,9 +70,9 @@ public class MessageDispatcher {
 		handlers.put(C2S_TRANSFER_ACK, new TransferACKHandler());
 		handlers.put(C2S_CREATEACCOUNT, new CreateAccountHandler());
 		handlers.put(C2S_CREATECHARACTER, new CreateCharacterHandler());
-
 		handlers.put(P2S_CREATEACCOUNT, new CreateAccountHandler());
 		handlers.put(P2S_CREATECHARACTER, new CreateCharacterHandler());
+		handlers.put(C2S_UPDATE_RESPONSE, new UpdateResponseHandler());
 	}
 
 	/**

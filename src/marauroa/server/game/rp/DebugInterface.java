@@ -98,4 +98,15 @@ public class DebugInterface {
 	public void onMessage(@SuppressWarnings("unused") Message msg) {
 		return;
 	}
+
+	/**
+	 * This method is called, when a message is received
+	 *
+	 * @param useragent browser and version 
+	 * @param msg message
+	 * @return msg
+	 */
+	public String onMessage(@SuppressWarnings("unused") String useragent, String msg) {
+		return msg;
+	}
 }
