@@ -5,7 +5,6 @@
 /javadocs
 /.externalToolBuilders
 /.settings
-/server.ini
 /build-client
 /classes
 /jacoco.exec
