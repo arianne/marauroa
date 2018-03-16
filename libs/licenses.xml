@@ -268,7 +268,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.193</version>
+      <version>1.4.196</version>
       <licenses>
         <license>
           <name>MPL 2.0 or EPL 1.0</name>
