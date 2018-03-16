@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2011-2016 - Marauroa                    *
+ *                   (C) Copyright 2011-2017 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -18,7 +18,8 @@
  *
  */
 "use strict";
-var marauroa = window.marauroa || {};
+
+var marauroa = window.marauroa = window.marauroa || {};
 
 marauroa.clientFramework = {
 	clientid: "-1",
@@ -40,12 +41,15 @@ marauroa.clientFramework = {
 		if (port === null) {
 			port = window.location.port;
 		}
-		var url = protocol + "://" + host + ":" + port + "/ws/";
+		if (port != "") {
+			port = ":" + port;
+		}
+		var url = protocol + "://" + host + port + "/ws/";
 		var socket = new WebSocket(url);
-		socket.onmessage = this.onMessage;
-		socket.onopen = this.onConnect;
-		socket.onclose = this.onDisonnect;
-		this.socket = socket;
+		socket.onmessage = marauroa.clientFramework.onMessage;
+		socket.onopen = marauroa.clientFramework.onConnect;
+		socket.onclose = marauroa.clientFramework.onDisonnect;
+		marauroa.clientFramework.socket = socket;
 	},
 
 	onConnect: function(reason, error) {
@@ -70,8 +74,8 @@ marauroa.clientFramework = {
 			"u": username,
 			"p": password
 		};
-		this.username = username;
-		this.sendMessage(msg);
+		marauroa.clientFramework.username = username;
+		marauroa.clientFramework.sendMessage(msg);
 	},
 
 	onServerInfo: function(contents) {
@@ -88,11 +92,8 @@ marauroa.clientFramework = {
 
 	onMessage: function(e) {
 		var msg = JSON.parse(e.data);
-		if (marauroa.debug.messages) {
-			console.log("<--: ", msg);
-		}
-		if (msg.t === "9" || msg.t === "15") {
-			marauroa.clientFramework.clientid = msg.c;
+		if (msg["t"] === "9" || msg["t"] === "15") {
+			marauroa.clientFramework.clientid = msg["c"];
 		}
 		if (typeof(msg) === "string") {
 			console.error("JSON error on message: " + msg);
@@ -104,14 +105,11 @@ marauroa.clientFramework = {
 
 	sendMessage: function(msg) {
 		var myMessage = {
-			"c": this.clientid, 
+			"c": marauroa.clientFramework.clientid, 
 			"s": "1"
 		};
 		marauroa.util.merge(myMessage, msg);
-		if (marauroa.debug.messages) {
-			console.log("-->: ", msg);
-		}
-		this.socket.send(JSON.stringify(myMessage));
+		marauroa.clientFramework.socket.send(JSON.stringify(myMessage));
 	},
 
 	resync: function() {
@@ -135,7 +133,7 @@ marauroa.clientFramework = {
 			"t": "1",
 			"character": character
 		};
-		this.sendMessage(msg);
+		marauroa.clientFramework.sendMessage(msg);
 	},
 
 	onChooseCharacterNack: function() {
@@ -153,7 +151,7 @@ marauroa.clientFramework = {
 			"t": "0",
 			"a": action
 		};
-		this.sendMessage(msg);
+		marauroa.clientFramework.sendMessage(msg);
 	},
 
 	/**
@@ -171,7 +169,7 @@ marauroa.clientFramework = {
 		var msg = {
 				"t": "5"
 			};
-		this.sendMessage(msg);
+		marauroa.clientFramework.sendMessage(msg);
 	},
 	
 	onLogoutOutAck: function() {
@@ -186,14 +184,14 @@ marauroa.clientFramework = {
 	 * Disconnect the socket and finish the network communications.
 	 */
 	close: function() {
-		this.socket.close();
+		marauroa.clientFramework.socket.close();
 	},
 
 	/**
 	 * It is called when a perception arrives so you can choose how to apply the
 	 * perception.
 	 *
-	 * @param message
+	 * @param perceptionMessage
 	 *            the perception message itself.
 	 */
 	onPerception: function(perceptionMessage) {
@@ -239,14 +237,14 @@ marauroa.clientFramework = {
 		// create a character if there is none
 		if (marauroa.util.isEmpty(characters)) {
 			console.log("No character found, creating a character with the username (redefine onAvailableCharacterDetails to prevent this).");
-			this.createCharacter(this.username, {});
+			marauroa.clientFramework.createCharacter(marauroa.clientFramework.username, {});
 			return;
 		}
 
 		// automatically select the first one
 		for (var key in characters) {
 			if (characters.hasOwnProperty(key)) {
-				this.chooseCharacter(key);
+				marauroa.clientFramework.chooseCharacter(key);
 			}
 		}
 	},
@@ -258,7 +256,7 @@ marauroa.clientFramework = {
 				"p": password,
 				"e": email
 			};
-		this.sendMessage(msg);
+		marauroa.clientFramework.sendMessage(msg);
 	},
 
 	onCreateAccountAck: function(username) {
@@ -276,7 +274,7 @@ marauroa.clientFramework = {
 				"charname": charname,
 				"template": template
 			};
-		this.sendMessage(msg);
+		marauroa.clientFramework.sendMessage(msg);
 	},
 
 	onCreateCharacterAck: function(charname, template) {

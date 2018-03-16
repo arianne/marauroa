@@ -10,14 +10,16 @@ import java.net.SocketTimeoutException;
 
 import javax.servlet.http.HttpSession;
 
+import org.eclipse.jetty.websocket.api.RemoteEndpoint;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.UpgradeRequest;
+import org.eclipse.jetty.websocket.api.WebSocketAdapter;
+
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.io.UnicodeSupportingInputStreamReader;
-
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.api.WebSocketAdapter;
+import marauroa.server.game.rp.DebugInterface;
 
 /**
  * a websocket connection to a client
@@ -29,13 +31,16 @@ public class WebSocketChannel extends WebSocketAdapter {
 
 	private static WebSocketConnectionManager webSocketServerManager = WebSocketConnectionManager.get();
 	private String username;
+	private String useragent;
 	private InetSocketAddress address;
 
 	@Override
 	public void onWebSocketConnect(Session sess) {
 		super.onWebSocketConnect(sess);
 		address = sess.getRemoteAddress();
-		username = extractUsernameFromSession(sess.getUpgradeRequest());
+		UpgradeRequest upgradeRequest = sess.getUpgradeRequest();
+		useragent = upgradeRequest.getHeader("User-Agent");
+		username = extractUsernameFromSession(upgradeRequest);
 		webSocketServerManager.onConnect(this);
 		logger.debug("Socket Connected: " + sess);
 	}
@@ -117,8 +122,9 @@ public class WebSocketChannel extends WebSocketAdapter {
 
 	@Override
 	public void onWebSocketText(String message) {
-		super.onWebSocketText(message);
-		webSocketServerManager.onMessage(this, message);
+		String msg = DebugInterface.get().onMessage(useragent, message);
+		super.onWebSocketText(msg);
+		webSocketServerManager.onMessage(this, msg);
 	}
 
 	@Override
@@ -163,18 +169,18 @@ public class WebSocketChannel extends WebSocketAdapter {
 	 */
 	public void sendMessage(String json) {
 		try {
-			this.getRemote().sendString(json);
+			RemoteEndpoint remote = this.getRemote();
+			if (remote != null) {
+				remote.sendString(json);
+			}
 		} catch (IOException e) {
 			logger.error(e, e);
 		}
 	}
 
-	/**
-	 * closes the socket
-	 */
 	public void close() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }

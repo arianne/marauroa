@@ -1,5 +1,7 @@
-/***************************************************************************
- *                   (C) Copyright 2011-2016 - Marauroa                    *
+/**
+ * @license 
+ **************************************************************************
+ *                   (C) Copyright 2011-2017 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -12,7 +14,7 @@
 
 "use strict";
 
-var marauroa = window.marauroa || {};
+var marauroa = window.marauroa = window.marauroa || {};
 
 marauroa.debug = {
 	messages: false,
@@ -59,6 +61,9 @@ marauroa.util = {
 	},
 
 	fromProto: function(proto, def) {
+		/**
+		 * @constructor
+		 */
 		var F = function() {
 			this.proto = proto;
 		};

@@ -223,6 +223,7 @@ public class MarauroaRPZone implements IRPZone {
 			deleted.setID(object.getID());
 			deleted.setRPClass(object.getRPClass());
 
+			modified.remove(object);
 			perception.removed(deleted);
 		}
 

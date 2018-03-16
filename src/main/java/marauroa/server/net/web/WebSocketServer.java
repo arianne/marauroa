@@ -12,13 +12,13 @@
  ***************************************************************************/
 package marauroa.server.net.web;
 
-import marauroa.common.Configuration;
-import marauroa.server.marauroad;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+
+import marauroa.common.Configuration;
+import marauroa.server.marauroad;
 
 /**
  * web socket server
@@ -58,7 +58,7 @@ public class WebSocketServer {
 			ServerConnector connector = new ServerConnector(server);
 			connector.setHost(host);
 			connector.setPort(port);
-// TODO			connector.setForwarded(Boolean.parseBoolean(conf.get("http_forwarded", "false")));
+//TODO:			connector.setForwarded(Boolean.parseBoolean(conf.get("http_forwarded", "false")));
 			server.addConnector(connector);
 		}
 
