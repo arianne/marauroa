@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2013 - Marauroa                    *
+ *                   (C) Copyright 2009-2018 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -31,6 +31,8 @@ import org.apache.log4j.MDC;
 class DBCommandQueueBackgroundThread implements Runnable {
 	private static Logger logger = Log4J.getLogger(DBCommandQueueBackgroundThread.class);
 
+	private long lastWarningTimestamp = 0;
+
 	/**
 	 * the background thread
 	 */
@@ -56,6 +58,8 @@ class DBCommandQueueBackgroundThread implements Runnable {
 					break;
 				}
 			}
+
+			checkAndWarnAboutQueueSize(queue);
 		}
 	}
 
@@ -125,5 +129,16 @@ class DBCommandQueueBackgroundThread implements Runnable {
 		}
 		I18N.resetThreadLocale();
 		return true;
+	}
+
+	private void checkAndWarnAboutQueueSize(DBCommandQueue queue) {
+		int size = queue.size();
+		if (size > 50) {
+			long currentTime = System.currentTimeMillis();
+			if (currentTime - lastWarningTimestamp > 60 * 1000) {
+				logger.warn("DBCommandQueue has " + size + " entries. Oldest entry was enqueued at " + queue.getOldestEnqueueTimestamp());
+				lastWarningTimestamp = currentTime; 
+			}
+		}
 	}
 }

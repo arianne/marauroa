@@ -11,6 +11,7 @@
  ***************************************************************************/
 package marauroa.server.db.command;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -164,5 +165,27 @@ public final class DBCommandQueue {
 	 */
 	protected boolean isFinished() {
 		return finished;
+	}
+
+	/**
+	 * returns the size of the queue
+	 *
+	 * @return size of queue
+	 */
+	public int size() {
+		return pendingCommands.size();
+	}
+
+	/**
+	 * gets the timestamp of the oldest pending command
+	 *
+	 * @return Timestamp or <code>null</code>
+	 */
+	protected Timestamp getOldestEnqueueTimestamp() {
+		DBCommandMetaData oldest = pendingCommands.peek();
+		if (oldest == null) {
+			return null;
+		}
+		return oldest.getCommand().getEnqueueTime();
 	}
 }
