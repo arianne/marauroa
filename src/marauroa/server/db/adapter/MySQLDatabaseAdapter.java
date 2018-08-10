@@ -150,7 +150,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 	private String rewriteSqlCreateTable(String sql) {
 		String mySql;
 		if (this.majorVersion >= 5) {
-			mySql = sql.substring(0, sql.length() - 1) + " ENGINE=InnoDB;";
+			mySql = sql.substring(0, sql.length() - 1) + " ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 		} else {
 			mySql = sql.substring(0, sql.length() - 1) + " TYPE=InnoDB;";
 		}
