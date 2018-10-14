@@ -118,19 +118,14 @@ public class RPSlotTest {
 	@Test
 	public void testRemoveContained() throws Exception {
 		RPObject owner = new RPObject();
-		
+
 		RPSlot slot = new RPSlot();
 		owner.addSlot(slot);
 		RPObject object = new RPObject();
 		slot.add(object);
 		assertTrue(object.isContained());
-		
+
 		slot.remove(object.getID());
 		assertFalse(object.isContained());
-		
-		
-		
-		
 	}
-	
 }

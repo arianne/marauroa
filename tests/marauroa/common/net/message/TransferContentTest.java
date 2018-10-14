@@ -55,7 +55,7 @@ public class TransferContentTest {
 		tcInn.timestamp=123123;
 		tcInn.cacheable=true;
 		tcInn.data=new byte[64];
-		
+
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		tcInn.writeREQ(new OutputSerializer(out));
@@ -67,7 +67,6 @@ public class TransferContentTest {
 		assertTrue(tcInn.cacheable == tcOut.cacheable);
 		assertTrue(tcInn.timestamp == tcOut.timestamp);
 		assertTrue(tcInn.name.equals(tcOut.name));
-
 	}
 
 	@Test
@@ -96,7 +95,7 @@ public class TransferContentTest {
 		tcInn.timestamp=123123;
 		tcInn.cacheable=true;
 		tcInn.data=new byte[64];
-		
+
 		for(int i=0;i<64;i++) {
 			tcInn.data[i]=(byte)i;
 		}
@@ -114,7 +113,5 @@ public class TransferContentTest {
 		  assertEquals(tcInn.data[i],tcOut.data[i]);
 		}
 		assertEquals(tcInn.name,tcOut.name);
-
 	}
-
 }

@@ -29,9 +29,9 @@ import org.junit.Test;
 
 /**
  * Test delta² algorithm This test unit needs MarauroaRPZone and RPObject.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class RPObjectDelta2Test {
 
@@ -42,7 +42,7 @@ public class RPObjectDelta2Test {
 	/**
 	 * Set up an object and create a zone that will contain it. It doesn't add
 	 * the object to the zone.
-	 * 
+	 *
 	 */
 	@Before
 	public void createObject() {
@@ -101,10 +101,10 @@ public class RPObjectDelta2Test {
 	/**
 	 * Test if adding a object to a zone works, by assigning object a correct id
 	 * and retriving object from zone.
-	 * 
+	 *
 	 * Also test that modifications to object after just adding it works as
 	 * expected, that means that modifications are irrelevant to delta²
-	 * 
+	 *
 	 */
 	@Test
 	public void testAddObjectToZone() {
@@ -128,7 +128,7 @@ public class RPObjectDelta2Test {
 		assertTrue(expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 		assertTrue(expected.deletedList.isEmpty());
-		
+
 		/*
 		 * Now we test the resulting object to check everything is ok.
 		 */
@@ -142,7 +142,7 @@ public class RPObjectDelta2Test {
 	/**
 	 * Test hidden object concept. It hide an object and then add it to zone,
 	 * the object must not appear at the perception.
-	 * 
+	 *
 	 */
 	@Test
 	public void testAddHiddenObjectToZone() {
@@ -177,7 +177,7 @@ public class RPObjectDelta2Test {
 	/**
 	 * Test remove object from zone, by adding it and on the next turn removing
 	 * it.
-	 * 
+	 *
 	 */
 	@Test
 	public void testRemoveObjectFromZone() {
@@ -203,7 +203,7 @@ public class RPObjectDelta2Test {
 		assertEquals(obj.get("id"), result.get("id"));
 		assertEquals("test", result.get("zoneid"));
 	}
-	
+
 	/**
 	 * Test modifying an object after it's been removed. This is a valid situation when the object
 	 * is moved to another zone.
@@ -219,7 +219,7 @@ public class RPObjectDelta2Test {
 		zone.modify(obj);
 		// then remove it
 		zone.remove(obj.getID());
-		
+
 		// Change ID as usually happens during zone changes. This ensures that the object is no
 		// longer found by its id at the zones removed list. It also is a modification that gets
 		// to the objects change map.
@@ -227,7 +227,7 @@ public class RPObjectDelta2Test {
 
 		Perception expected = zone.getPerception(obj, Perception.DELTA);
 		assertTrue(expected.addedList.isEmpty());
-		assertTrue("Modification added to perception after object removed from zone", 
+		assertTrue("Modification added to perception after object removed from zone",
 				expected.modifiedAddedList.isEmpty());
 		assertTrue(expected.modifiedDeletedList.isEmpty());
 	}
@@ -236,7 +236,7 @@ public class RPObjectDelta2Test {
 	/**
 	 * Test if adding an attribute to an object works as expected in Delta². The
 	 * change must appear at modified added list
-	 * 
+	 *
 	 */
 	@Test
 	public void testAttributeAddition() {
@@ -267,12 +267,12 @@ public class RPObjectDelta2Test {
 		assertEquals(obj.get("bg"), result.get("bg"));
 		assertEquals(obj.get("zoneid"), result.get("zoneid"));
 		assertEquals("test", result.get("zoneid"));
-		
+
 	}
 
 	/**
 	 * Test attribute removal. It must appear at modified deleted list.
-	 * 
+	 *
 	 */
 	@Test
 	public void testAttributeRemoval() {
@@ -305,7 +305,7 @@ public class RPObjectDelta2Test {
 		assertEquals(obj.get("zoneid"), result.get("zoneid"));
 		assertEquals("test", result.get("zoneid"));
 	}
-	
+
 	/**
 	 * Test attribute removal. It must appear at modified deleted list
 	 * even in the case the attribute has been modified the same turn.
@@ -346,7 +346,7 @@ public class RPObjectDelta2Test {
 
 	/**
 	 * Test attribute modification. The change must appear at modified added.
-	 * 
+	 *
 	 */
 	@Test
 	public void testAttributeModification() {
@@ -382,7 +382,7 @@ public class RPObjectDelta2Test {
 	/**
 	 * Test that an added event in a object inside a slot works. It must appear
 	 * at modified added.
-	 * 
+	 *
 	 */
 	@Test
 	public void testAddSlotEventAddition() {
@@ -431,7 +431,7 @@ public class RPObjectDelta2Test {
 	/**
 	 * Test that an modified attribute in a object inside a slot works. It must
 	 * appear at modified added.
-	 * 
+	 *
 	 */
 	@Test
 	public void testSlotObjectAttributeModification() {
@@ -471,7 +471,7 @@ public class RPObjectDelta2Test {
 	/**
 	 * Test that an added attribute in a object inside a slot works. It must
 	 * appear at modified added.
-	 * 
+	 *
 	 */
 	@Test
 	public void testSlotObjectAttributeAddition() {
@@ -511,7 +511,7 @@ public class RPObjectDelta2Test {
 	/**
 	 * Test that an removed attribute in a object inside a slot works. It must
 	 * appear at modified deleted.
-	 * 
+	 *
 	 */
 	@Test
 	public void testSlotObjectAttributeRemoval() {
@@ -551,7 +551,7 @@ public class RPObjectDelta2Test {
 	/**
 	 * Test that an added object in a object inside a slot works. It must appear
 	 * at modified added.
-	 * 
+	 *
 	 */
 	@Test
 	public void testSlotObjectAddition() {
@@ -597,7 +597,7 @@ public class RPObjectDelta2Test {
 	/**
 	 * Test that an removed object in a object inside a slot works. It must
 	 * appear at modified deleted.
-	 * 
+	 *
 	 */
 	@Test
 	public void testSlotObjectRemoval() {
@@ -707,7 +707,7 @@ public class RPObjectDelta2Test {
 
 		assertEquals(result, obj);
 	}
-	
+
 	/**
 	 * This test try to show a problem that could happen if you delete and add
 	 * an object on the same turn. It should work correctly. Different change
@@ -768,7 +768,7 @@ public class RPObjectDelta2Test {
 		obj.getDifferences(added, deleted);
 
 		result.applyDifferences(added, deleted);
-		
+
 		assertEquals(result, obj);
 	}
 
@@ -779,8 +779,8 @@ public class RPObjectDelta2Test {
 
 		zone.assignRPObjectID(obj);
 		zone.add(obj);
-		
-		events=obj.events();	
+
+		events=obj.events();
 		assertEquals("There is no event", 0, events.size());
 
 		RPObject result = (RPObject) obj.clone();
@@ -799,10 +799,10 @@ public class RPObjectDelta2Test {
 
 		result.applyDifferences(added, deleted);
 
-		events=result.events();	
+		events=result.events();
 		assertEquals("There is one event", 1, events.size());
 
-		
+
 		/*
 		 * Next turn. We want to clear Delta^2 data.
 		 */
@@ -811,7 +811,7 @@ public class RPObjectDelta2Test {
 			assertEquals("Events cleared at zone.nextTurn()", 0, o.events().size());
 		}
 	}
-	
+
 	/**
 	 * Test for the delta algorithm with maps
 	 */
@@ -840,9 +840,9 @@ public class RPObjectDelta2Test {
 		assertFalse(deleted2.isEmpty());
 		assertThat(deleted2.get("testmap", "testkey"), is("0"));
 	}
-	
+
 	/**
-	 * Test for the delta algorithm on maps with two maps within a RPObject 
+	 * Test for the delta algorithm on maps with two maps within a RPObject
 	 */
 	@Test
 	public void testMapDeltaWithTwoMaps() {
@@ -870,7 +870,7 @@ public class RPObjectDelta2Test {
 		assertTrue(added2.get("secondMap", "key").equals("value"));
 		assertTrue(deleted2.isEmpty());
 	}
-	
+
 	/**
 	 * Test for applyDifferences with two maps
 	 */
@@ -907,5 +907,4 @@ public class RPObjectDelta2Test {
 		client.applyDifferences(added2, deleted2);
 		assertEquals(newObject, client);
 	}
-	
 }

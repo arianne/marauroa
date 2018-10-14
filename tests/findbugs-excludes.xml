@@ -4,7 +4,7 @@
 	     the complete JVM, because a lot of nasty things can
 	     happen with a missing thread (for example no logging
 	     of item trades or game events. -->
-	<Match> 
+	<Match>
 		<Bug pattern="DM_EXIT" />
 		<Class name="marauroa.server.MarauroaUncaughtExceptionHandler" />
 	</Match>
@@ -15,7 +15,7 @@
 		<Class name="marauroa.server.marauroad" />
 	</Match>
 
-	<!-- the problem does not occur because the singleton 
+	<!-- the problem does not occur because the singleton
 	     initialization happens before the multi threading -->
 	<Match>
 		<Bug pattern="LI_LAZY_INIT_STATIC" />

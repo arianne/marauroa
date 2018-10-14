@@ -36,7 +36,7 @@ public class BugAtApplyDifferencesTest {
 	private MarauroaRPZone zone;
 
 	private MarauroaRPZone recreatedZone;
-	
+
 	/**
 	 * Set up an object and create a zone that will contain it. It doesn't add
 	 * the object to the zone.
@@ -105,7 +105,7 @@ public class BugAtApplyDifferencesTest {
 		assertTrue(obj.has("id"));
 		assertTrue(obj.has("zoneid"));
 		assertEquals("test", obj.get("zoneid"));
-		
+
 		/*
 		 * Create the perception and serialize it.
 		 */
@@ -113,29 +113,29 @@ public class BugAtApplyDifferencesTest {
 		MessageS2CPerception msg=new MessageS2CPerception(null, p);
 		Encoder enc=Encoder.get();
 		byte[] data=enc.encode(msg);
-		
+
 		Decoder dec=Decoder.get();
 		List<Message> msgs=dec.decode(null, data);
-		
+
 		/*
 		 * There should only be one message.
 		 */
 		assertEquals(1, msgs.size());
-		
+
 		MessageS2CPerception recv=(MessageS2CPerception)msgs.get(0);
 		assertTrue(recv.getModifiedAddedRPObjects().isEmpty());
 		assertTrue(recv.getModifiedDeletedRPObjects().isEmpty());
 		assertTrue(recv.getDeletedRPObjects().isEmpty());
-		
+
 		List<RPObject> added=recv.getAddedRPObjects();
 		assertEquals(1, added.size());
-		
+
 		RPObject recreated=added.get(0);
 		assertNotNull(recreated);
 		recreatedZone.add(recreated);
-		
+
 		assertEquals(obj, recreated);
-		
+
 		/*
 		 * Let's move Zone to the next turn.
 		 */
@@ -148,39 +148,38 @@ public class BugAtApplyDifferencesTest {
 		RPSlot lhand = obj.getSlot("lhand");
 		RPObject pocket=lhand.getFirst();
 		RPObject removed=lhand.remove(pocket.getID());
-		
+
 		assertNotNull(removed);
 		assertEquals(removed,pocket);
-		
+
 		zone.modify(obj);
-		
+
 		/*
 		 * Create the perception and serialize it.
 		 */
 		p=zone.getPerception(obj, Perception.DELTA);
 		msg=new MessageS2CPerception(null, p);
 		data=enc.encode(msg);
-		
+
 		msgs=dec.decode(null, data);
-		
+
 		assertEquals("there should only be one message",1, msgs.size());
-		
+
 		recv=(MessageS2CPerception)msgs.get(0);
 		assertTrue(recv.getAddedRPObjects().isEmpty());
 		assertTrue(recv.getModifiedAddedRPObjects().isEmpty());
 		assertFalse(recv.getModifiedDeletedRPObjects().isEmpty());
 		assertTrue(recv.getDeletedRPObjects().isEmpty());
-		
+
 		List<RPObject> modifiedDeleted=recv.getModifiedDeletedRPObjects();
 		assertEquals(1, modifiedDeleted.size());
-		
+
 		assertNotNull(modifiedDeleted.get(0));
 		recreated.applyDifferences(null, modifiedDeleted.get(0));
-		
+
 		System.out.println(obj);
 		System.out.println(recreated);
-		
+
 		assertEquals(obj, recreated);
 	}
-
 }

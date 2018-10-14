@@ -242,7 +242,7 @@ public class RPObjectTest {
 		obj.clearVisible(false);
 		assertTrue(obj.isEmpty());
 	}
-	
+
 	/**
 	 * Test that clearVisible() does not remove private attributes.
 	 */
@@ -260,7 +260,7 @@ public class RPObjectTest {
 		assertTrue("Private attributes should be kept when clearing visible data", testObj.has("private_attr"));
 		assertFalse("Public attributes should be removed when clearing visible data", testObj.has("public_attr"));
 	}
-	
+
 	/**
 	 * Test that clearVisible() does not remove private slots.
 	 */

@@ -25,11 +25,11 @@ import org.junit.Test;
  * @author hendrik
  */
 public class UnicodeSupportingInputStreamReaderTest {
-	
+
 	private BufferedReader getReader(String filename) throws IOException {
 		URL url = this.getClass().getResource(filename);
-		InputStream is = url.openStream(); 
-		UnicodeSupportingInputStreamReader usr = new UnicodeSupportingInputStreamReader(is); 
+		InputStream is = url.openStream();
+		UnicodeSupportingInputStreamReader usr = new UnicodeSupportingInputStreamReader(is);
 		BufferedReader br = new BufferedReader(usr);
 		return br;
 	}

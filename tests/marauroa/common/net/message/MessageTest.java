@@ -40,7 +40,7 @@ public class MessageTest {
 		}
 
 	}
-	
+
 	private static Channel createChannel() throws UnknownHostException {
 		InetAddress addr = InetAddress.getByName("127.0.0.1");
 		InetSocketAddress socketAddr = new InetSocketAddress(addr, 1);
@@ -88,5 +88,4 @@ public class MessageTest {
 		assertEquals(mmOut.getMessageTimestamp(), mmInn.getMessageTimestamp());
 		assertEquals(mmOut.getType(), mmInn.getType());
 	}
-
 }

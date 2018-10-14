@@ -28,9 +28,9 @@ import org.junit.Test;
 
 /**
  * This test unit run test over RPClass and make some usage of Attributes too.
- * 
+ *
  * @author miguel, durkham
- * 
+ *
  */
 public class RPClassTest {
 
@@ -48,7 +48,7 @@ public class RPClassTest {
     /**
      * In the same way that has test, we test get method so that is must return
      * the correct instance of RPClass.
-     * 
+     *
      */
     @Test
     public void testGetClass() {
@@ -76,7 +76,7 @@ public class RPClassTest {
 
     /**
      * Create some definitions for data in a RPClass and check them.
-     * 
+     *
      */
     @Test
     public void testDefinitions() {
@@ -94,7 +94,7 @@ public class RPClassTest {
     /**
      * Check if definition methods: isVisible, isHidden, isPrivate and
      * isStorable works as expected by defining some of them.
-     * 
+     *
      */
     @Test
     public void testDefinitionsMethods() {
@@ -132,12 +132,12 @@ public class RPClassTest {
      * This test case shows a bug fix for a Marauroa 1.3x bug where two
      * attributes definition even in diferent classes where created as the same
      * one ( ignoring the second definition ).
-     * 
+     *
      * For example A ( id string ) B ( id int )
-     * 
+     *
      * They are different attributes and of different type. Check that it is
      * true.
-     * 
+     *
      */
     @Test
     public void testGlobalDefinitionBug() {
@@ -160,7 +160,7 @@ public class RPClassTest {
     /**
      * Test serialization code of RPClass by serializing it and then
      * deserializing the stream again and checking that it is the same RPClass.
-     * 
+     *
      * @throws IOException
      */
     @Test
@@ -189,7 +189,7 @@ public class RPClassTest {
     /**
      * Test the creation of static attributes for Marauroa 2.0. Check they work
      * by creating an attribute object.
-     * 
+     *
      */
     @Test
     public void testStaticAttributes() {
@@ -209,7 +209,7 @@ public class RPClassTest {
     /**
      * Test the hierachy process.
      * This test verify bug, that caused codes to be badly resolve, is fixed.
-     * 
+     *
      */
     @Test
     public void testHierachyBug() {
@@ -222,11 +222,11 @@ public class RPClassTest {
         c.isA(b);
         c.add(DefinitionClass.ATTRIBUTE, "a", Type.STRING, Definition.STANDARD);
         c.add(DefinitionClass.STATIC, "c", "subclass", Definition.STANDARD);
-        
+
 
         Attributes attr = new Attributes(c);
         attr.put("a", 10);
-        
+
         assertTrue(attr.has("a"));
         assertFalse(attr.has("b"));
         assertTrue(attr.has("c"));
@@ -235,7 +235,7 @@ public class RPClassTest {
         Definition def=c.getDefinition(DefinitionClass.ATTRIBUTE, "a");
         assertEquals(Type.STRING,def.getType());
         short code=def.getCode();
-        
+
         assertEquals("a",c.getName(DefinitionClass.ATTRIBUTE, code));
     }
 
@@ -250,5 +250,4 @@ public class RPClassTest {
 				b,
 				b);
 	}
-	
 }

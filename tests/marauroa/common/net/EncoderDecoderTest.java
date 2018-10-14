@@ -29,15 +29,15 @@ import org.junit.Test;
 
 /**
  * Test the basic serialization schema.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class EncoderDecoderTest {
 
 	/**
 	 * Setup for class. It initialize the logger instance
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@BeforeClass
@@ -47,7 +47,7 @@ public class EncoderDecoderTest {
 
 	/**
 	 * Test encoding and decoding works when we use the data as a single chunk.
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws InvalidVersionException
 	 */
@@ -70,7 +70,7 @@ public class EncoderDecoderTest {
 			byte[] reencoded = enc.encode(decoded);
 
 			assertEquals(result.length, reencoded.length);
-			
+
 			/**
 			 * We verify the assertion by re encoding again the message.
 			 * Message.equals(Object ) is NOT implemented.
@@ -83,7 +83,7 @@ public class EncoderDecoderTest {
 
 	/**
 	 * Test that encoder and decoder works when we use several chunks of data.
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws InvalidVersionException
 	 */
@@ -133,7 +133,7 @@ public class EncoderDecoderTest {
 
 	/**
 	 * Test that encoder and decoder works when we use several chunks of data.
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws InvalidVersionException
 	 */
@@ -156,17 +156,16 @@ public class EncoderDecoderTest {
 		message = new MessageC2SAction(null, action);
 
 		byte[] result2 = enc.encode(message);
-		
+
 		byte[] result=new byte[result1.length+result2.length];
 		System.arraycopy(result1, 0, result, 0, result1.length);
 		System.arraycopy(result2, 0, result, result1.length, result2.length);
-		
+
 		Decoder dec = Decoder.get();
 
-		List<Message> decodedMsgs = dec.decode(null, result);		
+		List<Message> decodedMsgs = dec.decode(null, result);
 		assertNotNull(decodedMsgs);
-		
+
 		assertEquals(2, decodedMsgs.size());
 	}
-
 }
