@@ -21,7 +21,7 @@ import org.junit.Test;
  * @author hendrik
  */
 public class StringCheckerTest {
-	
+
 	@Test
 	public void testTrimAndEscapeSQLString() {
 		Assert.assertEquals(null, StringChecker.trimAndEscapeSQLString(null, 0));

@@ -31,10 +31,10 @@ public class CharacternameValidationTest {
 			logger.warn("Possible impersonation: " + username);
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Test
 	public void checkImpersonation() {
 		Assert.assertTrue(checkImpersonation("hendrik"));

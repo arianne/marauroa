@@ -31,7 +31,7 @@ public class DBTransactionTest {
 	/**
 	 * Tests for subst
 	 *
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	@Test
 	public void testSubst() throws SQLException {
@@ -40,7 +40,7 @@ public class DBTransactionTest {
 		params.put("p", "0, 1");
 		params.put("x", "0, y, 1");
 		params.put("injection", "0, 'y, 1");
-		
+
 		DBTransaction transaction = new DBTransaction(null);
 
 		assertThat(transaction.subst("", null), equalTo(""));
