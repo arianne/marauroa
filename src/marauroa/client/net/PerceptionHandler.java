@@ -45,7 +45,7 @@ public class PerceptionHandler {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 */
 	public PerceptionHandler() {
 		synced = false;
@@ -54,7 +54,7 @@ public class PerceptionHandler {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param listener
 	 *            the listener that will give meaning to perception handler.
 	 */
@@ -65,7 +65,7 @@ public class PerceptionHandler {
 
 	/**
 	 * Apply a perception to a world instance.
-	 * 
+	 *
 	 * @param message
 	 *            the perception message
 	 * @param world_instance
@@ -75,7 +75,7 @@ public class PerceptionHandler {
 	public void apply(MessageS2CPerception message, Map<RPObject.ID, RPObject> world_instance)
 	        throws Exception {
 		listener.onPerceptionBegin(message.getPerceptionType(), message.getPerceptionTimestamp());
-		
+
 		/*
 		 * We want to clear previous delta^2 info in the objects.
 		 * Delta^2 is only useful in server for getting changes done to the object.
@@ -153,7 +153,7 @@ public class PerceptionHandler {
 	/**
 	 * This method applys perceptions addedto the Map<RPObject::ID,RPObject>
 	 * passed as argument. It clears the map if this is a sync perception
-	 * 
+	 *
 	 * @param message
 	 *            the perception message
 	 * @param world
@@ -187,7 +187,7 @@ public class PerceptionHandler {
 	/**
 	 * This method applys perceptions deleted to the Map<RPObject::ID,RPObject>
 	 * passed as argument.
-	 * 
+	 *
 	 * @param message
 	 *            the perception message
 	 * @param world
@@ -210,7 +210,7 @@ public class PerceptionHandler {
 	/**
 	 * This method applys perceptions modified added and modified deleted to the
 	 * Map<RPObject::ID,RPObject> passed as argument.
-	 * 
+	 *
 	 * @param message
 	 *            the perception message
 	 * @param world
@@ -252,7 +252,7 @@ public class PerceptionHandler {
 	/**
 	 * This method applys perceptions for our RPObject to the Map<RPObject::ID,RPObject>
 	 * passed as argument.
-	 * 
+	 *
 	 * @param message
 	 *            the perception message
 	 * @param world

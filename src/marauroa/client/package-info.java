@@ -3,4 +3,3 @@
  * implement a real client.
  */
 package marauroa.client;
-
