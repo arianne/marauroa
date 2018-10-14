@@ -1,5 +1,5 @@
 /**
- * @license 
+ * @license
  **************************************************************************
  *                   (C) Copyright 2011-2017 - Marauroa                    *
  ***************************************************************************
@@ -74,7 +74,7 @@ marauroa.util = {
 		}
 		return marauroa.util.merge(obj, def);
 	},
-	
+
 	merge: function(a, b) {
 		for (var key in b) {
 			a[key] = b[key];

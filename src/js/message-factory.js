@@ -47,7 +47,7 @@ marauroa.messageFactory = new function() {
 		console.log("Server send key: ", this);
 		marauroa.clientFramework.onLoginRequired();
 	}
-	
+
 	// Message S2C Perception
 	this["t19"] = function() {
 		marauroa.clientFramework.onPerception(this);
@@ -109,7 +109,7 @@ marauroa.messageFactory = new function() {
 		}
 		marauroa.clientFramework.sendMessage(msg);
 	}
-	
+
 	// handle unexpected unknown messages
 	this.unknownMessage = function() {
 		// do nothing

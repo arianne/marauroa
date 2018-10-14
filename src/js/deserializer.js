@@ -158,7 +158,7 @@ marauroa.Deserializer = function(buffer) {
 
 	this.readRPObject = function(obj) {
 		this.readAttributes(obj);
-		
+
 		return obj;
 	}
 };

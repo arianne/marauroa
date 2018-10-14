@@ -147,7 +147,7 @@ marauroa.perceptionHandler = {
 
 	/**
 	 * Apply a perception.
-	 * 
+	 *
 	 * @param msg
 	 *            the perception msg
 	 */
@@ -175,7 +175,7 @@ marauroa.perceptionHandler = {
 	/**
 	 * This method applies perceptions addedto the Map<RPObject::ID,RPObject>
 	 * passed as argument. It clears the map if this is a sync perception
-	 * 
+	 *
 	 * @param msg
 	 *            the perception message
 	 */
@@ -196,7 +196,7 @@ marauroa.perceptionHandler = {
 	/**
 	 * This method applys perceptions deleted to the Map<RPObject::ID,RPObject>
 	 * passed as argument.
-	 * 
+	 *
 	 * @param msg
 	 *            the perception message
 	 */
@@ -217,7 +217,7 @@ marauroa.perceptionHandler = {
 	/**
 	 * This method applies perceptions modified added and modified deleted to the
 	 * Map<RPObject.ID,RPObject> passed as argument.
-	 * 
+	 *
 	 * @param msg
 	 *            the perception message
 	 */
@@ -255,7 +255,7 @@ marauroa.perceptionHandler = {
 	/**
 	 * This method applys perceptions for our RPObject to the Map<RPObject::ID,RPObject>
 	 * passed as argument.
-	 * 
+	 *
 	 * @param msg
 	 *            the perception message
 	 */
@@ -342,7 +342,7 @@ marauroa.perceptionHandler = {
 			for (var i in diff["m"]) {
 				if (!diff["m"].hasOwnProperty(i)) {
 					continue;
-				} 
+				}
 				if (marauroa.util.isEmpty(diff["m"][i]["a"])) {
 					object.unset(diff["m"][i]);
 				} else {
@@ -387,7 +387,7 @@ marauroa.perceptionHandler = {
 							object.setMapEntry(i, j, diff["m"][i]["a"][j]);
 						}
 					}
-				} 
+				}
 			}
 		}
 
@@ -412,7 +412,7 @@ marauroa.perceptionHandler = {
 							marauroa.perceptionHandler.addChanges(object[i].get(id), diff["s"][i][j])
 						}
 					}
-				} 
+				}
 			}
 		}
 
@@ -421,11 +421,10 @@ marauroa.perceptionHandler = {
 			for (var i in diff["e"]) {
 				if (diff["e"].hasOwnProperty(i)) {
 					object.onEvent(diff["e"][i]);
-				} 
+				}
 			}
 		}
 
 		// TODO: links
 	}
-
 }

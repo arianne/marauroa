@@ -105,7 +105,7 @@ marauroa.clientFramework = {
 
 	sendMessage: function(msg) {
 		var myMessage = {
-			"c": marauroa.clientFramework.clientid, 
+			"c": marauroa.clientFramework.clientid,
 			"s": "1"
 		};
 		marauroa.util.merge(myMessage, msg);
@@ -171,7 +171,7 @@ marauroa.clientFramework = {
 			};
 		marauroa.clientFramework.sendMessage(msg);
 	},
-	
+
 	onLogoutOutAck: function() {
 		console.log("Server accepted logout request");
 	},
@@ -200,10 +200,10 @@ marauroa.clientFramework = {
 
 	/**
 	 * is called before a content transfer is started.
-	 * 
-	 * <code> items </code> contains a list of names and timestamp. 
-	 * That information can be used to decide if a transfer from server is needed. 
-	 * By setting attribute ack to true in a TransferContent it will be acknowledged.   
+	 *
+	 * <code> items </code> contains a list of names and timestamp.
+	 * That information can be used to decide if a transfer from server is needed.
+	 * By setting attribute ack to true in a TransferContent it will be acknowledged.
 	 * All acknowledges items in the returned List, will be transfered by server.
 	 *
 	 * @param items
