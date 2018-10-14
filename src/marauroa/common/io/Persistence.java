@@ -23,7 +23,7 @@ import marauroa.common.Logger;
 /**
  * Allows transparent access to files. Subclasses implement Persistence for
  * normal and webstart environment.
- * 
+ *
  * @author hendrik
  */
 public abstract class Persistence {
@@ -36,7 +36,7 @@ public abstract class Persistence {
 
 	/**
 	 * Returns the Persistence manager for this environment
-	 * 
+	 *
 	 * @return Persistence
 	 */
 	public static Persistence get() {
@@ -66,7 +66,7 @@ public abstract class Persistence {
 
 	/**
 	 * Gets an input stream to this "virtual" file
-	 * 
+	 *
 	 * @param relativeToHome
 	 *            should this file be placed below the users home directory?
 	 * @param basedir
@@ -82,7 +82,7 @@ public abstract class Persistence {
 
 	/**
 	 * Gets an output stream to this "virtual" file
-	 * 
+	 *
 	 * @param relativeToHome
 	 *            should this file be placed below the users home directory?
 	 * @param basedir

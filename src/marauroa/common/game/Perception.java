@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * The Perception class provides a encapsultated way of managing perceptions. It
  * is the core implementation of the Delta^2.
- * 
+ *
  * Perception manages added, modified and removed perceptions. The basic
  * structure for sending world updates to clients is called perceptions. There
  * are two types of perception:
@@ -50,7 +50,7 @@ import java.util.List;
  * See RPAction reply in the RPObject documentation to know exactly what is
  * returned. However, keep in mind that the return result depends of each
  * particular game.
- * 
+ *
  * @author miguel
  */
 public class Perception {
@@ -81,7 +81,7 @@ public class Perception {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param type
 	 *            the type of perception, either Delta or Sync perception.
 	 * @param zoneid
@@ -99,7 +99,7 @@ public class Perception {
 
 	/**
 	 * This method adds an added object to the perception
-	 * 
+	 *
 	 * @param object
 	 *            the object added.
 	 */
@@ -112,7 +112,7 @@ public class Perception {
 
 	/**
 	 * This method adds an modified object of the world
-	 * 
+	 *
 	 * @param modified
 	 *            the modified object
 	 * @throws Exception
@@ -146,7 +146,7 @@ public class Perception {
 
 	/**
 	 * This method adds a removed object of the world
-	 * 
+	 *
 	 * @param object
 	 *            the removed object
 	 */
@@ -172,7 +172,7 @@ public class Perception {
 
 	/**
 	 * Returns the number of elements of the perception
-	 * 
+	 *
 	 * @return the amount of objects
 	 */
 	public int size() {

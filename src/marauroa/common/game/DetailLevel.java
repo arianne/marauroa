@@ -13,9 +13,9 @@ package marauroa.common.game;
 
 /**
  * This enum provides detatil level of the serialization
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public enum DetailLevel {
 	/** Remove hidden and private attributes */

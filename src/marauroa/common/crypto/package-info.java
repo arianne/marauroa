@@ -15,7 +15,7 @@
 
  <p>I'll call H(x) the hash of the value x.</p>
 
- <p>I'll call x^y the operation x xor y. Please note that 
+ <p>I'll call x^y the operation x xor y. Please note that
  x^y^x = x^x^y = y^x^x = y</p>
 
  <p>I'll call l the client login and p the client password.</p>
@@ -43,4 +43,3 @@
  that none of the two can choose.</p>
  */
 package marauroa.common.crypto;
-

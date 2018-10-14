@@ -553,7 +553,7 @@ public class RPClass implements marauroa.common.net.Serializable {
 
 
 	/**
-	 * Bakes the RPClass by including copies of all the definitions of the 
+	 * Bakes the RPClass by including copies of all the definitions of the
 	 * parent class to improve performance.
 	 */
 	public void bake() {

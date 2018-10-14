@@ -81,7 +81,7 @@ public class MessageS2CTransfer extends Message {
 	public boolean isEmpty() {
 		return contents.isEmpty();
 	}
-	
+
 	/**
 	 * The list if contents to transfer.
 	 * @return The list if contents to transfer.

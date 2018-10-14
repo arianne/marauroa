@@ -61,7 +61,7 @@ public class UnicodeSupportingInputStream extends InputStream {
      * Creates a new UnicodeSupportingInputStream
      *
      * @param in  inputstream to be read
-     * @param defaultEnc default encoding if stream does not have 
+     * @param defaultEnc default encoding if stream does not have
      *                   BOM marker. Give NULL to use system-level default.
      */
     public UnicodeSupportingInputStream(InputStream in, String defaultEnc) {
@@ -149,4 +149,3 @@ public class UnicodeSupportingInputStream extends InputStream {
         return internalIn.read();
     }
 }
-

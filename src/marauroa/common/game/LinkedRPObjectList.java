@@ -61,7 +61,7 @@ class LinkedRPObjectList extends LinkedList<RPObject> {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Removed the object from this list by its ID ignoring the zone.
 	 * The zone is really irrelevant in a contained object.

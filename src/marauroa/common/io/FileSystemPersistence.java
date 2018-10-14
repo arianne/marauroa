@@ -19,7 +19,7 @@ import java.io.OutputStream;
 
 /**
  * Normal persistence using files
- * 
+ *
  * @author hendrik
  */
 public class FileSystemPersistence extends Persistence {
@@ -35,7 +35,7 @@ public class FileSystemPersistence extends Persistence {
 
 	/**
 	 * create the filename string
-	 * 
+	 *
 	 * @param relativeToHome
 	 *            should this file be placed below the users home directory?
 	 * @param basedir
@@ -68,5 +68,4 @@ public class FileSystemPersistence extends Persistence {
 	        throws IOException {
 		return new FileOutputStream(concatFilename(relativeToHome, basedir, filename));
 	}
-
 }

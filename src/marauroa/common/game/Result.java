@@ -16,7 +16,7 @@ import static marauroa.common.i18n.I18N.translate;
 /**
  * This enum represent the possible values returned by the create account
  * process. Caller should verify that the process ended in OK_ACCOUNT_CREATED.
- * 
+ *
  * @author miguel
  */
 public enum Result {
@@ -114,12 +114,12 @@ public enum Result {
 	FAILED_CREATE_ON_MAIN_INSTEAD(false, "Accounts cannot be created on this server. Please create the account on the main server and wait a while.");
 
 	/**
-	 * Textual description of the result 
+	 * Textual description of the result
 	 */
 	private String text;
 
 	/**
-	 * True if the account is successfully created. 
+	 * True if the account is successfully created.
 	 */
 	private boolean created;
 
@@ -130,7 +130,7 @@ public enum Result {
 
 	/**
 	 * checks state of account creation represented by this result.
-	 *  
+	 *
 	 * @return  true if account creation failed. false if account creation was successful.
 	 */
 	public boolean failed() {

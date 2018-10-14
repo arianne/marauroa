@@ -16,7 +16,7 @@ import java.io.InputStream;
 
 /**
  * Some generic utility methods.
- * 
+ *
  * @author Matthias Totz
  */
 public class Utility {
@@ -29,7 +29,7 @@ public class Utility {
 	/**
 	 * adds some leading '0' to the sting until the length <i>maxDigits</i> is
 	 * reached
-	 * 
+	 *
 	 * @param number
 	 *            the number to convert
 	 * @param maxDigits
@@ -49,7 +49,7 @@ public class Utility {
 
 	/**
 	 * creates a nice hex-dump of the byte array
-	 * 
+	 *
 	 * @param byteArray
 	 *            the byte array to convert.
 	 * @return a hex-dump of the array.
@@ -63,7 +63,7 @@ public class Utility {
 
 	/**
 	 * creates a nice hex-dump of the byte array
-	 * 
+	 *
 	 * @param byteStream
 	 *            the byte array to convert.
 	 * @return a hex-dump of the array.
@@ -141,7 +141,7 @@ public class Utility {
 
 	/**
 	 * Sleeps a number of milliseconds.
-	 * 
+	 *
 	 * @param ms number of milliseconds to sleep
 	 */
 	public static void sleep(int ms) {

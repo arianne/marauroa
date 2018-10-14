@@ -14,7 +14,7 @@ package marauroa.common;
 /**
  * ConfigurationParams encapsulates parameters to be
  * used to initialize the Configuration class.
- * 
+ *
  * @author Martin Fuchs
  */
 public class ConfigurationParams {
@@ -79,5 +79,4 @@ public class ConfigurationParams {
 	public boolean isPersistence() {
 		return persistence;
 	}
-
 }

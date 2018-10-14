@@ -24,7 +24,7 @@ import javax.jnlp.UnavailableServiceException;
 
 /**
  * Persitence with webstart
- * 
+ *
  * @author hendrik
  */
 public class WebstartPersistence extends Persistence {
@@ -56,10 +56,10 @@ public class WebstartPersistence extends Persistence {
 
 	/**
 	 * Gets an input stream to this "virtual" file
-	 * 
+	 *
 	 * @param filename
 	 *            filename (without path)
-	 * 
+	 *
 	 * @return InputStream
 	 * @throws IOException
 	 *             on io error
@@ -75,10 +75,10 @@ public class WebstartPersistence extends Persistence {
 
 	/**
 	 * Gets an output stream to this "virtual" file
-	 * 
+	 *
 	 * @param filename
 	 *            filename (without path)
-	 * 
+	 *
 	 * @return InputStream
 	 * @throws IOException
 	 *             on io error
@@ -97,5 +97,4 @@ public class WebstartPersistence extends Persistence {
 		OutputStream os = fc.getOutputStream(false);
 		return os;
 	}
-
 }

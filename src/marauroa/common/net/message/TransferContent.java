@@ -234,7 +234,7 @@ public class TransferContent {
 		out.append(",\"data\":\"");
 		out.append(DatatypeConverter.printBase64Binary(data));
 		out.append("\"}");
-		
+
 	}
 
 	/**
@@ -251,5 +251,4 @@ public class TransferContent {
 		}
 		cacheable = (in.readByte() == 1);
 	}
-
 }

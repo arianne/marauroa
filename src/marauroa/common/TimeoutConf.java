@@ -13,9 +13,9 @@ package marauroa.common;
 
 /**
  * This class stores some constants about server timeout values.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class TimeoutConf {
 

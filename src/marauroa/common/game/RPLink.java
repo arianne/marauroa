@@ -27,7 +27,7 @@ import marauroa.common.net.OutputSerializer;
  *   just makes code harder and more prone to error.
  *   Buddies are not an slot in the sense that it is not something that a player
  *   contains, but an abstraction of something that a player is aware of.
- *   
+ *
  *   Bag is an slot
  *   Buddies should be an RPLink
  *

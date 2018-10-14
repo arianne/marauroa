@@ -27,7 +27,7 @@ public interface Serializable {
 	 */
 	void writeObject(OutputSerializer out) throws IOException;
 
-	/** 
+	/**
 	 * Method to build the object from a stream of bytes
 	 *
 	 * @param in InputSerializer to read from

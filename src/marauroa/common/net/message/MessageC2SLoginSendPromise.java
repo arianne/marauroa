@@ -42,8 +42,8 @@ public class MessageC2SLoginSendPromise extends MessageSendByteArray {
 	 *            The TCP/IP address associated to this message
 	 * @param hash
 	 *            The hash code of the nonce to use.
-	 * @param language 
-	 *            Client language 
+	 * @param language
+	 *            Client language
 	 */
 	public MessageC2SLoginSendPromise(Channel source, byte[] hash, String language) {
 		super(MessageType.C2S_LOGIN_SENDPROMISE, source, hash);

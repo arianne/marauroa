@@ -22,7 +22,7 @@ public class I18N {
 	private static ThreadLocal<Locale> threadLocale = new ThreadLocal<Locale>();
 	private static Map<String, Map<String, String>> dictionaries = new HashMap<String, Map<String, String>>();
 	private static Locale defaultLocale = Locale.ENGLISH;
-	
+
 	static {
 		addDictionaryFolder(I18N.class.getPackage().getName().replace('.', '/'));
 	}

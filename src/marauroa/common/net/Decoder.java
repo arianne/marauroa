@@ -62,7 +62,7 @@ public class Decoder {
 		public void add(byte[] data) {
 			parts.add(data);
 		}
-		
+
 		public boolean isEmpty() {
 			return parts.isEmpty();
 		}
@@ -85,9 +85,9 @@ public class Decoder {
 			if (length < 4) {
 				return null;
 			}
-			
+
 			int size = readSizeOfMessage();
-			
+
 			/*
 			 * If length is bigger than size that means that two messages on
 			 * a row... so we need to run until the end of the first one.
@@ -100,22 +100,22 @@ public class Decoder {
 			}
 
 			byte[] data = new byte[size];
-			
+
 			int remaining=size;
 
 			int offset = 0;
 			Iterator<byte[]> it=parts.iterator();
 			while(it.hasNext()) {
 				byte[] p=it.next();
-				
+
 				if(remaining-p.length<0) {
 					/*
 					 * This part completes first message and has stuff from the second one.
 					 */
 					System.arraycopy(p, 0, data, offset, remaining);
-					
+
 					/*
-					 * Copy the rest of the array to a new array.					  
+					 * Copy the rest of the array to a new array.
 					 */
 					byte[] rest = new byte[p.length-remaining];
 					System.arraycopy(p, remaining, rest, 0, p.length-remaining);
@@ -129,7 +129,7 @@ public class Decoder {
 					System.arraycopy(p, 0, data, offset, p.length);
 					offset += p.length;
 					remaining -=p.length;
-					
+
 					it.remove();
 				}
 			}
@@ -195,7 +195,7 @@ public class Decoder {
 	public void clear(SocketChannel channel) {
 		content.remove(channel);
 	}
-	
+
 	static int getSizeOfMessage(byte[] data) {
 		return (data[0] & 0xFF) + ((data[1] & 0xFF) << 8) + ((data[2] & 0xFF) << 16)
         + ((data[3] & 0xFF) << 24);
@@ -227,7 +227,7 @@ public class Decoder {
 			if(data.length<4) {
 				throw new IOException("Message is too short. Missing mandatory fields.");
 			}
-			
+
 			int size = getSizeOfMessage(data);
 
 			if(size<0) {
@@ -239,7 +239,7 @@ public class Decoder {
 				Message msg = msgFactory.getMessage(data, 4);
 				List<Message> list=new LinkedList<Message>();
 				list.add(msg);
-				
+
 				return list;
 			} else {
 				logger.debug("Message full body missing ("+size+"), waiting for more data ("+data.length+").");
@@ -266,7 +266,7 @@ public class Decoder {
 				return list;
 			}
 		}
-		
+
 		content.remove(channel);
 
 		return list;

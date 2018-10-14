@@ -54,7 +54,7 @@ public class UnicodeSupportingInputStreamReader extends Reader {
      * Creates a new UnicodeSupportingInputStreamReader
      *
      * @param in  inputstream to be read
-     * @param defaultEnc default encoding if stream does not have 
+     * @param defaultEnc default encoding if stream does not have
      *                   BOM marker. Give NULL to use system-level default.
      */
     public UnicodeSupportingInputStreamReader(InputStream in, String defaultEnc) {
@@ -139,5 +139,4 @@ public class UnicodeSupportingInputStreamReader extends Reader {
         init();
         return internalIn2.read(cbuf, off, len);
     }
-
 }

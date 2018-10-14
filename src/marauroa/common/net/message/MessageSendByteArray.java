@@ -20,14 +20,14 @@ import marauroa.common.net.OutputSerializer;
 
 /**
  * This message is a generic message that send a byte array.
- * 
+ *
  * @see marauroa.common.net.message.Message
  */
 public class MessageSendByteArray extends Message {
 
 	protected byte[] hash;
 
-	/** 
+	/**
 	 * Constructor for allowing creation of an empty message
 	 *
 	 * @param type tpye of message
@@ -39,7 +39,7 @@ public class MessageSendByteArray extends Message {
 	/**
 	 * Constructor with a TCP/IP source/destination of the message and the byte
 	 * array to send.
-	 * 
+	 *
 	 * @param type tpye of message
 	 * @param source
 	 *            The TCP/IP address associated to this message
@@ -53,7 +53,7 @@ public class MessageSendByteArray extends Message {
 
 	/**
 	 * This method returns the byte array.
-	 * 
+	 *
 	 * @return the byte array
 	 */
 	public byte[] getHash() {

@@ -56,7 +56,7 @@ public class MessageC2SCreateAccount extends Message {
 	 * @param email
 	 *            email of the player
 	 * @param language
-	 *            client language 
+	 *            client language
 	 */
 	public MessageC2SCreateAccount(Channel source, String username, String password,
 	        String email, String language) {

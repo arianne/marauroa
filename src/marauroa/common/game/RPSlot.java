@@ -365,7 +365,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	public int getCapacity() {
 		return capacity;
 	}
-	
+
 	/**
 	 * Set the capacity of the slot. By default the value from the RPClass
 	 * definition is used. It is the responsibility of the caller to ensure sane
@@ -374,7 +374,7 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 	 * from the RPClass. <em>Therefore, do not use this method to increase the
 	 * capacity, because the client will not be able cope with slots that have
 	 * more objects than the capacity defined in the RPClass.</em>
-	 * 
+	 *
 	 * @param capacity new capacity
 	 */
 	public void setCapacity(int capacity) {
@@ -684,5 +684,4 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 		}
 
 	}
-
 }

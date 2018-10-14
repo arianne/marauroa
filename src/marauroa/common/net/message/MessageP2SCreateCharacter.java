@@ -54,7 +54,7 @@ public class MessageP2SCreateCharacter extends Message {
 	 *            authentication
 	 * @param forwardedFor
 	 *            forwarded for
-	 * @param username 
+	 * @param username
 	 *            name of account
 	 * @param character
 	 *            the desired character name
@@ -150,5 +150,4 @@ public class MessageP2SCreateCharacter extends Message {
 			throw new IOException();
 		}
 	}
-
 }
