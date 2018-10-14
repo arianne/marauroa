@@ -5,4 +5,3 @@
  * It uses new classes introduced in Java 1.4 to do non blocking network connections using TCP.
  */
 package marauroa.server.net.nio;
-

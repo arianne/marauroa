@@ -25,7 +25,7 @@ import marauroa.server.net.flood.IFloodCheck;
  * us more than 1024 bytes per second or more than 20 messages per second. If this
  * happen, we warn client ( well, in fact we don't ), and at the third time it
  * happens we consider this a flooding.
- * 
+ *
  * @author miguel
  */
 public class FloodCheck implements IFloodCheck {
@@ -90,5 +90,4 @@ public class FloodCheck implements IFloodCheck {
 			entry.resetWarnings();
 		}
 	}
-
 }

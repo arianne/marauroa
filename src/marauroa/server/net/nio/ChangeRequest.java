@@ -16,9 +16,9 @@ import java.nio.channels.SocketChannel;
 /**
  * This class notify the NIO Server about a change request on one of the
  * sockets.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class ChangeRequest {
 

@@ -37,7 +37,7 @@ public class StatisticsDAO {
 
 	/**
 	 * adds an statistics sample to the database log
-	 * 
+	 *
 	 * @param transaction DBTransaction
 	 * @param var Variables
 	 * @throws SQLException in case of an database error
@@ -54,7 +54,7 @@ public class StatisticsDAO {
 
 	/**
 	 * adds an statistics sample to the database log
-	 * 
+	 *
 	 * @param var Variables
 	 */
 	public void addStatisticsEvent(Variables var) {

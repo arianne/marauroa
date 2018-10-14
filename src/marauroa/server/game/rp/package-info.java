@@ -1,9 +1,9 @@
 /**
  * This is possibly the most complex part of all the middleware that makes up Arianne.<br>
- * Role Playing Design is the determining factor on how easy is to create a new game for 
- * Arianne. 
+ * Role Playing Design is the determining factor on how easy is to create a new game for
+ * Arianne.
  * <p>
- * We had to choose easing the creation of turn time limited based games. 
+ * We had to choose easing the creation of turn time limited based games.
  * Arianne will work better with this kind of games (also known as realtime games).
  * <p>
  * Role Playing Design tries to be generic and game agnostic (independant of the game being made).
@@ -24,4 +24,3 @@
  * </ul>
  */
 package marauroa.server.game.rp;
-

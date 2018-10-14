@@ -28,11 +28,11 @@ import marauroa.server.game.rp.RPServerManager;
  * Python implementation of IRPRuleProcessor. You can't inherit directly
  * IRPRuleProcessor, so you need to inherit in your Python code the
  * PythonRPRuleProcessor class.
- * 
+ *
  * You should set ruleprocessor in server.ini to this class.
- * 
+ *
  * @see IRPRuleProcessor
- * 
+ *
  * @author miguel
  */
 public class PythonRPRuleProcessor implements IRPRuleProcessor {
@@ -56,7 +56,7 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 
 	/**
 	 * Set the context where the actions are executed.
-	 * 
+	 *
 	 * @param rpman
 	 *            the RP Manager object
 	 */

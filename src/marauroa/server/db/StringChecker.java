@@ -79,7 +79,7 @@ public class StringChecker {
 	}
 
 	/**
-	 * Trims the string to the specified size without error in case it is already shorter. 
+	 * Trims the string to the specified size without error in case it is already shorter.
 	 * Escapes ' and \ in a string so that the result can be passed into an SQL
 	 * command. The parameter has be quoted using ' in the sql. Most database
 	 * engines accept single quotes around numbers as well.

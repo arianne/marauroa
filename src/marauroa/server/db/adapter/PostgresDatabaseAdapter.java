@@ -72,7 +72,7 @@ public class PostgresDatabaseAdapter extends AbstractDatabaseAdapter {
 	}
 	/**
 	 * checks whether the specified index exists
-	 * 
+	 *
 	 * @param index name of index
 	 * @return true, if the index exists; false otherwise
 	 * @throws SQLException in case of a database error
@@ -127,7 +127,7 @@ public class PostgresDatabaseAdapter extends AbstractDatabaseAdapter {
 		}
 		return mySql;
 	}
-	
+
 	private String rewriteSqlAlterTable(String sql) {
 		String mySql = sql;
 		String mySqlLower = sql.toLowerCase(Locale.ENGLISH);
@@ -158,5 +158,4 @@ public class PostgresDatabaseAdapter extends AbstractDatabaseAdapter {
 				.replaceAll("(\\W)blob(\\W)", "$1bytea$2")
 				.replaceAll("(\\W)tinyint(\\W)", "$1integer$2");
 	}
-
 }

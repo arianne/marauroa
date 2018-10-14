@@ -67,7 +67,7 @@ public class WebSocketServer {
 
 		ServletHolder holderEvents = new ServletHolder("ws", MarauroaWebSocketServlet.class);
 		context.addServlet(holderEvents, "/ws/*");
-		
+
 		context.addServlet(new ServletHolder(new WebServletForStaticContent(marauroad.getMarauroa().getRPServerManager())), "/*");
 
 		server.start();

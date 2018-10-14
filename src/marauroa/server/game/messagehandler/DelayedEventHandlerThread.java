@@ -22,9 +22,9 @@ import marauroa.server.game.rp.RPServerManager;
 /**
  * Thread that handles delayed events like disconnecting players.
  * It has to be done this way because we can't run it on the main loop of GameServerManager,
- * because it locks waiting for new messages to arrive. This way the events are handles as 
+ * because it locks waiting for new messages to arrive. This way the events are handles as
  * they are requested to be.
- * 
+ *
  * @author miguel, hendrik
  *
  */
@@ -90,7 +90,7 @@ public class DelayedEventHandlerThread extends Thread {
 			while (true) {
 				try {
 
-					// Wait for up to one second for a delayed command. If no command is pending, check for a possible shutdown 
+					// Wait for up to one second for a delayed command. If no command is pending, check for a possible shutdown
 					Pair<DelayedEventHandler, Object> entry = queue.poll(1, TimeUnit.SECONDS);
 					if (entry == null) {
 						if (!keepRunning) {

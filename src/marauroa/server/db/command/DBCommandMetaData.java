@@ -28,7 +28,7 @@ class DBCommandMetaData {
 	private boolean awaitResult;
 	private long processedTimestamp = -1;
 	private Locale locale;
-	
+
 
 	/**
 	 * creates a new DBCommandMetaData object
@@ -114,5 +114,4 @@ class DBCommandMetaData {
     public String toString() {
 	    return "[" + requestingThread.getName() + ": " + command + "]";
     }
-
 }

@@ -23,7 +23,7 @@ import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
 
 /**
- * asynchronously loads a charcater's RPObject if the character is active 
+ * asynchronously loads a charcater's RPObject if the character is active
  * and belongs to the account.
  *
  * @author hendrik

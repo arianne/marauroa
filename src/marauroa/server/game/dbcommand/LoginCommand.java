@@ -109,7 +109,7 @@ public class LoginCommand extends DBCommandWithCallback {
 
 	/**
 	 * gets the Reason enum if the login failed
-	 * @return MessageS2CLoginNACK.Reasons or <code>null</code> 
+	 * @return MessageS2CLoginNACK.Reasons or <code>null</code>
 	 * in case the login did not fail (was succesful).
 	 */
 	public MessageS2CLoginNACK.Reasons getFailReason() {
@@ -119,7 +119,7 @@ public class LoginCommand extends DBCommandWithCallback {
 	/**
 	 * gets the message if the login failed
 	 *
-	 * @return error message or <code>null</code> 
+	 * @return error message or <code>null</code>
 	 * in case the login did not fail (was succesful).
 	 */
 	public String getFailMessage() {
@@ -127,7 +127,7 @@ public class LoginCommand extends DBCommandWithCallback {
 	}
 
 	/**
-	 * gets a list of previous logins so that the player can 
+	 * gets a list of previous logins so that the player can
 	 * notice possible account hacks.
 	 *
 	 * @return list of last logins

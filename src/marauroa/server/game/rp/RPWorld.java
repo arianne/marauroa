@@ -125,7 +125,7 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * gets the default zone.
-	 * 
+	 *
 	 * @return default zone
 	 */
 	public IRPZone getDefaultZone() {
@@ -183,26 +183,26 @@ public class RPWorld implements Iterable<IRPZone> {
 
 	/**
 	 * Removes a zone from world.
-	 * It calls zone.onFinish method to free resources zone could have allocated.	 * 
-	 * 
+	 * It calls zone.onFinish method to free resources zone could have allocated.	 *
+	 *
 	 * @param zoneid
 	 * @return the zone removed or null if not found
 	 * @throws Exception caused by onFinish
 	 */
 	public IRPZone removeRPZone(IRPZone.ID zoneid) throws Exception {
 		IRPZone zone=zones.remove(zoneid);
-		
+
 		if(zone!=null) {
 		  zone.onFinish();
 		}
-		
+
 		return zone;
 	}
 
 	/**
 	 * Removes a zone from world.
 	 * It calls zone.onFinish method to free resources zone could have allocated.
-	 * 
+	 *
 	 * @param objectid
 	 * @return the zone removed or null if not found
 	 * @throws Exception caused by onFinish
@@ -210,14 +210,14 @@ public class RPWorld implements Iterable<IRPZone> {
 	public IRPZone removeRPZone(RPObject.ID objectid) throws Exception {
 		IRPZone.ID zoneid=new IRPZone.ID(objectid.getZoneID());
 		IRPZone zone=zones.remove(zoneid);
-		
+
 		if(zone!=null) {
 		  zone.onFinish();
 		}
-		
+
 		return zone;
 	}
-	
+
 	/**
 	 * This method adds an object to the zone it points with its zoneid
 	 * attribute. And if it is a player, it request also a sync perception.

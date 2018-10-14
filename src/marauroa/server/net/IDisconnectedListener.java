@@ -15,15 +15,15 @@ import marauroa.common.net.Channel;
 
 /**
  * This interface provides a callback notification for disconnected clients.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public interface IDisconnectedListener {
 
 	/**
 	 * This method is called when a connection is closed.
-	 * 
+	 *
 	 * @param channel
 	 *            the channel that was closed.
 	 */

@@ -81,7 +81,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 
 	/**
 	 * checks whether the specified table is a real table and not a view
-	 * 
+	 *
 	 * @param table name of table
 	 * @return true, if the table is a base table; false otherwise
 	 * @throws SQLException in case of a database error
@@ -104,7 +104,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 
 	/**
 	 * checks whether the specified index exists
-	 * 
+	 *
 	 * @param table name of table
 	 * @param index name of index
 	 * @return true, if the index exists; false otherwise
@@ -115,7 +115,7 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 				+ " WHERE table_schema = database()"
 				+ " AND table_name = '" + StringChecker.escapeSQLString(table) + "'"
 				+ " AND index_name = '" + StringChecker.escapeSQLString(index) + "'";
-		
+
 		return querySingleCellInt(sql) > 0;
 	}
 
@@ -156,5 +156,4 @@ public class MySQLDatabaseAdapter extends AbstractDatabaseAdapter {
 		}
 		return mySql;
 	}
-
 }

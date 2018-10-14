@@ -225,5 +225,4 @@ public class SecuredLoginInfo {
 		return "SecuredLoginInfo [username=" + username + ", address="
 				+ address + ", seed=" + seed + ", reason=" + reason + "]";
 	}
-
 }

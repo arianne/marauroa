@@ -15,14 +15,14 @@ package marauroa.server.game.python;
  * This class is a abstract class for you to inherit in in Python. You can
  * implement onInit and onFinish methods to define the behaviour to do when
  * server init and server shutdown.
- * 
+ *
  * @author miguel
  */
 public class PythonWorld {
 
 	/**
 	 * Called on server start up
-	 * 
+	 *
 	 */
 	public void onInit() {
 		// implement in subclasses
@@ -30,7 +30,7 @@ public class PythonWorld {
 
 	/**
 	 * Called on server shutdown
-	 * 
+	 *
 	 */
 	public void onFinish() {
 		// implement in subclasses

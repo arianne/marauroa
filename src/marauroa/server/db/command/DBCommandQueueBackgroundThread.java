@@ -137,7 +137,7 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			long currentTime = System.currentTimeMillis();
 			if (currentTime - lastWarningTimestamp > 60 * 1000) {
 				logger.warn("DBCommandQueue has " + size + " entries. Oldest entry was enqueued at " + queue.getOldestEnqueueTimestamp());
-				lastWarningTimestamp = currentTime; 
+				lastWarningTimestamp = currentTime;
 			}
 		}
 	}

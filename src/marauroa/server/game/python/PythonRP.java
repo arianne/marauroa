@@ -23,7 +23,7 @@ import marauroa.server.game.rp.RPServerManager;
 /**
  * Barebone implementation of RPRuleProcessor that you can extends at Python.
  * You must extend this class.
- * 
+ *
  * @author miguel
  */
 public class PythonRP {
@@ -43,7 +43,7 @@ public class PythonRP {
 
 	/**
 	 * Transfer content to client.
-	 * 
+	 *
 	 * @param target
 	 *            client to transfer content to.
 	 * @param content
@@ -115,7 +115,7 @@ public class PythonRP {
 		// implement in sub classes
 	}
 
-	
+
 	/**
 	 * Execute an action in the name of a player.
 	 *
@@ -182,5 +182,4 @@ public class PythonRP {
 	public boolean onInit(RPObject object) {
 		return true;
 	}
-
 }

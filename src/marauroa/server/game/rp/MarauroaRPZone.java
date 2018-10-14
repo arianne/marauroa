@@ -159,7 +159,7 @@ public class MarauroaRPZone implements IRPZone {
 
 
 	/**
-	 * Load objects in database for this zone that were stored 
+	 * Load objects in database for this zone that were stored
 	 * and waits for the database operation to complete.
 	 */
 	public void onInit() throws Exception {
@@ -336,7 +336,7 @@ public class MarauroaRPZone implements IRPZone {
 								logger.debug("Modifying a non existing object: "+modified_obj);
 							}
 						}
-						
+
 						prebuildDeltaPerception.modified(modified_obj);
 					} catch (Exception e) {
 						logger.error("cannot add object to modified list (object is: ["

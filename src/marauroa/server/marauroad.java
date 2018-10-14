@@ -220,7 +220,7 @@ public class marauroad extends Thread {
 		} catch (Exception e) {
 			logger.warn("Trying to start webserver failed:", e);
 		} catch (UnsupportedClassVersionError e) {
-			logger.warn("The websocket server requires a newer version of the Java Runtime: ", e);			
+			logger.warn("The websocket server requires a newer version of the Java Runtime: ", e);
 		}
 	}
 

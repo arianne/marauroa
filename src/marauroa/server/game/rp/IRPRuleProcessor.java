@@ -161,7 +161,7 @@ public interface IRPRuleProcessor {
 
 	/**
 	 * gets the content type for the requested resource
-	 * 
+	 *
 	 * @param resource name of resource
 	 * @return mime content/type or <code>null</code>
 	 */
@@ -169,7 +169,7 @@ public interface IRPRuleProcessor {
 
 	/**
 	 * gets an input stream to the requested resource
-	 * 
+	 *
 	 * @param resource name of resource
 	 * @return InputStream or <code>null</code>
 	 */

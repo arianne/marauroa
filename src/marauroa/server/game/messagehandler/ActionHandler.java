@@ -49,7 +49,7 @@ class ActionHandler extends MessageHandler {
 			if (!isValidEvent(msg, entry, ClientState.GAME_BEGIN)) {
 				return;
 			}
-			
+
 			/*
 			 * Update timeout timestamp on player.
 			 */
@@ -90,5 +90,4 @@ class ActionHandler extends MessageHandler {
 			logger.error("error while processing ActionEvent", e);
 		}
 	}
-
 }

@@ -89,10 +89,9 @@ class TransferACKHandler extends MessageHandler {
 			if (!msgTransfer.isEmpty()) {
 				netMan.sendMessage(msgTransfer);
 			}
-			
+
 		} catch (Exception e) {
 			logger.error("error while processing TransferACK", e);
 		}
 	}
-
 }

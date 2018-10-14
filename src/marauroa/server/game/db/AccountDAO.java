@@ -800,7 +800,7 @@ public class AccountDAO {
 		}
 	}
 
-	
+
 	/**
 	 * deletes an account from the database
 	 *

@@ -96,7 +96,7 @@ public class RPZoneDAO {
 			int protocolVersion = NetConst.FIRST_VERSION_WITH_MULTI_VERSION_SUPPORT - 1;
 			Object temp = resultSet.getObject("protocol_version");
 			if (temp != null) {
-				protocolVersion = ((Integer) temp).intValue(); 
+				protocolVersion = ((Integer) temp).intValue();
 			}
 			inputSerializer.setProtocolVersion(protocolVersion);
 

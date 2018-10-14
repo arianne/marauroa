@@ -76,7 +76,7 @@ class LoginSendPromiseHandler extends MessageHandler {
 
 					/*
 					 * HACK: Remove the entry now so we can continue.
-					 */				
+					 */
 					playerContainer.remove(candidate.clientid);
 				}
 			}
@@ -119,6 +119,4 @@ class LoginSendPromiseHandler extends MessageHandler {
 			logger.error("client not found", e);
 		}
 	}
-
-
 }

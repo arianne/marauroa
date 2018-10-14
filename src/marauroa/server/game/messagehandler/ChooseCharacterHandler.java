@@ -153,7 +153,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 			return;
 		}
 
-		
+
 		/* We restore back the character to the world */
 		playerContainer.getLock().requestWriteLock();
 		completeLoadingCharacterIntoWorld(rpMan, clientid, cmd.getChannel(), entry, object);
@@ -198,12 +198,11 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 		entry.state = ClientState.LOGIN_COMPLETE;
 
 		/* Error: There is no such character */
-		MessageS2CChooseCharacterNACK msgChooseCharacterNACK = 
+		MessageS2CChooseCharacterNACK msgChooseCharacterNACK =
 			new MessageS2CChooseCharacterNACK(channel);
 
 		msgChooseCharacterNACK.setClientID(clientid);
 		msgChooseCharacterNACK.setProtocolVersion(entry.getProtocolVersion());
 		netMan.sendMessage(msgChooseCharacterNACK);
 	}
-
 }

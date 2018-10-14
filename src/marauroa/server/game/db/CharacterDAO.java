@@ -587,10 +587,10 @@ public class CharacterDAO {
 			throw e;
 		}
 	}
-    
+
 	/**
 	 * Modifies a character status.
-	 * 
+	 *
 	 * @param transaction DBTransaction
 	 * @param username username
 	 * @param character name of character

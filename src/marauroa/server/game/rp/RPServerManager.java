@@ -426,7 +426,7 @@ public class RPServerManager extends Thread {
 
 		for (PlayerEntry entry : playersToRemove) {
 			logger.warn("RP Disconnecting entry: " + entry);
-			
+
 			// Workaround for closed timeout
 			Object c = entry.channel.getInternalChannel();
 			if (c instanceof SocketChannel) {
@@ -435,7 +435,7 @@ public class RPServerManager extends Thread {
 					playerContainer.remove(entry.clientid);
 				}
 			}
-			
+
 			netMan.disconnectClient(entry.channel);
 		}
 	}

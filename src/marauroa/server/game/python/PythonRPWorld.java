@@ -17,11 +17,11 @@ import marauroa.server.game.rp.RPWorld;
 /**
  * Python implementation of RPWorld. You can't inherit directly RPWorld, so you
  * need to inherit in your Python code the PythonWorld class.
- * 
+ *
  * You should set world in server.ini to this class.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class PythonRPWorld extends RPWorld {
 
@@ -33,7 +33,7 @@ public class PythonRPWorld extends RPWorld {
 
 	/** The python instance of the world */
 	private PythonWorld pythonWorld;
-	
+
 	private static PythonRPWorld instance;
 
 	public static PythonRPWorld get() {
@@ -43,8 +43,8 @@ public class PythonRPWorld extends RPWorld {
 			instance = myInstance;
 		}
 		return instance;
-	}	
-	
+	}
+
 	/**
 	 * Constructor
 	 */

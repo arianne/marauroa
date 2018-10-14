@@ -25,7 +25,7 @@ class KeepAliveHandler extends MessageHandler {
 	private static final marauroa.common.Logger logger = Log4J.getLogger(KeepAliveHandler.class);
 
 	/**
-	 * This message is send from client to confirm that he is still alive and has not timeout. 
+	 * This message is send from client to confirm that he is still alive and has not timeout.
 	 *
 	 * @param message
 	 *            the keep alive message
@@ -47,5 +47,4 @@ class KeepAliveHandler extends MessageHandler {
 			logger.error("error while processing Keep Alive event", e);
 		}
 	}
-
 }

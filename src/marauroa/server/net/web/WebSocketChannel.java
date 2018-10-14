@@ -180,7 +180,6 @@ public class WebSocketChannel extends WebSocketAdapter {
 
 	public void close() {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 }

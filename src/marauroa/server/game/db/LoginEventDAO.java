@@ -90,9 +90,9 @@ public class LoginEventDAO {
 	public static class LoginEvent {
 
 		private long id = -1;
-		
+
 		private long playerId = -1;
-		
+
 		private String service = null;
 
 		/** TCP/IP address of the source of the login message */
@@ -122,7 +122,7 @@ public class LoginEventDAO {
 
 		/**
 		 * Creates a new LoginEvent object
-		 * 
+		 *
 		 * @param id database id
 		 * @param playerId database id of account
 		 * @param service name of service
@@ -178,7 +178,7 @@ public class LoginEventDAO {
 
 		/**
 		 * gets the ip-address
-		 * 
+		 *
 		 * @return ip-address
 		 */
 		public String getAddress() {
@@ -238,7 +238,7 @@ public class LoginEventDAO {
 
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			while (resultSet.next()) {
-				LoginEvent event = new LoginEvent(resultSet.getString("address"), 
+				LoginEvent event = new LoginEvent(resultSet.getString("address"),
 						format.format(resultSet.getTimestamp("timedate")), resultSet.getBoolean("result"));
 				list.add(event.toString());
 			}
@@ -272,7 +272,7 @@ public class LoginEventDAO {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("service", service);
 			params.put("player_id", Integer.toString(playerId));
-			
+
 			logger.debug("getLastSuccessfulLoginEvent is executing query " + query);
 
 			ResultSet resultSet = transaction.query(query, params);
@@ -288,7 +288,7 @@ public class LoginEventDAO {
 				return null;
 			}
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			LoginEvent event = new LoginEvent(resultSet.getLong("id"), 
+			LoginEvent event = new LoginEvent(resultSet.getLong("id"),
 					resultSet.getLong("player_id"), resultSet.getString("service"),
 					resultSet.getString("address"), format.format(resultSet.getTimestamp("timedate")),
 					resultSet.getBoolean("result"));
@@ -298,7 +298,7 @@ public class LoginEventDAO {
 			logger.error("Can't query for player \"" + playerId + "\"", e);
 			throw e;
 		}
-	}	
+	}
 
 	/**
 	 * gets the amount of failed login attemps
@@ -317,7 +317,7 @@ public class LoginEventDAO {
 			params.put("id", Long.toString(id));
 			params.put("player_id", Integer.toString(playerId));
 			logger.debug("getAmountOfFailedLogins is executing query " + query);
-		
+
 			ResultSet resultSet = transaction.query(query, params);
 			List<Pair<String, Long>> list = new LinkedList<Pair<String, Long>>();
 			while (resultSet.next()) {
@@ -329,7 +329,7 @@ public class LoginEventDAO {
 			logger.error("Can't query for player \"" + playerId + "\"", e);
 			throw e;
 		}
-	}	
+	}
 
 	/**
 	 * checks if this account is temporary blocked because of too many failed login attempts.
@@ -380,7 +380,7 @@ public class LoginEventDAO {
 		int attemps = transaction.querySingleCellInt(query, params);
 		return attemps > TimeoutConf.FAILED_LOGIN_ATTEMPTS_IP;
 	}
-	
+
 
 	/**
 	 * logs an login attempt
@@ -401,7 +401,7 @@ public class LoginEventDAO {
 		}
 	}
 
-	
+
 	/**
 	 * gets a list of recent login events
 	 *
@@ -456,5 +456,4 @@ public class LoginEventDAO {
 			TransactionPool.get().commit(transaction);
 		}
 	}
-
 }

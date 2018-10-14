@@ -102,7 +102,7 @@ public class DebugInterface {
 	/**
 	 * This method is called, when a message is received
 	 *
-	 * @param useragent browser and version 
+	 * @param useragent browser and version
 	 * @param msg message
 	 * @return msg
 	 */

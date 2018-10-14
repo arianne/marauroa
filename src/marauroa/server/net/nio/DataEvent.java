@@ -16,9 +16,9 @@ import java.nio.channels.SocketChannel;
 /**
  * This class represents a data event. It stores the socket associated and the
  * data that has been received.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 class DataEvent {
 

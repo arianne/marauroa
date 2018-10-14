@@ -36,7 +36,7 @@ public class GameEventDAO {
 
 	/**
 	 * adds an game event to the log
-	 * 
+	 *
 	 * @param transaction DBTransaction
 	 * @param source player name
 	 * @param event event type
@@ -69,7 +69,7 @@ public class GameEventDAO {
 
 	/**
 	 * adds an game event to the log
-	 * 
+	 *
 	 * @param source player name
 	 * @param event event type
 	 * @param params parameters
@@ -87,5 +87,4 @@ public class GameEventDAO {
 			TransactionPool.get().rollback(transaction);
 		}
 	}
-
 }

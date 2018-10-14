@@ -101,7 +101,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 		return true;
 	}
 
-	
+
 	/**
 	 * Callback method called when a new player enters in the game
 	 *
@@ -234,7 +234,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 
 	/**
 	 * gets the content type for the requested resource
-	 * 
+	 *
 	 * @param resource name of resource
 	 * @return mime content/type or <code>null</code>
 	 */
@@ -255,12 +255,11 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 
 	/**
 	 * gets an input stream to the requested resource
-	 * 
+	 *
 	 * @param resource name of resource
 	 * @return InputStream or <code>null</code>
 	 */
 	public InputStream getResource(String resource) {
 		return null;
 	}
-
 }

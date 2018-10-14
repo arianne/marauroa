@@ -23,9 +23,9 @@ import org.junit.Test;
 /**
  * Test the overall idea of Player Entry container to make sure it works
  * correctly. Database needs to be accesible in order to test it.
- * 
+ *
  * @author miguel
- * 
+ *
  */
 public class PlayerEntryContainerTest {
 
@@ -33,7 +33,7 @@ public class PlayerEntryContainerTest {
 
 	/**
 	 * Initialize the container.
-	 * 
+	 *
 	 */
 	@BeforeClass
 	public static void setUp() {
@@ -43,7 +43,7 @@ public class PlayerEntryContainerTest {
 	/**
 	 * Add an entry to the container and test if it is added correctly and if it
 	 * can be retrieved using the available methods.
-	 * 
+	 *
 	 */
 	@Test
 	public void testAdd() {
@@ -60,7 +60,7 @@ public class PlayerEntryContainerTest {
 
 	/**
 	 * Test get methods to see if they work as expected.
-	 * 
+	 *
 	 */
 	@Test
 	public void testGet() {
@@ -74,7 +74,7 @@ public class PlayerEntryContainerTest {
 
 	/**
 	 * Test remove method.
-	 * 
+	 *
 	 */
 	@Test
 	public void testRemove() {
@@ -88,5 +88,4 @@ public class PlayerEntryContainerTest {
 		removed = cont.remove(entry.clientid);
 		assertNull(removed);
 	}
-
 }
