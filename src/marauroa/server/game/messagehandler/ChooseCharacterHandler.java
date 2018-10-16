@@ -50,8 +50,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 		MessageC2SChooseCharacter msg = (MessageC2SChooseCharacter) message;
 		try {
 			int clientid = msg.getClientID();
-
-			PlayerEntry entry = playerContainer.get(clientid);
+			PlayerEntry entry = playerContainer.get(msg.getChannel());
 
 			/*
 			 * verify event so that we can trust that it comes from our player
@@ -66,11 +65,11 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 
 			PlayerEntry oldEntry = playerContainer.getOldEntry(entry);
 			if (oldEntry != null) {
-				if (oldEntry.state == ClientState.GAME_BEGIN) {
+				if ((oldEntry.state == ClientState.GAME_BEGIN) && oldEntry.username.equals(entry.username)) {
 					reownOldEntry(oldEntry, entry);
 					return;
 				} else {
-					logger.warn("Old PlayerEntry exists but is not in state GAME_BEGIN: " + oldEntry);
+					logger.warn("Old PlayerEntry exists but is not in state GAME_BEGIN or username (" + entry.username + ") does not match: " + oldEntry);
 					rejectClient(msg.getChannel(), clientid, entry);
 					playerContainer.getLock().requestWriteLock();
 					logger.debug("Disconnecting " + entry.channel + " with " + entry + " because there is a unexpected old entry.");
