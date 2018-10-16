@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+3.9.6 Security Update
+
+- Marauroa failed to verify username on client transfer (thanks to pepzs for the report)
+
+
+
 3.9.5
 
 - fixed a race condition allowing double login which may result in item duplication (thanks to pepsz for the report)
