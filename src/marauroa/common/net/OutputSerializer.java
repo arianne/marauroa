@@ -262,6 +262,17 @@ public class OutputSerializer {
 	}
 
 	/**
+	 * escapes a JSON string
+	 *
+	 * @param value json string to escape
+	 * @return escaped json string
+	 */
+	public static String escapeJsonString(String value) {
+		// TODO: needs more escaping
+		return value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n").replace("<", "\\u003c").replace("\t", "\\t");
+	}
+	
+	/**
 	 * writes a json key-value-pair
 	 *
 	 * @param out buffer to write to
@@ -269,8 +280,7 @@ public class OutputSerializer {
 	 */
 	public static void writeJson(StringBuilder out, String value) {
 		out.append("\"");
-		// TODO: needs more escaping
-		out.append(value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n").replace("<", "\\u003c"));
+		out.append(escapeJsonString(value));
 		out.append("\"");
 	}
 
@@ -283,11 +293,9 @@ public class OutputSerializer {
 	 */
 	public static void writeJson(StringBuilder out, String key, String value) {
 		out.append("\"");
-		// TODO: needs more escaping
-		out.append(key.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n").replace("<", "\\u003c"));
+		out.append(escapeJsonString(key));
 		out.append("\":\"");
-		// TODO: needs more escaping
-		out.append(value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n").replace("<", "\\u003c"));
+		out.append(escapeJsonString(value));
 		out.append("\"");
 	}
 
