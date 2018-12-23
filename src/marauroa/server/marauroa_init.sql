@@ -181,7 +181,7 @@ create table if not exists email
   token      varchar(64),
   address    varchar(64),
   timedate   timestamp default CURRENT_TIMESTAMP,
-  confirmed  timestamp,
+  confirmed  timestamp null,
   primary key(id)
   );
 
