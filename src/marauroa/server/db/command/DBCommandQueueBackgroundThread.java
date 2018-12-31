@@ -114,7 +114,7 @@ class DBCommandQueueBackgroundThread implements Runnable {
 		} catch (SQLException e) {
 			logger.error(e, e);
 			I18N.resetThreadLocale();
-			if (e.toString().contains("CommunicationsException") || e.toString().contains("Query execution was interrupted")) {
+			if (transaction.isConnectionError(e)) {
 				TransactionPool.get().killTransaction(transaction);
 				TransactionPool.get().refreshAvailableTransaction();
 				return false;
