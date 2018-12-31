@@ -376,6 +376,8 @@ public class CharacterDAO {
 	 *            the database transaction
 	 * @param username
 	 *            the player's username
+	 * @param condition
+	 *            additional where part
 	 * @return The loaded RPObject
 	 * @throws SQLException
 	 *             if there is any problem at database
