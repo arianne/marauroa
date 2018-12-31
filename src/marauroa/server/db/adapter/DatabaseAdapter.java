@@ -150,4 +150,13 @@ public interface DatabaseAdapter {
 	 * @return true, if the connection is valid; false otherwise
 	 */
 	public boolean verifyConnection();
+
+
+	/**
+	 * determine if the Exception indicates a connection error, so a retry of the transaction makes sense.
+	 *
+	 * @param e Exception
+	 * @return true, if the exception indicates a connection error; false otherwise
+	 */
+	public boolean isConnectionError(Exception e);
 }

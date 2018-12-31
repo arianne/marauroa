@@ -301,6 +301,6 @@ public class DBTransaction {
 	 * @return true, if the exception indicates a connection error; false otherwise
 	 */
 	public boolean isConnectionError(Exception e) {
-		return (e.toString().contains("CommunicationsException") || e.toString().contains("Query execution was interrupted"));
+		return databaseAdapter.isConnectionError(e);
 	}
 }

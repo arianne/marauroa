@@ -300,4 +300,14 @@ public abstract class AbstractDatabaseAdapter implements DatabaseAdapter {
 			return false;
 		}
 	}
+
+	/**
+	 * determine if the Exception indicates a connection error, so a retry of the transaction makes sense.
+	 *
+	 * @param e Exception
+	 * @return true, if the exception indicates a connection error; false otherwise
+	 */
+	public boolean isConnectionError(Exception e) {
+		return (e.toString().contains("CommunicationsException") || e.toString().contains("Query execution was interrupted"));
+	}
 }
