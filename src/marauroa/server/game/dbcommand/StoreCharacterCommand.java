@@ -18,8 +18,8 @@ import org.apache.log4j.Logger;
 
 import marauroa.common.game.RPObject;
 import marauroa.server.db.DBTransaction;
-import marauroa.server.db.TransactionPool;
 import marauroa.server.db.command.AbstractDBCommand;
+import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.db.CharacterDAO;
 import marauroa.server.game.db.DAORegister;
 
@@ -76,15 +76,10 @@ public class StoreCharacterCommand extends AbstractDBCommand {
 		logger.error("Disabling character " + character + " because of storage error.");
 
 		// use a dedicated transaction because our original transaction is flagged 
-		// as broken and will be rolled back as we are handling a DB error.
-		DBTransaction transaction = TransactionPool.get().beginWork();
-		try {
-			DAORegister.get().get(CharacterDAO.class).setCharacterStatus(username, character, "inactive");
-		} finally {
-			TransactionPool.get().commit(transaction);
-		}
+		// as broken and will be rolled back as we are handling a DB error. It still may
+		// own locks at this time, so we cannot open a new connection right away.
+		DBCommandQueue.get().enqueue(new SetCharacterStatusCommand(username, character, "inactive"));
 	}
-
 
 	/**
 	 * returns a string suitable for debug output of this DBCommand.
@@ -93,7 +88,7 @@ public class StoreCharacterCommand extends AbstractDBCommand {
 	 */
 	@Override
 	public String toString() {
-		return "StoreCharacterCommand [username=" + username + ", character="
-				+ character + ", frozenObject=" + frozenObject + "]";
+		return "StoreCharacterCommand [username=" + username + ", character=" + character + "]";
 	}
+
 }
