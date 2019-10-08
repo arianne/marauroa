@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.HttpCookie;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
+import java.util.LinkedList;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,6 +15,7 @@ import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.UpgradeRequest;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
+import org.eclipse.jetty.websocket.api.WriteCallback;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
@@ -26,13 +28,17 @@ import marauroa.server.game.rp.DebugInterface;
  *
  * @author hendrik
  */
-public class WebSocketChannel extends WebSocketAdapter {
+public class WebSocketChannel extends WebSocketAdapter implements WriteCallback {
 	private static Logger logger = Log4J.getLogger(WebSocketChannel.class);
 
 	private static WebSocketConnectionManager webSocketServerManager = WebSocketConnectionManager.get();
+	private LinkedList<String> queue = new LinkedList<String>();
+	private boolean sending = false;
+	
 	private String username;
 	private String useragent;
 	private InetSocketAddress address;
+
 
 	@Override
 	public void onWebSocketConnect(Session sess) {
@@ -167,19 +173,35 @@ public class WebSocketChannel extends WebSocketAdapter {
 	 *
 	 * @param json json string to send
 	 */
-	public void sendMessage(String json) {
-		try {
-			RemoteEndpoint remote = this.getRemote();
-			if (remote != null) {
-				remote.sendString(json);
-			}
-		} catch (IOException e) {
-			logger.error(e, e);
+	public synchronized void sendMessage(String json) {
+		queue.add(json);
+		if (!this.sending) {
+			sendNextMessage();
+		}
+	}
+
+	private synchronized void sendNextMessage() {
+		String message = queue.poll();
+		if (message == null) {
+			this.sending = false;
+			return;
+		}
+		RemoteEndpoint remote = this.getRemote();
+		if (remote != null) {
+			this.sending = true;
+			remote.sendString(message, this);
 		}
 	}
 
 	public void close() {
-		// TODO Auto-generated method stub
+		// nothing to do
+	}
 
+	public void writeFailed(Throwable e) {
+		logger.error(e, e);
+	}
+
+	public synchronized void writeSuccess() {
+		sendNextMessage();
 	}
 }

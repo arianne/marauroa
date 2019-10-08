@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+3.9.7
+- fixed concurrency issue between perceptions and content transfer in WebSocketChannel 
+
+
 3.9.6 Security Update
 
 - Marauroa failed to verify username on client transfer (thanks to pepzs for the report)
