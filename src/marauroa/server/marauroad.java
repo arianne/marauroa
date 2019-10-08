@@ -155,7 +155,7 @@ public class marauroad extends Thread {
 	private static final Logger logger = Log4J.getLogger(marauroad.class);
 
 	/** Which marauroa version are we running */
-	private static final String VERSION = "3.9.6";
+	private static final String VERSION = "3.9.7";
 
 	/** Marauroa is a singleton. */
 	private static marauroad marauroa;
