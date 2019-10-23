@@ -137,6 +137,7 @@ marauroa.currentZone = {
 	clear: function() {
 		for (var i in marauroa.currentZone) {
 			if (marauroa.currentZone.hasOwnProperty(i) && typeof(marauroa.currentZone[i]) !== "function") {
+				marauroa.currentZone[i].destroy(marauroa.currentZone);
 				delete marauroa.currentZone[i];
 			}
 		}
