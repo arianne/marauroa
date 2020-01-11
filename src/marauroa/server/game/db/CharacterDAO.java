@@ -213,7 +213,7 @@ public class CharacterDAO {
 		try {
 			String query = "SELECT charname, username FROM characters, account "
 				+ " WHERE account.username='[username]' AND account.id=characters.player_id "
-				+ " AND characters.status='active' AND charname='[character]'";
+				+ " AND account.status='active' AND characters.status='active' AND charname='[character]'";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			params.put("character", character);
