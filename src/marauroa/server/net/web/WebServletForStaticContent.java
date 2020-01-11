@@ -125,6 +125,7 @@ public class WebServletForStaticContent extends HttpServlet {
 				is = rpMan.getResource(name);
 			}
 			if (is == null) {
+				response.setStatus(404);
 				throw new FileNotFoundException(name);
 			}
 			os = response.getOutputStream();
