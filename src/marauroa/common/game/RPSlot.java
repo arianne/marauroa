@@ -541,7 +541,11 @@ public class RPSlot implements marauroa.common.net.Serializable, Iterable<RPObje
 			name = rpClass.getName(DefinitionClass.RPSLOT, code);
 		}
 
-		capacity = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name).getCapacity();
+		Definition slotDefinition = owner.getRPClass().getDefinition(DefinitionClass.RPSLOT, name);
+		if (slotDefinition == null) {
+			throw new IOException("Slot " + name + " is not defined");
+		}
+		capacity = slotDefinition.getCapacity();
 
 		int size = in.readInt();
 
