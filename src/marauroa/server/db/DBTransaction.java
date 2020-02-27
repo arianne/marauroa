@@ -303,4 +303,14 @@ public class DBTransaction {
 	public boolean isConnectionError(Exception e) {
 		return databaseAdapter.isConnectionError(e);
 	}
+
+	/**
+	 * determines if this Exception was caused by an deadlock, so a retry of the transaction makes sense
+	 *
+	 * @param e Exception
+	 * @return true, if the exception indicates a deadlock; false otherwise
+	 */
+	public boolean isDeadlockError(SQLException e) {
+		return e.getMessage().contains("Deadlock detected");
+	}
 }

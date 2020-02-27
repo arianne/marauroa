@@ -114,7 +114,14 @@ class DBCommandQueueBackgroundThread implements Runnable {
 		} catch (SQLException e) {
 			logger.error(e, e);
 			I18N.resetThreadLocale();
-			if (transaction.isConnectionError(e)) {
+			if (transaction.isDeadlockError(e)) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException eSleep) {
+					logger.error(eSleep);
+				}
+			}
+			if (transaction.isConnectionError(e) || transaction.isDeadlockError(e)) {
 				TransactionPool.get().killTransaction(transaction);
 				TransactionPool.get().refreshAvailableTransaction();
 				return false;
