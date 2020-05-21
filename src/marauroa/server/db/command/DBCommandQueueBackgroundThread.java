@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2018 - Marauroa                    *
+ *                   (C) Copyright 2009-2020 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -30,8 +30,10 @@ import org.apache.log4j.MDC;
  */
 class DBCommandQueueBackgroundThread implements Runnable {
 	private static Logger logger = Log4J.getLogger(DBCommandQueueBackgroundThread.class);
+	private DBCommandQueueLogger dbCommandQueueLogger = new DBCommandQueueLogger();
 
 	private long lastWarningTimestamp = 0;
+
 
 	/**
 	 * the background thread
@@ -75,17 +77,21 @@ class DBCommandQueueBackgroundThread implements Runnable {
 			return;
 		}
 
+		long startTime = System.currentTimeMillis();
 		for (int i = 0; i < 5; i++) {
 			if (executeDBAction(metaData)) {
 				break;
 			}
 			logger.warn("Retrying DBCommand " + metaData);
 		}
+		long dbDoneTime = System.currentTimeMillis();
 
 		if (metaData.getCommand() instanceof DBCommandWithCallback) {
 			DBCommandWithCallback commandWithCallback = (DBCommandWithCallback) metaData.getCommand();
 			commandWithCallback.invokeCallback();
 		}
+		long callbackDoneTime = System.currentTimeMillis();
+		dbCommandQueueLogger.log(metaData, startTime, dbDoneTime, callbackDoneTime);
 
 		if (metaData.isResultAwaited()) {
 			metaData.setProcessedTimestamp(System.currentTimeMillis());
