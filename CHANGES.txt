@@ -3,6 +3,8 @@ Changelog
 
 3.9.8
 - retry transactions on deadlock detection
+- supported KeepALive during login phase
+
 
 3.9.7
 - fixed concurrency issue between perceptions and content transfer in WebSocketChannel 

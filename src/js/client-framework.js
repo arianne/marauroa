@@ -47,7 +47,15 @@ marauroa.clientFramework = {
 		var url = protocol + "://" + host + port + "/ws/";
 		var socket = new WebSocket(url);
 		socket.onmessage = marauroa.clientFramework.onMessage;
-		socket.onopen = marauroa.clientFramework.onConnect;
+		socket.onopen = function() {
+			setInterval(function() {
+				var msg = {
+						"t": "8",
+				};
+				marauroa.clientFramework.sendMessage(msg);
+			}, 10000);
+			marauroa.clientFramework.onConnect;
+		}
 		socket.onclose = marauroa.clientFramework.onDisonnect;
 		marauroa.clientFramework.socket = socket;
 	},

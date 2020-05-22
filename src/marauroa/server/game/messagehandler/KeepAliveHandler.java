@@ -36,9 +36,12 @@ class KeepAliveHandler extends MessageHandler {
 		try {
 			int clientid = alive.getClientID();
 			PlayerEntry entry = playerContainer.get(clientid);
+			if (entry == null) {
+				return;
+			}
 
 			// verify event
-			if (!isValidEvent(alive, entry, ClientState.GAME_BEGIN, ClientState.LOGIN_COMPLETE)) {
+			if (!isValidEvent(alive, entry, ClientState.CONNECTION_ACCEPTED, ClientState.GAME_BEGIN, ClientState.LOGIN_COMPLETE)) {
 				return;
 			}
 

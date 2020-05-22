@@ -13,6 +13,7 @@ public class MarauroaWebSocketServlet extends org.eclipse.jetty.websocket.servle
 	@Override
 	public void configure(WebSocketServletFactory factory) {
 		factory.register(WebSocketChannel.class);
+		factory.getPolicy().setIdleTimeout(30 * 1000);
 	}
 
 }
