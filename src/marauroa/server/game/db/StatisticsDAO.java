@@ -57,6 +57,7 @@ public class StatisticsDAO {
 	 *
 	 * @param var Variables
 	 */
+	@Deprecated
 	public void addStatisticsEvent(Variables var) {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {

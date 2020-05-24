@@ -248,6 +248,7 @@ public class RPObjectDAO {
 	 * @throws IOException in case of an input/output error
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public RPObject loadRPObject(int objectid, boolean transform) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -266,6 +267,7 @@ public class RPObjectDAO {
 	 * @throws IOException in case of an input/output error
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public RPObject loadRPObject(int objectid) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -283,6 +285,7 @@ public class RPObjectDAO {
 	 * @return objectid
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public int removeRPObject(int objectid) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -300,6 +303,7 @@ public class RPObjectDAO {
 	 * @return true, if it exists; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean hasRPObject(int objectid) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -318,6 +322,7 @@ public class RPObjectDAO {
 	 * @throws IOException in case of an input/output error
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public int storeRPObject(RPObject object) throws IOException, SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {

@@ -98,6 +98,7 @@ public class LoginSeedDAO {
 	 *    <code>null</code>, if the seed does not exist at all
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public Boolean verifySeed(String username, String seed) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -114,6 +115,7 @@ public class LoginSeedDAO {
 	 * @param seed seed
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void useSeed(String seed) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {

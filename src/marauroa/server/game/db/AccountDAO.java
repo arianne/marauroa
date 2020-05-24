@@ -624,6 +624,7 @@ public class AccountDAO {
 	 * @param email email-address
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addPlayer(String username, byte[] password, String email) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -640,6 +641,7 @@ public class AccountDAO {
 	 * @param email new email-address
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void changeEmail(String username, String email) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -656,6 +658,7 @@ public class AccountDAO {
 	 * @param password new password
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void changePassword(String username, String password) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -672,6 +675,7 @@ public class AccountDAO {
 	 * @return true, if the account exists; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean hasPlayer(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -689,6 +693,7 @@ public class AccountDAO {
 	 * @param status account status
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void setAccountStatus(String username, String status) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -705,6 +710,7 @@ public class AccountDAO {
 	 * @return account status, or <code>null</code> if no such account exists
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public String getAccountStatus(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -722,6 +728,7 @@ public class AccountDAO {
 	 * @return account ban message, or <code>null</code> if this account is not banned
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public String getAccountBanMessage(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -739,6 +746,7 @@ public class AccountDAO {
 	 * @return email of account, or <code>null</code> if no such account exists
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public String getEmail(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -756,6 +764,7 @@ public class AccountDAO {
 	 * @return id of account, or -1 if no such account exists
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public int getDatabasePlayerId(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -773,6 +782,7 @@ public class AccountDAO {
 	 * @return true, on success; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean verify(SecuredLoginInfo informations) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -791,6 +801,7 @@ public class AccountDAO {
 	 * @return true on success, false if the account does not exists or the password does not match
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean verifyPassword(String username, String password) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -808,6 +819,7 @@ public class AccountDAO {
 	 * @return always true
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean removePlayer(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -827,6 +839,7 @@ public class AccountDAO {
 	 * @throws SQLException in case of an database error
 	 * @throws IOException in case of an input/output error
 	 */
+	@Deprecated
 	public boolean isAccountCreationLimitReached(String address) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -845,6 +858,7 @@ public class AccountDAO {
 	 * @param expire timestamp when this ban will expire, may be <code>null</code>
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addBan(String username, String reason, Timestamp expire)
 			throws SQLException {
 

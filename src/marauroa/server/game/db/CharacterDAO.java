@@ -627,6 +627,7 @@ public class CharacterDAO {
 	 * @throws IOException in case of an input/output error
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addCharacter(String username, String character, RPObject player) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -644,6 +645,7 @@ public class CharacterDAO {
 	 * @return true, if the character was deleted, false if it did not exist
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean removeCharacter(String username, String character) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -662,6 +664,7 @@ public class CharacterDAO {
 	 * @return true, if the character exists and belongs to the account; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean hasCharacter(String character) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -680,6 +683,7 @@ public class CharacterDAO {
 	 * @return true, if the character exists and belongs to the account; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean hasCharacter(String username, String character) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -699,6 +703,7 @@ public class CharacterDAO {
 	 * @return true, if the character exists and belongs to the account; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean hasActiveCharacter(String username, String character) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -716,6 +721,7 @@ public class CharacterDAO {
 	 * @return list of characters
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public List<String> getCharacters(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -740,6 +746,7 @@ public class CharacterDAO {
 	 *             if there is any problem at database.
 	 * @throws IOException
 	 */
+	@Deprecated
 	public void storeCharacter(String username, String character, RPObject player) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -762,6 +769,7 @@ public class CharacterDAO {
 	 *             if there is any problem at database
 	 * @throws IOException
 	 */
+	@Deprecated
 	public RPObject loadCharacter(String username, String character) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -784,6 +792,7 @@ public class CharacterDAO {
 	 * @throws IOException
 	 *             if there is a problem reading the blob
 	 */
+	@Deprecated
 	public Map<String, RPObject> loadAllCharacters(String username) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -806,6 +815,7 @@ public class CharacterDAO {
 	 * @throws IOException
 	 *             if there is a problem reading the blob
 	 */
+	@Deprecated
 	public Map<String, RPObject> loadAllActiveCharacters(String username) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -823,6 +833,7 @@ public class CharacterDAO {
 	 * @return name of account, or <code>null<code> in case the character does not exist
 	 * @throws SQLException if there is any problem at database
 	 */
+	@Deprecated
 	public String getAccountName(String character) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -840,6 +851,7 @@ public class CharacterDAO {
 	 * @return name of character, or <code>null<code> in case the character does not exist
 	 * @throws SQLException if there is any problem at database
 	 */
+	@Deprecated
 	public String getCanonicalName(String character) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -859,6 +871,7 @@ public class CharacterDAO {
 	 * @throws IOException in case of an input output error
 	 * @throws SQLException if there is any problem at database
 	 */
+	@Deprecated
 	public boolean isCharacterCreationLimitReached(String username, String address) throws IOException, SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -875,6 +888,7 @@ public class CharacterDAO {
 	 * @return date of character creation or null if no character with that name exists
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public Date getCreationDate(String character) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -894,6 +908,7 @@ public class CharacterDAO {
 	 * @throws IOException in case of an input/output error
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void setCharacterStatus(String username, String character, String status) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {

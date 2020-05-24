@@ -392,6 +392,7 @@ public class LoginEventDAO {
 	 * @param result 0 failed password, 1 successful login, 2 banned, 3 inactive, 4 blocked, 5 merged
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addLoginEvent(String username, InetAddress source, String service, String seed, int result) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -410,6 +411,7 @@ public class LoginEventDAO {
 	 * @return list of login attempts
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public List<String> getLoginEvents(String username, int events) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -429,6 +431,7 @@ public class LoginEventDAO {
 	 * @return true, if this account is blocked; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean isAccountBlocked(String username) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
@@ -447,6 +450,7 @@ public class LoginEventDAO {
 	 * @return true, if this address is blocked; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public boolean isAddressBlocked(String address) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {

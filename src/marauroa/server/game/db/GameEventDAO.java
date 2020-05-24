@@ -74,6 +74,7 @@ public class GameEventDAO {
 	 * @param event event type
 	 * @param params parameters
 	 */
+	@Deprecated
 	public void addGameEvent(String source, String event, String... params) {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {

@@ -61,6 +61,7 @@ public class BanListDAO {
 	 * @return list of banned ip-address ranges
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public List<InetAddressMask> getBannedAddresses() throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
