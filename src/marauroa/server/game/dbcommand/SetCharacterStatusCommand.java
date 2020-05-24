@@ -45,7 +45,7 @@ public class SetCharacterStatusCommand extends AbstractDBCommand {
 
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
-		DAORegister.get().get(CharacterDAO.class).setCharacterStatus(username, character, status);
+		DAORegister.get().get(CharacterDAO.class).setCharacterStatus(transaction, username, character, status);
 	}
 
 }

@@ -218,7 +218,6 @@ public class RPZoneDAO {
 	 * @throws IOException in case of an input/output error
 	 * @throws SQLException in case of an database error
 	 */
-	@Deprecated
 	public void loadRPZone(IRPZone zone) throws SQLException, IOException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {

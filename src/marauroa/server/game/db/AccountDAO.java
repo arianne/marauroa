@@ -424,7 +424,7 @@ public class AccountDAO {
 				return false;
 			}
 			// the provided seed is valid, use it up
-			loginSeedDAO.useSeed(informations.seed);
+			loginSeedDAO.useSeed(transaction, informations.seed);
 			if (seedVerified.booleanValue()) {
 				// the seed was even pre authenticated, so we are done here
 				return true;
@@ -588,7 +588,7 @@ public class AccountDAO {
 	public void addBan(DBTransaction transaction, String username, String reason, Timestamp expire)
 			throws SQLException {
 		try {
-			int player_id = getDatabasePlayerId(username);
+			int player_id = getDatabasePlayerId(transaction, username);
 
 			String expireStr = "'[expire]'";
 			if (expire == null) {

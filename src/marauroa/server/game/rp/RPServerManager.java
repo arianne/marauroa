@@ -459,6 +459,7 @@ public class RPServerManager extends Thread {
 	 *
 	 * @param object player object
 	 * @return true, to continue, false to prevent logout
+	 * @throws RPObjectNotFoundException if the object does not exist
 	 */
 	public boolean onExit(RPObject object) throws RPObjectNotFoundException {
 		scheduler.clearRPActions(object);
@@ -470,7 +471,12 @@ public class RPServerManager extends Thread {
 		return ruleProcessor.onExit(object);
 	}
 
-	/** This method is called when connection to client is closed */
+	/** 
+	 * This method is called when connection to client is closed
+	 *
+	 * @param object player object
+	 * @throws RPObjectNotFoundException if the object does not exist
+	 */
 	public void onTimeout(RPObject object) throws RPObjectNotFoundException {
 		DebugInterface.get().onTimeout(object);
 		scheduler.clearRPActions(object);
@@ -519,14 +525,24 @@ public class RPServerManager extends Thread {
 		}
 	}
 
-	/** This method is triggered to send content to the clients */
+	/**
+	 * This method is triggered to send content to the clients
+	 *
+	 * @param target player
+	 * @param content content to transfer
+	 */
 	public void transferContent(RPObject target, List<TransferContent> content) {
 		synchronized (contentsToTransfer) {
 			contentsToTransfer.put(target, content);
 		}
 	}
 
-	/** This method is triggered to send content to the clients */
+	/**
+	 * This method is triggered to send content to the clients
+	 *
+	 * @param target player
+	 * @param content content to transfer
+	 */
 	public void transferContent(RPObject target, TransferContent content) {
 		List<TransferContent> list = new LinkedList<TransferContent>();
 		list.add(content);
