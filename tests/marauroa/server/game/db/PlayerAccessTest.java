@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
@@ -71,7 +73,7 @@ public class PlayerAccessTest {
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertTrue(accountDAO.hasPlayer(transaction, username));
 		} finally {
 			transactionPool.rollback(transaction);
@@ -95,7 +97,7 @@ public class PlayerAccessTest {
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertTrue(accountDAO.hasPlayer(transaction, username));
 
 			SecuredLoginInfo login = SecureLoginTest.simulateSecureLogin(username,
@@ -130,12 +132,12 @@ public class PlayerAccessTest {
 			if (accountDAO.hasPlayer(transaction, username)) {
 				fail("Player was not expected");
 			}
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 
 			if (!accountDAO.hasPlayer(transaction, username)) {
 				fail("Player was expected");
 			}
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 
 			fail("Player was added");
 		} finally {
@@ -155,7 +157,7 @@ public class PlayerAccessTest {
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertTrue(accountDAO.hasPlayer(transaction, username));
 			accountDAO.removePlayer(transaction, username);
 			assertFalse(accountDAO.hasPlayer(transaction, username));
@@ -176,7 +178,7 @@ public class PlayerAccessTest {
 		DBTransaction transaction = transactionPool.beginWork();
 
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertEquals("active", accountDAO.getAccountStatus(transaction, username));
 		} finally {
 			transactionPool.rollback(transaction);
@@ -195,7 +197,7 @@ public class PlayerAccessTest {
 		DBTransaction transaction = transactionPool.beginWork();
 
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertEquals("active", accountDAO.getAccountStatus(transaction, username));
 			accountDAO.setAccountStatus(transaction, username, "banned");
 			assertEquals("banned", accountDAO.getAccountStatus(transaction, username));
@@ -217,7 +219,7 @@ public class PlayerAccessTest {
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertTrue(accountDAO.hasPlayer(transaction, username));
 
 			InetAddress address = InetAddress.getLocalHost();
@@ -225,7 +227,7 @@ public class PlayerAccessTest {
 			assertFalse(loginEventDAO.isAccountBlocked(transaction, username));
 
 			for (int i = 0; i < TimeoutConf.FAILED_LOGIN_ATTEMPTS_ACCOUNT + 1; i++) {
-				DAORegister.get().get(LoginEventDAO.class).addLoginEvent(transaction, username, address, null, null, 0);
+				DAORegister.get().get(LoginEventDAO.class).addLoginEvent(transaction, username, address, null, null, 0, new Timestamp(new Date().getTime()));
 			}
 
 			assertTrue(loginEventDAO.isAccountBlocked(transaction, username));

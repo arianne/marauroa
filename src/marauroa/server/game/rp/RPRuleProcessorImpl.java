@@ -13,6 +13,8 @@ package marauroa.server.game.rp;
 
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import marauroa.common.Log4J;
@@ -174,7 +176,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 			if (accountDAO.hasPlayer(trans, username)) {
 				return new AccountResult(Result.FAILED_PLAYER_EXISTS, username);
 			}
-			accountDAO.addPlayer(trans, username, Hash.hash(password), email);
+			accountDAO.addPlayer(trans, username, Hash.hash(password), email, new Timestamp(new Date().getTime()));
 			transactionPool.commit(trans);
 			return new AccountResult(Result.OK_CREATED, username);
 
@@ -205,7 +207,7 @@ public class RPRuleProcessorImpl implements IRPRuleProcessor {
 			RPObject object = createCharacterObject(username, character, template);
 			IRPZone zone = RPWorld.get().getDefaultZone();
 			zone.assignRPObjectID(object);
-			characterDAO.addCharacter(trans, username, character, object);
+			characterDAO.addCharacter(trans, username, character, object, new Timestamp(new Date().getTime()));
 			transactionPool.commit(trans);
 			return new CharacterResult(Result.OK_CREATED, character, object);
 

@@ -12,6 +12,8 @@
 package marauroa.server.game.db;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +45,22 @@ public class GameEventDAO {
 	 * @param params parameters
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addGameEvent(DBTransaction transaction, String source, String event, String... params) throws SQLException {
+		this.addGameEvent(transaction, new Timestamp(new Date().getTime()), source, event, params);
+	}
+
+	/**
+	 * adds an game event to the log
+	 *
+	 * @param transaction DBTransaction
+	 * @param timestamp timestamp
+	 * @param source player name
+	 * @param event event type
+	 * @param params parameters
+	 * @throws SQLException in case of an database error
+	 */
+	public void addGameEvent(DBTransaction transaction, Timestamp timestamp, String source, String event, String... params) throws SQLException {
 		String firstParam = (params.length > 0 ? params[0] : "");
 		StringBuilder param = new StringBuilder();
 		if (params.length > 1) {
@@ -55,14 +72,15 @@ public class GameEventDAO {
 		String param2 = param.toString();
 
 		// write the row to the database, escaping and cutting the parameters to column size
-		String query = "insert into gameEvents(source, event, param1, param2)"
-			+ " values('[source]', '[event]', '[param1]', '[param2]');";
+		String query = "insert into gameEvents(source, event, param1, param2, timedate)"
+			+ " values('[source]', '[event]', '[param1]', '[param2]', '[timedate');";
 
 		Map<String, Object> sqlParams = new HashMap<String, Object>();
 		sqlParams.put("source", source);
 		sqlParams.put("event", event);
 		sqlParams.put("param1", (firstParam == null ? null : firstParam.substring(0, Math.min(127, firstParam.length()))));
 		sqlParams.put("param2", param2.substring(0, Math.min(255, param2.length())));
+		sqlParams.put("timedate", timestamp);
 
 		transaction.execute(query, sqlParams);
 	}

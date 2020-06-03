@@ -19,6 +19,8 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import marauroa.common.Log4J;
@@ -74,9 +76,9 @@ public class CharacterAccessTest {
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertTrue(accountDAO.hasPlayer(transaction, username));
-			characterDAO.addCharacter(transaction, username, character, player);
+			characterDAO.addCharacter(transaction, username, character, player, new Timestamp(new Date().getTime()));
 			assertTrue(characterDAO.hasCharacter(transaction, username, character));
 		} finally {
 			transactionPool.rollback(transaction);
@@ -97,11 +99,11 @@ public class CharacterAccessTest {
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertTrue(accountDAO.hasPlayer(transaction, username));
-			characterDAO.addCharacter(transaction, username, character, player);
+			characterDAO.addCharacter(transaction, username, character, player, new Timestamp(new Date().getTime()));
 			assertTrue(characterDAO.hasCharacter(transaction, username, character));
-			characterDAO.addCharacter(transaction, username, character, player);
+			characterDAO.addCharacter(transaction, username, character, player, new Timestamp(new Date().getTime()));
 
 			fail("Character was added");
 		} finally {
@@ -123,9 +125,9 @@ public class CharacterAccessTest {
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertTrue(accountDAO.hasPlayer(transaction, username));
-			characterDAO.addCharacter(transaction, username, character, player);
+			characterDAO.addCharacter(transaction, username, character, player, new Timestamp(new Date().getTime()));
 			assertTrue(characterDAO.hasCharacter(transaction, username, character));
 			characterDAO.removeCharacter(transaction, username, character);
 			assertFalse(characterDAO.hasCharacter(transaction, username, character));
@@ -149,9 +151,9 @@ public class CharacterAccessTest {
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertTrue(accountDAO.hasPlayer(transaction, username));
-			characterDAO.addCharacter(transaction, username, character, player);
+			characterDAO.addCharacter(transaction, username, character, player, new Timestamp(new Date().getTime()));
 			assertTrue(characterDAO.hasCharacter(transaction, username, character));
 			accountDAO.removePlayer(transaction, username);
 			assertFalse(characterDAO.hasCharacter(transaction, username, character));
@@ -174,9 +176,9 @@ public class CharacterAccessTest {
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			for (String character : characters) {
-				characterDAO.addCharacter(transaction, username, character, new RPObject());
+				characterDAO.addCharacter(transaction, username, character, new RPObject(), new Timestamp(new Date().getTime()));
 			}
 
 			List<String> result = characterDAO.getCharacters(transaction, username);
@@ -206,10 +208,10 @@ public class CharacterAccessTest {
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
 			assertFalse(accountDAO.hasPlayer(transaction, username));
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 
 			assertFalse(characterDAO.hasCharacter(transaction, username, character));
-			characterDAO.addCharacter(transaction, username, character, player);
+			characterDAO.addCharacter(transaction, username, character, player, new Timestamp(new Date().getTime()));
 
 			RPObject loaded = characterDAO.loadCharacter(transaction, username, character);
 			assertEquals(player, loaded);
@@ -233,9 +235,9 @@ public class CharacterAccessTest {
 
 		DBTransaction transaction = transactionPool.beginWork();
 		try {
-			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com");
+			accountDAO.addPlayer(transaction, username, Hash.hash("testPassword"), "email@email.com", new Timestamp(new Date().getTime()));
 			assertTrue(accountDAO.hasPlayer(transaction, username));
-			characterDAO.addCharacter(transaction, username, character, player);
+			characterDAO.addCharacter(transaction, username, character, player, new Timestamp(new Date().getTime()));
 			assertTrue(characterDAO.hasCharacter(transaction, username, character));
 			assertTrue(characterDAO.hasActiveCharacter(transaction, username, character));
 			//Now change the status

@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -57,16 +58,33 @@ public class LoginEventDAO {
 	 * @param result 0 failed password, 1 successful login, 2 banned, 3 inactive, 4 blocked, 5 merged
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source, String service, String seed, int result) throws SQLException {
+		this.addLoginEvent(transaction, username, source, service, seed, result, new Timestamp(new Date().getTime()));
+	}
 
+	/**
+	 * logs an login attempt
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param source ip-address
+	 * @param service name of service
+	 * @param seed seed
+	 * @param result 0 failed password, 1 successful login, 2 banned, 3 inactive, 4 blocked, 5 merged
+	 * @param timestamp timestamp
+	 * @throws SQLException in case of an database error
+	 */
+	public void addLoginEvent(DBTransaction transaction, String username, InetAddress source,
+			String service, String seed, int result, Timestamp timestamp) throws SQLException {
 		try {
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
 			// Note: playerId == -1 means that the player does not exist. We log this anyway to
 			// be able to notice if someone tries to hack accounts by picking	a fixed password
 			// and bruteforcing matching usernames.
 
-			String query = "insert into loginEvent(player_id, address, service, seed, result)"
-				+ " values ([player_id], '[address]', '[service]', '[seed]', [result])";
+			String query = "insert into loginEvent(player_id, address, service, seed, result, timedate)"
+				+ " values ([player_id], '[address]', '[service]', '[seed]', [result], '[timedate]')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
 			params.put("address", source.getHostAddress());
@@ -79,6 +97,7 @@ public class LoginEventDAO {
 			} else {
 			    params.put("seed", seed);
 			}
+			params.put("timedate", timestamp);
 			transaction.execute(query, params);
 		} catch (SQLException e) {
 			logger.error("Can't query for player \"" + username + "\"", e);
@@ -460,4 +479,5 @@ public class LoginEventDAO {
 			TransactionPool.get().commit(transaction);
 		}
 	}
+
 }

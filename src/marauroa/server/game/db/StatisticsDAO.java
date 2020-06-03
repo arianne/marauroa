@@ -12,6 +12,8 @@
 package marauroa.server.game.db;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,13 +44,27 @@ public class StatisticsDAO {
 	 * @param var Variables
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addStatisticsEvent(DBTransaction transaction, Variables var) throws SQLException {
-		String query = "insert into statistics(bytes_send, bytes_recv, players_login, players_logout, players_timeout, players_online, ips_online) "
-			+ " values([Bytes send], [Bytes recv], [Players login], [Players logout], [Players timeout], [Players online], [Ips online])";
+		addStatisticsEvent(transaction, var, new Timestamp(new Date().getTime()));
+	}
+
+	/**
+	 * adds an statistics sample to the database log
+	 *
+	 * @param transaction DBTransaction
+	 * @param var Variables
+	 * @param timestamp timestamp
+	 * @throws SQLException in case of an database error
+	 */
+	public void addStatisticsEvent(DBTransaction transaction, Variables var, Timestamp timestamp) throws SQLException {
+		String query = "insert into statistics(bytes_send, bytes_recv, players_login, players_logout, players_timeout, players_online, ips_online, timedate) "
+			+ " values([Bytes send], [Bytes recv], [Players login], [Players logout], [Players timeout], [Players online], [Ips online], '[timedate]')";
 		Map<String, Object> params = new HashMap<String, Object>();
 		for (String key : var) {
 			params.put(key, var.get(key));
 		}
+		params.put("timedate", timestamp);
 		transaction.execute(query, params);
 	}
 

@@ -18,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +50,20 @@ public class AccountDAO {
 		// hide constructor as this class should only be instantiated by DAORegister
 	}
 
+	/**
+	 * creates an account
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param passwordHash password hash
+	 * @param email email-address
+	 * @throws SQLException in case of an database error
+	 */
+	@Deprecated
+	public void addPlayer(DBTransaction transaction, String username, byte[] passwordHash, String email) throws SQLException {
+		addPlayer(transaction, username,passwordHash, email, new Timestamp(new Date().getTime()));
+	}
+
 
 	/**
 	 * creates an account
@@ -59,15 +74,15 @@ public class AccountDAO {
 	 * @param email email-address
 	 * @throws SQLException in case of an database error
 	 */
-	public void addPlayer(DBTransaction transaction, String username, byte[] passwordHash, String email) throws SQLException {
+	public void addPlayer(DBTransaction transaction, String username, byte[] passwordHash, String email, Timestamp timestamp) throws SQLException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(email)) {
 				throw new SQLException("Invalid string username=(" + username + ") email=(" + email
 				        + ")");
 			}
 
-			String query = "insert into account(username, password, status)"
-				+ " values('[username]','[password]', '[status]')";
+			String query = "insert into account(username, password, status, timedate)"
+				+ " values('[username]','[password]', '[status]', '[timedate]')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("username", username);
 			try {
@@ -81,6 +96,7 @@ public class AccountDAO {
 			} catch (IOException e) {
 				throw new SQLException(e);
 			}
+			params.put("timedate", timestamp);
 			logger.debug("addPlayer is using query: " + query);
 			transaction.execute(query, params);
 
@@ -628,7 +644,7 @@ public class AccountDAO {
 	public void addPlayer(String username, byte[] password, String email) throws SQLException {
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
-			addPlayer(transaction, username, password, email);
+			addPlayer(transaction, username, password, email, new Timestamp(new Date().getTime()));
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}

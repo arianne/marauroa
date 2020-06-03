@@ -64,7 +64,7 @@ public class LoginCommand extends DBCommandWithCallback {
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
 		if (info.isBlocked(transaction)) {
 			failReason = MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES;
-			info.addLoginEvent(transaction, info.address, 4);
+			info.addLoginEvent(transaction, info.address, 4, this.getEnqueueTime());
 			return;
 		}
 
@@ -73,7 +73,7 @@ public class LoginCommand extends DBCommandWithCallback {
 				info.reason = MessageS2CLoginNACK.Reasons.USERNAME_WRONG;
 			}
 			failReason = info.reason;
-			info.addLoginEvent(transaction, info.address, 0);
+			info.addLoginEvent(transaction, info.address, 0, this.getEnqueueTime());
 			return;
 		}
 
@@ -83,11 +83,11 @@ public class LoginCommand extends DBCommandWithCallback {
 			if (status == null) {
 				// oops
 			} else if (status.equals("banned")) {
-				info.addLoginEvent(transaction, info.address, 2);
+				info.addLoginEvent(transaction, info.address, 2, this.getEnqueueTime());
 			} else if (status.equals("inactive")) {
-				info.addLoginEvent(transaction, info.address, 3);
+				info.addLoginEvent(transaction, info.address, 3, this.getEnqueueTime());
 			} else if (status.equals("merged")) {
-				info.addLoginEvent(transaction, info.address, 5);
+				info.addLoginEvent(transaction, info.address, 5, this.getEnqueueTime());
 			}
 			failMessage = accountStatusMessage;
 			return;
@@ -95,7 +95,7 @@ public class LoginCommand extends DBCommandWithCallback {
 
 		/* Successful login */
 		previousLogins = DAORegister.get().get(LoginEventDAO.class).getLoginEvents(transaction, info.username, 1);
-		info.addLoginEvent(transaction, info.address, 1);
+		info.addLoginEvent(transaction, info.address, 1, this.getEnqueueTime());
 	}
 
 	/**

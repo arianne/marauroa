@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2010 - Marauroa                    *
+ *                   (C) Copyright 2010-2020 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -11,44 +11,44 @@
  ***************************************************************************/
 package marauroa.server.game.dbcommand;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.command.AbstractDBCommand;
-import marauroa.server.game.Statistics.Variables;
+import marauroa.server.game.db.AccountDAO;
 import marauroa.server.game.db.DAORegister;
-import marauroa.server.game.db.StatisticsDAO;
-
 
 /**
- * logs statistics.
+ * bans an account
  *
  * @author hendrik
  */
-public class LogStatisticsCommand extends AbstractDBCommand {
-	private Variables frozenNow;
+public class BanAccountCommand  extends AbstractDBCommand {
+	private String username;
+	private String reason;
+	private Timestamp expire;
 
+	
 	/**
-	 * creates a new LogStatisticsCommand
+	 * creates a BanAccountCommand
 	 *
-	 * @param now current state of statistic information
+	 * @param username username to ban
+	 * @param reason reason for the an
+	 * @param expire expire timestamp
 	 */
-	public LogStatisticsCommand(Variables now) {
-		this.frozenNow = (Variables) now.clone();
+	public BanAccountCommand(String username, String reason, Timestamp expire) {
+		this.username = username;
+		this.reason = reason;
+		this.expire = expire;
 	}
+
+
 
 	@Override
-	public void execute(DBTransaction transaction) throws SQLException {
-		DAORegister.get().get(StatisticsDAO.class).addStatisticsEvent(transaction, frozenNow, getEnqueueTime());
+	public void execute(DBTransaction transaction) throws SQLException, IOException {
+		DAORegister.get().get(AccountDAO.class).addBan(transaction, username, reason, expire);
 	}
 
-	/**
-	 * returns a string suitable for debug output of this DBCommand.
-	 *
-	 * @return debug string
-	 */
-	@Override
-	public String toString() {
-		return "LogStatisticsCommand [frozenNow=" + frozenNow + "]";
-	}
 }

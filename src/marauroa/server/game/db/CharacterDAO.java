@@ -48,6 +48,7 @@ public class CharacterDAO {
 		// hide constructor as this class should only be instantiated by DAORegister
 	}
 
+
 	/**
 	 * creates a new character
 	 *
@@ -58,8 +59,25 @@ public class CharacterDAO {
 	 * @throws IOException in case of an input/output error
 	 * @throws SQLException in case of an database error
 	 */
+	@Deprecated
 	public void addCharacter(DBTransaction transaction, String username, String character,
 	        RPObject player) throws SQLException, IOException {
+		addCharacter(transaction, username, character, player, new Timestamp(new Date().getTime()));
+	}
+
+	/**
+	 * creates a new character
+	 *
+	 * @param transaction DBTransaction
+	 * @param username username
+	 * @param character name of character
+	 * @param player RPObject of the player
+	 * @param timestamp timestamp
+	 * @throws IOException in case of an input/output error
+	 * @throws SQLException in case of an database error
+	 */
+	public void addCharacter(DBTransaction transaction, String username, String character,
+	        RPObject player, Timestamp timestamp) throws SQLException, IOException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
 				throw new SQLException("Invalid string username=(" + username + ") character=("
@@ -69,13 +87,14 @@ public class CharacterDAO {
 			int id = DAORegister.get().get(AccountDAO.class).getDatabasePlayerId(transaction, username);
 			int object_id = DAORegister.get().get(RPObjectDAO.class).storeRPObject(transaction, player);
 
-			String query = "insert into characters(player_id, charname, object_id, status)"
-				+ "values([player_id], '[character]', [object_id], '[status]')";
+			String query = "insert into characters(player_id, charname, object_id, status, timedate)"
+				+ "values([player_id], '[character]', [object_id], '[status]', '[timedate]')";
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("player_id", Integer.valueOf(id));
 			params.put("object_id", Integer.valueOf(object_id));
 			params.put("character", character);
 			params.put("status", Configuration.getConfiguration().get("character_creation_status", "active"));
+			params.put("timedate", timestamp);
 			logger.debug("addCharacter is executing query " + query);
 			logger.debug("Character: " + player);
 
@@ -274,6 +293,7 @@ public class CharacterDAO {
 		}
 	}
 
+
 	/**
  	 * This method stores a character's avatar in the database and updates the link
  	 * with the Character table.
@@ -290,8 +310,31 @@ public class CharacterDAO {
 	 *             if there is any problem at database.
 	 * @throws IOException
 	 */
+	@Deprecated
 	public void storeCharacter(DBTransaction transaction, String username, String character,
 	        RPObject player) throws SQLException, IOException {
+		storeCharacter(transaction, username, character, player, new Timestamp(new Date().getTime()));
+	}
+
+	/**
+ 	 * This method stores a character's avatar in the database and updates the link
+ 	 * with the Character table.
+	 *
+	 * @param transaction
+	 *            the database transaction
+	 * @param username
+	 *            the player's username
+	 * @param character
+	 *            the player's character name
+	 * @param player
+	 *            the RPObject itself.
+	 * @param timestamp timestamp
+	 * @throws SQLException
+	 *             if there is any problem at database.
+	 * @throws IOException
+	 */
+	public void storeCharacter(DBTransaction transaction, String username, String character,
+	        RPObject player, Timestamp timestamp) throws SQLException, IOException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
 				throw new SQLException("Invalid string username=(" + username + ") character=("

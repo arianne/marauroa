@@ -45,7 +45,7 @@ public class LogGameEventCommand extends AbstractDBCommand {
 
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException {
-		DAORegister.get().get(GameEventDAO.class).addGameEvent(transaction, source, event, params);
+		DAORegister.get().get(GameEventDAO.class).addGameEvent(transaction, this.getEnqueueTime(), source, event, params);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2020 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -37,8 +37,7 @@ public class LoginSeedDAO {
 
 
 	/**
-	 * checks if the ip-address is temporary blocked because of too many failed login attempts.
-	 * Blocking ip-addresses is not related to banning ip-addresses.
+	 * verifies a login seed
 	 *
 	 * @param transaction DBTransaction
 	 * @param username username

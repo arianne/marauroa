@@ -51,7 +51,7 @@ public class StoreCharacterCommand extends AbstractDBCommand {
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
 		try {
-			DAORegister.get().get(CharacterDAO.class).storeCharacter(transaction, username, character, frozenObject);
+			DAORegister.get().get(CharacterDAO.class).storeCharacter(transaction, username, character, frozenObject, getEnqueueTime());
 		} catch (SQLException e) {
 			if (!transaction.isConnectionError(e)) {
 				handleStorageFailure();

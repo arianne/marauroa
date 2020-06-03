@@ -3,6 +3,7 @@ package marauroa.server.game.container;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
@@ -102,9 +103,10 @@ public class SecuredLoginInfo {
 	 * @param transaction DBTransactions
 	 * @param address the IP address that originated the request.
 	 * @param result 0 failed password, 1 successful login, 2 banned, 3 inactive, 4 blocked, 5 merged
+	 * @param timestamp timestamp
 	 * @throws SQLException if there is any database problem.
 	 */
-	public void addLoginEvent(DBTransaction transaction, InetAddress address, int result) throws SQLException {
+	public void addLoginEvent(DBTransaction transaction, InetAddress address, int result, Timestamp timestamp) throws SQLException {
 		String service = null;
 		try {
 			Configuration conf = Configuration.getConfiguration();
@@ -116,7 +118,7 @@ public class SecuredLoginInfo {
 		} catch (IOException e) {
 			logger.error(e, e);
 		}
-		DAORegister.get().get(LoginEventDAO.class).addLoginEvent(transaction, username, address, service, seed, result);
+		DAORegister.get().get(LoginEventDAO.class).addLoginEvent(transaction, username, address, service, seed, result, timestamp);
 	}
 
 	/**
