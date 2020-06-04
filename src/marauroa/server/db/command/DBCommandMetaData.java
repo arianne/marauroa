@@ -12,6 +12,7 @@
 package marauroa.server.db.command;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -112,6 +113,7 @@ class DBCommandMetaData {
 
 	@Override
     public String toString() {
-	    return "[" + requestingThread.getName() + ": " + command + "]";
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss SSS", Locale.ENGLISH);
+	    return "[" + requestingThread.getName() + ", " +  format.format(command.getEnqueueTime()) + ": " + command + "]";
     }
 }

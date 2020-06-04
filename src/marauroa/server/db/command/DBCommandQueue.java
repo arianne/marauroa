@@ -188,4 +188,17 @@ public final class DBCommandQueue {
 		}
 		return oldest.getCommand().getEnqueueTime();
 	}
+
+	/**
+	 * returns a frozen array of the complete queue content
+	 *
+	 * @return array of the queue content
+	 */
+	protected DBCommandMetaData[] dumpQueue() {
+		// Make the array a little larger than required, to make it less likely that toArray 
+		// needs to create a completely new array because the size of the queue was increased
+		// in the mean time
+		DBCommandMetaData[] res = new DBCommandMetaData[pendingCommands.size() + 2];
+		return pendingCommands.toArray(res);
+	}
 }

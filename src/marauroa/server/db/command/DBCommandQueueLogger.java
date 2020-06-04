@@ -14,8 +14,13 @@ package marauroa.server.db.command;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
+
+import marauroa.common.Configuration;
 
 /**
  * logging of database commands with timestamps
@@ -87,6 +92,47 @@ public class DBCommandQueueLogger {
 		stopLogging();
 		try {
 			writer = new BufferedWriter(new FileWriter(filename));
+		} catch (IOException e) {
+			logger.error(e, e);
+		}
+	}
+
+	private String generateLoggingFilename(String prefix) {
+		String loggingFolder;
+		try {
+			loggingFolder = Configuration.getConfiguration().get("logging_folder");
+		} catch (IOException e) {
+			logger.error(e, e);
+			return null;
+		}
+		if (loggingFolder == null) {
+			return null;
+		}
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.ENGLISH);
+        String filename = loggingFolder + "/" + prefix + "-" + format.format(new Date()) + ".txt";
+        return filename;
+	}
+
+
+	/**
+	 * logs the complete queue
+	 *
+	 * @param queue queue
+	 */
+	public void logQueueSize(DBCommandQueue queue) {
+		String filename = generateLoggingFilename("large-db-queue");
+		if (filename == null) {
+			return;
+		}
+
+		DBCommandMetaData[] content = queue.dumpQueue();
+		BufferedWriter sizeWriter;
+		try {
+			sizeWriter = new BufferedWriter(new FileWriter(filename));
+			for (DBCommandMetaData commandMetaData : content) {
+				sizeWriter.append(commandMetaData + "\n");
+			}
+			sizeWriter.close();
 		} catch (IOException e) {
 			logger.error(e, e);
 		}
