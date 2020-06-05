@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2016 - Marauroa                    *
+ *                   (C) Copyright 2003-2020 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -12,8 +12,10 @@
 package marauroa.common.net.message;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 
-import javax.xml.bind.DatatypeConverter;
+import org.apache.log4j.Logger;
 
 import marauroa.common.Utility;
 import marauroa.common.crypto.Hash;
@@ -28,6 +30,7 @@ import marauroa.common.net.OutputSerializer;
  *
  */
 public class TransferContent {
+	private static Logger logger = Logger.getLogger(TransferContent.class);
 
 	/**
 	 * Name of the content to transfer.
@@ -232,7 +235,13 @@ public class TransferContent {
 		out.append(",\"cachable\":");
 		out.append(cacheable ? "true" : "false");
 		out.append(",\"data\":\"");
-		out.append(DatatypeConverter.printBase64Binary(data));
+		String encodedData = null;
+		try {
+			encodedData = new String(Base64.getEncoder().encode(data), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e, e);
+		}
+		out.append(encodedData);
 		out.append("\"}");
 
 	}
