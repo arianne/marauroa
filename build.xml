@@ -265,11 +265,11 @@
 	
 	<!-- testing targets -->
 	<target name="compile-tests" depends="compile">
-		<javac srcdir="${src-test}" source="1.5" target="1.5" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+		<javac srcdir="${src-test}" source="1.6" target="1.6" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
 			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-tests-classpath" />
 		</javac>
-		<javac srcdir="functional_tests" source="1.5" target="1.5" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+		<javac srcdir="functional_tests" source="1.6" target="1.6" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
 			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-tests-classpath" />
 		</javac>
