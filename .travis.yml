@@ -10,5 +10,9 @@ notifications:
     skip_join: false
 before_install:
   - pip install --user codecov
+addons:
+  apt:
+    packages:
+      - ant-optional
 after_success:
   - codecov
