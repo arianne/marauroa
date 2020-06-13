@@ -14,6 +14,7 @@ package marauroa.server.net.nio;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -265,7 +266,7 @@ class NioServer extends Thread {
 		SocketChannel socketChannel = (SocketChannel) key.channel();
 
 		// Clear out our read buffer so it's ready for new data
-		this.readBuffer.clear();
+		java8Compatibility(this.readBuffer).clear();
 
 		// Attempt to read off the channel
 		int numRead;
@@ -355,4 +356,7 @@ class NioServer extends Thread {
 		return socketSelector;
 	}
 
+	private Buffer java8Compatibility(ByteBuffer buffer) {
+		return buffer;
+	}
 }
