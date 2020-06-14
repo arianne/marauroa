@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2010 - Marauroa                    *
+ *                   (C) Copyright 2009-2020 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -16,8 +16,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import marauroa.common.i18n.I18N;
@@ -30,7 +29,7 @@ import marauroa.common.i18n.I18N;
 public final class DBCommandQueue {
 	private static DBCommandQueue instance;
 
-	private BlockingQueue<DBCommandMetaData> pendingCommands = new LinkedBlockingQueue<DBCommandMetaData>();
+	private PriorityBlockingQueue<DBCommandMetaData> pendingCommands = new PriorityBlockingQueue<DBCommandMetaData>();
 	private List<DBCommandMetaData> processedCommands = Collections.synchronizedList(new LinkedList<DBCommandMetaData>());
 
 	private boolean finished;
@@ -61,7 +60,17 @@ public final class DBCommandQueue {
 	 * @param command DBCommand to add to the queue
 	 */
 	public void enqueue(DBCommand command) {
-		pendingCommands.add(new DBCommandMetaData(command, null, Thread.currentThread(), false, I18N.getLocale()));
+		enqueue(command, DBCommandPriority.CRITICAL);
+	}
+
+	/**
+	 * enqueues a "fire and forget" command.
+	 *
+	 * @param command DBCommand to add to the queue
+	 * @param priority DBCommandPriority
+	 */
+	public void enqueue(DBCommand command, DBCommandPriority priority) {
+		pendingCommands.add(new DBCommandMetaData(command, null, Thread.currentThread(), false, I18N.getLocale(), priority));
 	}
 
 	/**
@@ -71,7 +80,18 @@ public final class DBCommandQueue {
 	 * @param handle ResultHandle
 	 */
 	public void enqueueAndAwaitResult(DBCommand command, ResultHandle handle) {
-		pendingCommands.add(new DBCommandMetaData(command, handle, Thread.currentThread(), true, I18N.getLocale()));
+		enqueueAndAwaitResult(command, DBCommandPriority.CRITICAL, handle);
+	}
+
+	/**
+	 * enqueues a command and remembers the result.
+	 *
+	 * @param command DBCommand to add to the queue
+	 * @param priority DBCommandPriority
+	 * @param handle ResultHandle
+	 */
+	public void enqueueAndAwaitResult(DBCommand command, DBCommandPriority priority, ResultHandle handle) {
+		pendingCommands.add(new DBCommandMetaData(command, handle, Thread.currentThread(), true, I18N.getLocale(), priority));
 	}
 
 	/**

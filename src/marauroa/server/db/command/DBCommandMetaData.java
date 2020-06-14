@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2010 - Marauroa                    *
+ *                   (C) Copyright 2009-2020 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -21,8 +21,9 @@ import java.util.Locale;
  *
  * @author hendrik, madmetzger
  */
-class DBCommandMetaData {
+class DBCommandMetaData implements Comparable<DBCommandMetaData> {
 
+	private DBCommandPriority priority;
 	private DBCommand command;
 	private ResultHandle handle;
 	private Thread requestingThread;
@@ -37,14 +38,17 @@ class DBCommandMetaData {
 	 * @param command DBCommand
 	 * @param handle ResultHandle
 	 * @param requestingThread the thread requesting the execution of the DBCommand
-	 * @param awaitResult does the thread want a result back?
+	 * @param awaitResult does the thread want a result returned?
+	 * @param locale locale of this operation
+	 * @param priority DBCommandPriority
 	 */
-	public DBCommandMetaData(DBCommand command, ResultHandle handle, Thread requestingThread, boolean awaitResult, Locale locale) {
+	public DBCommandMetaData(DBCommand command, ResultHandle handle, Thread requestingThread, boolean awaitResult, Locale locale, DBCommandPriority priority) {
 		this.command = command;
 		this.handle = handle;
 		this.requestingThread = requestingThread;
 		this.awaitResult = awaitResult;
 		this.locale = locale;
+		this.priority = priority;
 		command.setEnqueueTime(new Timestamp(new Date().getTime()));
 	}
 
@@ -112,8 +116,18 @@ class DBCommandMetaData {
 	}
 
 	@Override
+	public int compareTo(DBCommandMetaData o) {
+		int p = this.priority.getPriorityValue() - o.priority.getPriorityValue();
+		if (p != 0) {
+			return p;
+		}
+		return command.getEnqueueTime().compareTo(o.command.getEnqueueTime());
+	}
+
+	@Override
     public String toString() {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss SSS", Locale.ENGLISH);
-	    return "[" + requestingThread.getName() + ", " +  format.format(command.getEnqueueTime()) + ": " + command + "]";
+	    return "[" + requestingThread.getName() + ", " + priority + ", " + format.format(command.getEnqueueTime()) + ": " + command + "]";
     }
+
 }
