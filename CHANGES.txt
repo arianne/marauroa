@@ -2,10 +2,11 @@ Changelog
 ---------
 
 3.9.8
-- retry transactions on deadlock detection
+- retry transactions on detected deadlock
 - supported KeepALive during login phase
 - deprecated DAO methods without transaction parameter
-- use timestamp when a command was added to the queue in all database operations
+- use timestamp of when a command was added to the queue in all database operations
+- DBCommandQueue supports low priority database commands, that are not critical for the next log in
 
 
 3.9.7
