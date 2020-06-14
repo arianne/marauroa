@@ -33,6 +33,7 @@ class DBCommandQueueBackgroundThread implements Runnable {
 	private DBCommandQueueLogger dbCommandQueueLogger = new DBCommandQueueLogger();
 
 	private long lastWarningTimestamp = 0;
+	private int shutdownCounter = 0;
 
 
 	/**
@@ -56,8 +57,12 @@ class DBCommandQueueBackgroundThread implements Runnable {
 				}
 			} else {
 				// There are no more pending commands, check if the server is being shutdown.
+				// If that is the case, we wait a little (e. g. 3 seconds) to ensure no new commands pop up during shutdown
 				if (queue.isFinished()) {
-					break;
+					shutdownCounter++;
+					if (shutdownCounter >= 3) {
+						break;
+					}
 				}
 			}
 
