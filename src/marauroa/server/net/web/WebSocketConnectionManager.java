@@ -27,6 +27,7 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.server.marauroad;
 import marauroa.server.db.command.DBCommand;
+import marauroa.server.db.command.DBCommandPriority;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
@@ -85,7 +86,7 @@ public class WebSocketConnectionManager implements ConnectionManager {
 			DBCommand command = new LoadAllActiveCharactersCommand(entry.username,
 					new SendCharacterListHandler((INetworkServerManager) serverManager, 0),
 					entry.clientid, channel, 0);
-			DBCommandQueue.get().enqueue(command);
+			DBCommandQueue.get().enqueue(command, DBCommandPriority.CRITICAL);
 		} else {
 			entry.state = ClientState.CONNECTION_ACCEPTED;
 			entry.disableTimeout();

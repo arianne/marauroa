@@ -23,6 +23,7 @@ import marauroa.common.net.message.MessageP2SCreateCharacter;
 import marauroa.common.net.message.MessageS2CCreateCharacterACK;
 import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
 import marauroa.server.db.command.DBCommand;
+import marauroa.server.db.command.DBCommandPriority;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
@@ -131,7 +132,7 @@ class CreateCharacterHandler extends MessageHandler {
 				DBCommand command = new LoadAllActiveCharactersCommand(username,
 						new SendCharacterListHandler(netMan, protocolVersion), clientid, channel,
 						protocolVersion);
-				DBCommandQueue.get().enqueue(command);
+				DBCommandQueue.get().enqueue(command, DBCommandPriority.CRITICAL);
 			}
 		} else {
 			/*

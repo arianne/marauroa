@@ -20,6 +20,7 @@ import java.util.Map;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
+import marauroa.server.db.command.DBCommandPriority;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.dbcommand.LogStatisticsCommand;
 
@@ -287,7 +288,7 @@ public class Statistics implements StatisticsMBean {
 	}
 
 	private void addStatisticsEventRow() {
-		DBCommandQueue.get().enqueue(new LogStatisticsCommand(now));
+		DBCommandQueue.get().enqueue(new LogStatisticsCommand(now), DBCommandPriority.LOW);
 
 		now.clear();
 		init();

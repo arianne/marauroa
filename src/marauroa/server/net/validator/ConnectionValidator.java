@@ -21,6 +21,7 @@ import java.util.TimerTask;
 
 import marauroa.common.Log4J;
 import marauroa.common.net.Channel;
+import marauroa.server.db.command.DBCommandPriority;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.dbcommand.LoadBanListCommand;
 import marauroa.server.game.messagehandler.DelayedEventHandler;
@@ -197,7 +198,7 @@ public class ConnectionValidator implements Iterable<InetAddressMask>, DelayedEv
 	 */
 	public synchronized void checkReload() {
 		if (System.currentTimeMillis() - lastLoadTS >= RELOAD_PERMANENT_BANS) {
-			DBCommandQueue.get().enqueue(new LoadBanListCommand(this));
+			DBCommandQueue.get().enqueue(new LoadBanListCommand(this), DBCommandPriority.CRITICAL);
 		}
 	}
 

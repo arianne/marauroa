@@ -29,6 +29,7 @@ import marauroa.common.net.NetConst;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.TransferContent;
 import marauroa.server.db.command.DBCommand;
+import marauroa.server.db.command.DBCommandPriority;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.dbcommand.StoreCharacterCommand;
 
@@ -273,7 +274,7 @@ public class PlayerEntry {
 
 		// We store the object in the database
 		DBCommand command = new StoreCharacterCommand(username, character, player);
-		DBCommandQueue.get().enqueue(command);
+		DBCommandQueue.get().enqueue(command, DBCommandPriority.CRITICAL);
 	}
 
 	/**

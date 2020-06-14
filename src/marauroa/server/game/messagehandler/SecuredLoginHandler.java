@@ -31,6 +31,7 @@ import marauroa.common.net.message.MessageS2CLoginMessageNACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CServerInfo;
 import marauroa.server.db.command.DBCommand;
+import marauroa.server.db.command.DBCommandPriority;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
@@ -72,7 +73,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 			DBCommand command = new LoginCommand(info,
 					this, entry.clientid,
 					msg.getChannel(), msg.getProtocolVersion());
-			DBCommandQueue.get().enqueue(command);
+			DBCommandQueue.get().enqueue(command, DBCommandPriority.CRITICAL);
 	}
 
 	private void completeLogin(Channel channel, int clientid, int protocolVersion, SecuredLoginInfo info, List<String> previousLogins) {
@@ -107,7 +108,7 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 		DBCommand command = new LoadAllActiveCharactersCommand(entry.username,
 				new SendCharacterListHandler(netMan, protocolVersion),
 				clientid, channel, protocolVersion);
-		DBCommandQueue.get().enqueue(command);
+		DBCommandQueue.get().enqueue(command, DBCommandPriority.CRITICAL);
 
 		entry.state = ClientState.LOGIN_COMPLETE;
 	}

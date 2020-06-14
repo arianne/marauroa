@@ -28,6 +28,7 @@ import marauroa.common.game.IRPZone;
 import marauroa.common.game.Perception;
 import marauroa.common.game.RPObject;
 import marauroa.common.game.RPObjectInvalidException;
+import marauroa.server.db.command.DBCommandPriority;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.RPZoneDAO;
@@ -154,7 +155,7 @@ public class MarauroaRPZone implements IRPZone {
 		for (RPObject object : objects.values()) {
 			list.add((RPObject) object.clone());
 		}
-		DBCommandQueue.get().enqueue(new StoreZoneCommand(this, list));
+		DBCommandQueue.get().enqueue(new StoreZoneCommand(this, list), DBCommandPriority.CRITICAL);
 	}
 
 

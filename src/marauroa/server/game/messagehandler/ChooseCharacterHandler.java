@@ -19,6 +19,7 @@ import marauroa.common.net.message.MessageC2SChooseCharacter;
 import marauroa.common.net.message.MessageS2CChooseCharacterACK;
 import marauroa.common.net.message.MessageS2CChooseCharacterNACK;
 import marauroa.server.db.command.DBCommand;
+import marauroa.server.db.command.DBCommandPriority;
 import marauroa.server.db.command.DBCommandQueue;
 import marauroa.server.game.container.ClientState;
 import marauroa.server.game.container.PlayerEntry;
@@ -113,7 +114,7 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 	 */
 	private void loadAndPlaceInWorld(MessageC2SChooseCharacter msg, int clientid, PlayerEntry entry) {
 		DBCommand command = new LoadActiveCharacterCommand(entry.username, entry.character, this, clientid, msg.getChannel(), msg.getProtocolVersion());
-		DBCommandQueue.get().enqueue(command);
+		DBCommandQueue.get().enqueue(command, DBCommandPriority.CRITICAL);
 	}
 
 	/**
