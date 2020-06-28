@@ -17,14 +17,19 @@ package marauroa.server.db.command;
 public enum DBCommandPriority {
 
 	/**
-	 * this command has to be executed before the next player may login
+	 * the command has to be executed before the next player may login
 	 */
 	CRITICAL(10000),
 
 	/**
-	 * this command deals with data not relevant to logins
+	 * the command deals with data not relevant to logins
 	 */
-	LOW(90000);
+	LOW(90000),
+
+	/**
+	 * the command deals with data that is not relevant to game play
+	 */
+	LOWEST (99999);
 
 	private int priorityValue;
 
