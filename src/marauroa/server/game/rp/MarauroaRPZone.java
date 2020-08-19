@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2020 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.IRPZone;
@@ -131,7 +131,7 @@ public class MarauroaRPZone implements IRPZone {
 		this.zoneid = new ID(zoneid);
 		rand.setSeed(new Date().getTime());
 
-		objects = new LinkedHashMap<RPObject.ID, RPObject>();
+		objects = new ConcurrentHashMap<RPObject.ID, RPObject>();
 		modified = new HashSet<RPObject>();
 
 		perception = new Perception(Perception.DELTA, this.zoneid);
