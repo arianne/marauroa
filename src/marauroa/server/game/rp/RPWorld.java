@@ -378,12 +378,16 @@ public class RPWorld implements Iterable<IRPZone> {
 	 * @return the amount of objects added to world.
 	 */
 	public int size() {
-		int size = 0;
+		long size = 0;
 
 		for (IRPZone zone : zones.values()) {
 			size += zone.size();
 		}
 
-		return size;
+		// we cannot change the return type without breaking the method signature
+		if (size > Integer.MAX_VALUE) {
+			return Integer.MAX_VALUE;
+		}
+		return (int) size;
 	}
 }
