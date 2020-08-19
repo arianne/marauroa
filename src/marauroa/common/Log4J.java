@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
@@ -75,6 +76,16 @@ public class Log4J {
 		} catch (IOException ioe) {
 			System.err.println("cannot read property-file " + LOG4J_PROPERTIES + " because "
 			        + ioe.getMessage());
+		} catch (NoClassDefFoundError e) {
+			// On Android java.lang.NoClassDefFoundError: Failed resolution of: Ljava/beans/Introspector;
+			try {
+				BasicConfigurator.configure();
+			} catch (NoClassDefFoundError e2) {
+				System.err.println("Failed to configure log4j using PropertyConfigurator:");
+				e.printStackTrace();
+				System.err.println("Failed to configure log4j using BasicConfigurator:");
+				e2.printStackTrace();
+			}
 		}
 	}
 

@@ -2,6 +2,7 @@ Changelog
 ---------
 
 3.9.8
+- fixed log4j compatibility issue on Android
 - retry transactions on detected deadlock
 - supported KeepALive during login phase
 - deprecated DAO methods without transaction parameter
