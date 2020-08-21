@@ -114,6 +114,24 @@ public class RSAPublicKey {
 	}
 
 	/**
+	 * encodes an array
+	 *
+	 * @param init array
+	 * @param message array
+	 * @return encoded array
+	 */
+	public byte[] encodeByteArray(byte[] init, byte[] message) {
+		BigInteger initInt = Hash.bytesToBigInt(init);
+		BigInteger messageInt = Hash.bytesToBigInt(message);
+		BigInteger multiplied = messageInt.multiply(initInt);
+		if (multiplied.compareTo(n) > 0) {
+			throw new RuntimeException("Message is larger then key");
+		}
+		BigInteger encoded = encode(multiplied);
+		return encoded.toByteArray();
+	}
+
+	/**
 	 * verifies a signature
 	 *
 	 * @param message BigInteger

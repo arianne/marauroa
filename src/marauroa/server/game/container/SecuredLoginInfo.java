@@ -57,6 +57,12 @@ public class SecuredLoginInfo {
 	/** is the password encrypted */
 	public boolean usingSecureChannel = true;
 
+	/** token type */
+	public String tokenType;
+
+	/**  */
+	public String token;
+
 	/**
 	 * Constructor
 	 *

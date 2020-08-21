@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2012 - Marauroa                    *
+ *                   (C) Copyright 2003-2020 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -26,6 +26,7 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
 import marauroa.common.net.message.MessageC2SLoginSendUsernameAndPassword;
+import marauroa.common.net.message.MessageC2SLoginWithToken;
 import marauroa.common.net.message.MessageS2CLoginACK;
 import marauroa.common.net.message.MessageS2CLoginMessageNACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
@@ -127,6 +128,12 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 			info.username = msgLogin.getUsername();
 			info.password = msgLogin.getPassword();
 			info.seed = decode(info, msgLogin.getSeed());
+		} else if (msg instanceof MessageC2SLoginWithToken) {
+			MessageC2SLoginWithToken msgLogin = (MessageC2SLoginWithToken) msg;
+			info.clientNonce = msgLogin.getHash();
+			info.username = msgLogin.getUsername();
+			info.tokenType = msgLogin.getTokenType();
+			info.token = decodeToken(info, msgLogin.getToken());
 		} else {
 			MessageC2SLoginSendUsernameAndPassword msgLogin = (MessageC2SLoginSendUsernameAndPassword) msg;
 			info = new SecuredLoginInfo(entry.getAddress());
@@ -155,6 +162,17 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 		}
 	}
 
+	private String decodeToken(SecuredLoginInfo info, byte[] data) {
+		byte[] b2 = Hash.xor(info.clientNonce, info.serverNonce);
+		byte[] b1 = info.key.decodeByteArray(b2, data);
+
+		try {
+			return new String(b1, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e, e);
+			return null;
+		}
+	}
 
 
 	/**

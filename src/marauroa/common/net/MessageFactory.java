@@ -30,6 +30,7 @@ import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
 import marauroa.common.net.message.MessageC2SLoginSendUsernameAndPassword;
+import marauroa.common.net.message.MessageC2SLoginWithToken;
 import marauroa.common.net.message.MessageC2SLogout;
 import marauroa.common.net.message.MessageC2SOutOfSync;
 import marauroa.common.net.message.MessageC2STransferACK;
@@ -143,6 +144,7 @@ public class MessageFactory {
 		register(Message.MessageType.C2S_LOGIN_SENDUSERNAMEANDPASSWORD, MessageC2SLoginSendUsernameAndPassword.class);
 		register(Message.MessageType.S2C_UPDATE, MessageS2CUpdate.class);
 		register(Message.MessageType.C2S_UPDATE_RESPONSE, MessageC2SUpdateResponse.class);
+		register(Message.MessageType.C2S_LOGIN_WITH_TOKEN, MessageC2SLoginWithToken.class);
 	}
 
 	/**

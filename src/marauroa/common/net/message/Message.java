@@ -105,7 +105,9 @@ public class Message implements Serializable {
 		/** send a software update */
 		S2C_UPDATE,
 		/** update response */
-		C2S_UPDATE_RESPONSE
+		C2S_UPDATE_RESPONSE,
+		/** Login with token */
+		C2S_LOGIN_WITH_TOKEN
 	}
 
 	/** Type of the message */

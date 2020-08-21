@@ -49,6 +49,7 @@ import marauroa.common.net.message.MessageC2SLoginRequestKey;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
 import marauroa.common.net.message.MessageC2SLoginSendPromise;
+import marauroa.common.net.message.MessageC2SLoginWithToken;
 import marauroa.common.net.message.MessageC2SLogout;
 import marauroa.common.net.message.MessageC2SOutOfSync;
 import marauroa.common.net.message.MessageC2STransferACK;
@@ -375,6 +376,134 @@ public abstract class ClientFramework {
 						netMan.addMessage(new MessageC2SLoginSendNonceNameAndPassword(null,
 					        clientNonce, username, cryptedPassword));
 					}
+					break;
+				}
+					/* Server replied with ACK to login operation */
+				case S2C_LOGIN_ACK:
+					logger.debug("Login correct");
+
+					onPreviousLogins(((MessageS2CLoginACK) msg).getPreviousLogins());
+
+					received++;
+					break;
+				/* Server send the character list */
+				case S2C_CHARACTERLIST:
+					logger.debug("Received Character list");
+
+					/*
+					 * We notify client of characters by calling the callback
+					 * method.
+					 */
+					String[] characters = ((MessageS2CCharacterList) msg).getCharacters();
+					onAvailableCharacters(characters);
+					Map<String, RPObject> characterDetails = ((MessageS2CCharacterList) msg).getCharacterDetails();
+					onAvailableCharacterDetails(characterDetails);
+					received++;
+					break;
+				/*
+				 * Server sends the server info message with information about
+				 * versions, homepage, etc...
+				 */
+				case S2C_SERVERINFO:
+					logger.debug("Received Server info");
+					String[] info = ((MessageS2CServerInfo) msg).getContents();
+
+					/* We notify client of this info by calling the callback method. */
+					onServerInfo(info);
+					received++;
+					break;
+				/* Login failed, explain reason on event */
+				case S2C_LOGIN_NACK:
+					MessageS2CLoginNACK msgNACK = (MessageS2CLoginNACK) msg;
+					logger.debug("Login failed. Reason: " + msgNACK.getResolution());
+					throw new LoginFailedException(msgNACK.getResolution(), msgNACK.getResolutionCode());
+
+				/* Login failed, explain reason on event */
+				case S2C_LOGIN_MESSAGE_NACK:
+					MessageS2CLoginMessageNACK msgMessageNACK = (MessageS2CLoginMessageNACK) msg;
+					logger.debug("Login failed. Reason: " + msgMessageNACK.getReason());
+					throw new LoginFailedException(msgMessageNACK.getReason());
+
+				/* If message doesn't match, store it, someone will need it. */
+				default:
+					messages.add(msg);
+			}
+		}
+	}
+
+	/**
+	 * Login to server using the given username and password.
+	 *
+	 * @param username
+	 *            player username (may be null)
+	 * @param tokenType
+	 *            type of token (may be null)
+	 * @param token
+	 *            authentication token
+	 * @throws InvalidVersionException
+	 *             if we are not using a compatible version
+	 * @throws TimeoutException
+	 *             if timeout happens while waiting for the message.
+	 * @throws LoginFailedException
+	 *             if login is rejected
+	 * @throws BannedAddressException
+	 */
+	@SuppressWarnings("null")
+	public synchronized void loginWithToken(String username, String tokenType, String token)
+	        throws InvalidVersionException, TimeoutException, LoginFailedException,
+	        BannedAddressException {
+		int received = 0;
+		RSAPublicKey key = null;
+		byte[] clientNonce = null;
+		byte[] serverNonce = null;
+
+		/* Send to server a login request and indicate the game name and version */
+		netMan.addMessage(new MessageC2SLoginRequestKey(null, getGameName(), getVersionNumber()));
+
+		int timeout = TIMEOUT;
+		while (received < 3) {
+			Message msg = getMessage(timeout);
+			// Okay, now  we know that there is a marauroa server responding to the handshake.
+			// We can give it more time for the next steps in case the database is slow.
+			// Loging heavily depends on the database because number of failed logins for both
+			// ip-address and username, banstatus, username&password have to be checked. And
+			// the list of characters needs to be loaded from the database.
+			timeout = TIMEOUT_EXTENDED;
+
+			switch (msg.getType()) {
+				case S2C_INVALIDMESSAGE: {
+					throw new LoginFailedException(((MessageS2CInvalidMessage) msg).getReason());
+				}
+				/* Server sends its public RSA key */
+				case S2C_LOGIN_SENDKEY: {
+					logger.debug("Received Key");
+					key = ((MessageS2CLoginSendKey) msg).getKey();
+
+					clientNonce = Hash.random(Hash.hashLength());
+					Locale locale = Locale.getDefault();
+					netMan.addMessage(new MessageC2SLoginSendPromise(null, Hash.hash(clientNonce), locale.getLanguage()));
+					break;
+				}
+					/* Server sends a random big integer */
+				case S2C_LOGIN_SENDNONCE: {
+					logger.debug("Received Server Nonce");
+					if (serverNonce != null) {
+						throw new LoginFailedException(translate("Already received a serverNonce"));
+					}
+
+					serverNonce = ((MessageS2CLoginSendNonce) msg).getHash();
+					byte[] b1 = Hash.xor(clientNonce, serverNonce);
+					if (b1 == null) {
+						throw new LoginFailedException(translate("Incorrect hash b1"));
+					}
+					byte[] b2 = new byte[0];
+					try {
+						b2 = token.getBytes("UTF-8");
+					} catch (UnsupportedEncodingException e) {
+						logger.error(e, e);
+					}
+					byte[] crypted = key.encodeByteArray(b1, b2);
+					netMan.addMessage(new MessageC2SLoginWithToken(null, clientNonce, username, tokenType, crypted));
 					break;
 				}
 					/* Server replied with ACK to login operation */
