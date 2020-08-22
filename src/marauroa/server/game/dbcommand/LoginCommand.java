@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2013 - Marauroa                    *
+ *                   (C) Copyright 2003-2020 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -59,40 +59,55 @@ public class LoginCommand extends DBCommandWithCallback {
 		super(callback, clientid, channel, protocolVersion);
 		this.info = info;
 	}
-
+	
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException, IOException {
+		if (!blockCheck(transaction)) {
+			return;
+		}
+		
+		if (!credentialsCheck(transaction)) {
+			return;
+		}
+		
+		processSuccessfulLogin(transaction);
+	}
+
+	protected boolean blockCheck(DBTransaction transaction) throws SQLException {
 		if (info.isBlocked(transaction)) {
 			failReason = MessageS2CLoginNACK.Reasons.TOO_MANY_TRIES;
 			info.addLoginEvent(transaction, info.address, 4, this.getEnqueueTime());
-			return;
+			return false;
 		}
+		return true;
+	}
 
-		if (!info.verify(transaction)) {
+	/**
+	 * verifies credentials against the database
+	 *
+	 * @param transaction DBTransaction
+	 * @throws SQLException in case of a database error
+	 * @throws IOException in case of an input/output error
+	 * @return verification result
+	 */
+	protected boolean verify(DBTransaction transaction) throws SQLException, IOException {
+		return DAORegister.get().get(AccountDAO.class).verify(transaction, info);
+	}
+
+	protected boolean credentialsCheck(DBTransaction transaction) throws SQLException, IOException {
+		boolean verified = verify(transaction);
+		if (!verified) {
 			if (info.reason == null) {
 				info.reason = MessageS2CLoginNACK.Reasons.USERNAME_WRONG;
 			}
 			failReason = info.reason;
 			info.addLoginEvent(transaction, info.address, 0, this.getEnqueueTime());
-			return;
+			return false;
 		}
+		return true;
+	}
 
-		String accountStatusMessage = DAORegister.get().get(AccountDAO.class).getAccountBanMessage(transaction, info.username);
-		if (accountStatusMessage != null) {
-			String status = DAORegister.get().get(AccountDAO.class).getAccountStatus(transaction, info.username);
-			if (status == null) {
-				// oops
-			} else if (status.equals("banned")) {
-				info.addLoginEvent(transaction, info.address, 2, this.getEnqueueTime());
-			} else if (status.equals("inactive")) {
-				info.addLoginEvent(transaction, info.address, 3, this.getEnqueueTime());
-			} else if (status.equals("merged")) {
-				info.addLoginEvent(transaction, info.address, 5, this.getEnqueueTime());
-			}
-			failMessage = accountStatusMessage;
-			return;
-		}
-
+	protected void processSuccessfulLogin(DBTransaction transaction) throws SQLException {
 		/* Successful login */
 		previousLogins = DAORegister.get().get(LoginEventDAO.class).getLoginEvents(transaction, info.username, 1);
 		info.addLoginEvent(transaction, info.address, 1, this.getEnqueueTime());

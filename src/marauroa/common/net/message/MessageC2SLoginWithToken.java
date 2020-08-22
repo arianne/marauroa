@@ -102,7 +102,11 @@ public class MessageC2SLoginWithToken extends MessageSendByteArray {
 	@Override
 	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
-		out.write(username);
+		if (username != null) {
+			out.write(username);
+		} else {
+			out.write("");
+		}
 		out.write(tokenType);
 		out.write(token);
 	}

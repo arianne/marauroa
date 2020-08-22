@@ -20,6 +20,11 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAKey;
@@ -28,9 +33,6 @@ import marauroa.server.db.TransactionPool;
 import marauroa.server.game.db.AccountDAO;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.DatabaseFactory;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * Test the secure login procedure in the same way.
@@ -73,14 +75,16 @@ public class SecureLoginTest {
 	public void testLogin() throws SQLException, UnknownHostException {
 		String username = "testUsername3z23798";
 		String password = "password";
-		boolean exists = DAORegister.get().get(AccountDAO.class).hasPlayer(username);
+		DBTransaction transaction = TransactionPool.get().beginWork();
+		boolean exists = DAORegister.get().get(AccountDAO.class).hasPlayer(transaction, username);
 		if (!exists) {
-			DAORegister.get().get(AccountDAO.class).addPlayer(username, Hash.hash(password), "example@example.com");
+			DAORegister.get().get(AccountDAO.class).addPlayer(transaction, username, Hash.hash(password), 
+					"example@example.com", new Timestamp(new Date().getTime()));
 		}
 		SecuredLoginInfo login = simulateSecureLogin(username, password);
-		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
-			assertTrue("Unable to verify login", login.verify(transaction));
+			boolean verified = DAORegister.get().get(AccountDAO.class).verify(transaction, login);
+			assertTrue("Unable to verify login", verified);
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}
@@ -101,7 +105,8 @@ public class SecureLoginTest {
 		SecuredLoginInfo login = simulateSecureLogin("testUsername", password);
 		DBTransaction transaction = TransactionPool.get().beginWork();
 		try {
-			assertFalse(login.verify(transaction));
+			boolean verified = DAORegister.get().get(AccountDAO.class).verify(transaction, login);
+			assertFalse(verified);
 		} finally {
 			TransactionPool.get().commit(transaction);
 		}

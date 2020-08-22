@@ -31,6 +31,7 @@ import marauroa.common.net.message.MessageS2CLoginACK;
 import marauroa.common.net.message.MessageS2CLoginMessageNACK;
 import marauroa.common.net.message.MessageS2CLoginNACK;
 import marauroa.common.net.message.MessageS2CServerInfo;
+import marauroa.server.auth.AuthenticationManager;
 import marauroa.server.db.command.DBCommand;
 import marauroa.server.db.command.DBCommandPriority;
 import marauroa.server.db.command.DBCommandQueue;
@@ -50,9 +51,23 @@ import org.apache.log4j.Logger;
  * are freed.
  */
 class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler {
+
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(SecuredLoginHandler.class);
 
+	private AuthenticationManager authMan;
+
+	public SecuredLoginHandler() {
+		try {
+			Configuration conf = Configuration.getConfiguration();
+			Class<?> authManClass = Class.forName(conf.get("authentication", "marauroa.server.auth.DatabaseAuthenticationManager"));
+			authMan = (AuthenticationManager) authManClass.newInstance();
+		} catch (IOException e) {
+			logger.error(e, e);
+		} catch (ReflectiveOperationException e) {
+			logger.error(e, e);
+		}
+	}
 
 	/**
 	 * This last method completes the login process.
@@ -71,10 +86,8 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 			}
 
 			SecuredLoginInfo info = fillLoginInfo(msg, entry);
-			DBCommand command = new LoginCommand(info,
-					this, entry.clientid,
+			authMan.verify(info, this, entry.clientid,
 					msg.getChannel(), msg.getProtocolVersion());
-			DBCommandQueue.get().enqueue(command, DBCommandPriority.CRITICAL);
 	}
 
 	private void completeLogin(Channel channel, int clientid, int protocolVersion, SecuredLoginInfo info, List<String> previousLogins) {
