@@ -450,7 +450,7 @@ public class AccountDAO {
 
 		if (info.token != null && info.tokenType != null) {
 			AccountLinkDAO accountLinkDAO = DAORegister.get().get(AccountLinkDAO.class);
-			boolean tokenVerified = accountLinkDAO.verifyToken(transaction, info);
+			boolean tokenVerified = accountLinkDAO.verifyPermanentToken(transaction, info);
 			if (tokenVerified) {
 				return true;
 			}

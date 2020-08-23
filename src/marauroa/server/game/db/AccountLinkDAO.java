@@ -96,7 +96,7 @@ public class AccountLinkDAO {
 	 * @return true, if a secret could be verified, false otherweise
 	 * @throws SQLException in case of a database error
 	 */
-	public boolean verifyToken(DBTransaction transaction, SecuredLoginInfo info) throws SQLException {
+	public boolean verifyPermanentToken(DBTransaction transaction, SecuredLoginInfo info) throws SQLException {
 		String secret = info.token;
 		String tokenType = info.tokenType;
 		if (secret == null || secret.trim().equals("") || tokenType == null) {
@@ -118,6 +118,5 @@ public class AccountLinkDAO {
 		info.username = username;
 		return true;
 	}
-
 
 }
