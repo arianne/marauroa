@@ -94,6 +94,7 @@ public class DAORegister {
 		factory = RPObjectFactory.get();
 
 		register(AccountDAO.class, new AccountDAO());
+		register(AccountLinkDAO.class, new AccountLinkDAO());
 		register(BanListDAO.class, new BanListDAO());
 		register(CharacterDAO.class, new CharacterDAO());
 		register(GameEventDAO.class, new GameEventDAO());
