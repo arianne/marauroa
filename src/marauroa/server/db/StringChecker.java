@@ -103,4 +103,21 @@ public class StringChecker {
 		}
 		return escapeSQLString(res);
 	}
+
+
+	/**
+	 * trims a string to null
+	 *
+	 * @param s string
+	 * @return null, if the string was null or empty, s.trim() otherweise
+	 */
+	public static String trimEmptyToNull(String s) {
+		if (s == null) {
+			return null;
+		}
+		if (s.trim().equals("")) {
+			return null;
+		}
+		return s.trim();
+	}
 }

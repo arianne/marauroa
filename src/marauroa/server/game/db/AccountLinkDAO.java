@@ -11,12 +11,16 @@
  ***************************************************************************/
 package marauroa.server.game.db;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import marauroa.server.db.DBTransaction;
+import marauroa.server.db.StringChecker;
 import marauroa.server.game.container.SecuredLoginInfo;
 
 /**
@@ -25,6 +29,7 @@ import marauroa.server.game.container.SecuredLoginInfo;
  * @author hendrik
  */
 public class AccountLinkDAO {
+	private static Logger logger = Logger.getLogger(AccountLinkDAO.class);
 
 	/**
 	 Creates a new AccountLinkDAO
@@ -116,7 +121,49 @@ public class AccountLinkDAO {
 
 		String username = result.getString("username");
 		info.username = username;
+		result.close();
 		return true;
+	}
+
+	/**
+	 * adds an accountLink. tokenType and either username or secret are required. 
+	 *
+	 * @param transaction DBTransaction
+	 * @param accountId   account.id
+	 * @param tokenType   token
+	 * @param externalUsername username
+	 * @param externalNickname nickname
+	 * @param externalEmail email
+	 * @param secret secret
+	 * @return true if the accountLink was created successfully
+	 * @throws SQLException
+	 */
+	public boolean addAccountLink(DBTransaction transaction, int accountId, String tokenType, String externalUsername, String externalNickname, String externalEmail, String secret) throws SQLException {
+		String query = "SELECT id FROM accountLink WHERE type='[type]' AND (username='[username]' OR secret='[secret]')";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("type", tokenType);
+		params.put("username", externalUsername);
+		params.put("secret", secret);
+		ResultSet result = transaction.query(query, params);
+		if (result.next()) {
+			logger.warn("Account link already exists: " + result.getInt("id"), new Throwable());
+			result.close();
+			return false;
+		}
+		result.close();
+		
+		String sql = "INSERT INTO accountLink(player_id, type, username, nickname, email, secret) VALUES (?, ?, ?, ?, ?, ?)";
+		PreparedStatement stmt = transaction.prepareStatement(sql, null);
+		stmt.setInt(1, Integer.valueOf(accountId));
+		stmt.setString(2, tokenType);
+		stmt.setString(3, StringChecker.trimEmptyToNull(externalUsername));
+		stmt.setString(4, StringChecker.trimEmptyToNull(externalNickname));
+		stmt.setString(5, StringChecker.trimEmptyToNull(externalEmail));
+		stmt.setString(6, StringChecker.trimEmptyToNull(secret));
+
+		boolean res = stmt.execute();
+		stmt.close();
+		return res;
 	}
 
 }
