@@ -72,6 +72,7 @@ public class AccountDAO {
 	 * @param username username
 	 * @param passwordHash password hash
 	 * @param email email-address
+	 * @param timestamp when the account was added
 	 * @throws SQLException in case of an database error
 	 */
 	public void addPlayer(DBTransaction transaction, String username, byte[] passwordHash, String email, Timestamp timestamp) throws SQLException {
@@ -420,35 +421,43 @@ public class AccountDAO {
 	 * verifies username and password
 	 *
 	 * @param transaction DBTransaction
-	 * @param informations login credentials
+	 * @param info login credentials
 	 * @return true, on success; false otherwise
 	 * @throws SQLException in case of an database error
 	 */
-	public boolean verify(DBTransaction transaction, SecuredLoginInfo informations)
+	public boolean verify(DBTransaction transaction, SecuredLoginInfo info)
 	        throws SQLException {
-		if (informations.isUsingSecureChannel() && Hash.compare(Hash.hash(informations.clientNonce), informations.clientNonceHash) != 0) {
+		if (info.isUsingSecureChannel() && Hash.compare(Hash.hash(info.clientNonce), info.clientNonceHash) != 0) {
 			logger.debug("Different hashs for client Nonce");
 			return false;
 		}
 
 		// if a login seed was provided, check it
-		if (informations.seed != null) {
+		if (info.seed != null) {
 			LoginSeedDAO loginSeedDAO = DAORegister.get().get(LoginSeedDAO.class);
-			Boolean seedVerified = loginSeedDAO.verifySeed(transaction, informations.username, informations.seed);
+			Boolean seedVerified = loginSeedDAO.verifySeed(transaction, info.username, info.seed);
 			if (seedVerified == null) {
-				informations.reason = MessageS2CLoginNACK.Reasons.SEED_WRONG;
+				info.reason = MessageS2CLoginNACK.Reasons.SEED_WRONG;
 				return false;
 			}
 			// the provided seed is valid, use it up
-			loginSeedDAO.useSeed(transaction, informations.seed);
+			loginSeedDAO.useSeed(transaction, info.seed);
 			if (seedVerified.booleanValue()) {
 				// the seed was even pre authenticated, so we are done here
 				return true;
 			}
 		}
 
-		byte[] passwordHash = informations.getDecryptedPasswordHash();
-		boolean res = verifyUsingDB(transaction, informations.username, passwordHash);
+		if (info.token != null && info.tokenType != null) {
+			AccountLinkDAO accountLinkDAO = DAORegister.get().get(AccountLinkDAO.class);
+			boolean tokenVerified = accountLinkDAO.verifyToken(transaction, info);
+			if (tokenVerified) {
+				return true;
+			}
+		}
+
+		byte[] passwordHash = info.getDecryptedPasswordHash();
+		boolean res = verifyUsingDB(transaction, info.username, passwordHash);
 		return res;
 	}
 
