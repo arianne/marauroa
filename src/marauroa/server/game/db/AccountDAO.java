@@ -453,6 +453,9 @@ public class AccountDAO {
 		}
 
 		byte[] passwordHash = info.getDecryptedPasswordHash();
+		if (passwordHash == null) {
+			return false;
+		}
 		boolean res = verifyUsingDB(transaction, info.username, passwordHash);
 		return res;
 	}
