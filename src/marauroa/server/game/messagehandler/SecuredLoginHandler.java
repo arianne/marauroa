@@ -88,6 +88,12 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 			}
 
 			SecuredLoginInfo info = fillLoginInfo(msg, entry);
+
+			if (info.isUsingSecureChannel() && Hash.compare(Hash.hash(info.clientNonce), info.clientNonceHash) != 0) {
+				logger.warn("Different hashs for client Nonce");
+				return;
+			}
+
 			authMan.verify(info, this, entry.clientid,
 					msg.getChannel(), msg.getProtocolVersion());
 	}
