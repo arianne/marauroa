@@ -13,6 +13,7 @@ package marauroa.server.game.messagehandler;
 
 import static marauroa.common.net.message.Message.MessageType.C2S_ACTION;
 import static marauroa.common.net.message.Message.MessageType.C2S_CHOOSECHARACTER;
+import static marauroa.common.net.message.Message.MessageType.C2S_CREATE_ACCOUNT_WITH_TOKEN;
 import static marauroa.common.net.message.Message.MessageType.C2S_CREATEACCOUNT;
 import static marauroa.common.net.message.Message.MessageType.C2S_CREATECHARACTER;
 import static marauroa.common.net.message.Message.MessageType.C2S_KEEPALIVE;
@@ -71,6 +72,7 @@ public class MessageDispatcher {
 		handlers.put(C2S_KEEPALIVE, new KeepAliveHandler());
 		handlers.put(C2S_TRANSFER_ACK, new TransferACKHandler());
 		handlers.put(C2S_CREATEACCOUNT, new CreateAccountHandler());
+		handlers.put(C2S_CREATE_ACCOUNT_WITH_TOKEN, new CreateAccountWithTokenHandler());
 		handlers.put(C2S_CREATECHARACTER, new CreateCharacterHandler());
 		handlers.put(P2S_CREATEACCOUNT, new CreateAccountHandler());
 		handlers.put(P2S_CREATECHARACTER, new CreateCharacterHandler());

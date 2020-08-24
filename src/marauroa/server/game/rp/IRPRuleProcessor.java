@@ -82,6 +82,21 @@ public interface IRPRuleProcessor {
 	public AccountResult createAccount(String username, String password, String email);
 
 	/**
+	 * Create an account for a player in game.
+	 * Uses token instead of password for cases like 3rd party authentication
+	 * (e.g. google sign-in).
+	 *
+	 * @param username
+	 *            username for a new account
+	 * @param tokenType
+	 *            token type for useful data about token
+	 * @param token
+	 *            auth token to verify, usually obtained from 3rd party
+	 * @return the Result of creating a new account
+	 */
+	public AccountResult createAccountWithToken(String username, String tokenType, String token);
+
+	/**
 	 * Creates an new character for an account already logged into the game
 	 *
 	 * @param username

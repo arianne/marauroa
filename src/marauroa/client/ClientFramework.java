@@ -39,37 +39,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.i18n.I18N;
 import marauroa.common.net.InvalidVersionException;
-import marauroa.common.net.message.Message;
-import marauroa.common.net.message.MessageC2SAction;
-import marauroa.common.net.message.MessageC2SChooseCharacter;
-import marauroa.common.net.message.MessageC2SCreateAccount;
-import marauroa.common.net.message.MessageC2SCreateCharacter;
-import marauroa.common.net.message.MessageC2SKeepAlive;
-import marauroa.common.net.message.MessageC2SLoginRequestKey;
-import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
-import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
-import marauroa.common.net.message.MessageC2SLoginSendPromise;
-import marauroa.common.net.message.MessageC2SLoginWithToken;
-import marauroa.common.net.message.MessageC2SLogout;
-import marauroa.common.net.message.MessageC2SOutOfSync;
-import marauroa.common.net.message.MessageC2STransferACK;
-import marauroa.common.net.message.MessageS2CCharacterList;
-import marauroa.common.net.message.MessageS2CConnectNACK;
-import marauroa.common.net.message.MessageS2CCreateAccountACK;
-import marauroa.common.net.message.MessageS2CCreateAccountNACK;
-import marauroa.common.net.message.MessageS2CCreateCharacterACK;
-import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
-import marauroa.common.net.message.MessageS2CInvalidMessage;
-import marauroa.common.net.message.MessageS2CLoginACK;
-import marauroa.common.net.message.MessageS2CLoginMessageNACK;
-import marauroa.common.net.message.MessageS2CLoginNACK;
-import marauroa.common.net.message.MessageS2CLoginSendKey;
-import marauroa.common.net.message.MessageS2CLoginSendNonce;
-import marauroa.common.net.message.MessageS2CPerception;
-import marauroa.common.net.message.MessageS2CServerInfo;
-import marauroa.common.net.message.MessageS2CTransfer;
-import marauroa.common.net.message.MessageS2CTransferREQ;
-import marauroa.common.net.message.TransferContent;
+import marauroa.common.net.message.*;
 
 /**
  * It is a wrapper over all the things that the client should do. You should
@@ -135,7 +105,7 @@ public abstract class ClientFramework {
 	 * @throws IOException
 	 *             if connection is not possible
 	 */
-	public void connect(String host, int port) throws IOException {
+	public synchronized void connect(String host, int port) throws IOException {
 		InetSocketAddress address = new InetSocketAddress(host, port);
 		IOException originalException = null;
 		boolean connected = false;
@@ -624,6 +594,45 @@ public abstract class ClientFramework {
 
 		netMan.addMessage(msgCA);
 
+		return processAccountCreationResponse(username);
+	}
+
+	/**
+	 * Request server to create an account with token on server.
+	 *
+	 * @param username
+	 *            the player desired username
+	 * @param tokenType
+	 *            token type
+	 * @param token
+	 * 			  authentication token (usually obtained from 3rd party).
+	 * @return AccountResult
+	 * @throws InvalidVersionException
+	 *             if we are not using a compatible version
+	 * @throws TimeoutException
+	 *             if timeout happens while waiting for the message.
+	 * @throws BannedAddressException
+	 */
+	public synchronized AccountResult createAccountWithToken(String username, String tokenType, String token)
+			throws TimeoutException, InvalidVersionException, BannedAddressException {
+		Locale locale = Locale.getDefault();
+		Message msgCA = new MessageC2SCreateAccountWithToken(null, username, tokenType, token, locale.getLanguage());
+
+		netMan.addMessage(msgCA);
+
+		return processAccountCreationResponse(username);
+	}
+
+	/**
+	 * Gets account creation response from server and
+	 * @param username
+	 * @return
+	 * @throws TimeoutException
+	 * @throws InvalidVersionException
+	 * @throws BannedAddressException
+	 */
+	private synchronized AccountResult processAccountCreationResponse(String username)
+			 throws TimeoutException, InvalidVersionException, BannedAddressException {
 		int received = 0;
 
 		AccountResult result = null;

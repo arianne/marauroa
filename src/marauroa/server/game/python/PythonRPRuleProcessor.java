@@ -83,6 +83,10 @@ public class PythonRPRuleProcessor implements IRPRuleProcessor {
 		return pythonRP.createAccount(username, password, email);
 	}
 
+	public AccountResult createAccountWithToken(String username, String tokenType, String token) {
+		return pythonRP.createAccountWithToken(username, tokenType, token);
+	}
+
 	public CharacterResult createCharacter(String username, String character, RPObject template) {
 		return pythonRP.createCharacter(username, character, template);
 	}
