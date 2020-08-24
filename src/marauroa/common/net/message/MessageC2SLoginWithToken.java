@@ -14,7 +14,6 @@ package marauroa.common.net.message;
 import java.io.IOException;
 
 import marauroa.common.Utility;
-import marauroa.common.crypto.Hash;
 import marauroa.common.net.Channel;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
@@ -26,15 +25,18 @@ import marauroa.common.net.OutputSerializer;
  *
  * @see marauroa.common.net.message.Message
  */
-public class MessageC2SLoginWithToken extends MessageSendByteArray {
+public class MessageC2SLoginWithToken extends Message {
 
+	private byte[] nonce;
+	private byte[] encryptedSessionKey;
+	private byte[] initVector;
 	private String username;
 	private String tokenType;
-	private byte[] token;
+	private byte[] encryptedToken;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SLoginWithToken() {
-		super(MessageType.C2S_LOGIN_WITH_TOKEN);
+		super(MessageType.C2S_LOGIN_WITH_TOKEN, null);
 	}
 
 	/**
@@ -47,17 +49,34 @@ public class MessageC2SLoginWithToken extends MessageSendByteArray {
 	 *            random number to prevent replay attacks
 	 * @param username
 	 *            the username of the user that wants to login
+	 * @param initVector 
+	 * @param encryptedSessionKey 
 	 * @param tokenType
 	 *            type of token
 	 * @param token
 	 *            authentication token
 	 */
 	public MessageC2SLoginWithToken(Channel source, byte[] nonce,
-	        String username, String tokenType, byte[] token) {
-		super(MessageType.C2S_LOGIN_WITH_TOKEN, source, nonce);
+			byte[] encryptedSessionKey, byte[] initVector, String username, String tokenType, byte[] encryptedToken) {
+		super(MessageType.C2S_LOGIN_WITH_TOKEN, source);
+		this.nonce = Utility.copy(nonce);
+		this.encryptedSessionKey = Utility.copy(encryptedSessionKey);
+		this.initVector = Utility.copy(initVector);
 		this.username = username;
 		this.tokenType = tokenType;
-		this.token = Utility.copy(token);
+		this.encryptedToken = Utility.copy(encryptedToken);
+	}
+
+	public byte[] getNonce() {
+		return nonce;
+	}
+
+	public byte[] getEncryptedSessionKey() {
+		return encryptedSessionKey;
+	}
+
+	public byte[] getInitVector() {
+		return initVector;
 	}
 
 	/**
@@ -83,8 +102,8 @@ public class MessageC2SLoginWithToken extends MessageSendByteArray {
 	 *
 	 * @return the token
 	 */
-	public byte[] getToken() {
-		return Utility.copy(token);
+	public byte[] getEncryptedToken() {
+		return Utility.copy(encryptedToken);
 	}
 
 	/**
@@ -94,29 +113,34 @@ public class MessageC2SLoginWithToken extends MessageSendByteArray {
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Login With Token) from (" + getAddress() + ") CONTENTS: (nonce:"
-		        + Hash.toHexString(hash) + "\tusername:" + username + "\ttokenType:"
-				+ tokenType + "\ttoken:"+ Hash.toHexString(token) + ")";
+		return "Message (C2S Login With Token) from (" + getAddress() + ") CONTENTS: (username:"
+				+ username + "\ttokenType:"	+ tokenType + "token:<encrypted>)";
 	}
 
 	@Override
 	public void writeObject(OutputSerializer out) throws IOException {
 		super.writeObject(out);
+		out.write(nonce);
+		out.write(encryptedSessionKey);
+		out.write(initVector);
 		if (username != null) {
 			out.write(username);
 		} else {
 			out.write("");
 		}
 		out.write(tokenType);
-		out.write(token);
+		out.write(encryptedToken);
 	}
 
 	@Override
 	public void readObject(InputSerializer in) throws IOException {
 		super.readObject(in);
+		nonce = in.readByteArray();
+		encryptedSessionKey = in.readByteArray();;
+		initVector = in.readByteArray();;
 		username = in.readString();
 		tokenType = in.readString();
-		token = in.readByteArray();
+		encryptedToken = in.readByteArray();
 		if (type != MessageType.C2S_LOGIN_WITH_TOKEN) {
 			throw new IOException();
 		}

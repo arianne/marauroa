@@ -13,6 +13,7 @@ package marauroa.server.game.messagehandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -21,6 +22,7 @@ import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
+import marauroa.common.crypto.SymmetricKey;
 import marauroa.common.net.Channel;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
@@ -143,10 +145,10 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 			info.seed = decode(info, msgLogin.getSeed());
 		} else if (msg instanceof MessageC2SLoginWithToken) {
 			MessageC2SLoginWithToken msgLogin = (MessageC2SLoginWithToken) msg;
-			info.clientNonce = msgLogin.getHash();
+			info.clientNonce = msgLogin.getNonce();
 			info.username = msgLogin.getUsername();
 			info.tokenType = msgLogin.getTokenType();
-			info.token = decodeToken(info, msgLogin.getToken());
+			info.token = decodeToken(info, msgLogin);
 		} else {
 			MessageC2SLoginSendUsernameAndPassword msgLogin = (MessageC2SLoginSendUsernameAndPassword) msg;
 			info = new SecuredLoginInfo(entry.getAddress());
@@ -175,16 +177,26 @@ class SecuredLoginHandler extends MessageHandler implements DelayedEventHandler 
 		}
 	}
 
-	private String decodeToken(SecuredLoginInfo info, byte[] data) {
-		byte[] b2 = Hash.xor(info.clientNonce, info.serverNonce);
-		byte[] b1 = info.key.decodeByteArray(b2, data);
-
+	private String decodeToken(SecuredLoginInfo info, MessageC2SLoginWithToken msgLogin) {
 		try {
-			return new String(b1, "UTF-8");
+			
+			byte[] encryptedSessionKey = msgLogin.getEncryptedSessionKey();
+			byte[] b1 = info.key.decodeByteArray(encryptedSessionKey);
+			byte[] b2 = Hash.xor(info.clientNonce, info.serverNonce);
+
+			byte[] sessionKey = Hash.xor(b1, b2);
+			SymmetricKey symmetricKey = new SymmetricKey(sessionKey);
+
+			byte[] initVector = msgLogin.getInitVector();
+			byte[] token = symmetricKey.decrypt(initVector, msgLogin.getEncryptedToken());
+
+			return new String(token, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e, e);
-			return null;
+		} catch (GeneralSecurityException e) {
+			logger.error(e, e);
 		}
+		return null;
 	}
 
 
