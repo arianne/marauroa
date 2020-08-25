@@ -20,6 +20,7 @@ import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,7 @@ import marauroa.client.net.TCPNetworkClientManager;
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.crypto.RSAPublicKey;
+import marauroa.common.crypto.SymmetricKey;
 import marauroa.common.game.AccountResult;
 import marauroa.common.game.CharacterResult;
 import marauroa.common.game.RPAction;
@@ -466,14 +468,26 @@ public abstract class ClientFramework {
 					if (b1 == null) {
 						throw new LoginFailedException(translate("Incorrect hash b1"));
 					}
-					byte[] b2 = new byte[0];
+
 					try {
-						b2 = token.getBytes("UTF-8");
+						byte[] sessionKey = Hash.random(16);
+						byte[] b3 = Hash.xor(b1, sessionKey);
+						byte[] encryptedSessionKey = key.encodeByteArray(b3);
+						SymmetricKey symmetricKey = new SymmetricKey(sessionKey);
+
+						byte[] initVector = Hash.random(16);
+						byte[] tokenData = token.getBytes("UTF-8");
+						byte[] encryptedToken = symmetricKey.encrypt(initVector, tokenData);
+						netMan.addMessage(new MessageC2SLoginWithToken(null, clientNonce, encryptedSessionKey, initVector, username, tokenType, encryptedToken));
+
 					} catch (UnsupportedEncodingException e) {
-						logger.error(e, e);
+						// UTF-8 encoding is always pressent as per Java specification
+						throw new RuntimeException("Failed to read UTF-8 string", e);
+					} catch (GeneralSecurityException e) {
+						// we expect the required cyphers to be part of Java
+						throw new RuntimeException("Encryption failed", e);
 					}
-					byte[] crypted = key.encodeByteArray(b1, b2);
-					netMan.addMessage(new MessageC2SLoginWithToken(null, clientNonce, username, tokenType, crypted));
+
 					break;
 				}
 					/* Server replied with ACK to login operation */

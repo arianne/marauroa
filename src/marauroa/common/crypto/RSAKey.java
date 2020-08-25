@@ -156,23 +156,6 @@ public class RSAKey extends RSAPublicKey {
 		return Hash.bigIntToBytes(decode(new BigInteger(message)));
 	}
 
-
-	/**
-	 * decode an array
-	 *
-	 * @param init array
-	 * @param message array
-	 * @return decoded array
-	 */
-	public byte[] decodeByteArray(byte[] init, byte[] message) {
-		BigInteger messageInt = new BigInteger(message);
-		BigInteger decoded = decode(messageInt);
-		BigInteger initInt = Hash.bytesToBigInt(init);
-		BigInteger result = decoded.divide(initInt);
-		return Hash.bigIntToBytes(result);
-	}
-
-
 	/**
 	 * signs a message
 	 *

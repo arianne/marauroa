@@ -201,6 +201,9 @@ public class SecuredLoginInfo {
 	 * @return the decrypted password hash
 	 */
 	public byte[] getDecryptedPasswordHash() {
+		if (password == null) {
+			return null;
+		}
 		byte[] b1 = key.decodeByteArray(password);
 		byte[] b2 = Hash.xor(clientNonce, serverNonce);
 		if (b2 == null) {

@@ -427,10 +427,6 @@ public class AccountDAO {
 	 */
 	public boolean verify(DBTransaction transaction, SecuredLoginInfo info)
 	        throws SQLException {
-		if (info.isUsingSecureChannel() && Hash.compare(Hash.hash(info.clientNonce), info.clientNonceHash) != 0) {
-			logger.debug("Different hashs for client Nonce");
-			return false;
-		}
 
 		// if a login seed was provided, check it
 		if (info.seed != null) {
@@ -457,6 +453,9 @@ public class AccountDAO {
 		}
 
 		byte[] passwordHash = info.getDecryptedPasswordHash();
+		if (passwordHash == null) {
+			return false;
+		}
 		boolean res = verifyUsingDB(transaction, info.username, passwordHash);
 		return res;
 	}
