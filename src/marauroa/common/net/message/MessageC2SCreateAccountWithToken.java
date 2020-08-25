@@ -32,7 +32,7 @@ public class MessageC2SCreateAccountWithToken extends Message {
 
     /** Constructor for allowing creation of an empty message */
     public MessageC2SCreateAccountWithToken() {
-        super(MessageType.C2S_CREATEACCOUNT, null);
+        super(MessageType.C2S_CREATE_ACCOUNT_WITH_TOKEN, null);
     }
 
     /**
