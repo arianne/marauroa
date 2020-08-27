@@ -886,6 +886,9 @@ public abstract class ClientFramework {
 	 * @return true unless it is sure that we are disconnected
 	 */
 	public boolean getConnectionState() {
+		if (netMan == null) {
+			return false;
+		}
 		return netMan.getConnectionState();
 	}
 
