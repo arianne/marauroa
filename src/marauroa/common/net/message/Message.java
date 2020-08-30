@@ -82,6 +82,8 @@ public class Message implements Serializable {
 		C2S_CREATEACCOUNT,
 		/** server to client: confirms a successful character creation attempt */
 		S2C_CREATEACCOUNT_ACK,
+		/** client to server: requests an account creation without password required (e.g. 3rd party auth provider) */
+		C2S_CREATE_ACCOUNT_WITH_TOKEN,
 		/** server to client: rejects an account cration attempt */
 		S2C_CREATEACCOUNT_NACK,
 		/** client to server: requests a character creation */

@@ -45,6 +45,7 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
 import marauroa.common.net.message.MessageC2SChooseCharacter;
 import marauroa.common.net.message.MessageC2SCreateAccount;
+import marauroa.common.net.message.MessageC2SCreateAccountWithToken;
 import marauroa.common.net.message.MessageC2SCreateCharacter;
 import marauroa.common.net.message.MessageC2SKeepAlive;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
@@ -638,13 +639,47 @@ public abstract class ClientFramework {
 
 		netMan.addMessage(msgCA);
 
+		AccountResult result = processAccountCreationResponse(username);
+
+		return result;
+	}
+
+
+	/**
+	 * Request server to create an account with token on server.
+	 *
+	 * @param username
+	 *            the player desired username
+	 * @param tokenType
+	 *            token type
+	 * @param token
+	 * 			  authentication token (usually obtained from 3rd party).
+	 * @return AccountResult
+	 * @throws InvalidVersionException
+	 *             if we are not using a compatible version
+	 * @throws TimeoutException
+	 *             if timeout happens while waiting for the message.
+	 * @throws BannedAddressException
+	 */
+	public synchronized AccountResult createAccountWithToken(String username, String tokenType, String token)
+			throws TimeoutException, InvalidVersionException, BannedAddressException {
+		Locale locale = Locale.getDefault();
+		Message msgCA = new MessageC2SCreateAccountWithToken(null, username, tokenType, token, locale.getLanguage());
+
+		netMan.addMessage(msgCA);
+
+		return processAccountCreationResponse(username);
+	}
+
+	private AccountResult processAccountCreationResponse(String username)
+			throws InvalidVersionException, TimeoutException, BannedAddressException {
 		int received = 0;
-
+		
 		AccountResult result = null;
-
+		
 		while (received != 1) {
 			Message msg = getMessage(TIMEOUT_EXTENDED);
-
+			
 			switch (msg.getType()) {
 				case S2C_INVALIDMESSAGE: {
 					result = new AccountResult(Result.FAILED_EXCEPTION, username);
@@ -653,26 +688,25 @@ public abstract class ClientFramework {
 				/* Account was created */
 				case S2C_CREATEACCOUNT_ACK:
 					logger.debug("Create account ACK");
-
+					
 					MessageS2CCreateAccountACK msgack = (MessageS2CCreateAccountACK) msg;
 					result = new AccountResult(Result.OK_CREATED, msgack.getUsername());
-
+					
 					received++;
 					break;
-
-				/* Account was not created. Reason explained on event. */
+					
+					/* Account was not created. Reason explained on event. */
 				case S2C_CREATEACCOUNT_NACK:
 					logger.debug("Create account NACK");
 					MessageS2CCreateAccountNACK nack = (MessageS2CCreateAccountNACK) msg;
 					result = new AccountResult(nack.getResolutionCode(), username);
-
+					
 					received++;
 					break;
 				default:
 					logger.debug("Unexpected method while waiting for confirmation of account creation: " + msg);
 			}
 		}
-
 		return result;
 	}
 

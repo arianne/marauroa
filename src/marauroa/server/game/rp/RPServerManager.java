@@ -260,6 +260,53 @@ public class RPServerManager extends Thread {
 	 * @return a Result indicating if account creation was done successfully or not.
 	 */
 	public AccountResult createAccount(String username, String password, String email, String address) {
+		AccountResult creationError = accountCreationPossible(username, address);
+		if (creationError != null) {
+			return creationError;
+		}
+
+		// forward the creation request to the game
+		return ruleProcessor.createAccount(username, password, email);
+	}
+
+	/**
+	 * Create an account for a player in game.
+	 * Uses token instead of password for cases like 3rd party authentication
+	 * (e.g. google sign-in).
+	 *
+	 * @param username
+	 *            username for a new account
+	 * @param tokenType
+	 * 		      token type
+	 * @param token
+	 *            token obtained from 3rd party to verify
+	 * @param address
+	 *            ip address of client
+	 * @return a Result indicating if account creation was done successfully or not.
+	 */
+	public AccountResult createAccountWithToken(String username, String tokenType, String token, String address) {
+		AccountResult creationError = accountCreationPossible(username, address);
+		if (creationError != null) {
+			return creationError;
+		}
+
+		// forward the creation request to the game
+		return ruleProcessor.createAccountWithToken(username, tokenType, token);
+	}
+
+	/**
+	 * Checks if account creation is possible.
+	 * Must be called before delegating to user.
+	 *
+	 * @param username
+	 *            Account username.
+	 * @param address
+	 *            Player's address.
+	 * @return
+	 * Returns AccountResult with error, if account creation is not possible.
+	 * Returns null if account can be created.
+	 */
+	private AccountResult accountCreationPossible(String username, String address) {
 		try {
 			if (!Boolean.parseBoolean(Configuration.getConfiguration().get("allow_account_creation", "true"))) {
 				return new AccountResult(Result.FAILED_CREATE_ON_MAIN_INSTEAD, username);
@@ -281,8 +328,7 @@ public class RPServerManager extends Thread {
 			return new AccountResult(Result.FAILED_EXCEPTION, username);
 		}
 
-		// forward the creation request to the game
-		return ruleProcessor.createAccount(username, password, email);
+		return null;
 	}
 
 	/**

@@ -23,6 +23,7 @@ import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
 import marauroa.common.net.message.MessageC2SChooseCharacter;
 import marauroa.common.net.message.MessageC2SCreateAccount;
+import marauroa.common.net.message.MessageC2SCreateAccountWithToken;
 import marauroa.common.net.message.MessageC2SCreateCharacter;
 import marauroa.common.net.message.MessageC2SKeepAlive;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
@@ -130,6 +131,7 @@ public class MessageFactory {
 		register(Message.MessageType.S2C_LOGIN_SENDNONCE, MessageS2CLoginSendNonce.class);
 		register(Message.MessageType.C2S_LOGIN_SENDPROMISE, MessageC2SLoginSendPromise.class);
 		register(Message.MessageType.C2S_CREATEACCOUNT, MessageC2SCreateAccount.class);
+		register(Message.MessageType.C2S_CREATE_ACCOUNT_WITH_TOKEN, MessageC2SCreateAccountWithToken.class);
 		register(Message.MessageType.S2C_CREATEACCOUNT_ACK, MessageS2CCreateAccountACK.class);
 		register(Message.MessageType.S2C_CREATEACCOUNT_NACK, MessageS2CCreateAccountNACK.class);
 		register(Message.MessageType.C2S_CREATECHARACTER, MessageC2SCreateCharacter.class);
