@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2010 - Marauroa                    *
+ *                   (C) Copyright 2009-2020 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -13,21 +13,35 @@ package marauroa.server.game.dbcommand;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.command.AbstractDBCommand;
 import marauroa.server.game.db.DAORegister;
 import marauroa.server.game.db.GameEventDAO;
+import marauroa.server.game.rp.GameEvent;
 
 /**
- * logs an gameEvent
+ * logs gameEvents
  *
  * @author hendrik
  */
 public class LogGameEventCommand extends AbstractDBCommand {
+	private final List<GameEvent> gameEvents;
+
 	private String source;
 	private String event;
 	private String[] params;
+
+	/**
+	 * creates a new LogGameEventCommand.
+	 *
+	 * @param gameEvents list of GameEvent
+	 */
+	public LogGameEventCommand(List<GameEvent> gameEvents) {
+		this.gameEvents = new LinkedList<GameEvent>(gameEvents);
+	}
 
 	/**
 	 * creates a new LogGameEventCommand.
@@ -37,6 +51,7 @@ public class LogGameEventCommand extends AbstractDBCommand {
 	 * @param params parameters
 	 */
 	public LogGameEventCommand(String source, String event, String... params) {
+		this.gameEvents = null;
 		this.source = source;
 		this.event = event;
 		this.params = new String[params.length];
@@ -45,7 +60,11 @@ public class LogGameEventCommand extends AbstractDBCommand {
 
 	@Override
 	public void execute(DBTransaction transaction) throws SQLException {
-		DAORegister.get().get(GameEventDAO.class).addGameEvent(transaction, this.getEnqueueTime(), source, event, params);
+		if (gameEvents == null) {
+			DAORegister.get().get(GameEventDAO.class).addGameEvent(transaction, this.getEnqueueTime(), source, event, params);
+		} else {
+			DAORegister.get().get(GameEventDAO.class).addGameEvents(transaction, gameEvents);
+		}
 	}
 
 	/**
