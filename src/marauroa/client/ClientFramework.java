@@ -15,11 +15,7 @@ import static marauroa.common.i18n.I18N.translate;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.security.GeneralSecurityException;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,38 +37,7 @@ import marauroa.common.game.RPObject;
 import marauroa.common.game.Result;
 import marauroa.common.i18n.I18N;
 import marauroa.common.net.InvalidVersionException;
-import marauroa.common.net.message.Message;
-import marauroa.common.net.message.MessageC2SAction;
-import marauroa.common.net.message.MessageC2SChooseCharacter;
-import marauroa.common.net.message.MessageC2SCreateAccount;
-import marauroa.common.net.message.MessageC2SCreateAccountWithToken;
-import marauroa.common.net.message.MessageC2SCreateCharacter;
-import marauroa.common.net.message.MessageC2SKeepAlive;
-import marauroa.common.net.message.MessageC2SLoginRequestKey;
-import marauroa.common.net.message.MessageC2SLoginSendNonceNameAndPassword;
-import marauroa.common.net.message.MessageC2SLoginSendNonceNamePasswordAndSeed;
-import marauroa.common.net.message.MessageC2SLoginSendPromise;
-import marauroa.common.net.message.MessageC2SLoginWithToken;
-import marauroa.common.net.message.MessageC2SLogout;
-import marauroa.common.net.message.MessageC2SOutOfSync;
-import marauroa.common.net.message.MessageC2STransferACK;
-import marauroa.common.net.message.MessageS2CCharacterList;
-import marauroa.common.net.message.MessageS2CConnectNACK;
-import marauroa.common.net.message.MessageS2CCreateAccountACK;
-import marauroa.common.net.message.MessageS2CCreateAccountNACK;
-import marauroa.common.net.message.MessageS2CCreateCharacterACK;
-import marauroa.common.net.message.MessageS2CCreateCharacterNACK;
-import marauroa.common.net.message.MessageS2CInvalidMessage;
-import marauroa.common.net.message.MessageS2CLoginACK;
-import marauroa.common.net.message.MessageS2CLoginMessageNACK;
-import marauroa.common.net.message.MessageS2CLoginNACK;
-import marauroa.common.net.message.MessageS2CLoginSendKey;
-import marauroa.common.net.message.MessageS2CLoginSendNonce;
-import marauroa.common.net.message.MessageS2CPerception;
-import marauroa.common.net.message.MessageS2CServerInfo;
-import marauroa.common.net.message.MessageS2CTransfer;
-import marauroa.common.net.message.MessageS2CTransferREQ;
-import marauroa.common.net.message.TransferContent;
+import marauroa.common.net.message.*;
 
 /**
  * It is a wrapper over all the things that the client should do. You should
@@ -138,7 +103,27 @@ public abstract class ClientFramework {
 	 * @throws IOException
 	 *             if connection is not possible
 	 */
-	public void connect(String host, int port) throws IOException {
+	public synchronized void connect (String host, int port) throws IOException {
+		connect(host, port, -1);
+	}
+
+	/**
+	 * Call this method to connect to server. This method just configure the
+	 * connection, it doesn't send anything
+	 *
+	 * @param host
+	 *            server host name
+	 * @param port
+	 *            server port number
+	 * @param timeoutMs
+	 * 			  time before SocketTimeoutException if cant establish a connection
+	 * @throws IOException
+	 *             if connection is not possible
+	 * @throws SocketTimeoutException
+	 * 			   if connection takes longer than timeoutMs
+	 */
+	public synchronized void connect(String host, int port, int timeoutMs)
+			throws IOException, SocketTimeoutException {
 		InetSocketAddress address = new InetSocketAddress(host, port);
 		IOException originalException = null;
 		boolean connected = false;
@@ -147,7 +132,7 @@ public abstract class ClientFramework {
 		try {
 			Proxy proxy = discoverProxy(host, port);
 			if (proxy != Proxy.NO_PROXY) {
-				connect(proxy, address);
+				connect(proxy, address, timeoutMs);
 				connected = true;
 			}
 		} catch (IOException e) {
@@ -161,7 +146,7 @@ public abstract class ClientFramework {
 		// if no proxy is specified, or it failed, try without proxy
 		if (!connected) {
 			try {
-				connect(Proxy.NO_PROXY, address);
+				connect(Proxy.NO_PROXY, address, timeoutMs);
 			} catch (IOException e) {
 				// if this is only the fallback, throw the original exception instead
 				if (originalException != null) {
@@ -217,10 +202,26 @@ public abstract class ClientFramework {
 	 *
 	 * @param proxy proxy server to use for the connection
 	 * @param serverAddress marauroa server (final destination)
+	 * @param timeoutMs time in milliseconds, after which this method throws SocketTimeoutException
+	 * @throws IOException if connection is not possible
+	 * @throws SocketTimeoutException if connection took more than timeoutMs
+	 */
+	public void connect(Proxy proxy, InetSocketAddress serverAddress, int timeoutMs)
+			throws IOException, SocketTimeoutException {
+		netMan = new TCPNetworkClientManager(proxy, serverAddress, timeoutMs);
+	}
+
+	/**
+	 * Call this method to connect to server using a proxy-server inbetween.
+	 * This method just configure the connection, it doesn't send anything.
+	 *
+	 * @param proxy proxy server to use for the connection
+	 * @param serverAddress marauroa server (final destination)
 	 * @throws IOException if connection is not possible
 	 */
-	public void connect(Proxy proxy, InetSocketAddress serverAddress) throws IOException {
-		netMan = new TCPNetworkClientManager(proxy, serverAddress);
+	public void connect(Proxy proxy, InetSocketAddress serverAddress)
+			throws IOException {
+		netMan = new TCPNetworkClientManager(proxy, serverAddress, -1);
 	}
 
 	/**
@@ -674,12 +675,12 @@ public abstract class ClientFramework {
 	private AccountResult processAccountCreationResponse(String username)
 			throws InvalidVersionException, TimeoutException, BannedAddressException {
 		int received = 0;
-		
+
 		AccountResult result = null;
-		
+
 		while (received != 1) {
 			Message msg = getMessage(TIMEOUT_EXTENDED);
-			
+
 			switch (msg.getType()) {
 				case S2C_INVALIDMESSAGE: {
 					result = new AccountResult(Result.FAILED_EXCEPTION, username);
@@ -688,19 +689,19 @@ public abstract class ClientFramework {
 				/* Account was created */
 				case S2C_CREATEACCOUNT_ACK:
 					logger.debug("Create account ACK");
-					
+
 					MessageS2CCreateAccountACK msgack = (MessageS2CCreateAccountACK) msg;
 					result = new AccountResult(Result.OK_CREATED, msgack.getUsername());
-					
+
 					received++;
 					break;
-					
+
 					/* Account was not created. Reason explained on event. */
 				case S2C_CREATEACCOUNT_NACK:
 					logger.debug("Create account NACK");
 					MessageS2CCreateAccountNACK nack = (MessageS2CCreateAccountNACK) msg;
 					result = new AccountResult(nack.getResolutionCode(), username);
-					
+
 					received++;
 					break;
 				default:

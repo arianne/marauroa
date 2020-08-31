@@ -19,6 +19,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -107,8 +108,8 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	 *            the port of the server where we connect to.
 	 * @throws IOException
 	 */
-	public TCPNetworkClientManager(String host, int port) throws IOException {
-		this(Proxy.NO_PROXY, new InetSocketAddress(host, port));
+	public TCPNetworkClientManager(String host, int port, int timeoutMs) throws IOException {
+		this(Proxy.NO_PROXY, new InetSocketAddress(host, port), timeoutMs);
 	}
 	/**
 	 * Constructor that opens the socket on the marauroa_PORT and start the
@@ -116,9 +117,12 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	 *
 	 * @param proxy proxy server and protocol to use
 	 * @param serverAddress the host and port where we connect to.
+	 * @param timeoutMs time in milliseconds, after which this method throws SocketTimeoutException
 	 * @throws IOException
+	 * @throws SocketTimeoutException if timeoutMs elapses before socket connection
 	 */
-	public TCPNetworkClientManager(Proxy proxy, InetSocketAddress serverAddress) throws IOException {
+	public TCPNetworkClientManager(Proxy proxy, InetSocketAddress serverAddress, int timeoutMs)
+			throws IOException, SocketTimeoutException {
 		clientid = Message.CLIENTID_INVALID;
 		this.address = serverAddress;
 
@@ -133,7 +137,11 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 		} else {
 			socket = new Socket(proxy);
 		}
-		socket.connect(address);
+		if (timeoutMs > 0) {
+			socket.connect(address, timeoutMs);
+		} else {
+			socket.connect(address);
+		}
 		socket.setTcpNoDelay(true); // disable Nagle's algorithm
 		socket.setReceiveBufferSize(128 * 1024);
 
