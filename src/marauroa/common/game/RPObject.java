@@ -130,7 +130,10 @@ public class RPObject extends SlotOwner {
 	 */
 	public RPObject(String rpclass) {
 		super(RPClass.getRPClass(rpclass));
-		clear();
+		RPClass rpClassObj = RPClass.getRPClass(rpclass);
+		if (rpClassObj == null) {
+			logger.error("RPClass '" + rpclass + "' was not defined.", new Throwable());
+		}
 	}
 
 	/**
