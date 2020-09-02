@@ -226,6 +226,7 @@ public abstract class ClientFramework {
 	/**
 	 * Retrieves a message from network manager.
 	 *
+	 * @param timeout timeout time in milliseconds
 	 * @return a message
 	 * @throws InvalidVersionException
 	 * @throws TimeoutException
@@ -850,9 +851,10 @@ public abstract class ClientFramework {
 	public synchronized boolean loop(@SuppressWarnings("unused") int delta) {
 		boolean receivedMessages = false;
 
-		/* Check network for new messages. */
-		messages.addAll(((TCPNetworkClientManager) netMan).getMessages());
-		/* For all the received messages do */
+		// Check network for new messages.
+		((TCPNetworkClientManager) netMan).retrieveMessages(messages);
+
+		// For all the received messages do
 		for (Message msg : messages) {
 			receivedMessages = true;
 

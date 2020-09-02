@@ -224,8 +224,19 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 	 * gets all messages received so far and removes them from the queue.
 	 *
 	 *
+	 * @param drainTo the messages received
+	 */
+	public synchronized void retrieveMessages(Collection<? super Message> drainTo) {
+		 processedMessages.drainTo(drainTo);
+	}
+
+	/**
+	 * gets all messages received so far and removes them from the queue.
+	 *
+	 *
 	 * @return the messages received
 	 */
+	@Deprecated
 	public synchronized Collection<Message> getMessages() {
 		Collection<Message> col = new LinkedList<Message>();
 		 processedMessages.drainTo(col);
