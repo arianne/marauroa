@@ -26,6 +26,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import marauroa.common.Log4J;
+import marauroa.common.TimeoutConf;
 import marauroa.common.Utility;
 import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
@@ -133,7 +134,7 @@ public final class TCPNetworkClientManager implements INetworkClientManagerInter
 		} else {
 			socket = new Socket(proxy);
 		}
-		socket.connect(address);
+		socket.connect(address, TimeoutConf.SOCKET_TIMEOUT * 1000);
 		socket.setTcpNoDelay(true); // disable Nagle's algorithm
 		socket.setReceiveBufferSize(128 * 1024);
 
