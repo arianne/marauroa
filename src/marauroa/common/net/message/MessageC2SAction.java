@@ -11,10 +11,9 @@
  ***************************************************************************/
 package marauroa.common.net.message;
 
-import java.awt.HeadlessException;
-import java.awt.KeyboardFocusManager;
-import java.awt.Window;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import marauroa.common.game.RPAction;
@@ -33,6 +32,32 @@ public class MessageC2SAction extends Message {
 	private RPAction action;
 	/** the priority of the action */
 	byte priority = -1;
+
+	private static Object kfm;
+	private static Method kfmMethod;
+
+	static {
+		Class<?> clazz;
+		try {
+			clazz = Class.forName("java.awt.KeyboardFocusManager");
+			Method method = clazz.getMethod("getCurrentKeyboardFocusManager");
+			kfm = method.invoke(null);
+			kfmMethod = clazz.getMethod("getActiveWindow");
+		} catch (ClassNotFoundException e) {
+			// ignore
+		} catch (NoSuchMethodException e) {
+			// ignore
+		} catch (SecurityException e) {
+			// ignore
+		} catch (IllegalAccessException e) {
+			// ignore
+		} catch (IllegalArgumentException e) {
+			// ignore
+		} catch (InvocationTargetException e) {
+			// ignore
+		}
+
+	}
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageC2SAction() {
@@ -87,10 +112,14 @@ public class MessageC2SAction extends Message {
 
 		// get priority
 		try {
-			KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-			Window window = keyboardFocusManager.getActiveWindow();
+			if (kfm == null) {
+				out.write((byte) 2);
+			}
+			Object window = kfmMethod.invoke(kfm);
 			out.write((byte) ((window != null) ? 0 : 1));
-		} catch (HeadlessException e) {
+		} catch (Exception e) {
+			out.write((byte) 2);
+		} catch (Error e) {
 			out.write((byte) 2);
 		}
 	}
