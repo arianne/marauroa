@@ -199,10 +199,18 @@ public class RPObjectTest {
 
 		assertEquals(obj, result);
 
-		RPSlot inslot = result.getSlot("lhand");
-		for ( RPObject contained : inslot) {
+		RPSlot lHandBeforeSerialization = obj.getSlot("lhand");
+		RPSlot lHandAfterSerialization = result.getSlot("lhand");
+		for ( RPObject contained : lHandAfterSerialization) {
 			assertTrue(contained.isContained());
 		}
+
+		RPObject secondPocket1 = new RPObject();
+		RPObject secondPocket2 = new RPObject();
+		lHandBeforeSerialization.add(secondPocket1);
+		lHandAfterSerialization.add(secondPocket2);
+
+		assertEquals(secondPocket1.getID(), secondPocket2.getID());
 	}
 
 	/**
