@@ -359,6 +359,37 @@ public abstract class SlotOwner extends Attributes {
 				slots.add(slot);
 			}
 		}
+		//We get root owner because RPSlot of any depth uses root's lastAssignedId
+		SlotOwner rootOwner = this;
+		while (rootOwner.getContainerOwner() != null) {
+			rootOwner = rootOwner.getContainerOwner();
+		}
+		rootOwner.lastAssignedID = getHighestId(rootOwner) + 1;
+	}
+
+	/**
+	 * Recursively goes from rootOwner through all objects
+	 * down in the tree and gets highest object ID.
+	 * @param rootOwner slotOwner from which we start moving down.
+	 * @return highest object id.
+	 */
+	private int getHighestId(SlotOwner rootOwner) {
+		int highestId = 0;
+		if (rootOwner.slots == null) {
+			return highestId;
+		}
+		for (RPSlot slot : rootOwner.slots) {
+			for (RPObject object : slot) {
+				int objectId = object.getID().getObjectID();
+				if (highestId < objectId) {
+					highestId = objectId;
+				}
+				if (object.slots != null && object.slots.size() != 0) {
+					highestId = Math.max(highestId, getHighestId(object));
+				}
+			}
+		}
+		return highestId;
 	}
 
 	@Override
