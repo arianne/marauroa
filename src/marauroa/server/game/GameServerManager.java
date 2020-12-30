@@ -276,6 +276,9 @@ public final class GameServerManager extends Thread implements IDisconnectedList
 			}
 		} catch (Throwable e) {
 			logger.error("Unhandled exception, server will shut down.", e);
+			// Traditionally when get to this point, the server is broken beyond repair.
+			// Lets kill it so that it can be restarted.
+			System.exit(1);
 		}
 
 		isfinished = true;

@@ -249,6 +249,10 @@ public final class NetworkServerManager implements IServerManager, INetworkServe
 	 */
 	public void onMessage(ConnectionManager server, Object internalChannel, Message msg) {
 		Channel channel = channels.get(internalChannel);
+		if (channel == null) {
+			logger.warn(("Ignring message from unknown channel: " + msg + " from" + internalChannel));
+			return;
+		}
 		msg.setChannel(channel);
 		messages.add(msg);
 	}

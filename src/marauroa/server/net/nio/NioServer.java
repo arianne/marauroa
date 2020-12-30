@@ -195,7 +195,7 @@ class NioServer extends Thread {
 									// Force data to be sent if there is data waiting.
 									if (pendingData.containsKey(change.socket)) {
 										SelectionKey key = change.socket.keyFor(selector);
-										if (key.isValid()) {
+										if ((key != null) && key.isValid()) {
 											write(key);
 										}
 									}
