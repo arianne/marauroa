@@ -40,6 +40,8 @@ public class Hash {
 
 	static {
 		try {
+			// md5 is used for compatibility only.
+			// passwords are hashed with Sha512Crypt
 			md = MessageDigest.getInstance("MD5");
 			random = SecureRandom.getInstance("SHA1PRNG");
 		} catch (NoSuchAlgorithmException e) {
@@ -48,7 +50,7 @@ public class Hash {
 	}
 
 	/**
-	 * Return a hash of the given argument.
+	 * Return an <b>insecure</b> hash of the given argument.
 	 * It is thread safe.
 	 *
 	 * @param value a string
@@ -72,7 +74,7 @@ public class Hash {
 	}
 
 	/**
-	 * Return the hash of an array of bytes.
+	 * Return an <b>insecure</b> hash of an array of bytes.
 	 * This method is thread safe.
 	 *
 	 * @param value an array of bytes.
