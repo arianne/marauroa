@@ -203,6 +203,16 @@ public class RPObjectTest {
 		for ( RPObject contained : inslot) {
 			assertTrue(contained.isContained());
 		}
+		inslot.add(new RPObject());
+
+		for (RPObject object : inslot) {
+			for (RPObject object1 : inslot) {
+				if (object == object1) continue; //Skip check against itself
+				if (object.getID().getObjectID() == object1.getID().getObjectID()) {
+					fail("Object IDs must be unique.");
+				}
+			}
+		}
 	}
 
 	/**
