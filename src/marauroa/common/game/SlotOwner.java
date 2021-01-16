@@ -339,11 +339,7 @@ public abstract class SlotOwner extends Attributes {
 		out.append("}");
 	}
 
-	protected void deserializeRPSlots(InputSerializer in)
-			throws IOException {
-		/*
-		 * First we load slots
-		 */
+	protected void deserializeRPSlots(InputSerializer in) throws IOException {
 		int size = in.readInt();
 		if (size > TimeoutConf.MAX_ARRAY_ELEMENTS) {
 			throw new IOException("Illegal request of an list of " + String.valueOf(size) + " size");
@@ -359,17 +355,20 @@ public abstract class SlotOwner extends Attributes {
 				slots.add(slot);
 			}
 		}
-		//We get root owner because RPSlot of any depth uses root's lastAssignedId
+
+		// We get root owner because RPSlot of any depth uses root's lastAssignedID
 		SlotOwner rootOwner = this;
 		while (rootOwner.getContainerOwner() != null) {
 			rootOwner = rootOwner.getContainerOwner();
 		}
-		rootOwner.lastAssignedID = getHighestId(rootOwner) + 1;
+		this.lastAssignedID = getHighestId(rootOwner);
+		rootOwner.usedSlotID(this.lastAssignedID);
 	}
 
 	/**
 	 * Recursively goes from rootOwner through all objects
 	 * down in the tree and gets highest object ID.
+	 *
 	 * @param rootOwner slotOwner from which we start moving down.
 	 * @return highest object id.
 	 */
