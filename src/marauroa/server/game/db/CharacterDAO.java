@@ -334,7 +334,7 @@ public class CharacterDAO {
 	 * @throws IOException
 	 */
 	public void storeCharacter(DBTransaction transaction, String username, String character,
-	        RPObject player, Timestamp timestamp) throws SQLException, IOException {
+	        RPObject player, @SuppressWarnings("unused") Timestamp timestamp) throws SQLException, IOException {
 		try {
 			if (!StringChecker.validString(username) || !StringChecker.validString(character)) {
 				throw new SQLException("Invalid string username=(" + username + ") character=("
