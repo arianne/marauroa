@@ -69,7 +69,9 @@ public class LoginCommand extends DBCommandWithCallback {
 		if (!credentialsCheck(transaction)) {
 			return;
 		}
-		
+		if (!accountStatusCheck(transaction)) {
+			return;
+		}
 		processSuccessfulLogin(transaction);
 	}
 
@@ -102,6 +104,25 @@ public class LoginCommand extends DBCommandWithCallback {
 			}
 			failReason = info.reason;
 			info.addLoginEvent(transaction, info.address, 0, this.getEnqueueTime());
+			return false;
+		}
+		return true;
+	}
+
+	protected boolean accountStatusCheck(DBTransaction transaction) throws SQLException {
+		String accountStatusMessage = DAORegister.get().get(AccountDAO.class).getAccountBanMessage(transaction, info.username);
+		if (accountStatusMessage != null) {
+			String status = DAORegister.get().get(AccountDAO.class).getAccountStatus(transaction, info.username);
+			if (status == null) {
+				// oops
+			} else if (status.equals("banned")) {
+				info.addLoginEvent(transaction, info.address, 2, this.getEnqueueTime());
+			} else if (status.equals("inactive")) {
+				info.addLoginEvent(transaction, info.address, 3, this.getEnqueueTime());
+			} else if (status.equals("merged")) {
+				info.addLoginEvent(transaction, info.address, 5, this.getEnqueueTime());
+			}
+			failMessage = accountStatusMessage;
 			return false;
 		}
 		return true;
