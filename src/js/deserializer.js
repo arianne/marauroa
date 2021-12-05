@@ -163,6 +163,15 @@ marauroa.Deserializer = function(buffer) {
 	}
 };
 
+marauroa.Deserializer.binaryStringToUint = function(binary) {
+    var len = binary.length;
+    var bytes = new Uint8Array( len );
+    for (var i = 0; i < len; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes.buffer
+};
+
 /**
  * created a deserializer from a deflated data stream that was encoded using base64.
  *
@@ -171,8 +180,10 @@ marauroa.Deserializer = function(buffer) {
  */
 marauroa.Deserializer.fromDeflatedBase64 = function(base64) {
     var d = window.atob(base64);
-    var binary = window.RawDeflate.inflate(d.substring(2, d.length - 4));
-    return marauroa.Deserializer.fromBinaryString(binary);
+    var buffer = marauroa.Deserializer.binaryStringToUint(d.substring(2, d.length - 4));
+    var inflate = new window["Zlib"]["RawInflate"](buffer);
+    var data = inflate["decompress"]();
+    return new marauroa.Deserializer(data.buffer);
 };
 
 /**
