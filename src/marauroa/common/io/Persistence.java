@@ -14,7 +14,6 @@ package marauroa.common.io;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.AccessControlException;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
@@ -43,7 +42,10 @@ public abstract class Persistence {
 		if (instance == null) {
 			try {
 				System.getProperty("user.home");
-			} catch (AccessControlException e) {
+				// AccessControlException is deprecated for removal
+			} catch (Exception e) {
+				WEB_START_SANDBOX = true;
+			} catch (Error e) {
 				WEB_START_SANDBOX = true;
 			}
 

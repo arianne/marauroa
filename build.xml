@@ -85,7 +85,7 @@
                    byline="true"/>
 
 		<!-- Compile it -->
-		<javac srcdir="${src}" source="6" target="1.6" destdir="${build-classes}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit};${exclude.web}" includeantruntime="false">
+		<javac srcdir="${src}" source="8" target="8" destdir="${build-classes}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit};${exclude.web}" includeantruntime="false">
 			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-classpath" />
 		</javac>
@@ -113,7 +113,7 @@
 		<mkdir dir="${build-client}"/>
 		
 		<!-- Compile it -->
-		<javac srcdir="${src}" source="6" target="1.6" destdir="${build-client}" debug="true" debuglevel="source,lines" includeantruntime="false">
+		<javac srcdir="${src}" source="8" target="8" destdir="${build-client}" debug="true" debuglevel="source,lines" includeantruntime="false">
 			<compilerarg line="-encoding utf-8"/>
 			<include name="marauroa/client/**"/>
 			<include name="marauroa/common/**"/>
@@ -265,11 +265,11 @@
 	
 	<!-- testing targets -->
 	<target name="compile-tests" depends="compile">
-		<javac srcdir="${src-test}" source="1.6" target="1.6" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+		<javac srcdir="${src-test}" source="8" target="8" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
 			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-tests-classpath" />
 		</javac>
-		<javac srcdir="functional_tests" source="1.6" target="1.6" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
+		<javac srcdir="functional_tests" source="8" target="8" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
 			<compilerarg line="-encoding utf-8"/>
 			<classpath refid="compile-tests-classpath" />
 		</javac>
