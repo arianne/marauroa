@@ -1,16 +1,15 @@
 Changelog
 ---------
 
-3.9.8
+3.9.7
+- added support for Java 17, dropped support for Java 6 and Java 7
+- updated log4j to log4j-lts-1.2.18.jar
 - fixed log4j compatibility issue on Android
 - retry transactions on detected deadlock
 - supported KeepALive during login phase
 - deprecated DAO methods without transaction parameter
 - use timestamp of when a command was added to the queue in all database operations
 - DBCommandQueue supports low priority database commands, that are not critical for the next log in
-
-
-3.9.7
 - fixed concurrency issue between perceptions and content transfer in WebSocketChannel 
 
 
