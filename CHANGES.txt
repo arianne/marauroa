@@ -1,6 +1,10 @@
 Changelog
 ---------
 
+3.9.8
+
+
+
 3.9.7
 - added support for Java 17, dropped support for Java 6 and Java 7
 - updated log4j to log4j-lts-1.2.18.jar

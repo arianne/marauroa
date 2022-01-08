@@ -6,5 +6,5 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-export LOCALCLASSPATH=.:libs/marauroa-3.9.7.jar:libs/jython.jar:libs/h2.jar:libs/mysql-connector.jar:libs/log4j.jar:libs/servlet-api-2.5.jar:libs/socketio-java-20110114.jar:libs/jetty-client-7.1.6.v20100715.jar:libs/jetty-continuation-7.1.6.v20100715.jar:libs/jetty-http-7.1.6.v20100715.jar:libs/jetty-io-7.1.6.v20100715.jar:libs/jetty-security-7.1.6.v20100715.jar:libs/jetty-server-7.1.6.v20100715.jar:libs/jetty-servlet-7.1.6.v20100715.jar:libs/jetty-util-7.1.6.v20100715.jar:libs/jetty-webapp-7.1.6.v20100715.jar:libs/jetty-websocket-7.1.6.v20100715.jar:libs/jetty-xml-7.1.6.v20100715.jar
+export LOCALCLASSPATH=.:libs/marauroa-3.9.8.jar:libs/jython.jar:libs/h2.jar:libs/mysql-connector.jar:libs/log4j.jar:libs/servlet-api-2.5.jar:libs/socketio-java-20110114.jar:libs/jetty-client-7.1.6.v20100715.jar:libs/jetty-continuation-7.1.6.v20100715.jar:libs/jetty-http-7.1.6.v20100715.jar:libs/jetty-io-7.1.6.v20100715.jar:libs/jetty-security-7.1.6.v20100715.jar:libs/jetty-server-7.1.6.v20100715.jar:libs/jetty-servlet-7.1.6.v20100715.jar:libs/jetty-util-7.1.6.v20100715.jar:libs/jetty-webapp-7.1.6.v20100715.jar:libs/jetty-websocket-7.1.6.v20100715.jar:libs/jetty-xml-7.1.6.v20100715.jar
 java -cp $LOCALCLASSPATH marauroa.server.marauroad -c $2
