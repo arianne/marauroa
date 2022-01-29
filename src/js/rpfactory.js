@@ -20,7 +20,7 @@ var marauroa = window.marauroa = window.marauroa || {};
  * use the rpclass name as attribute name for a prototype object
  */
 marauroa.rpobjectFactory = new function(){
-	this["_default"] = function() {};
+	this["_default"] = {};
 	this["_default"].onEvent = function(e) {
 		var event = marauroa.rpeventFactory.create(e["c"]);
 		for (var i in e["a"]) {
@@ -82,7 +82,7 @@ marauroa.rpobjectFactory = new function(){
  * use the rpclass name as attribute name for a prototype object
  */
 marauroa.rpeventFactory = new function(){
-	this["_default"] = function() {};
+	this["_default"] = {};
 	this["_default"].execute = function(rpobject) {
 		if (marauroa.debug.unknownEvents) {
 			console.log("Unhandled event: ", this, " on ", rpobject);
@@ -106,9 +106,8 @@ marauroa.rpeventFactory = new function(){
  * use the rpclass name as attribute name for a prototype object
  */
 marauroa.rpslotFactory = new function(){
-	this["_default"] = function() {
-		// this method is never called?!
-		this._objects = [];
+	this["_default"] = {
+		_objects: []
 	};
 	this["_default"].add = function(value) {
 		if (value && value["id"]) {

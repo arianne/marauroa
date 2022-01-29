@@ -61,14 +61,20 @@ marauroa.util = {
 	},
 
 	fromProto: function(proto, def) {
-		/**
-		 * @constructor
-		 */
-		var F = function() {
-			this.proto = proto;
-		};
-		F.prototype = proto;
-		var obj = new F();
+		var obj = undefined;
+		if (typeof(proto) === "function") {
+			obj = new proto();
+		} else {
+			/**
+			 * @constructor
+			 */
+			var F = function() {
+				this.proto = proto;
+			};
+			F.prototype = proto;
+			obj = new F();
+		}
+
 		if (!def) {
 			return obj;
 		}
