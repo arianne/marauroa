@@ -53,15 +53,18 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 			int clientid = msg.getClientID();
 			PlayerEntry entry = playerContainer.get(msg.getChannel());
 
-			/*
-			 * verify event so that we can trust that it comes from our player
-			 * and that it has completed the login stage.
-			 */
+			// verify event so that we can trust that it comes from our player
+			// and that it has completed the login stage.
 			if (!isValidEvent(msg, entry, ClientState.LOGIN_COMPLETE, ClientState.GAME_BEGIN)) {
 				return;
 			}
 
-			/* We set the character in the entry info */
+			// if we changing to another character mid game
+			if (handlePossiblePreviousCharacter(entry, msg.getCharacter())) {
+				return;
+			}
+
+			// We set the character in the entry info
 			entry.character = msg.getCharacter();
 
 			PlayerEntry oldEntry = playerContainer.getOldEntry(entry);
@@ -86,6 +89,22 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 		} catch (Exception e) {
 			logger.error("error when processing character event", e);
 		}
+	}
+
+	private boolean handlePossiblePreviousCharacter(PlayerEntry entry, String character) {
+		if (character.equals(entry.character)) {
+			return true;
+		}
+
+		if (entry.character != null) {
+			playerContainer.getLock().requestWriteLock();
+			if (!rpMan.onExit(entry.object)) {
+				rpMan.onTimeout(entry.object);
+			}
+			playerContainer.getLock().releaseLock();
+		}
+
+		return false;
 	}
 
 	private void reownOldEntry(PlayerEntry oldEntry, PlayerEntry entry) {

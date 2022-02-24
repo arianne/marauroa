@@ -109,4 +109,15 @@ public class DebugInterface {
 	public String onMessage(@SuppressWarnings("unused") String useragent, String msg) {
 		return msg;
 	}
+
+	/**
+	 * This method is called, when there is an interaction of two RPObjects
+	 *
+	 * @param rpobject1 first RPObject
+	 * @param rpobject2 second RPObbject
+	 */
+	@SuppressWarnings("unused")
+	public void onRPOBjectInteraction(RPObject rpobject1, RPObject rpobject2) {
+		return;
+	}
 }
