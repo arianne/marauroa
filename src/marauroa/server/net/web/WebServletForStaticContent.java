@@ -54,7 +54,7 @@ public class WebServletForStaticContent extends HttpServlet {
 			request.getSession().setAttribute("marauroa_authenticated_username", conf.get("debug_fake_web_username"));
 		}
 
-		String csp = "default-src 'none'; script-src 'self'; connect-src 'self' ws://*:* wss://*:*; img-src * data: blob: filesystem:; media-src * data: blob: filesystem:; style-src 'self'; frame-ancestors 'none'; sandbox allow-forms allow-same-origin allow-scripts allow-popups allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-top-navigation";
+		String csp = "default-src 'none'; script-src 'self'; connect-src 'self' ws://*:* wss://*:*; img-src * data: blob: filesystem:; media-src * data: blob: filesystem:; style-src 'self'; frame-ancestors 'none'; sandbox allow-forms allow-same-origin allow-scripts allow-popups allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-top-navigation allow-downloads";
 		if (conf.has("content_security_policy")) {
 			csp = conf.get("content_security_policy");
 		}
