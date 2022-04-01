@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2009-2020 - Marauroa                    *
+ *                   (C) Copyright 2009-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -14,14 +14,14 @@ package marauroa.server.db.command;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import org.apache.log4j.MDC;
+
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
 import marauroa.common.i18n.I18N;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.game.dbcommand.DBCommandWithCallback;
-
-import org.apache.log4j.MDC;
 
 /**
  * processes DBCommands in the background

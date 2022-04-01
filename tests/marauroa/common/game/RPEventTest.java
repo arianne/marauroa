@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -18,11 +18,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import org.junit.Test;
+
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
-
-import org.junit.Test;
 
 /**
  * Test unit for RPEvent class

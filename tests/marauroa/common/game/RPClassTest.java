@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2008 - Marauroa                    *
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -19,12 +19,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import org.junit.Test;
+
 import marauroa.common.game.Definition.DefinitionClass;
 import marauroa.common.game.Definition.Type;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
-
-import org.junit.Test;
 
 /**
  * This test unit run test over RPClass and make some usage of Attributes too.

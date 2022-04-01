@@ -1,9 +1,23 @@
+/***************************************************************************
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
 import marauroa.common.Log4J;
 import marauroa.common.game.AccountResult;
 import marauroa.common.game.Result;
-import marauroa.common.net.message.*;
+import marauroa.common.net.message.Message;
+import marauroa.common.net.message.MessageC2SCreateAccountWithToken;
+import marauroa.common.net.message.MessageS2CCreateAccountACK;
+import marauroa.common.net.message.MessageS2CCreateAccountNACK;
 
 /**
  * This is a create account request.

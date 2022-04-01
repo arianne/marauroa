@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2012 - Marauroa                    *
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -26,12 +26,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import marauroa.common.game.Definition.Type;
 import marauroa.common.net.InputSerializer;
 import marauroa.common.net.OutputSerializer;
-
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Test unit for RPObject basic functionality.

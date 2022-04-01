@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2009 - Marauroa                    *
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -12,6 +12,11 @@
 package marauroa.server.game.db;
 
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import marauroa.common.Log4J;
 import marauroa.common.game.RPClassTestHelper;
 import marauroa.common.game.RPEvent;
@@ -20,10 +25,6 @@ import marauroa.common.game.RPSlot;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.game.rp.MarauroaRPZone;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * This test unit test the load and store methods of rpzoneDAO.

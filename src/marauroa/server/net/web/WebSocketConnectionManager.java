@@ -1,6 +1,6 @@
 /* $Id: INetworkServerManager.java,v 1.12 2007/12/04 20:00:10 martinfuchs Exp $ */
 /***************************************************************************
- *                   (C) Copyright 2010-2011 - Marauroa                    *
+ *                   (C) Copyright 2010-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.json.simple.JSONValue;
 
 import marauroa.common.Log4J;
 import marauroa.common.Logger;
@@ -36,8 +38,6 @@ import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;
 import marauroa.server.game.messagehandler.SendCharacterListHandler;
 import marauroa.server.net.INetworkServerManager;
 import marauroa.server.net.IServerManager;
-
-import org.json.simple.JSONValue;
 
 /**
  * a network manager implementation that uses a websocket server for web based clients.

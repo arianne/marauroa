@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -20,12 +20,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import marauroa.common.game.Definition.Type;
-import marauroa.server.game.rp.MarauroaRPZone;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import marauroa.common.game.Definition.Type;
+import marauroa.server.game.rp.MarauroaRPZone;
 
 /**
  * Test delta² algorithm This test unit needs MarauroaRPZone and RPObject.

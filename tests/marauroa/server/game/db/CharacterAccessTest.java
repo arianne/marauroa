@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2007-2009 - Marauroa                    *
+ *                   (C) Copyright 2007-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -23,14 +23,14 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import marauroa.common.Log4J;
 import marauroa.common.crypto.Hash;
 import marauroa.common.game.RPObject;
 import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * Test the character related methods of database access.

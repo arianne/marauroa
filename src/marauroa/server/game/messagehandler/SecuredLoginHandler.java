@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2020 - Marauroa                    *
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -17,6 +17,8 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import marauroa.common.Configuration;
 import marauroa.common.Log4J;
@@ -44,8 +46,6 @@ import marauroa.server.game.container.SecuredLoginInfo;
 import marauroa.server.game.dbcommand.LoadAllActiveCharactersCommand;
 import marauroa.server.game.dbcommand.LoginCommand;
 import marauroa.server.game.rp.RPServerManager;
-
-import org.apache.log4j.Logger;
 
 /**
  * Complete the login stage. It will either success and

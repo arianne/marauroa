@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2007-2013 - Marauroa                    *
+ *                   (C) Copyright 2007-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -12,6 +12,7 @@
 package marauroa.client;
 
 import static marauroa.common.i18n.I18N.translate;
+
 import marauroa.common.net.message.MessageS2CLoginNACK.Reasons;
 
 /**

@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2010 - Marauroa                    *
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -19,15 +19,15 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import marauroa.common.net.Decoder;
 import marauroa.common.net.Encoder;
 import marauroa.common.net.InvalidVersionException;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageS2CPerception;
 import marauroa.server.game.rp.MarauroaRPZone;
-
-import org.junit.Before;
-import org.junit.Test;
 
 
 public class BugAtApplyDifferencesTest {

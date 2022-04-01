@@ -1,12 +1,23 @@
+/***************************************************************************
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
+ ***************************************************************************
+ ***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 package marauroa.common.net.message;
-
-import marauroa.common.net.Channel;
-import marauroa.common.net.InputSerializer;
-import marauroa.common.net.OutputSerializer;
 
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
+
+import marauroa.common.net.Channel;
+import marauroa.common.net.InputSerializer;
+import marauroa.common.net.OutputSerializer;
 
 /**
  * This message indicate the server to create an account with token.

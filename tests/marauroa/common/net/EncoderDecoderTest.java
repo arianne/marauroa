@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2009 - Marauroa                    *
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -19,13 +19,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import marauroa.common.Log4J;
 import marauroa.common.game.RPAction;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SAction;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * Test the basic serialization schema.

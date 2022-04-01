@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2022 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -16,10 +16,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import marauroa.common.game.Definition.DefinitionClass;
-import marauroa.common.game.RPObject.ID;
 
 import org.junit.Test;
+
+import marauroa.common.game.Definition.DefinitionClass;
+import marauroa.common.game.RPObject.ID;
 
 public class RPSlotTest {
 

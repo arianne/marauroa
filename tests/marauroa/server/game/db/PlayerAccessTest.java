@@ -1,5 +1,5 @@
 /***************************************************************************
- *                    (C) Copyright 2007-2010 - Marauroa                   *
+ *                    (C) Copyright 2007-2022 - Marauroa                   *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -23,6 +23,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import marauroa.common.Log4J;
 import marauroa.common.TimeoutConf;
 import marauroa.common.crypto.Hash;
@@ -30,9 +33,6 @@ import marauroa.server.db.DBTransaction;
 import marauroa.server.db.TransactionPool;
 import marauroa.server.game.container.SecureLoginTest;
 import marauroa.server.game.container.SecuredLoginInfo;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * Test database methods that are related with player like adding a player,
