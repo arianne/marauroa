@@ -43,12 +43,26 @@ public class WebSocketChannel extends WebSocketAdapter implements WriteCallback 
 	@Override
 	public void onWebSocketConnect(Session sess) {
 		super.onWebSocketConnect(sess);
-		address = sess.getRemoteAddress();
 		UpgradeRequest upgradeRequest = sess.getUpgradeRequest();
+		extractAddress(sess, upgradeRequest);
 		useragent = upgradeRequest.getHeader("User-Agent");
 		username = extractUsernameFromSession(upgradeRequest);
 		webSocketServerManager.onConnect(this);
 		logger.debug("Socket Connected: " + sess);
+	}
+
+	private void extractAddress(Session sess, UpgradeRequest upgradeRequest) {
+		address = sess.getRemoteAddress();
+		if (address.getAddress().isLoopbackAddress()) {
+			String xff = upgradeRequest.getHeader("X-Forwarded-For");
+			if (xff != null) {
+				int pos = xff.lastIndexOf(" ");
+				if (pos > -1) {
+					xff = xff.substring(pos + 1);
+				}
+				address = new InetSocketAddress(xff, 0);
+			}
+		}
 	}
 
 	/**
