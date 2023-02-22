@@ -207,8 +207,11 @@ public class WebSocketChannel extends WebSocketAdapter implements WriteCallback 
 		}
 	}
 
+	/**
+	 * closes the websocket channel
+	 */
 	public void close() {
-		// nothing to do
+		getSession().close();
 	}
 
 	public void writeFailed(Throwable e) {

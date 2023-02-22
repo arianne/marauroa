@@ -56,7 +56,7 @@ marauroa.clientFramework = {
 			}, 10000);
 			marauroa.clientFramework.onConnect();
 		}
-		socket.onclose = marauroa.clientFramework.onDisonnect;
+		socket.onclose = marauroa.clientFramework.onDisconnect;
 		marauroa.clientFramework.socket = socket;
 	},
 
