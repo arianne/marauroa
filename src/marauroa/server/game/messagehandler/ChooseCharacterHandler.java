@@ -189,18 +189,23 @@ class ChooseCharacterHandler extends MessageHandler implements DelayedEventHandl
 		entry.setObject(object);
 
 		/* We ask RP Manager to initialize the object */
-		if(rpMan.onInit(object)) {
-			/* Correct: Character exist */
-			MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(channel);
-			msgChooseCharacterACK.setClientID(clientid);
-			msgChooseCharacterACK.setProtocolVersion(entry.getProtocolVersion());
-			netMan.sendMessage(msgChooseCharacterACK);
-
-			/* And finally sets this connection state to GAME_BEGIN */
-			entry.state = ClientState.GAME_BEGIN;
-		} else {
-			logger.warn("RuleProcessor rejected character(" + entry.character + ")");
-			rejectClient(channel, clientid, entry);
+		playerContainer.getLock().requestWriteLock();
+		try {
+			if(rpMan.onInit(object)) {
+				/* Correct: Character exist */
+				MessageS2CChooseCharacterACK msgChooseCharacterACK = new MessageS2CChooseCharacterACK(channel);
+				msgChooseCharacterACK.setClientID(clientid);
+				msgChooseCharacterACK.setProtocolVersion(entry.getProtocolVersion());
+				netMan.sendMessage(msgChooseCharacterACK);
+	
+				/* And finally sets this connection state to GAME_BEGIN */
+				entry.state = ClientState.GAME_BEGIN;
+			} else {
+				logger.warn("RuleProcessor rejected character(" + entry.character + ")");
+				rejectClient(channel, clientid, entry);
+			}
+		} finally {
+			playerContainer.getLock().releaseLock();
 		}
 	}
 
