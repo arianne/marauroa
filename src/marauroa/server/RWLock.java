@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2007 - Marauroa                    *
+ *                   (C) Copyright 2003-2023 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -11,7 +11,7 @@
  ***************************************************************************/
 package marauroa.server;
 
-import marauroa.common.Log4J;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * This class is a Reader/Writters lock A Reader Writer Lock is a
@@ -31,39 +31,16 @@ import marauroa.common.Log4J;
  */
 public class RWLock {
 
-	/** the logger instance. */
-	private static final marauroa.common.Logger logger = Log4J.getLogger(RWLock.class);
-
-	private int givenLocks;
-
-	private int waitingWriters;
-
-	private Object mutex;
-
-	/**
-	 * Constructor
-	 */
-	public RWLock() {
-		mutex = new Object();
-		givenLocks = 0;
-		waitingWriters = 0;
-	}
+	private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
 	/**
 	 * Request a reader lock.<br>
 	 * Readers can obtain a lock as long as there is no writer.
 	 */
 	public void requestReadLock() {
-		synchronized (mutex) {
-			try {
-				while ((givenLocks == -1) || (waitingWriters != 0)) {
-					mutex.wait(100);
-				}
-			} catch (InterruptedException ie) {
-				logger.debug("interrupted while requesting a read lock", ie);
-			}
-			givenLocks++;
-		}
+		// for compatibility we cannot use readLocks because old code calls 
+		// releaseLock without specifying whether it was a read or write lock
+		this.lock.writeLock().lock();
 	}
 
 	/**
@@ -71,34 +48,13 @@ public class RWLock {
 	 * no more writers nor readers using the lock.
 	 */
 	public void requestWriteLock() {
-		synchronized (mutex) {
-			waitingWriters++;
-			try {
-				while (givenLocks != 0) {
-					mutex.wait(100);
-				}
-			} catch (InterruptedException ie) {
-				logger.debug("interrupted while requesting a write lock", ie);
-			}
-			waitingWriters--;
-			givenLocks = -1;
-		}
+		this.lock.writeLock().lock();
 	}
 
 	/**
 	 * This releases the lock for both readers and writers.
 	 */
 	public void releaseLock() {
-		synchronized (mutex) {
-			if (givenLocks == 0) {
-				return;
-			}
-			if (givenLocks == -1) {
-				givenLocks = 0;
-			} else {
-				givenLocks--;
-			}
-			mutex.notifyAll();
-		}
+		this.lock.writeLock().unlock();
 	}
 }
