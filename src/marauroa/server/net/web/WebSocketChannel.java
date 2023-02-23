@@ -8,6 +8,7 @@ import java.net.HttpCookie;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -46,7 +47,7 @@ public class WebSocketChannel extends WebSocketAdapter implements WriteCallback 
 		UpgradeRequest upgradeRequest = sess.getUpgradeRequest();
 		extractAddress(sess, upgradeRequest);
 		useragent = upgradeRequest.getHeader("User-Agent");
-		username = extractUsernameFromSession(upgradeRequest);
+		username = extractUsernameFromSession((HttpSession) upgradeRequest.getSession(), upgradeRequest.getCookies());
 		webSocketServerManager.onConnect(this);
 		logger.debug("Socket Connected: " + sess);
 	}
@@ -68,13 +69,13 @@ public class WebSocketChannel extends WebSocketAdapter implements WriteCallback 
 	/**
 	 * extracts the username from the session, supporting both java and php sessions
 	 *
-	 * @param request HttpServletRequest
+	 * @param session HttpSession
+	 * @param cookies HttpCookies
 	 * @return username
 	 */
-	private String extractUsernameFromSession(UpgradeRequest request) {
+	public static String extractUsernameFromSession(HttpSession session, List<HttpCookie> cookies) {
 
 		// first try java session
-		HttpSession session = (HttpSession) request.getSession();
 		if (session != null) {
 			String temp = (String) session.getAttribute("marauroa_authenticated_username");
 			if (temp != null) {
@@ -83,12 +84,12 @@ public class WebSocketChannel extends WebSocketAdapter implements WriteCallback 
 		}
 
 		// Jetty returns null instead of an empty list if there is no cookie header.
-		if (request.getCookies() == null) {
+		if (cookies == null) {
 			return null;
 		}
 
 		// try php session
-		for (HttpCookie cookie : request.getCookies()) {
+		for (HttpCookie cookie : cookies) {
 			if (!cookie.getName().equals("PHPSESSID")) {
 				continue;
 			}

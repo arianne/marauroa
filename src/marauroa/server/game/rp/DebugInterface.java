@@ -11,6 +11,8 @@
  ***************************************************************************/
 package marauroa.server.game.rp;
 
+import java.io.InputStream;
+
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.message.Message;
@@ -117,7 +119,19 @@ public class DebugInterface {
 	 * @param rpobject2 second RPObbject
 	 */
 	@SuppressWarnings("unused")
-	public void onRPOBjectInteraction(RPObject rpobject1, RPObject rpobject2) {
+	public void onRPObjectInteraction(RPObject rpobject1, RPObject rpobject2) {
 		return;
+	}
+
+
+	/**
+	 * This method is called, when there is an web request for a file
+	 *
+	 * @param url url of the request
+	 * @return InputStream or <code>null</code>
+	 */
+	@SuppressWarnings("unused")
+	public InputStream onFileRequest(String url) {
+		return null;
 	}
 }

@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import marauroa.common.Configuration;
+import marauroa.server.game.rp.DebugInterface;
 import marauroa.server.game.rp.RPServerManager;
 
 /**
@@ -123,6 +124,9 @@ public class WebServletForStaticContent extends HttpServlet {
 			is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("js" + name);
 			if (is == null) {
 				is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("srcjs" + name);
+			}
+			if (is == null) {
+				is = DebugInterface.get().onFileRequest(name);
 			}
 			if (is == null) {
 				is = rpMan.getResource(name);
