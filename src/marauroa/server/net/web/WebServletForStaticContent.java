@@ -65,7 +65,7 @@ public class WebServletForStaticContent extends HttpServlet {
 			response.setHeader("Cache-Control", "no-store, must-revalidate");
 		}
 
-		sendFile(response, filename);
+		sendFile(request, response, filename);
 	}
 
 	/**
@@ -98,11 +98,12 @@ public class WebServletForStaticContent extends HttpServlet {
 	/**
 	 * sends a file to the server
 	 *
+	 * @param request request object
 	 * @param response response object to send the file to
 	 * @param filename name of file to send
 	 * @throws IOException in case of an input/output error
 	 */
-	private void sendFile(HttpServletResponse response, String filename) throws IOException {
+	private void sendFile(HttpServletRequest request, HttpServletResponse response, String filename) throws IOException {
 		String name = filename;
 
 		// prevent directory traversing
@@ -126,7 +127,7 @@ public class WebServletForStaticContent extends HttpServlet {
 				is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("srcjs" + name);
 			}
 			if (is == null) {
-				is = DebugInterface.get().onFileRequest(name);
+				is = DebugInterface.get().onFileRequest(request, response, name);
 			}
 			if (is == null) {
 				is = rpMan.getResource(name);

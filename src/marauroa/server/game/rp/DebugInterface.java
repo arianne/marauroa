@@ -13,6 +13,9 @@ package marauroa.server.game.rp;
 
 import java.io.InputStream;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import marauroa.common.game.RPAction;
 import marauroa.common.game.RPObject;
 import marauroa.common.net.message.Message;
@@ -127,11 +130,13 @@ public class DebugInterface {
 	/**
 	 * This method is called, when there is an web request for a file
 	 *
+	 * @param request request object
+	 * @param response response object to send the file to
 	 * @param url url of the request
 	 * @return InputStream or <code>null</code>
 	 */
 	@SuppressWarnings("unused")
-	public InputStream onFileRequest(String url) {
+	public InputStream onFileRequest(HttpServletRequest request, HttpServletResponse response, String url) {
 		return null;
 	}
 }
