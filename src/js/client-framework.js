@@ -30,7 +30,7 @@ marauroa.clientFramework = {
 	 * @param host server host name
 	 * @param port server port number
 	 */
-	connect: function(host, port) {
+	connect: function(host, port, path) {
 		var protocol = "ws";
 		if (window.location.protocol === "https:") {
 			protocol = "wss";
@@ -44,7 +44,10 @@ marauroa.clientFramework = {
 		if (port != "") {
 			port = ":" + port;
 		}
-		var url = protocol + "://" + host + port + "/ws/";
+		if (path === null) {
+			path = "ws/"
+		}
+		var url = protocol + "://" + host + port + "/" + path;
 		var socket = new WebSocket(url);
 		socket.onmessage = marauroa.clientFramework.onMessage;
 		socket.onopen = function() {

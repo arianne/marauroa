@@ -32,14 +32,14 @@ import marauroa.server.game.rp.DebugInterface;
 public class WebSocketChannel extends WebSocketAdapter implements WriteCallback {
 	private static Logger logger = Log4J.getLogger(WebSocketChannel.class);
 
-	private static WebSocketConnectionManager webSocketServerManager = WebSocketConnectionManager.get();
+	private static WebSocketConnectionManager webSocketServerManager = WebSocketConnectionManager
+			.get();
 	private LinkedList<String> queue = new LinkedList<String>();
 	private boolean sending = false;
-	
+
 	private String username;
 	private String useragent;
 	private InetSocketAddress address;
-
 
 	@Override
 	public void onWebSocketConnect(Session sess) {
@@ -47,7 +47,18 @@ public class WebSocketChannel extends WebSocketAdapter implements WriteCallback 
 		UpgradeRequest upgradeRequest = sess.getUpgradeRequest();
 		extractAddress(sess, upgradeRequest);
 		useragent = upgradeRequest.getHeader("User-Agent");
-		username = extractUsernameFromSession((HttpSession) upgradeRequest.getSession(), upgradeRequest.getCookies());
+		String origin = upgradeRequest.getHeader("Origin");
+		try {
+			String expectedOrigin = Configuration.getConfiguration().get("http_origin");
+			if ((expectedOrigin != null) && !expectedOrigin.equals(origin)) {
+				logger.warn("Expected origin " + expectedOrigin + " from client " + address + " but got " + origin);
+				sess.close();
+			}
+		} catch (IOException e) {
+			logger.error(e, e);
+		}
+		username = extractUsernameFromSession((HttpSession) upgradeRequest.getSession(),
+				upgradeRequest.getCookies());
 		webSocketServerManager.onConnect(this);
 		logger.debug("Socket Connected: " + sess);
 	}
@@ -102,10 +113,12 @@ public class WebSocketChannel extends WebSocketAdapter implements WriteCallback 
 
 			BufferedReader br = null;
 			try {
-				String prefix = Configuration.getConfiguration().get("php_session_file_prefix", "/var/lib/php5/sess_");
+				String prefix = Configuration.getConfiguration().get("php_session_file_prefix",
+						"/var/lib/php5/sess_");
 				String filename = prefix + sessionid;
 				if (new File(filename).canRead()) {
-					br = new BufferedReader(new UnicodeSupportingInputStreamReader(new FileInputStream(filename)));
+					br = new BufferedReader(
+							new UnicodeSupportingInputStreamReader(new FileInputStream(filename)));
 					String line;
 					while ((line = br.readLine()) != null) {
 						int pos1 = line.indexOf("marauroa_authenticated_username|s:");
