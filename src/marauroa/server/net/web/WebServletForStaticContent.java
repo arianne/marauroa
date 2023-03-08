@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2010-2017 - Marauroa                    *
+ *                   (C) Copyright 2010-2023 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -16,10 +16,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import marauroa.common.Configuration;
 import marauroa.server.game.rp.DebugInterface;
 import marauroa.server.game.rp.RPServerManager;

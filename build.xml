@@ -11,10 +11,8 @@
 		<pathelement path="${jnlp_jar}"/>
 		<pathelement path="${jython_jar}"/>
 		  <fileset dir="${libdir}">
-		    <include name="jetty*.jar"/>
+		    <include name="tomcat*.jar"/>
 		    <include name="json-simple*.jar"/>
-		    <include name="servlet*.jar"/>
-		  	<include name="websocket*.jar" />
 		  </fileset>
 	</path>
 	
@@ -186,11 +184,11 @@
 	<target name="dist_binary" depends="jar">
 		<replaceregexp file="${extras}/marauroad.bat"
                    match="set LOCALCLASSPATH=.*"
-                   replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${h2_jar};${connectorJ_jar};${log4j_jar};${servlet_jar};${socketio_jar};${jetty_client_jar};${jetty_continuation_jar};${jetty_http_jar};${jetty_io_jar};${jetty_security_jar};${jetty_server_jar};${jetty_servlet_jar};${jetty_util_jar};${jetty_webapp_jar};${jetty_websocket_jar};${jetty_xml_jar}"
+                   replace="set LOCALCLASSPATH=.;marauroa-${version}.jar;${jython_jar};${h2_jar};${connectorJ_jar};${log4j_jar};${json-simple_jar};${jakarta_annotation_jar};${tomcat_embed_core_jar};${tomcat_embed_websocket}"
                    byline="true"/>
 		<replaceregexp file="${extras}/marauroad"
 	    	       match="export LOCALCLASSPATH=.*"
-    	    	   replace="export LOCALCLASSPATH=.:libs/marauroa-${version}.jar:${jython_jar}:${h2_jar}:${connectorJ_jar}:${log4j_jar}:${servlet_jar}:${socketio_jar}:${jetty_client_jar}:${jetty_continuation_jar}:${jetty_http_jar}:${jetty_io_jar}:${jetty_security_jar}:${jetty_server_jar}:${jetty_servlet_jar}:${jetty_util_jar}:${jetty_webapp_jar}:${jetty_websocket_jar}:${jetty_xml_jar}"
+    	    	   replace="export LOCALCLASSPATH=.:libs/marauroa-${version}.jar:${jython_jar}:${h2_jar}:${connectorJ_jar}:${log4j_jar}:${json-simple_jar}:${jakarta_annotation_jar}:${tomcat_embed_core_jar}:${tomcat_embed_websocket}"
                    byline="true"/>
 
 		<mkdir dir="marauroa-${version}"/>

@@ -1,6 +1,5 @@
-/* $Id: INetworkServerManager.java,v 1.12 2007/12/04 20:00:10 martinfuchs Exp $ */
 /***************************************************************************
- *                   (C) Copyright 2010-2011 - Marauroa                    *
+ *                   (C) Copyright 2010-2023 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -12,13 +11,19 @@
  ***************************************************************************/
 package marauroa.server.net.web;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.apache.catalina.Context;
+import org.apache.catalina.connector.Connector;
+import org.apache.catalina.startup.ContextConfig;
+import org.apache.catalina.startup.Tomcat;
+import org.apache.tomcat.util.scan.StandardJarScanner;
 
 import marauroa.common.Configuration;
 import marauroa.server.marauroad;
+import marauroa.server.game.rp.RPServerManager;
 
 /**
  * web socket server
@@ -38,38 +43,51 @@ public class WebSocketServer {
 		System.err.println("Please use the normal marauroa.server.marauroad as main class");
 	}
 
+	private static String createTemporaryFolder() throws IOException {
+		Path dir = Files.createTempDirectory("maraurora");
+		dir.toFile().deleteOnExit();
+		return dir.toAbsolutePath().toString();
+	}
+
 	/**
 	 * starts the web server
 	 *
 	 * @throws Exception in case of an unexpected exception
 	 */
 	public static void startWebSocketServer() throws Exception {
+
 		Configuration conf = Configuration.getConfiguration();
-		if (!conf.has("http_port")) {
+		String host = conf.get("http_host", "127.0.0.1");
+		int port = conf.getInt("http_port", -1);
+		if (port < 0) {
 			return;
 		}
 
-		Server server = new Server();
+		Tomcat tomcat = new Tomcat();
+		tomcat.setBaseDir(createTemporaryFolder());
 
-		String host = conf.get("http_host", "localhost");
-		int port = -1;
-		if (conf.has("http_port")) {
-			port = conf.getInt("http_port", 8080);
-			ServerConnector connector = new ServerConnector(server);
-			connector.setHost(host);
-			connector.setPort(port);
-//TODO:			connector.setForwarded(Boolean.parseBoolean(conf.get("http_forwarded", "false")));
-			server.addConnector(connector);
-		}
+		Connector connector = new Connector();
+		connector.setPort(port);
+		connector.setProperty("address", host);
+		tomcat.setConnector(connector);
 
-		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-		server.setHandler(context);
+		Context context = tomcat.addContext("", createTemporaryFolder());
+		StandardJarScanner scan = (StandardJarScanner) context.getJarScanner();
+		scan.setScanClassPath(true);
+		scan.setScanBootstrapClassPath(true);
+		scan.setScanAllDirectories(false);
+		scan.setScanAllFiles(false);
+		ContextConfig contextConfig = new ContextConfig();
+		context.addLifecycleListener(contextConfig);
 
-		ServletHolder holderEvents = new ServletHolder("ws", MarauroaWebSocketServlet.class);
-		context.addServlet(holderEvents, "/ws/*");
+		tomcat.addServlet("", "websocket", new WebSocketServlet());
+		context.addServletMappingDecoded("/ws/*", "websocket");
 
-		context.addServlet(new ServletHolder(new WebServletForStaticContent(marauroad.getMarauroa().getRPServerManager())), "/*");
+		RPServerManager rpServerManager = marauroad.getMarauroa().getRPServerManager();
+		tomcat.addServlet("", "static", new WebServletForStaticContent(rpServerManager));
+		context.addServletMappingDecoded("/*", "static");
 
-		server.start();
+		tomcat.start();
 	}
+
 }

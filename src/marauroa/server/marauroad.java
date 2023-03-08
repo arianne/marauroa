@@ -196,12 +196,17 @@ public class marauroad extends Thread {
 	 * @param args command line arguments
 	 */
 	public static void main(String[] args) {
+		long startTime = System.currentTimeMillis();
 		if (!marauroad.getMarauroa().init(args)) {
 			// initialize failed
 			System.exit(-1);
 		}
 		tryToStartWebSocketServerIfConfigured();
 		marauroad.getMarauroa().start();
+
+		double startupTime = (System.currentTimeMillis() - startTime) / 1000.0;
+		logger.info("marauroa " + VERSION + " is up and running... (startup time: " + (long)(startupTime*10)/10. + " s)");
+
 	}
 
 	/**
@@ -286,7 +291,6 @@ public class marauroad extends Thread {
 	 * @return true, in case the startup was successful, false otherwise
 	 */
 	public boolean init(String[] args) {
-		long startTime = System.currentTimeMillis();
 
 		System.out.println("Starting Marauroa https://arianne-project.org/engine/marauroa.html");
 		System.out.println("Arianne's open source multiplayer online framework for game development");
@@ -395,9 +399,6 @@ public class marauroad extends Thread {
 			}
 		});
 
-		double startupTime = (System.currentTimeMillis() - startTime) / 1000.0;
-
-		logger.info("marauroa " + VERSION + " is up and running... (startup time: " + (long)(startupTime*10)/10. + " s)");
 		return true;
 	}
 

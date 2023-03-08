@@ -3,29 +3,20 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="src" path="functional_tests"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-11-openjdk-amd64">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="libs/h2.jar"/>
-	<classpathentry kind="lib" path="libs/jetty-client-9.2.14.v20151106.jar"/>
-	<classpathentry kind="lib" path="libs/jetty-continuation-9.2.14.v20151106.jar"/>
-	<classpathentry kind="lib" path="libs/jetty-http-9.2.14.v20151106.jar"/>
-	<classpathentry kind="lib" path="libs/jetty-io-9.2.14.v20151106.jar"/>
-	<classpathentry kind="lib" path="libs/jetty-security-9.2.14.v20151106.jar"/>
-	<classpathentry kind="lib" path="libs/jetty-server-9.2.14.v20151106.jar"/>
-	<classpathentry kind="lib" path="libs/jetty-servlet-9.2.14.v20151106.jar"/>
-	<classpathentry kind="lib" path="libs/jetty-util-9.2.14.v20151106.jar"/>
-	<classpathentry kind="lib" path="libs/jetty-webapp-9.2.14.v20151106.jar"/>
-	<classpathentry kind="lib" path="libs/jetty-xml-9.2.14.v20151106.jar"/>
 	<classpathentry kind="lib" path="libs/jnlp.jar"/>
 	<classpathentry kind="lib" path="libs/json-simple-1.1.1.jar"/>
 	<classpathentry kind="lib" path="libs/junit-4.4.jar"/>
 	<classpathentry kind="lib" path="libs/jython.jar"/>
 	<classpathentry kind="lib" path="libs/log4j.jar"/>
-	<classpathentry kind="lib" path="libs/servlet-api-3.1.jar"/>
-	<classpathentry kind="lib" path="libs/websocket-api-9.2.5.v20141112.jar"/>
-	<classpathentry kind="lib" path="libs/websocket-client-9.2.5.v20141112.jar"/>
-	<classpathentry kind="lib" path="libs/websocket-common-9.2.5.v20141112.jar"/>
-	<classpathentry kind="lib" path="libs/websocket-server-9.2.5.v20141112.jar"/>
-	<classpathentry kind="lib" path="libs/websocket-servlet-9.2.5.v20141112.jar"/>
 	<classpathentry kind="lib" path="libs/jaxb-api-2.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/tomcat-embed-core-10.1.7.jar" sourcepath="/tomcat"/>
+	<classpathentry exported="true" kind="lib" path="libs/jakarta.annotation-api-2.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/tomcat-embed-websocket-10.1.7.jar" sourcepath="/tomcat"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

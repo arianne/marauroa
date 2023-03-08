@@ -2,8 +2,7 @@ Changelog
 ---------
 
 3.9.8
-
-
+- migrated from Jetty to Tomcat
 
 3.9.7
 - added support for Java 17, dropped support for Java 6 and Java 7
