@@ -131,13 +131,15 @@ public class WebSocketChannel {
 	 * @param json json string to send
 	 */
 	public synchronized void sendMessage(String json) {
-		Basic remote = socketSession.getBasicRemote();
-		if (remote != null) {
-			try {
+		try {
+			Basic remote = socketSession.getBasicRemote();
+			if (remote != null) {
 				remote.sendText(json);
-			} catch (IOException e) {
-				logger.error(e, e);
 			}
+		} catch (IOException e) {
+			logger.error(e, e);
+		} catch (IllegalStateException e) {
+			logger.warn(e);
 		}
 	}
 
