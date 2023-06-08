@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2011 - Marauroa                    *
+ *                   (C) Copyright 2003-2023 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -59,6 +60,8 @@ public class DBTransaction {
 	/**
 	 * prints an error if a DBTransaction is accessed outside the thread
 	 * it was bound to.
+	 *
+	 * @param acceptUnused do no report accessing an available DBTransaction 
 	 */
 	private void ensureCorrectThread(boolean acceptUnused) {
 		if (thread == null) {
@@ -200,6 +203,26 @@ public class DBTransaction {
 		ensureCorrectThread(false);
 		String sql = subst(query, params);
 		return databaseAdapter.query(sql);
+	}
+
+    /**
+     * queries the database and returns map with one entry per row.
+     *
+     * @param query   SQL statement
+     * @param params  parameter values
+     * @return ResultSet
+     * @throws SQLException in case of an database error
+     */
+	@SuppressWarnings("unchecked")
+	public <K, V> Map<K, V> queryAsMap(String query, Map<String, Object> params) throws SQLException {
+		ensureCorrectThread(false);
+		String sql = subst(query, params);
+		ResultSet resultSet = databaseAdapter.query(sql);
+		Map<K, V> res = new HashMap<K, V>();
+		while (resultSet.next()) {
+			res.put((K) resultSet.getObject(1), (V) resultSet.getObject(2));
+		}
+		return res;
 	}
 
     /**
