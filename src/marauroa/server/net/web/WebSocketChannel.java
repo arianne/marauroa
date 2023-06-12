@@ -64,7 +64,7 @@ public class WebSocketChannel {
 		String origin = params.get("origin").get(0);
 		try {
 			String expectedOrigin = Configuration.getConfiguration().get("http_origin");
-			if ((expectedOrigin != null) && !expectedOrigin.equals(origin)) {
+			if (!validateOrigin(origin, expectedOrigin)) {
 				logger.warn("Expected origin " + expectedOrigin + " from client " + address + " but got " + origin);
 				close();
 				return;
@@ -82,6 +82,20 @@ public class WebSocketChannel {
 		}
 		webSocketServerManager.onConnect(this);
 		logger.debug("Socket Connected: " + session);
+	}
+
+
+	private boolean validateOrigin(String origin, String expectedOrigin) {
+		if (expectedOrigin == null) {
+			return true;
+		}
+		String[] expectedOrigins = expectedOrigin.split(",");
+		for (String exp : expectedOrigins) {
+			if (exp.equals(origin)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 
