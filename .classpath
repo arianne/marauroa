@@ -15,8 +15,8 @@
 	<classpathentry kind="lib" path="libs/jython.jar"/>
 	<classpathentry kind="lib" path="libs/log4j.jar"/>
 	<classpathentry kind="lib" path="libs/jaxb-api-2.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tomcat-embed-core-10.1.7.jar" sourcepath="/tomcat"/>
 	<classpathentry exported="true" kind="lib" path="libs/jakarta.annotation-api-2.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/tomcat-embed-websocket-10.1.7.jar" sourcepath="/tomcat"/>
+	<classpathentry kind="lib" path="libs/tomcat-embed-core-10.1.13.jar"/>
+	<classpathentry kind="lib" path="libs/tomcat-embed-websocket-10.1.13.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
