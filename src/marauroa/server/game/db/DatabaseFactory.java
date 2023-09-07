@@ -36,7 +36,7 @@ public class DatabaseFactory {
 	 */
 	public void initializeTestDatabase() {
 		Properties props = new Properties();
-		props.put("jdbc_url", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;AUTO_RECONNECT=TRUE;DB_CLOSE_ON_EXIT=TRUE");
+		props.put("jdbc_url", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;AUTO_RECONNECT=TRUE");
 		props.put("jdbc_class", "org.h2.Driver");
 		props.put("database_adapter", "marauroa.server.db.adapter.H2DatabaseAdapter");
 
