@@ -244,13 +244,13 @@ public class InputSerializer {
 
 		long result = data[0] & 0xFF;
 
-		result += (data[1] & 0xFF) << 8;
-		result += (data[2] & 0xFF) << 16;
-		result += (data[3] & 0xFF) << 24;
-		result += (data[4] & 0xFF) << 32;
-		result += (data[5] & 0xFF) << 40;
-		result += (data[6] & 0xFF) << 48;
-		result += (data[7] & 0xFF) << 56;
+		result += ((long) (data[1] & 0xFF)) << 8;
+		result += ((long) (data[2] & 0xFF)) << 16;
+		result += ((long) (data[3] & 0xFF)) << 24;
+		result += ((long) (data[4] & 0xFF)) << 32;
+		result += ((long) (data[5] & 0xFF)) << 40;
+		result += ((long) (data[6] & 0xFF)) << 48;
+		result += ((long) (data[7] & 0xFF)) << 56;
 		return result;
 	}
 
