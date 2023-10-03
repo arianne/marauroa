@@ -75,7 +75,8 @@ marauroa.clientFramework = {
 		console.log("onDisconnect: " + reason + " error: " + error);
 	},
 
-	onLoginRequired: function() {
+	onLoginRequired: function(config) {
+		console.log("Config", config);
 		// a login is required
 	},
 
@@ -90,7 +91,7 @@ marauroa.clientFramework = {
 	},
 
 	onServerInfo: function(contents) {
-		console.log("ServerInfo", contents);
+		// console.log("ServerInfo", contents);
 	},
 
 	onPreviousLogins: function(previousLogins) {
