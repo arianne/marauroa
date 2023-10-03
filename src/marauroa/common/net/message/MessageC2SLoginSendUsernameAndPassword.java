@@ -61,9 +61,7 @@ public class MessageC2SLoginSendUsernameAndPassword extends MessageSendByteArray
 	 */
 	@Override
 	public String toString() {
-		return "Message (C2S Login) from (" + getAddress() + ") CONTENTS: (nonce:"
-		        + Hash.toHexString(hash) + "\tusername:" + username + "\tpassword:"
-		        + Hash.toHexString(Hash.hash(password)) + ")";
+		return "Message (C2S Login) from (" + getAddress() + ") CONTENTS: (username:" + username + ")";
 	}
 
 	@Override

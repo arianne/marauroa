@@ -201,6 +201,9 @@ public class SecuredLoginInfo {
 	 * @return the decrypted password hash
 	 */
 	public byte[] getDecryptedPasswordHash() {
+		if (!usingSecureChannel) {
+			return password;
+		}
 		if (password == null) {
 			return null;
 		}
