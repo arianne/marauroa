@@ -76,9 +76,7 @@ public class WebSocketChannel {
 		}
 		username = params.get("marauroa_authenticated_usernam").get(0);
 		if (username == null) {
-			logger.warn("No username in request by" + address);
-			close();
-			return;
+			logger.debug("No username in request by" + address);
 		}
 		webSocketServerManager.onConnect(this);
 		logger.debug("Socket Connected: " + session);
