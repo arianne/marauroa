@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2016 - Marauroa                    *
+ *                   (C) Copyright 2003-2023 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -28,6 +28,7 @@ import marauroa.common.net.OutputSerializer;
 public class MessageS2CLoginSendKey extends Message {
 
 	private RSAPublicKey key;
+	private String[] config;
 
 	/** Constructor for allowing creation of an empty message */
 	public MessageS2CLoginSendKey() {
@@ -42,10 +43,13 @@ public class MessageS2CLoginSendKey extends Message {
 	 *            The TCP/IP address associated to this message
 	 * @param key
 	 *            the server public key.
+	 * @param config
+	 *            client config
 	 */
-	public MessageS2CLoginSendKey(Channel source, RSAPublicKey key) {
+	public MessageS2CLoginSendKey(Channel source, RSAPublicKey key, String[] config) {
 		super(MessageType.S2C_LOGIN_SENDKEY, source);
 		this.key = key;
+		this.config = config;
 	}
 
 	/**
@@ -93,7 +97,17 @@ public class MessageS2CLoginSendKey extends Message {
 		out.append(new BigInteger(key.getN().toByteArray()));
 		out.append("\",\"e\":\"");
 		out.append(new BigInteger(key.getE().toByteArray()));
-		out.append("\"");
+		out.append("\",\"config\":[");
+		boolean first = true;
+		for (String line : config) {
+			if (first) {
+				first = false;
+			} else {
+				out.append(",");
+			}
+			OutputSerializer.writeJson(out, line);
+		}
+		out.append("]");
 	}
 
 }

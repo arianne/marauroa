@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2003-2012 - Marauroa                    *
+ *                   (C) Copyright 2003-2023 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -11,6 +11,12 @@
  ***************************************************************************/
 package marauroa.server.game.messagehandler;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+
+import marauroa.common.Configuration;
 import marauroa.common.Log4J;
 import marauroa.common.net.message.Message;
 import marauroa.common.net.message.MessageC2SLoginRequestKey;
@@ -23,6 +29,27 @@ import marauroa.common.net.message.MessageS2CLoginSendKey;
 class LoginRequestKeyHandler extends MessageHandler {
 	/** the logger instance. */
 	private static final marauroa.common.Logger logger = Log4J.getLogger(LoginRequestKeyHandler.class);
+
+	private String[] clientConfig;
+
+	public LoginRequestKeyHandler()  {
+		try {
+			Configuration config = Configuration.getConfiguration();
+			List<String> list = new ArrayList<String>();
+	
+			Enumeration<?> props = config.propertyNames();
+			while (props.hasMoreElements()) {
+				String prop_name = String.valueOf(props.nextElement());
+				if (prop_name.startsWith("client_")) {
+					list.add(prop_name + "=" + config.get(prop_name));
+				}
+			}
+			this.clientConfig = list.toArray(new String[list.size()]);
+		} catch (IOException e) {
+			logger.error(e, e);
+			this.clientConfig = new String[] {};
+		}
+	}
 
 	/**
 	 * This method handles the initial login of the client into the server.
@@ -48,8 +75,8 @@ class LoginRequestKeyHandler extends MessageHandler {
 			 * If this is correct we send player the server key so it can sign
 			 * the password.
 			 */
-			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(msg
-			        .getChannel(), key);
+			MessageS2CLoginSendKey msgLoginSendKey = new MessageS2CLoginSendKey(
+					msg.getChannel(), key, clientConfig);
 			msgLoginSendKey.setClientID(msg.getClientID());
 			msgLoginSendKey.setProtocolVersion(msg.getProtocolVersion());
 			netMan.sendMessage(msgLoginSendKey);
