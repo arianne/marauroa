@@ -117,6 +117,9 @@ public class WebServletForStaticContent extends HttpServlet {
 		if (name.startsWith("/srcjs/")) {
 			name = name.substring(6);
 		}
+		if (name.startsWith("/build/js/")) {
+			name = name.substring(9);
+		}
 
 		InputStream is = null;
 		OutputStream os = null;
