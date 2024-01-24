@@ -11,6 +11,7 @@
  ***************************************************************************/
 package marauroa.server.net.web;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
@@ -112,7 +113,7 @@ public class WebSocketChannel {
 
 	@OnError
 	public void onError(Session session, Throwable cause) {
-		if (cause instanceof SocketTimeoutException) {
+		if (cause instanceof SocketTimeoutException || cause instanceof EOFException) {
 			onClose(session, new CloseReason(CloseCodes.UNEXPECTED_CONDITION, "Timeout"));
 			return;
 		}
