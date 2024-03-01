@@ -1,5 +1,5 @@
 /***************************************************************************
- *                   (C) Copyright 2010-2023 - Marauroa                    *
+ *                   (C) Copyright 2010-2024 - Marauroa                    *
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
@@ -117,6 +117,9 @@ public class WebServletForStaticContent extends HttpServlet {
 		if (name.startsWith("/srcjs/")) {
 			name = name.substring(6);
 		}
+		if (name.startsWith("/src/js/")) {
+			name = name.substring(7);
+		}
 		if (name.startsWith("/build/js/")) {
 			name = name.substring(9);
 		}
@@ -127,6 +130,9 @@ public class WebServletForStaticContent extends HttpServlet {
 			is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("js" + name);
 			if (is == null) {
 				is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("srcjs" + name);
+			}
+			if (is == null) {
+				is = WebServletForStaticContent.class.getClassLoader().getResourceAsStream("src/js" + name);
 			}
 			if (is == null) {
 				is = DebugInterface.get().onFileRequest(request, response, name);
