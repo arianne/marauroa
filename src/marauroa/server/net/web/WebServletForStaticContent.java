@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.apache.log4j.Logger;
+
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +31,7 @@ import marauroa.server.game.rp.RPServerManager;
  * @author hendrik
  */
 public class WebServletForStaticContent extends HttpServlet {
+	private static Logger logger = Logger.getLogger(WebServletForStaticContent.class);
 
 	private static final long serialVersionUID = 3182173716768800221L;
 	private final RPServerManager rpMan;
@@ -44,27 +47,34 @@ public class WebServletForStaticContent extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String filename = request.getPathInfo();
-		filename = filename.substring(request.getContextPath().length());
-		String contentType = guessContentType(filename);
-		response.setContentType(contentType);
-
-		Configuration conf = Configuration.getConfiguration();
-		if (conf.has("debug_fake_web_username")) {
-			request.getSession().setAttribute("marauroa_authenticated_username", conf.get("debug_fake_web_username"));
-		}
-
-		String csp = "default-src 'none'; script-src 'self'; connect-src 'self' ws://*:* wss://*:*; img-src * data: blob: filesystem:; media-src * data: blob: filesystem:; style-src 'self'; font-src 'self'; frame-ancestors 'none'; sandbox allow-forms allow-same-origin allow-scripts allow-popups allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-top-navigation allow-downloads";
-		if (conf.has("content_security_policy")) {
-			csp = conf.get("content_security_policy");
-		}
-		response.setHeader("Content-Security-Policy", csp);
-
-		if (filename.endsWith(".css") || filename.endsWith(".html") || filename.endsWith(".js") || filename.endsWith(".json")) {
-			response.setHeader("Cache-Control", "no-store, must-revalidate");
-		}
-
-		sendFile(request, response, filename);
+		try {
+			String filename = request.getPathInfo();
+			filename = filename.substring(request.getContextPath().length());
+			String contentType = guessContentType(filename);
+			response.setContentType(contentType);
+	
+			Configuration conf = Configuration.getConfiguration();
+			if (conf.has("debug_fake_web_username")) {
+				request.getSession().setAttribute("marauroa_authenticated_username", conf.get("debug_fake_web_username"));
+			}
+	
+			String csp = "default-src 'none'; script-src 'self'; connect-src 'self' ws://*:* wss://*:*; img-src * data: blob: filesystem:; media-src * data: blob: filesystem:; style-src 'self'; font-src 'self'; frame-ancestors 'none'; sandbox allow-forms allow-same-origin allow-scripts allow-popups allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-top-navigation allow-downloads";
+			if (conf.has("content_security_policy")) {
+				csp = conf.get("content_security_policy");
+			}
+			response.setHeader("Content-Security-Policy", csp);
+	
+			if (filename.endsWith(".css") || filename.endsWith(".html") || filename.endsWith(".js") || filename.endsWith(".json")) {
+				response.setHeader("Cache-Control", "no-store, must-revalidate");
+			}
+	
+			sendFile(request, response, filename);
+		} catch (FileNotFoundException e) {
+			response.sendError(404, "Not Found.");
+		} catch (IOException e) {
+			logger.error(e, e);
+			response.sendError(500, "Unexpected error.");
+		} 
 	}
 
 	/**
