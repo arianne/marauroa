@@ -17,6 +17,7 @@ import java.nio.file.Path;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
+import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.ContextConfig;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.util.scan.StandardJarScanner;
@@ -70,6 +71,9 @@ public class WebSocketServer {
 		connector.setPort(port);
 		connector.setProperty("address", host);
 		tomcat.setConnector(connector);
+
+		StandardHost standardHost = (StandardHost) tomcat.getHost();
+		standardHost.setErrorReportValveClass("marauroa.server.net.web.DetaillessErrorReportValve");
 
 		Context context = tomcat.addContext("", createTemporaryFolder());
 		StandardJarScanner scan = (StandardJarScanner) context.getJarScanner();
