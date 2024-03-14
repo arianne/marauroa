@@ -165,7 +165,7 @@ public class AccountDAO {
 			params.put("email", email);
 			String query = "insert into email(player_id, email, token)"
 					+ " values ([player_id], '[email]', '[token]')";
-			logger.debug("changePassword is using query: " + query);
+			logger.debug("changeEmail is using query: " + query);
 
 			int result = transaction.execute(query, params);
 
