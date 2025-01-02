@@ -68,5 +68,5 @@ Legal
 Marauroa(c) is copyright of Miguel Angel Blanch Lardin, 2003-2007,
 arianne_rpg at users dot sourceforge dot net
 
-Marauroa(c) is copyright of the Arianne Project, 2006-2021,
+Marauroa(c) is copyright of the Arianne Project, 2006-2025,
 arianne-general at lists dot sourceforge dot net
