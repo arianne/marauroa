@@ -15,19 +15,19 @@
 		    <include name="json-simple*.jar"/>
 		  </fileset>
 	</path>
-	
+
 	<path id="compile-tests-classpath">
 		<path refid="compile-classpath" />
 		<path location="${build-classes}" />
 	</path>
-	
+
 	<path id="run-tests-classpath">
 		<path refid="compile-tests-classpath" />
 		<pathelement location="${h2_jar}"/>
 		<pathelement path="${build-tests}" />
 		<pathelement path="."/>
 	</path>
-	
+
 	<!-- Clears the instalation -->
 	<target name="clean">
 		<delete dir="${build}"/>
@@ -75,7 +75,7 @@
 				</not>
 			</or>
 		</condition>
-		
+
 		<!-- Update version number. -->
 		<replaceregexp file="${src}/marauroa/server/marauroad.java"
                    match="private static final String VERSION = &quot;.*&quot;;"
@@ -94,7 +94,7 @@
 				<include name="*.properties"/>
 			</fileset>
 		</copy>
-		
+
 		<ant target="compile-js" />
 		<mkdir dir="${build-classes}/js" />
 		<copy todir="${build-classes}/js">
@@ -109,7 +109,7 @@
 	<target name="compile-client">
 		<delete dir="${build-client}" quiet="true" />
 		<mkdir dir="${build-client}"/>
-		
+
 		<!-- Compile it -->
 		<javac srcdir="${src}" source="8" target="8" destdir="${build-client}" debug="true" debuglevel="source,lines" includeantruntime="false">
 			<compilerarg line="-encoding utf-8"/>
@@ -260,7 +260,7 @@
 
 	<!-- builds the whole project for releasing -->
 	<target name="dist" depends="dist_binary, dist_docs, dist_source"/>
-	
+
 	<!-- testing targets -->
 	<target name="compile-tests" depends="compile">
 		<javac srcdir="${src-test}" source="8" target="8" destdir="${build-tests}" debug="true" debuglevel="source,lines" includes="**/marauroa/**" excludes="${exclude.python};${exclude.junit}" includeantruntime="false">
@@ -280,12 +280,12 @@
 		</copy>
 		<copy file="${test-server-ini}" tofile="./server.ini" />
 	</target>
-	
+
 	<target name="test" depends="compile-tests">
 		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
 			<classpath path="buildtools/jacoco/jacocoant.jar"/>
 		</taskdef>
-		
+
 		<jacoco:coverage destfile="build/jacoco.exec" append="false">
 			<junit printsummary="yes" fork="yes" forkmode="once" haltonerror="true" haltonfailure="true">
 				<jvmarg value="-Djava.awt.headless=true"/>
@@ -319,5 +319,5 @@
 	    	<xml destfile="${build-coverage}/jacoco.xml" />
 	    </jacoco:report>
 	</target>
-	
+
 </project>
