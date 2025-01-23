@@ -37,7 +37,7 @@ Changelog
 
 - code
   - converted CVS to Git
-  - https://github.com/arianne/marauroa
+  - https://codeberg.org/arianne/marauroa
   - junit tests use in memory database
   - various performance and memory usage improvements
   - fixed compiler warnings and improved code comments
