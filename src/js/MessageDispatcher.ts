@@ -21,13 +21,13 @@ export class MessageDispatcher {
 		switch (msg.t) {
 
 			case 14: { // Message S2C Login NACK
-				this.clientFramework.onLoginFailed(this["reason"], this["text"]);
+				this.clientFramework.onLoginFailed(msg["reason"], msg["text"]);
 				break;
 			}
 
 
 			case 9: { // Message S2C CharacterList
-				this.clientFramework.onAvailableCharacterDetails(this["characters"]);
+				this.clientFramework.onAvailableCharacterDetails(msg["characters"]);
 				break;
 			}
 
@@ -46,14 +46,14 @@ export class MessageDispatcher {
 
 
 			case 13: { // Message S2C Login ACK
-				this.clientFramework.onPreviousLogins(this["previousLogins"]);
+				this.clientFramework.onPreviousLogins(msg["previousLogins"]);
 				break;
 			}
 
 
 			case 15: { // Message S2C Send Key
 				let config = {};
-				for (let entry of this["config"]) {
+				for (let entry of msg["config"]) {
 					let pos = entry.indexOf("=");
 					config[entry.substring(0, pos).trim()] = entry.substring(pos + 1).trim();
 				}
@@ -69,25 +69,25 @@ export class MessageDispatcher {
 
 
 			case 20: { // Message S2C Server Info
-				this.clientFramework.onServerInfo(this["contents"]);
+				this.clientFramework.onServerInfo(msg["contents"]);
 				break;
 			}
 
 
 			case 21: { // Message S2C Transfer
-				this.clientFramework.onTransfer(this["contents"]);
+				this.clientFramework.onTransfer(msg["contents"]);
 				break;
 			}
 
 
 			case 22: { // Message S2C TransferREQ
-				this.clientFramework.onTransferREQ(this["contents"]);
+				this.clientFramework.onTransferREQ(msg["contents"]);
 				var contents = {};
-				for (var i in this["contents"]) {
-					if (typeof (this["contents"][i]["ack"]) != "undefined" && this["contents"][i]["ack"]) {
-						contents[this["contents"][i]["name"]] = true;
+				for (var i in msg["contents"]) {
+					if (typeof (msg["contents"][i]["ack"]) != "undefined" && msg["contents"][i]["ack"]) {
+						contents[msg["contents"][i]["name"]] = true;
 					} else {
-						contents[this["contents"][i]["name"]] = false;
+						contents[msg["contents"][i]["name"]] = false;
 					}
 				}
 				var msg2 = {
@@ -100,25 +100,25 @@ export class MessageDispatcher {
 
 
 			case 24: { // Message S2C CreateAccount ACK
-				this.clientFramework.onCreateAccountAck(this["username"]);
+				this.clientFramework.onCreateAccountAck(msg["username"]);
 				break;
 			}
 
 
 			case 25: { // Message S2C CreateAccount NACK
-				this.clientFramework.onCreateAccountNack(this["username"], this["reason"]);
+				this.clientFramework.onCreateAccountNack(msg["username"], msg["reason"]);
 				break;
 			}
 
 
 			case 27: { // Message S2C CreateCharacter ACK
-				this.clientFramework.onCreateCharacterAck(this["charname"], this["template"]);
+				this.clientFramework.onCreateCharacterAck(msg["charname"], msg["template"]);
 				break;
 			}
 
 
 			case 28: { // Message S2C CreateCharacter NACK
-				this.clientFramework.onCreateCharacterNack(this["charname"], this["reason"]);
+				this.clientFramework.onCreateCharacterNack(msg["charname"], msg["reason"]);
 				break;
 			}
 
@@ -126,7 +126,7 @@ export class MessageDispatcher {
 			case 35: { // Message S2C Update
 				let msg2 = {
 					"t": "36",
-					"response": eval(this["update"])
+					"response": eval(msg["update"])
 				}
 				this.clientFramework.sendMessage(msg2);
 				break;
