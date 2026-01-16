@@ -32,7 +32,7 @@ export class MarauroaUtils {
 		return true;
 	}
 
-	static first(obj: object) {
+	static first(obj: any) {
 		for (var i in obj) {
 			if (obj.hasOwnProperty(i)) {
 				return obj[i];
@@ -45,14 +45,7 @@ export class MarauroaUtils {
 		if (typeof(proto) === "function") {
 			obj = new proto();
 		} else {
-			/**
-			 * @constructor
-			 */
-			var F = function() {
-				this.proto = proto;
-			};
-			F.prototype = proto;
-			obj = new F();
+			obj = Object.create(proto);
 		}
 
 		if (!def) {
@@ -61,7 +54,7 @@ export class MarauroaUtils {
 		return MarauroaUtils.merge(obj, def);
 	}
 
-	static merge(a: object, b: object) {
+	static merge(a: any, b: any) {
 		for (let key in b) {
 			a[key] = b[key];
 		}
