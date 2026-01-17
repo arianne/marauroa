@@ -13,8 +13,14 @@
  ***************************************************************************/
 
 export { marauroa } from "./Marauroa";
+
 export { RPObject } from "./RPObject";
 export { RPEvent } from "./RPEvent";
 export { RPSlot } from "./RPSlot";
+
+export { RPObjectFactory } from "./RPObjectFactory";
+export { RPEventFactory } from "./RPEventFactory";
+export { RPSlotFactory } from "./RPSlotFactory";
+
 export { ClientFramework } from "./ClientFramework";
 export { Deserializer } from "./Deserializer";

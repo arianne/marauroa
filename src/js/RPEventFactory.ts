@@ -11,33 +11,38 @@
  ***************************************************************************/
 
 import { marauroa } from "./Marauroa";
+import { RPEvent } from "./RPEvent";
 import { RPObject } from "./RPObject";
-import { MarauroaUtils } from "./MarauroaUtils";
 
-let rpClasses = new Map();
-rpClasses.set("_default", RPObject);
+class DefaultRPEvent extends RPEvent {
+
+	override execute(rpobject: RPObject) {
+		if (marauroa.debug.unknownEvents) {
+			console.log("Unhandled event: ", this, " on ", rpobject);
+		}
+	}
+}
+
+let rpEvents = new Map();
+rpEvents.set("_default", DefaultRPEvent);
 
 /**
- * marauroa.rpobjectFactory
- * creates RPObjects
+ * creates RPEvent
  *
  * use the rpclass name as attribute name for a prototype object
  */
-export class RPObjectFactory {
+export class RPEventFactory {
 
-	register(name: string, clazz: typeof RPObject) {
-		rpClasses.set(name, clazz);
+	register(name: string, clazz: typeof RPEvent) {
+		rpEvents.set(name, clazz);
 	}
 
-	create(rpclass: string): RPObject {
-		let ctor = rpClasses.get(rpclass);
+	create(rpclass: string) {
+		let ctor = rpEvents.get(rpclass);
 		if (!ctor) {
-			console.log("Unknown RPClass " + rpclass);
-			ctor = rpClasses.get("_default");
+			ctor = rpEvents.get("_default");
 		}
-		let temp = new ctor();
-		temp.init();
-		return temp;
-	};
+		return new ctor();
+	}
 
 }

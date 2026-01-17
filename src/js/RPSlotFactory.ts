@@ -10,34 +10,31 @@
  *                                                                         *
  ***************************************************************************/
 
-import { marauroa } from "./Marauroa";
-import { RPObject } from "./RPObject";
-import { MarauroaUtils } from "./MarauroaUtils";
+import { RPSlot } from "./RPSlot";
 
-let rpClasses = new Map();
-rpClasses.set("_default", RPObject);
+let rpSlots = new Map();
+rpSlots.set("_default", RPSlot);
 
 /**
- * marauroa.rpobjectFactory
- * creates RPObjects
+ * creates RPSlot
  *
  * use the rpclass name as attribute name for a prototype object
  */
-export class RPObjectFactory {
+export class RPSlotFactory {
 
-	register(name: string, clazz: typeof RPObject) {
-		rpClasses.set(name, clazz);
+	register(name: string, clazz: typeof RPSlot) {
+		rpSlots.set(name, clazz);
 	}
 
-	create(rpclass: string): RPObject {
-		let ctor = rpClasses.get(rpclass);
+	create(name: string) {
+		let ctor = rpSlots.get(name);
 		if (!ctor) {
-			console.log("Unknown RPClass " + rpclass);
-			ctor = rpClasses.get("_default");
+			ctor = rpSlots.get("_default");
 		}
-		let temp = new ctor();
-		temp.init();
-		return temp;
+		let slot = new ctor();
+		slot._name = name;
+		slot._objects = [];
+		return slot;
 	};
 
-}
+};
