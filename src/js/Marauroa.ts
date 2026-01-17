@@ -1,4 +1,9 @@
 import { ClientFramework } from "./ClientFramework";
+import { RPObject } from "./RPObject";
+import { RPObjectFactory } from "./RPObjectFactory";
+import { RPSlotFactory } from "./RPSlotFactory";
+import { RPEventFactory } from "./RPEventFactory";
+
 
 class Marauroa {
 	debug = {
@@ -10,10 +15,10 @@ class Marauroa {
 	currentZone: any;
 	perceptionHandler: any;
 	perceptionListener: any;
-	rpobjectFactory: any;
-	rpslotFactory: any;
-	rpeventFactory: any;
-	me: any;
+	rpobjectFactory = new RPObjectFactory();
+	rpslotFactory = new RPSlotFactory();
+	rpeventFactory = new RPEventFactory();
+	me?: RPObject;
 }
 
 export const marauroa = new Marauroa();
