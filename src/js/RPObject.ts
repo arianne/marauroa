@@ -9,8 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-var marauroa = (window as any).marauroa = (window as any).marauroa || {};
-
+import { marauroa } from "./Marauroa";
 
 /**
  * base class for RPObjects
