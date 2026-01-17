@@ -57,7 +57,7 @@ export class PerceptionListener {
 	 *            the deleted attributes.
 	 * @return true to stop further processing
 	 */
-	onModifiedDeleted(object, changes) {
+	onModifiedDeleted(object: object, changes: object) {
 		return false;
 	}
 
@@ -69,7 +69,7 @@ export class PerceptionListener {
 	 *            the original object
 	 * @return true to stop further processing
 	 */
-	onDeleted(object) {
+	onDeleted(object: object) {
 		return false;
 	}
 
@@ -83,7 +83,7 @@ export class PerceptionListener {
 	 *            the deleted attributes
 	 * @return true to stop further processing
 	 */
-	onMyRPObject(added, deleted) {
+	onMyRPObject(added: object, deleted: object) {
 		return false;
 	}
 
@@ -105,7 +105,7 @@ export class PerceptionListener {
 	 * @param timestamp
 	 *            the timestamp of the perception
 	 */
-	onPerceptionBegin(type, timestamp) {
+	onPerceptionBegin(type: any, timestamp: any) {
 	}
 
 	/**
@@ -116,7 +116,7 @@ export class PerceptionListener {
 	 * @param timestamp
 	 *            the timestamp of the perception
 	 */
-	onPerceptionEnd(type, timestamp) {
+	onPerceptionEnd(type: any, timestamp: any) {
 	}
 
 	/**
@@ -127,7 +127,7 @@ export class PerceptionListener {
 	 * @param perception
 	 *            the message that causes the problem
 	 */
-	onException(exception, perception) {
+	onException(exception: any, perception: any) {
 		console.error(exception, perception);
 	}
 };
@@ -155,7 +155,7 @@ export class PerceptionHandler {
 	 * @param msg
 	 *            the perception msg
 	 */
-	apply(msg) {
+	apply(msg: any) {
 		marauroa.perceptionListener.onPerceptionBegin(msg["sync"], msg["s"]);
 
 		// clean world on login/zone change
@@ -183,7 +183,7 @@ export class PerceptionHandler {
 	 * @param msg
 	 *            the perception message
 	 */
-	applyPerceptionAddedRPObjects(msg) {
+	applyPerceptionAddedRPObjects(msg: any) {
 		if (msg["aO"]) {
 			for (var i in msg["aO"]) {
 				if (msg["aO"].hasOwnProperty(i)) {
@@ -204,7 +204,7 @@ export class PerceptionHandler {
 	 * @param msg
 	 *            the perception message
 	 */
-	applyPerceptionDeletedRPObjects(msg) {
+	applyPerceptionDeletedRPObjects(msg: any) {
 		if (msg["dO"]) {
 			for (var i in msg["dO"]) {
 				if (msg["dO"].hasOwnProperty(i)) {
@@ -225,7 +225,7 @@ export class PerceptionHandler {
 	 * @param msg
 	 *            the perception message
 	 */
-	applyPerceptionModifiedRPObjects(msg) {
+	applyPerceptionModifiedRPObjects(msg: any) {
 
 		// deleted attributes
 		if (msg["dA"]) {
@@ -263,7 +263,7 @@ export class PerceptionHandler {
 	 * @param msg
 	 *            the perception message
 	 */
-	applyPerceptionMyRPObject(msg) {
+	applyPerceptionMyRPObject(msg: any) {
 
 		if (!marauroa.perceptionListener.onMyRPObject(msg["aM"], msg["dM"])) {
 			var id;
@@ -292,7 +292,7 @@ export class PerceptionHandler {
 	 *
 	 * @param added added changes of my object
 	 */
-	addMyRPObjectToWorldIfPrivate(id, added) {
+	addMyRPObjectToWorldIfPrivate(id: any, added: any) {
 		if (typeof(marauroa.currentZone[id]) !== "undefined") {
 			return;
 		}
@@ -307,7 +307,7 @@ export class PerceptionHandler {
 		}
 	}
 
-	deleteChanges(object, diff) {
+	deleteChanges(object: any, diff: any) {
 		if (typeof(diff) === "undefined") {
 			return;
 		}
@@ -361,7 +361,7 @@ export class PerceptionHandler {
 		// TODO: links
 	}
 
-	addChanges(object, diff) {
+	addChanges(object: any, diff: any) {
 		if (typeof(diff) === "undefined") {
 			return;
 		}
