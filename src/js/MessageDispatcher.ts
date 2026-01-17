@@ -10,14 +10,15 @@
  *                                                                         *
  ***************************************************************************/
 
+import { ClientFramework } from "./ClientFramework";
 
 export class MessageDispatcher {
 
-	constructor(private clientFramework) {
+	constructor(private clientFramework: ClientFramework) {
 		// empty
 	}
 
-	dispatchMessage(msg) {
+	dispatchMessage(msg: any) {
 		switch (msg.t) {
 
 			case 14: { // Message S2C Login NACK
@@ -52,7 +53,7 @@ export class MessageDispatcher {
 
 
 			case 15: { // Message S2C Send Key
-				let config = {};
+				let config: Record<string, string> = {};
 				for (let entry of msg["config"]) {
 					let pos = entry.indexOf("=");
 					config[entry.substring(0, pos).trim()] = entry.substring(pos + 1).trim();
@@ -82,15 +83,15 @@ export class MessageDispatcher {
 
 			case 22: { // Message S2C TransferREQ
 				this.clientFramework.onTransferREQ(msg["contents"]);
-				var contents = {};
-				for (var i in msg["contents"]) {
+				let contents: any = {};
+				for (let i in msg["contents"]) {
 					if (typeof (msg["contents"][i]["ack"]) != "undefined" && msg["contents"][i]["ack"]) {
 						contents[msg["contents"][i]["name"]] = true;
 					} else {
 						contents[msg["contents"][i]["name"]] = false;
 					}
 				}
-				var msg2 = {
+				let msg2 = {
 					"t": "7",
 					"contents": contents
 				}

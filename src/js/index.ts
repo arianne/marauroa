@@ -17,3 +17,4 @@ export { RPObject } from "./RPObject";
 export { RPEvent } from "./RPEvent";
 export { RPSlot } from "./RPSlot";
 export { ClientFramework } from "./ClientFramework";
+export { Deserializer } from "./Deserializer";
