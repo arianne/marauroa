@@ -14,7 +14,7 @@ export class Deserializer {
 	private offset: number = 0;
 	private view: DataView;
 
-	constructor(private buffer) {
+	constructor(private buffer: ArrayBufferLike) {
 		this.offset = 0;
 		this.view = new DataView(buffer);
 	}
@@ -142,7 +142,7 @@ export class Deserializer {
 	 * @param obj object to read into
 	 * @return obj
 	 */
-	readAttributes(obj) {
+	readAttributes(obj: Record<string, string>) {
 		this.readString();
 		let size = this.readInt();
 		for (let i = 0; i < size; i++) {
@@ -158,13 +158,13 @@ export class Deserializer {
 		return obj;
 	}
 
-	readRPObject(obj) {
+	readRPObject(obj: Record<string, string>) {
 		this.readAttributes(obj);
 
 		return obj;
 	}
 
-	static binaryStringToUint(binary) {
+	static binaryStringToUint(binary: string) {
 		let len = binary.length;
 		let bytes = new Uint8Array(len);
 		for (let i = 0; i < len; i++) {
@@ -179,10 +179,10 @@ export class Deserializer {
 	 * @param base64 base64 string
 	 * @return Deserializer
 	 */
-	static fromDeflatedBase64(base64) {
+	static fromDeflatedBase64(base64: string) {
 		let d = window.atob(base64);
 		let buffer = Deserializer.binaryStringToUint(d.substring(2, d.length - 4));
-		let inflate = new window["Zlib"]["RawInflate"](buffer);
+		let inflate: any = new (window as any)["Zlib"]["RawInflate"](buffer);
 		let data = inflate["decompress"]();
 		return new Deserializer(data.buffer);
 	}
@@ -193,7 +193,7 @@ export class Deserializer {
 	 * @param base64 base64 string
 	 * @return Deserializer
 	 */
-	static fromBase64(base64) {
+	static fromBase64(base64: string) {
 		return Deserializer.fromBinaryString(atob(base64));
 	}
 
@@ -204,7 +204,7 @@ export class Deserializer {
 	 * @param binary binary string
 	 * @return Deserializer
 	 */
-	static fromBinaryString(binary) {
+	static fromBinaryString(binary: string) {
 		let len = binary.length;
 		let bytes = new Uint8Array(len);
 		for (let i = 0; i < len; i++) {

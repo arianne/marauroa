@@ -1,10 +1,10 @@
 import { ClientFramework } from "./ClientFramework";
 
 class Marauroa {
-	debug!: {
+	debug = {
 		messages: false,
 		unknownEvents: true
-	}
+	};
 	clientFramework!: ClientFramework;
 	currentZoneName!: string;
 	currentZone: any;

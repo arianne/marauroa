@@ -13,6 +13,7 @@
 import { MarauroaUtils } from "./MarauroaUtils";
 import { MessageDispatcher } from "./MessageDispatcher";
 import { marauroa } from "./Marauroa";
+import { RPObject } from "./RPObject";
 
 
 /**
@@ -24,9 +25,9 @@ import { marauroa } from "./Marauroa";
  */
 
 export class ClientFramework {
-	clientid: "-1"
-	username: string;
-	socket: WebSocket;
+	clientid = "-1"
+	username?: string;
+	socket?: WebSocket;
 	messageDispatcher: MessageDispatcher;
 
 	constructor() {
@@ -39,7 +40,7 @@ export class ClientFramework {
 	 * @param host server host name
 	 * @param port server port number
 	 */
-	connect(host: string, port: string, path: string) {
+	connect(host: string|null, port: string|null, path: string|null) {
 		var protocol = "ws";
 		if (window.location.protocol === "https:") {
 			protocol = "wss";
@@ -59,8 +60,8 @@ export class ClientFramework {
 		var url = protocol + "://" + host + port + "/" + path;
 		let socket = new WebSocket(url);
 		socket.addEventListener("message", (e) => this.onMessage(e));
-		socket.addEventListener("open", (e) => {
-			setInterval(function() {
+		socket.addEventListener("open", (_e) => {
+			setInterval(() => {
 				var msg = {
 						"t": "8",
 				};
@@ -80,12 +81,12 @@ export class ClientFramework {
 		console.log("onDisconnect: " + reason + " code: " + code + " wasClean: " + wasClean);
 	}
 
-	onLoginRequired(config) {
+	onLoginRequired(config: Record<string, string>) {
 		console.log("Config", config);
 		// a login is required
 	}
 
-	login(username, password) {
+	login(username: string, password: string) {
 		var msg = {
 			"t": "34",
 			"u": username,
@@ -95,19 +96,19 @@ export class ClientFramework {
 		this.sendMessage(msg);
 	}
 
-	onServerInfo(contents) {
+	onServerInfo(contents: string) {
 		// console.log("ServerInfo", contents);
 	}
 
-	onPreviousLogins(previousLogins) {
+	onPreviousLogins(previousLogins: string[]) {
 		console.log("Previous Logins", previousLogins);
 	}
 
-	onLoginFailed(reason, text) {
+	onLoginFailed(reason: string, text: string) {
 		console.error("Login failed with reason " + reason + ": " + text);
 	}
 
-	onMessage(e) {
+	onMessage(e: Record<string, any>) {
 		var msg = JSON.parse(e.data);
 		if (msg["t"] === "9" || msg["t"] === "15") {
 			this.clientid = msg["c"];
@@ -119,13 +120,13 @@ export class ClientFramework {
 		}
 	}
 
-	sendMessage(msg) {
+	sendMessage(msg: Record<string, any>) {
 		var myMessage = {
 			"c": this.clientid,
 			"s": "1"
 		};
 		MarauroaUtils.merge(myMessage, msg);
-		this.socket.send(JSON.stringify(myMessage));
+		this.socket!.send(JSON.stringify(myMessage));
 	}
 
 	resync() {
@@ -144,7 +145,7 @@ export class ClientFramework {
 	 *             if timeout happens while waiting for the message.
 	 * @throws BannedAddressException
 	 */
-	chooseCharacter(character) {
+	chooseCharacter(character: string) {
 		var msg = {
 			"t": "1",
 			"character": character
@@ -162,7 +163,7 @@ export class ClientFramework {
 	 * @param action
 	 *            the action to send to server.
 	 */
-	sendAction(action) {
+	sendAction(action: Record<string, any>) {
 		var msg = {
 			"t": "0",
 			"a": action
@@ -200,7 +201,7 @@ export class ClientFramework {
 	 * Disconnect the socket and finish the network communications.
 	 */
 	close() {
-		this.socket.close();
+		this.socket?.close();
 	}
 
 	/**
@@ -210,7 +211,7 @@ export class ClientFramework {
 	 * @param perceptionMessage
 	 *            the perception message itself.
 	 */
-	onPerception(perceptionMessage) {
+	onPerception(perceptionMessage: any) {
 		marauroa.perceptionHandler.apply(perceptionMessage);
 	}
 
@@ -226,7 +227,7 @@ export class ClientFramework {
 	 *            in this list by default all items.ack attributes are set to false;
 	 * @return the list of approved and rejected items.
 	 */
-	onTransferREQ(items) {
+	onTransferREQ(items: any) {
 		console.log("onTransferREQ: ", items);
 	}
 
@@ -236,7 +237,7 @@ export class ClientFramework {
 	 * @param items
 	 *            the transfered items.
 	 */
-	onTransfer(items) {
+	onTransfer(items: any) {
 		console.log("onTransfer: ", items);
 	}
 
@@ -247,13 +248,13 @@ export class ClientFramework {
 	 * @param characters
 	 *            the characters we have available at this account.
 	 */
-	onAvailableCharacterDetails(characters) {
+	onAvailableCharacterDetails(characters: Record<string, RPObject>) {
 		console.log("onAvailableCharacterDetails: ", characters);
 
 		// create a character if there is none
 		if (MarauroaUtils.isEmpty(characters)) {
 			console.log("No character found, creating a character with the username (redefine onAvailableCharacterDetails to prevent this).");
-			this.createCharacter(this.username, {});
+			this.createCharacter(this.username!, {});
 			return;
 		}
 
@@ -265,7 +266,7 @@ export class ClientFramework {
 		}
 	}
 
-	createAccount(username, password, email) {
+	createAccount(username: string, password: string, email: string) {
 		var msg = {
 				"t": "23",
 				"u": username,
@@ -275,16 +276,16 @@ export class ClientFramework {
 		this.sendMessage(msg);
 	}
 
-	onCreateAccountAck(username) {
+	onCreateAccountAck(username: string) {
 		console.log("Account \"" + username + "\" created successfully");
 	}
 
-	onCreateAccountNack(username, reason) {
+	onCreateAccountNack(username: string, reason: Record<string, string>) {
 		console.log("Creating Account \"" + username + "\" failed: ", reason);
 		alert(reason.text);
 	}
 
-	createCharacter(charname, template) {
+	createCharacter(charname: string, template: Record<string, string>) {
 		var msg = {
 				"t": "26",
 				"charname": charname,
@@ -293,11 +294,11 @@ export class ClientFramework {
 		this.sendMessage(msg);
 	}
 
-	onCreateCharacterAck(charname, template) {
+	onCreateCharacterAck(charname: string, template: RPObject) {
 		console.log("Character \"" + charname + "\" created successfully", template);
 	}
 
-	onCreateCharacterNack(charname, reason) {
+	onCreateCharacterNack(charname: string, reason: Record<string, string>) {
 		console.log("Creating Character \"" + charname + "\" failed: ", reason);
 		alert(reason.text);
 	}
