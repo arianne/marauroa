@@ -1,13 +1,15 @@
+import { ClientFramework } from "./ClientFramework";
 
 class Marauroa {
-	debug: {
+	debug!: {
 		messages: false,
 		unknownEvents: true
 	}
+	clientFramework!: ClientFramework;
+	currentZoneName!: string;
 	currentZone: any;
 	perceptionHandler: any;
 	perceptionListener: any;
-	currentZoneName: string;
 	rpobjectFactory: any;
 	rpslotFactory: any;
 	rpeventFactory: any;
