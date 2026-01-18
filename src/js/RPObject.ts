@@ -9,6 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
+import { RPZone } from "RPZone";
 import { marauroa } from "./Marauroa";
 
 /**
@@ -51,7 +52,7 @@ export class RPObject {
 		delete this[map][key];
 	}
 
-	destroy(_parent: RPObject) {
+	destroy(_parent: RPObject|RPZone) {
 		// do nothing
 	}
 
