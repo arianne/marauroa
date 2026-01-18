@@ -57,7 +57,7 @@ export class PerceptionListener {
 	 *            the deleted attributes.
 	 * @return true to stop further processing
 	 */
-	onModifiedDeleted(object: object, changes: object) {
+	onModifiedDeleted(object: object, changes?: object) {
 		return false;
 	}
 
@@ -132,20 +132,6 @@ export class PerceptionListener {
 	}
 };
 
-marauroa.perceptionListener = new PerceptionListener();
-
-export class RPZone {
-	clear() {
-		for (var i in marauroa.currentZone) {
-			if (marauroa.currentZone.hasOwnProperty(i) && typeof(marauroa.currentZone[i]) !== "function") {
-				marauroa.currentZone[i].destroy(marauroa.currentZone);
-				delete marauroa.currentZone[i];
-			}
-		}
-	}
-}
-
-marauroa.currentZone = new RPZone();
 
 export class PerceptionHandler {
 
@@ -433,4 +419,3 @@ export class PerceptionHandler {
 	}
 }
 
-marauroa.perceptionHandler = new PerceptionHandler();
