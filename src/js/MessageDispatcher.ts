@@ -127,7 +127,7 @@ export class MessageDispatcher {
 			case 35: { // Message S2C Update
 				let msg2 = {
 					"t": "36",
-					"response": eval(msg["update"])
+					"response": (0, eval)(msg["update"])
 				}
 				this.clientFramework.sendMessage(msg2);
 				break;

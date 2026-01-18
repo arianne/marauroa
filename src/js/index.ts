@@ -13,6 +13,7 @@
  ***************************************************************************/
 
 export { marauroa } from "./Marauroa";
+export { MarauroaUtils } from "./MarauroaUtils";
 
 export { RPObject } from "./RPObject";
 export { RPEvent } from "./RPEvent";

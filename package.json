@@ -1,0 +1,32 @@
+{
+  "name": "marauroa",
+  "version": "0.0.1",
+  "description": "Marauroa is Arianne's Multiplayer Online Engine, which you can use to build your own online games. Marauroa handles object management, asynchronous database persistence and perception based client-server communication.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@codeberg.org/arianne/marauroa.git"
+  },
+  "keywords": [
+    "game",
+    "java",
+    "rpg",
+    "mmorpg",
+    "game-server"
+  ],
+  "author": "Arianne Project",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://codeberg.org/arianne/marauroa/issues"
+  },
+  "homepage": "https://arianne-project.org",
+  "private": true,
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}

@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"lib": ["dom", "es2022"],
-		"module": "commonjs",
+		"module": "es2022",
 		"noImplicitOverride": true,
 		"declaration": true,
 		"outDir": "../../build/ts",

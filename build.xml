@@ -5,6 +5,13 @@
 	<property name="jarname" value="marauroa-${version}.jar"/>
 	<property name="jarname_client" value="marauroa-client-only-${version}.jar"/>
 
+	<condition property="executable.npm" value="npm.cmd" else="npm">
+		<os family="windows"/>
+	</condition>
+	<condition property="executable.npx" value="npx.cmd" else="npx">
+		<os family="windows"/>
+	</condition>
+
 	<!-- time & date -->
 	<tstamp>
 		<format property="year" pattern="yyyy"/>
@@ -109,11 +116,25 @@
 			</fileset>
 		</copy>
 
-		<ant target="compile-js" />
+		<exec executable="${executable.npm}" failonerror="true">
+			<arg value="install"/>
+			<arg value="--no-save"/>
+		</exec>
+
 		<mkdir dir="${build-classes}/js" />
+		<exec executable="${executable.npx}" dir="src/js" failonerror="true">
+			<arg value="tsup"/>
+			<arg value="index.ts"/>
+			<arg value="--format"/>
+			<arg value="cjs,esm"/>
+			<arg value="--dts"/>
+			<arg value="--clean"/>
+			<arg value="-d"/>
+			<arg value="../../${build-classes}/js"/>
+		</exec>
 		<copy todir="${build-classes}/js">
 			<fileset dir="src/js">
-				<include name="*"/>
+				<include name="*.js"/>
 			</fileset>
 		</copy>
 	</target>
@@ -134,32 +155,6 @@
 				<pathelement path="${jnlp_jar}"/>
 			</classpath>
 		</javac>
-	</target>
-
-	<!-- Compiles the client-only library -->
-	<target name="compile-js">
-		<java jar="buildtools/closure-compiler/compiler.jar" fork="true" failonerror="true"	maxmemory="128m">
-			<arg value="--js"/>
-			<arg value="src/js/marauroa.js"/>
-			<arg value="--js"/>
-			<arg value="src/js/inflate.js"/>
-			<arg value="--js"/>
-			<arg value="src/js/encoding.js"/>
-			<arg value="--js"/>
-			<arg value="src/js/deserializer.js"/>
-			<arg value="--js"/>
-			<arg value="src/js/client-framework.js"/>
-			<arg value="--js"/>
-			<arg value="src/js/message-factory.js"/>
-			<arg value="--js"/>
-			<arg value="src/js/rpfactory.js"/>
-			<arg value="--js"/>
-			<arg value="src/js/perception.js"/>
-			<arg value="--js_output_file"/>
-			<arg value="${build-classes}/js/marauroa.compiled.js"/>
-			<arg value="--compilation_level"/>
-			<arg value="SIMPLE_OPTIMIZATIONS"/>
-       </java>
 	</target>
 
 
