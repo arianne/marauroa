@@ -22,7 +22,7 @@ rpSlots.set("_default", RPSlot);
  */
 export class RPSlotFactory {
 
-	register(name: string, clazz: typeof RPSlot) {
+	register<T extends RPSlot>(name: string, clazz: new() => T) {
 		rpSlots.set(name, clazz);
 	}
 

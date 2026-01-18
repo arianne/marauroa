@@ -10,9 +10,7 @@
  *                                                                         *
  ***************************************************************************/
 
-import { marauroa } from "./Marauroa";
 import { RPObject } from "./RPObject";
-import { MarauroaUtils } from "./MarauroaUtils";
 
 let rpClasses = new Map();
 rpClasses.set("_default", RPObject);
@@ -25,7 +23,7 @@ rpClasses.set("_default", RPObject);
  */
 export class RPObjectFactory {
 
-	register(name: string, clazz: typeof RPObject) {
+	register<T extends RPObject>(name: string, clazz: new() => T) {
 		rpClasses.set(name, clazz);
 	}
 

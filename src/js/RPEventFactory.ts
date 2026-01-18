@@ -33,7 +33,7 @@ rpEvents.set("_default", DefaultRPEvent);
  */
 export class RPEventFactory {
 
-	register(name: string, clazz: typeof RPEvent) {
+	register<T extends RPEvent>(name: string, clazz: new() => T) {
 		rpEvents.set(name, clazz);
 	}
 
