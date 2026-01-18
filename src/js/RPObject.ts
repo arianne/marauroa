@@ -9,7 +9,7 @@
  *                                                                         *
  ***************************************************************************/
 
-import { RPZone } from "RPZone";
+import { RPZone } from "./RPZone";
 import { marauroa } from "./Marauroa";
 
 /**

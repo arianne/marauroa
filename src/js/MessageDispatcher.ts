@@ -19,7 +19,7 @@ export class MessageDispatcher {
 	}
 
 	dispatchMessage(msg: any) {
-		switch (msg.t) {
+		switch (parseInt(msg.t, 10)) {
 
 			case 14: { // Message S2C Login NACK
 				this.clientFramework.onLoginFailed(msg["reason"], msg["text"]);
@@ -64,7 +64,7 @@ export class MessageDispatcher {
 
 
 			case 19: { // Message S2C Perception
-				this.clientFramework.onPerception(this);
+				this.clientFramework.onPerception(msg);
 				break;
 			}
 
@@ -136,7 +136,7 @@ export class MessageDispatcher {
 			// handle unexpected unknown messages
 			default: {
 				// do nothing
-				console.log("Unknown message: " + JSON.stringify(this));
+				console.log("Unknown message: " + JSON.stringify(msg));
 			}
 
 		}
