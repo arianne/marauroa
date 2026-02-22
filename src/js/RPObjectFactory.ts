@@ -34,6 +34,7 @@ export class RPObjectFactory {
 			ctor = rpClasses.get("_default");
 		}
 		let temp = new ctor();
+		temp._rpclass = rpclass;
 		temp.init();
 		return temp;
 	};
