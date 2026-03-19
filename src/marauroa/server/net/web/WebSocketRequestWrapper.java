@@ -60,7 +60,7 @@ public class WebSocketRequestWrapper extends HttpServletRequestWrapper {
 		res.put("useragent", new String[] { request.getHeader("User-Agent") });
 		res.put("origin", new String[] { request.getHeader("Origin") });
 		res.put("address", new String[] { extractAddress() });
-		res.put("marauroa_authenticated_usernam", new String[] { extractUsernameFromSession() });
+		res.put("marauroa_authenticated_username", new String[] { extractUsernameFromSession() });
 		return res;
 	}
 

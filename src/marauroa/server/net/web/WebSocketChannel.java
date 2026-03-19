@@ -75,7 +75,7 @@ public class WebSocketChannel {
 			close();
 			return;
 		}
-		username = params.get("marauroa_authenticated_usernam").get(0);
+		username = params.get("marauroa_authenticated_username").get(0);
 		if (username == null) {
 			logger.debug("No username in request by" + address);
 		}
