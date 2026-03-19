@@ -121,7 +121,7 @@ public class WebSocketRequestWrapper extends HttpServletRequestWrapper {
 			BufferedReader br = null;
 			try {
 				String prefix = Configuration.getConfiguration().get("php_session_file_prefix",
-						"/var/lib/php5/sess_");
+						"/var/lib/php/sessions/sess_");
 				String filename = prefix + sessionid;
 				if (new File(filename).canRead()) {
 					br = new BufferedReader(
