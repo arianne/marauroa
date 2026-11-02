@@ -353,8 +353,8 @@
   <pitest
       pitClasspath="pit.path"
       classPath="run-tests-classpath"
-      targetClasses="marauroa.server.game.db.*"
-      targetTests="marauroa.server.game.db.*"
+      targetClasses="marauroa.server.game.db.*, marauroa.clientconnect.*, marauroa.common.game.RPObjectTest, marauroa.server.game.container.SecureLoginTest"
+      targetTests="marauroa.server.game.db.*, marauroa.clientconnect.*, marauroa.common.game.RPObjectTest, marauroa.server.game.container.SecureLoginTest"
       reportDir="mutation-results-db"
       sourceDir="${src}"/>
 </target>
