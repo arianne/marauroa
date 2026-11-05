@@ -1,0 +1,626 @@
+[32m10:58:28 (25157) INFO ProjectReader[39m Found 1 of 388 file(s) to be mutated.
+[32m10:58:28 (25157) INFO Instrumenter[39m Instrumented 1 source file(s) with 50 mutant(s)
+[32m10:58:31 (25157) INFO ConcurrencyTokenProvider[39m Creating 7 test runner process(es).
+[32m10:58:32 (25157) INFO DryRunExecutor[39m Starting initial test run (vitest test runner with "perTest" coverage analysis). This may take a while.
+[32m10:58:34 (25157) INFO DryRunExecutor[39m Initial test run succeeded. Ran 291 tests in 2 seconds (net 94.89674100000639 ms, overhead 2556.1032589999936 ms).
+
+All tests
+  action-handlers.test.ts
+    ✘ handleAction > returns false for unknown actions [line 127] (covered 0)
+    ✘ handleAction > returns true for known actions [line 131] (covered 0)
+    ✘ handleAction > adds the active page to Chrome Reading List [line 135] (covered 0)
+    ✘ handleAction > requests the optional Reading List permission on first use [line 148] (covered 0)
+    ✘ handleAction > shows a visible error when Reading List permission is denied [line 157] (covered 0)
+    ✘ handleAction > shows a visible error when the page is already in Reading List [line 167] (covered 0)
+    ✘ handleAction > tab management > creates a new tab [line 177] (covered 0)
+    ✘ handleAction > tab management > closes the current tab [line 182] (covered 0)
+    ✘ handleAction > tab management > duplicates the current tab [line 187] (covered 0)
+    ✘ handleAction > tab management > reopens last closed tab [line 192] (covered 0)
+    ✘ handleAction > tab management > closes other tabs [line 198] (covered 0)
+    ✘ handleAction > tab management > toggles pin on current tab [line 204] (covered 0)
+    ✘ handleAction > tab management > toggles mute on current tab [line 210] (covered 0)
+    ✓ handleAction > tab navigation > switches to next tab [line 217] (killed 7)
+    ✓ handleAction > tab navigation > switches to previous tab [line 225] (killed 2)
+    ✘ handleAction > tab movement > moves tab left [line 235] (covered 0)
+    ✘ handleAction > tab movement > moves tab right [line 241] (covered 0)
+    ✘ handleAction > tab movement > moves tab to first position [line 246] (covered 0)
+    ✘ handleAction > tab movement > moves tab to last position [line 251] (covered 0)
+    ✘ handleAction > tab movement > does not move tab left if already at position 0 [line 256] (covered 0)
+    ✘ handleAction > tab movement > joins tab group when moving left next to a grouped tab [line 262] (covered 0)
+    ✘ handleAction > tab movement > moves tab left without regrouping when tabGroups permission is denied [line 273] (covered 0)
+    ✘ handleAction > tab movement > joins tab group when moving right next to a grouped tab [line 287] (covered 0)
+    ✘ handleAction > tab movement > leaves tab group when moving left away from group [line 298] (covered 0)
+    ✘ handleAction > tab movement > leaves tab group when moving right away from group [line 309] (covered 0)
+    ✘ handleAction > tab movement > stays in same group when moving left within group [line 320] (covered 0)
+    ✘ handleAction > tab movement > stays in same group when moving right within group [line 332] (covered 0)
+    ✘ handleAction > window management > creates a new window [line 346] (covered 0)
+    ✘ handleAction > window management > creates a new private window [line 351] (covered 0)
+    ✘ handleAction > window management > closes the current window [line 356] (covered 0)
+    ✘ handleAction > window management > toggles fullscreen [line 361] (covered 0)
+    ✘ handleAction > window management > exits fullscreen when already fullscreen [line 366] (covered 0)
+    ✘ handleAction > zoom > zooms in [line 374] (covered 0)
+    ✘ handleAction > zoom > zooms out [line 380] (covered 0)
+    ✘ handleAction > zoom > resets zoom [line 385] (covered 0)
+    ✘ handleAction > scrolling > handles scroll actions [line 392] (covered 0)
+    ✘ handleAction > navigation > clears downloads [line 406] (covered 0)
+    ✘ handleAction > navigation > opens settings page [line 411] (covered 0)
+    ✘ handleAction > navigation > opens extensions page [line 416] (covered 0)
+    ✘ handleAction > navigation > opens shortcuts page [line 421] (covered 0)
+    ✘ handleAction > navigation > views source [line 426] (covered 0)
+    ✘ handleAction > bookmarks > executes the bookmarklet body from "javascript:document.title%20%3D%20%22Done%22" without navigating [line 437] (covered 0)
+    ✘ handleAction > bookmarks > executes the bookmarklet body from " \tJaVaScRiPt:document.title = \"100%\"" without navigating [line 437] (covered 0)
+    ✘ handleAction > bookmarks > executes the bookmarklet body from "java\nscript:document.title = \"Done\"" without navigating [line 437] (covered 0)
+    ✘ handleAction > bookmarks > openbookmark scheme checks > does not navigate to or execute "data:text/html,<script>alert(1)</script>" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmark scheme checks > does not navigate to or execute " \tDaTa:text/html,test" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmark scheme checks > does not navigate to or execute "da\nta:text/html,test" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmark scheme checks > does not navigate to or execute "vbscript:msgbox(1)" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmark scheme checks > does not navigate to or execute "Vb\tScript:msgbox(1)" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarknewtab scheme checks > does not navigate to or execute "data:text/html,<script>alert(1)</script>" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarknewtab scheme checks > does not navigate to or execute " \tDaTa:text/html,test" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarknewtab scheme checks > does not navigate to or execute "da\nta:text/html,test" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarknewtab scheme checks > does not navigate to or execute "vbscript:msgbox(1)" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarknewtab scheme checks > does not navigate to or execute "Vb\tScript:msgbox(1)" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarkbackgroundtab scheme checks > does not navigate to or execute "data:text/html,<script>alert(1)</script>" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarkbackgroundtab scheme checks > does not navigate to or execute " \tDaTa:text/html,test" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarkbackgroundtab scheme checks > does not navigate to or execute "da\nta:text/html,test" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarkbackgroundtab scheme checks > does not navigate to or execute "vbscript:msgbox(1)" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarkbackgroundtab scheme checks > does not navigate to or execute "Vb\tScript:msgbox(1)" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarkbackgroundtabandclose scheme checks > does not navigate to or execute "data:text/html,<script>alert(1)</script>" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarkbackgroundtabandclose scheme checks > does not navigate to or execute " \tDaTa:text/html,test" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarkbackgroundtabandclose scheme checks > does not navigate to or execute "da\nta:text/html,test" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarkbackgroundtabandclose scheme checks > does not navigate to or execute "vbscript:msgbox(1)" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > openbookmarkbackgroundtabandclose scheme checks > does not navigate to or execute "Vb\tScript:msgbox(1)" [line 457] (covered 0)
+    ✘ handleAction > bookmarks > opens a bookmark in current tab [line 468] (covered 0)
+    ✘ handleAction > bookmarks > opens a bookmark in new tab [line 477] (covered 0)
+    ✘ handleAction > go to tab > jumps to tab by URL when found [line 487] (covered 0)
+    ✘ handleAction > go to tab > creates new tab when URL not found [line 493] (covered 0)
+    ✘ handleAction > go to tab > creates new tab when no matchurl [line 499] (covered 0)
+    ✘ handleAction > app launch > launches app by ID [line 506] (covered 0)
+    ✘ handleAction > app launch > does nothing without app ID [line 511] (covered 0)
+    ✘ handleAction > disable (no-op) > returns true without doing anything [line 518] (covered 0)
+    ✘ handleAction > new tab to the right (#615) > creates tab at current index + 1 [line 525] (covered 0)
+    ✘ handleAction > audible tab (#487) > switches to first audible tab [line 533] (covered 0)
+    ✘ handleAction > audible tab (#487) > shows toast when no audible tabs [line 541] (covered 0)
+    ✘ handleAction > tab groups (#786) > grouptab groups all highlighted tabs [line 549] (covered 0)
+    ✘ handleAction > tab groups (#786) > grouptab requests tabGroups permission when needed [line 555] (covered 0)
+    ✘ handleAction > tab groups (#786) > grouptab sets group name when groupname is provided [line 562] (covered 0)
+    ✘ handleAction > tab groups (#786) > grouptab does nothing when no highlighted tabs [line 569] (covered 0)
+    ✘ handleAction > tab groups (#786) > grouptab shows toast when tabGroups permission is denied [line 575] (covered 0)
+    ✘ handleAction > tab groups (#786) > grouptab returns true when chrome.tabs.group is unavailable [line 582] (covered 0)
+    ✘ handleAction > tab groups (#786) > ungrouptab ungroups all highlighted tabs [line 591] (covered 0)
+    ✘ handleAction > tab groups (#786) > ungrouptab does nothing when no highlighted tabs [line 597] (covered 0)
+    ✘ handleAction > tab groups (#786) > togglegrouptab ungroups when any tab is grouped [line 603] (covered 0)
+    ✘ handleAction > tab groups (#786) > togglegrouptab groups when no tab is grouped [line 610] (covered 0)
+    ✘ handleAction > tab groups (#786) > togglegrouptab sets group name when grouping [line 617] (covered 0)
+    ✘ handleAction > tab groups (#786) > namegroup sets title on current tab group [line 624] (covered 0)
+    ✘ handleAction > tab groups (#786) > namegroup shows toast when tab is not in a group [line 630] (covered 0)
+    ✘ handleAction > tab groups (#786) > namegroup shows toast when tabGroups permission is denied [line 637] (covered 0)
+    ✘ handleAction > tab groups (#786) > collapsegroup collapses current tab group [line 644] (covered 0)
+    ✘ handleAction > tab groups (#786) > collapsegroup shows a saved-group error when Chrome rejects the update [line 650] (covered 0)
+    ✘ handleAction > tab groups (#786) > collapsegroup shows a failure toast when the group state does not change [line 657] (covered 0)
+    ✘ handleAction > tab groups (#786) > collapsegroup shows toast when tab is not in a group [line 665] (covered 0)
+    ✘ handleAction > tab groups (#786) > collapsegroup shows toast when tabGroups permission is denied [line 672] (covered 0)
+    ✘ handleAction > tab groups (#786) > selecttableft extends selection one tab to the left [line 679] (covered 0)
+    ✘ handleAction > tab groups (#786) > selecttableft does nothing when already at leftmost position [line 687] (covered 0)
+    ✘ handleAction > tab groups (#786) > selecttabright extends selection one tab to the right [line 695] (covered 0)
+    ✘ handleAction > tab groups (#786) > selecttabright does nothing when already at rightmost position [line 703] (covered 0)
+    ✘ handleAction > insert text (#495) > calls executeScript with configured text [line 713] (covered 0)
+    ✘ handleAction > insert text (#495) > does nothing without inserttext config [line 719] (covered 0)
+    ✘ handleAction > copy actions with toast > copyurl trims whitespace (#630) [line 728] (covered 0)
+    ✘ handleAction > copy actions with toast > copytitleurlmarkdown formats as markdown link [line 736] (covered 0)
+    ✘ handleAction > maximized windows (#645) > new window opens maximized [line 746] (covered 0)
+    ✘ handleAction > maximized windows (#645) > new private window opens maximized [line 751] (covered 0)
+    ✘ handleAction > maximized windows (#645) > move tab to new window opens maximized [line 756] (covered 0)
+    ✘ handleAction > maximized windows (#645) > open incognito opens maximized [line 761] (covered 0)
+    ✘ handleAction > video controls (#632) > videoplaypause calls executeScript [line 768] (covered 0)
+    ✘ handleAction > video controls (#632) > videospeedup calls executeScript [line 774] (covered 0)
+    ✘ handleAction > video controls (#632) > videoskipforward calls executeScript [line 780] (covered 0)
+    ✘ handleAction > search providers (#658) > searchyoutube opens YouTube with selection [line 788] (covered 0)
+    ✘ handleAction > search providers (#658) > searchwikipedia opens Wikipedia with selection [line 799] (covered 0)
+    ✘ handleAction > search providers (#658) > searchgithub opens GitHub with selection [line 810] (covered 0)
+    ✘ handleAction > macro (chained actions) > uses each step URL rather than the parent or previous step URL (#919) [line 823] (covered 0)
+    ✘ handleAction > macro (chained actions) > passes each action its own parameters [line 838] (covered 0)
+    ✘ handleAction > macro (chained actions) > forwards trigger parameters without parent identity or macro data [line 856] (covered 0)
+    ✓ handleAction > macro (chained actions) > clicks the step selector before switching tabs [line 867] (killed 1)
+    ✘ handleAction > macro (chained actions) > does not recursively dispatch imported macro steps [line 881] (covered 0)
+    ✘ handleAction > macro (chained actions) > reports content step failures rather than silently skipping them [line 889] (covered 0)
+    ✘ handleAction > macro (chained actions) > returns true with no macroSteps [line 896] (covered 0)
+    ✘ handleAction > macro (chained actions) > returns true with empty macroSteps [line 901] (covered 0)
+    ✘ handleAction > macro (chained actions) > executes background actions sequentially [line 906] (covered 0)
+    ✘ handleAction > macro (chained actions) > forwards content-script-only actions to the active tab [line 924] (covered 0)
+    ✘ handleAction > macro (chained actions) > handles mix of background and content-script actions [line 942] (covered 0)
+    ✘ handleAction > macro (chained actions) > respects delay between steps [line 961] (covered 0)
+    ✘ handleAction > macro (chained actions) > caps steps at MAX_MACRO_STEPS [line 984] (covered 0)
+    ✘ handleAction > macro (chained actions) > gracefully handles sendMessage failure for content-script actions [line 997] (covered 0)
+    ✘ handleAction > macro (chained actions) > executes JS macro step code via executeScript [line 1015] (covered 0)
+    ✘ handleAction > macro (chained actions) > skips JS macro step with no code [line 1031] (covered 0)
+    ✘ handleAction > URL increment/decrement (#754) > urlinc increments the last number in URL [line 1048] (covered 0)
+    ✘ handleAction > URL increment/decrement (#754) > urlinc preserves leading zeros [line 1054] (covered 0)
+    ✘ handleAction > URL increment/decrement (#754) > urldec decrements the last number in URL [line 1060] (covered 0)
+    ✘ handleAction > URL increment/decrement (#754) > urldec floors at zero [line 1066] (covered 0)
+    ✘ handleAction > URL increment/decrement (#754) > urlinc shows toast when no number in URL [line 1072] (covered 0)
+    ✘ handleAction > prev/next page navigation (#754) > nextpage calls executeScript [line 1081] (covered 0)
+    ✘ handleAction > prev/next page navigation (#754) > nextpage shows toast when no link found [line 1087] (covered 0)
+    ✘ handleAction > prev/next page navigation (#754) > nextpage does not show toast when link is found [line 1094] (covered 0)
+    ✘ handleAction > prev/next page navigation (#754) > prevpage calls executeScript [line 1102] (covered 0)
+    ✘ handleAction > prev/next page navigation (#754) > prevpage shows toast when no link found [line 1108] (covered 0)
+    ✘ handleAction > prev/next page navigation (#754) > prevpage does not show toast when link is found [line 1115] (covered 0)
+    ✘ handleAction > focus input (#754) > calls executeScript to focus input [line 1125] (covered 0)
+    ✘ handleAction > focus input (#754) > shows toast when no input found on page [line 1131] (covered 0)
+    ✘ handleAction > focus input (#754) > does not show toast when input is found [line 1138] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: top [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: bottom [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: scrolldown [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: scrolldownmore [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: pagedown [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: scrollup [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: scrollupmore [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: pageup [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: scrollright [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: scrollrightmore [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: scrollleft [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: scrollleftmore [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: back [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: forward [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: reload [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: hardreload [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: copyurl [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: copypagetitle [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: copytitleurl [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: copytitleurlmarkdown [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openclipboardurl [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openclipboardurlnewtab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openurl [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: opensettings [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openextensions [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openshortcuts [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: urlup [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: urlroot [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: urlinc [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: urldec [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: nextpage [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: prevpage [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openbookmark [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openbookmarknewtab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openbookmarkbackgroundtab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openbookmarkbackgroundtabandclose [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: addtoreadinglist [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: gototab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: gototabbytitle [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: gototabbyindex [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: newtab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: newtabright [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: closetab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: onlytab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: closelefttabs [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: closerighttabs [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: closeduplicatetabs [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: clonetab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: movetabtonewwindow [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: reopentab [line 1158] (covered 0)
+    ~ handleAction > coverage of all registered actions > handles action: nexttab [line 1158] (covered 7)
+    ~ handleAction > coverage of all registered actions > handles action: prevtab [line 1158] (covered 7)
+    ~ handleAction > coverage of all registered actions > handles action: firsttab [line 1158] (covered 7)
+    ~ handleAction > coverage of all registered actions > handles action: lasttab [line 1158] (covered 7)
+    ✘ handleAction > coverage of all registered actions > handles action: audibletab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: togglepin [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: togglemute [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: movetableft [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: movetabright [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: movetabtofirst [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: movetabtolast [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: sorttabs [line 1158] (covered 0)
+    ~ handleAction > coverage of all registered actions > handles action: discardtab [line 1158] (covered 7)
+    ✘ handleAction > coverage of all registered actions > handles action: grouptab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: ungrouptab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: togglegrouptab [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: namegroup [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: collapsegroup [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: selecttableft [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: selecttabright [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: newwindow [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: newprivatewindow [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: closewindow [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: fullscreen [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: zoomin [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: zoomout [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: zoomreset [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: showlatestdownload [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: cleardownloads [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: viewsource [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: disable [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: inserttext [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: print [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openapp [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: togglebookmark [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: openincognito [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: macro [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: focusinput [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: videoplaypause [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: videomute [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: videofullscreen [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: videospeedup [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: videospeeddown [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: videospeedreset [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: videoskipforward [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: videoskipback [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: searchgoogle [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: searchyoutube [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: searchwikipedia [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: searchgithub [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-dark-mode [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-reader-mode [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-hide-sticky [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-bigger-text [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-highlight-links [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-edit-page [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-copy-all-links [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-word-count [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-extract-emails [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-table-to-csv [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-qr-code [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-remove-images [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-show-image-sizes [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-extract-headings [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-scroll-progress [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-show-grid [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-clear-storage [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-perf-metrics [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-log-events [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-json-viewer [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-pip [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-video-speed [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-download-images [line 1158] (covered 0)
+    ✘ handleAction > coverage of all registered actions > handles action: script-audio-visualizer [line 1158] (covered 0)
+    ✘ handleAction > URL hierarchy navigation (#754) > urlup navigates to parent path [line 1166] (covered 0)
+    ✘ handleAction > URL hierarchy navigation (#754) > urlup strips query and hash [line 1172] (covered 0)
+    ✘ handleAction > URL hierarchy navigation (#754) > urlup does nothing at root [line 1178] (covered 0)
+    ✘ handleAction > URL hierarchy navigation (#754) > urlroot navigates to origin [line 1184] (covered 0)
+  firefox-consent.test.ts
+    ✘ Firefox transmission consent > does not access Firefox permissions on Chrome [line 20] (covered 0)
+    ✘ Firefox transmission consent > requires the correct optional data categories and rechecks revocation [line 25] (covered 0)
+    ✘ Firefox transmission consent > fails closed when native data consent is unavailable [line 39] (covered 0)
+    ✘ Firefox transmission consent > requests native optional consent without awaiting other work first [line 45] (covered 0)
+    ✘ Firefox transmission consent > does not swallow permission API failures [line 54] (covered 0)
+    ✘ Firefox transmission consent > gates real dispatch, including macros, while leaving local actions available [line 60] (covered 0)
+    ✘ Remote executable pack detection > checks code rather than trusting remote hasJavaScript metadata [line 89] (covered 0)
+  macro-parameters.test.ts
+    ✘ macro parameter conversion > preserves openurl parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves javascript parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves gototab parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves gototabbytitle parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves gototabbyindex parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves buttonnexttab parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves openbookmark parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves openapp parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves trigger parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves inserttext parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves namegroup parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > preserves scrolldown parameters through conversion and JSON [line 24] (covered 0)
+    ✘ macro parameter conversion > clears stale parent parameters when converting back to a blank step [line 36] (covered 0)
+    ✘ macro parameter conversion > distinguishes configurable actions from zero-config actions [line 42] (covered 0)
+
+[NoCoverage] ConditionalExpression
+src/actions/action-handlers.ts:35:5
+-       case 'first':
+-         target = tabs[0]
+-         break
++       case 'first':
+
+[NoCoverage] StringLiteral
+src/actions/action-handlers.ts:35:10
+-       case 'first':
++       case "":
+
+[NoCoverage] ConditionalExpression
+src/actions/action-handlers.ts:38:5
+-       case 'last':
+-         target = tabs[tabs.length - 1]
+-         break
++       case 'last':
+
+[NoCoverage] StringLiteral
+src/actions/action-handlers.ts:38:10
+-       case 'last':
++       case "":
+
+[NoCoverage] ArithmeticOperator
+src/actions/action-handlers.ts:39:21
+-         target = tabs[tabs.length - 1]
++         target = tabs[tabs.length + 1]
+
+[NoCoverage] ConditionalExpression
+src/actions/action-handlers.ts:41:5
+-       default: {
+-         const index = parseInt(direction) || 0
+-         if (index >= 1 && index <= tabs.length) {
+-           target = tabs[index - 1]
+-         }
+-       }
++       default:
+
+[NoCoverage] BlockStatement
+src/actions/action-handlers.ts:41:14
+-       default: {
+-         const index = parseInt(direction) || 0
+-         if (index >= 1 && index <= tabs.length) {
+-           target = tabs[index - 1]
+-         }
+-       }
++       default: {}
+
+[NoCoverage] ConditionalExpression
+src/actions/action-handlers.ts:42:21
+-         const index = parseInt(direction) || 0
++         const index = true
+
+[NoCoverage] ConditionalExpression
+src/actions/action-handlers.ts:42:21
+-         const index = parseInt(direction) || 0
++         const index = false
+
+[NoCoverage] LogicalOperator
+src/actions/action-handlers.ts:42:21
+-         const index = parseInt(direction) || 0
++         const index = parseInt(direction) && 0
+
+[NoCoverage] ConditionalExpression
+src/actions/action-handlers.ts:43:11
+-         if (index >= 1 && index <= tabs.length) {
++         if (true) {
+
+[NoCoverage] ConditionalExpression
+src/actions/action-handlers.ts:43:11
+-         if (index >= 1 && index <= tabs.length) {
++         if (false) {
+
+[NoCoverage] LogicalOperator
+src/actions/action-handlers.ts:43:11
+-         if (index >= 1 && index <= tabs.length) {
++         if (index >= 1 || index <= tabs.length) {
+
+[NoCoverage] ConditionalExpression
+src/actions/action-handlers.ts:43:11
+-         if (index >= 1 && index <= tabs.length) {
++         if (true && index <= tabs.length) {
+
+[NoCoverage] EqualityOperator
+src/actions/action-handlers.ts:43:11
+-         if (index >= 1 && index <= tabs.length) {
++         if (index > 1 && index <= tabs.length) {
+
+[NoCoverage] EqualityOperator
+src/actions/action-handlers.ts:43:11
+-         if (index >= 1 && index <= tabs.length) {
++         if (index < 1 && index <= tabs.length) {
+
+[NoCoverage] ConditionalExpression
+src/actions/action-handlers.ts:43:25
+-         if (index >= 1 && index <= tabs.length) {
++         if (index >= 1 && true) {
+
+[NoCoverage] EqualityOperator
+src/actions/action-handlers.ts:43:25
+-         if (index >= 1 && index <= tabs.length) {
++         if (index >= 1 && index < tabs.length) {
+
+[NoCoverage] EqualityOperator
+src/actions/action-handlers.ts:43:25
+-         if (index >= 1 && index <= tabs.length) {
++         if (index >= 1 && index > tabs.length) {
+
+[NoCoverage] BlockStatement
+src/actions/action-handlers.ts:43:47
+-         if (index >= 1 && index <= tabs.length) {
+-           target = tabs[index - 1]
+-         }
++         if (index >= 1 && index <= tabs.length) {}
+
+[NoCoverage] ArithmeticOperator
+src/actions/action-handlers.ts:44:23
+-           target = tabs[index - 1]
++           target = tabs[index + 1]
+
+[Survived] BooleanLiteral
+src/actions/action-handlers.ts:21:58
+-     const tabs = await browser.tabs.query({ currentWindow: true })
++     const tabs = await browser.tabs.query({ currentWindow: false })
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+  and 5 more tests!
+
+
+[Survived] ConditionalExpression
+src/actions/action-handlers.ts:22:7
+-     if (tabs.length <= 1) return
++     if (false) return
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+  and 5 more tests!
+
+
+[Survived] ObjectLiteral
+src/actions/action-handlers.ts:21:41
+-     const tabs = await browser.tabs.query({ currentWindow: true })
++     const tabs = await browser.tabs.query({})
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+  and 5 more tests!
+
+
+[Survived] EqualityOperator
+src/actions/action-handlers.ts:22:7
+-     if (tabs.length <= 1) return
++     if (tabs.length < 1) return
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+  and 5 more tests!
+
+
+[Survived] BooleanLiteral
+src/actions/action-handlers.ts:24:80
+-     const [currentTab] = await browser.tabs.query({ currentWindow: true, active: true })
++     const [currentTab] = await browser.tabs.query({ currentWindow: true, active: false })
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] ObjectLiteral
+src/actions/action-handlers.ts:24:49
+-     const [currentTab] = await browser.tabs.query({ currentWindow: true, active: true })
++     const [currentTab] = await browser.tabs.query({})
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] BooleanLiteral
+src/actions/action-handlers.ts:24:66
+-     const [currentTab] = await browser.tabs.query({ currentWindow: true, active: true })
++     const [currentTab] = await browser.tabs.query({ currentWindow: false, active: true })
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] ConditionalExpression
+src/actions/action-handlers.ts:25:46
+-     const currentIndex = tabs.findIndex((t) => t.id === currentTab.id)
++     const currentIndex = tabs.findIndex((t) => true)
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] ConditionalExpression
+src/actions/action-handlers.ts:25:46
+-     const currentIndex = tabs.findIndex((t) => t.id === currentTab.id)
++     const currentIndex = tabs.findIndex((t) => false)
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] EqualityOperator
+src/actions/action-handlers.ts:25:46
+-     const currentIndex = tabs.findIndex((t) => t.id === currentTab.id)
++     const currentIndex = tabs.findIndex((t) => t.id !== currentTab.id)
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] ArrowFunction
+src/actions/action-handlers.ts:25:39
+-     const currentIndex = tabs.findIndex((t) => t.id === currentTab.id)
++     const currentIndex = tabs.findIndex(() => undefined)
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] ConditionalExpression
+src/actions/action-handlers.ts:29:5
+-       case 'next':
+-         target = tabs[(currentIndex + 1) % tabs.length]
+-         break
++       case 'next':
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] ConditionalExpression
+src/actions/action-handlers.ts:32:5
+-       case 'previous':
+-         target = tabs[(currentIndex - 1 + tabs.length) % tabs.length]
+-         break
++       case 'previous':
+Tests ran:
+    handleAction > tab navigation > switches to previous tab
+
+
+[Survived] ArithmeticOperator
+src/actions/action-handlers.ts:33:22
+-         target = tabs[(currentIndex - 1 + tabs.length) % tabs.length]
++         target = tabs[(currentIndex - 1 - tabs.length) % tabs.length]
+Tests ran:
+    handleAction > tab navigation > switches to previous tab
+
+
+[Survived] ConditionalExpression
+src/actions/action-handlers.ts:49:7
+-     if (target?.id) {
++     if (true) {
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] ArithmeticOperator
+src/actions/action-handlers.ts:33:22
+-         target = tabs[(currentIndex - 1 + tabs.length) % tabs.length]
++         target = tabs[(currentIndex + 1 + tabs.length) % tabs.length]
+Tests ran:
+    handleAction > tab navigation > switches to previous tab
+
+
+[Survived] OptionalChaining
+src/actions/action-handlers.ts:49:7
+-     if (target?.id) {
++     if (target.id) {
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] ObjectLiteral
+src/actions/action-handlers.ts:50:42
+-       await browser.tabs.update(target.id, { active: true })
++       await browser.tabs.update(target.id, {})
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+[Survived] BooleanLiteral
+src/actions/action-handlers.ts:50:52
+-       await browser.tabs.update(target.id, { active: true })
++       await browser.tabs.update(target.id, { active: false })
+Tests ran:
+    handleAction > tab navigation > switches to next tab
+    handleAction > tab navigation > switches to previous tab
+    handleAction > macro (chained actions) > clicks the step selector before switching tabs
+
+
+Ran 1.62 tests per mutant on average.
+--------------------|------------------|----------|-----------|------------|----------|----------|
+                    | % Mutation score |          |           |            |          |          |
+File                |  total | covered | # killed | # timeout | # survived | # no cov | # errors |
+--------------------|--------|---------|----------|-----------|------------|----------|----------|
+All files           |  20.00 |   34.48 |       10 |         0 |         19 |       21 |        0 |
+ action-handlers.ts |  20.00 |   34.48 |       10 |         0 |         19 |       21 |        0 |
+--------------------|--------|---------|----------|-----------|------------|----------|----------|
+[32m10:58:38 (25157) INFO JsonReporter[39m Your report can be found at: file:///Users/macbookpro/Documents/SFU2026Fall/cmpt473/a3/shortkeys/reports/individual/before.json
+[32m10:58:38 (25157) INFO HtmlReporter[39m Your report can be found at: file:///Users/macbookpro/Documents/SFU2026Fall/cmpt473/a3/shortkeys/reports/individual/before.html
+[32m10:58:38 (25157) INFO MutationTestExecutor[39m Done in 9 seconds.
+npx stryker run stryker.selecttab.config.json  20.35s user 3.24s system 193% cpu 12.182 total
