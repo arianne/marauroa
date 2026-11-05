@@ -1,0 +1,1935 @@
+Buildfile: /Users/viktorzepeda/codesfu/marauroaTEST/build.xml
+
+init:
+
+compile:
+     [exec] 
+     [exec] up to date, audited 99 packages in 309ms
+     [exec] 
+     [exec] 6 packages are looking for funding
+     [exec]   run `npm fund` for details
+     [exec] 
+     [exec] 1 high severity vulnerability
+     [exec] 
+     [exec] To address all issues, run:
+     [exec]   npm audit fix
+     [exec] 
+     [exec] Run `npm audit` for details.
+     [exec] CLI Building entry: index.ts
+     [exec] CLI Using tsconfig: tsconfig.json
+     [exec] CLI tsup v8.5.1
+     [exec] CLI Target: es2022
+     [exec] CLI Cleaning output folder
+     [exec] CJS Build start
+     [exec] ESM Build start
+     [exec] ESM ../../build/classes/js/index.mjs 30.84 KB
+     [exec] ESM ⚡️ Build success in 41ms
+     [exec] CJS ../../build/classes/js/index.js 32.21 KB
+     [exec] CJS ⚡️ Build success in 41ms
+     [exec] DTS Build start
+     [exec] DTS ⚡️ Build success in 301ms
+     [exec] DTS ../../build/classes/js/index.d.ts  24.08 KB
+     [exec] DTS ../../build/classes/js/index.d.mts 24.08 KB
+     [copy] Copying 9 files to /Users/viktorzepeda/codesfu/marauroaTEST/build/classes/js
+
+compile-tests:
+
+test:
+[jacoco:coverage] Enhancing junit with coverage
+    [junit] Running marauroa.IniFileExistsTest
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting sun/util/resources/cldr/provider/CLDRLocaleDataMetaInfo.
+    [junit] Testsuite: marauroa.IniFileExistsTest
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 sec
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 sec
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] Testcase: checkIniExists took 0.001 sec
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] Running marauroa.common.SymmetricKeyTest
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] Testsuite: marauroa.common.SymmetricKeyTest
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClass(BuiltinClassLoader.java:560)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:614)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:612)
+    [junit] 	at java.base/java.util.ServiceLoader.loadProvider(ServiceLoader.java:755)
+    [junit] 	at java.base/java.util.ServiceLoader$ModuleServicesLookupIterator.hasNext(ServiceLoader.java:955)
+    [junit] 	at java.base/java.util.ServiceLoader$1.hasNext(ServiceLoader.java:1164)
+    [junit] 	at java.base/java.util.ServiceLoader$2.hasNext(ServiceLoader.java:1246)
+    [junit] 	at java.base/sun.util.cldr.CLDRLocaleProviderAdapter.<init>(CLDRLocaleProviderAdapter.java:75)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at java.base/sun.util.locale.provider.LocaleProviderAdapter.forType(LocaleProviderAdapter.java:181)
+    [junit] 	at java.base/sun.util.locale.provider.LocaleProviderAdapter.findAdapter(LocaleProviderAdapter.java:280)
+    [junit] 	at java.base/sun.util.locale.provider.LocaleProviderAdapter.getAdapter(LocaleProviderAdapter.java:251)
+    [junit] 	at java.base/java.text.NumberFormat.getInstance(NumberFormat.java:1125)
+    [junit] 	at java.base/java.text.NumberFormat.getInstance(NumberFormat.java:591)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter.<init>(SummaryJUnitResultFormatter.java:44)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.FormatterElement.createFormatter(FormatterElement.java:305)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.FormatterElement.createFormatter(FormatterElement.java:266)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.transferFormatters(JUnitTestRunner.java:1099)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1195)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting sun/util/resources/cldr/provider/CLDRLocaleDataMetaInfo.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 34 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 35 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting sun/util/resources/provider/LocaleDataProvider.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClass(BuiltinClassLoader.java:560)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:614)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:612)
+    [junit] 	at java.base/java.util.ServiceLoader.loadProvider(ServiceLoader.java:755)
+    [junit] 	at java.base/java.util.ServiceLoader$ModuleServicesLookupIterator.hasNext(ServiceLoader.java:955)
+    [junit] 	at java.base/java.util.ServiceLoader$1.hasNext(ServiceLoader.java:1164)
+    [junit] 	at java.base/java.util.ServiceLoader$2.hasNext(ServiceLoader.java:1246)
+    [junit] 	at java.base/sun.util.resources.Bundles.loadBundleFromProviders(Bundles.java:261)
+    [junit] 	at java.base/sun.util.resources.Bundles.findBundleOf(Bundles.java:199)
+    [junit] 	at java.base/sun.util.resources.Bundles.loadBundleOf(Bundles.java:143)
+    [junit] 	at java.base/sun.util.resources.Bundles.of(Bundles.java:104)
+    [junit] 	at java.base/sun.util.resources.LocaleData.getBundle(LocaleData.java:154)
+    [junit] 	at java.base/sun.util.resources.LocaleData.getNumberFormatData(LocaleData.java:150)
+    [junit] 	at java.base/sun.util.locale.provider.LocaleResources.getNumberPatterns(LocaleResources.java:542)
+    [junit] 	at java.base/sun.util.locale.provider.NumberFormatProviderImpl.getInstance(NumberFormatProviderImpl.java:184)
+    [junit] 	at java.base/sun.util.locale.provider.NumberFormatProviderImpl.getNumberInstance(NumberFormatProviderImpl.java:151)
+    [junit] 	at java.base/java.text.NumberFormat.getInstance(NumberFormat.java:1141)
+    [junit] 	at java.base/java.text.NumberFormat.getInstance(NumberFormat.java:1127)
+    [junit] 	at java.base/java.text.NumberFormat.getInstance(NumberFormat.java:591)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter.<init>(SummaryJUnitResultFormatter.java:44)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.FormatterElement.createFormatter(FormatterElement.java:305)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.FormatterElement.createFormatter(FormatterElement.java:266)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.transferFormatters(JUnitTestRunner.java:1099)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1195)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting sun/util/resources/provider/LocaleDataProvider.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 37 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 38 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting sun/text/resources/cldr/ext/FormatData_en_CA.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClass(BuiltinClassLoader.java:560)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:614)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:612)
+    [junit] 	at jdk.localedata/sun.util.resources.provider.LocaleDataProvider.loadResourceBundle(LocaleDataProvider.java:53)
+    [junit] 	at jdk.localedata/sun.util.resources.provider.LocaleDataProvider.getBundle(LocaleDataProvider.java:39)
+    [junit] 	at java.base/sun.util.resources.Bundles.loadBundleFromProviders(Bundles.java:264)
+    [junit] 	at java.base/sun.util.resources.Bundles.findBundleOf(Bundles.java:199)
+    [junit] 	at java.base/sun.util.resources.Bundles.loadBundleOf(Bundles.java:143)
+    [junit] 	at java.base/sun.util.resources.Bundles.of(Bundles.java:104)
+    [junit] 	at java.base/sun.util.resources.LocaleData.getBundle(LocaleData.java:154)
+    [junit] 	at java.base/sun.util.resources.LocaleData.getNumberFormatData(LocaleData.java:150)
+    [junit] 	at java.base/sun.util.locale.provider.LocaleResources.getNumberPatterns(LocaleResources.java:542)
+    [junit] 	at java.base/sun.util.locale.provider.NumberFormatProviderImpl.getInstance(NumberFormatProviderImpl.java:184)
+    [junit] 	at java.base/sun.util.locale.provider.NumberFormatProviderImpl.getNumberInstance(NumberFormatProviderImpl.java:151)
+    [junit] 	at java.base/java.text.NumberFormat.getInstance(NumberFormat.java:1141)
+    [junit] 	at java.base/java.text.NumberFormat.getInstance(NumberFormat.java:1127)
+    [junit] 	at java.base/java.text.NumberFormat.getInstance(NumberFormat.java:591)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter.<init>(SummaryJUnitResultFormatter.java:44)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.FormatterElement.createFormatter(FormatterElement.java:305)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.FormatterElement.createFormatter(FormatterElement.java:266)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.transferFormatters(JUnitTestRunner.java:1099)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1195)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting sun/text/resources/cldr/ext/FormatData_en_CA.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 35 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 36 more
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 sec
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 sec
+    [junit] 
+    [junit] Testcase: testSymmetricKey took 0.037 sec
+    [junit] Running marauroa.common.game.AttributesTest
+    [junit] Testsuite: marauroa.common.game.AttributesTest
+    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 sec
+    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 sec
+    [junit] ------------- Standard Output ---------------
+    [junit] 296
+    [junit] Attributes of Class(): [john=][anton=][pepe=]
+    [junit] Attributes of Class(): [john=][anton=][pepe=]
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: testSerialization took 0.008 sec
+    [junit] Testcase: testToString took 0.001 sec
+    [junit] Testcase: testPutHasGet took 0 sec
+    [junit] Testcase: testSerializationOfClasslessAttributesWithALongString took 0 sec
+    [junit] Testcase: testSerializationWithRPClassFailure took 0 sec
+    [junit] Testcase: testEquals took 0 sec
+    [junit] Testcase: testSerializationWithRPClass took 0.001 sec
+    [junit] Testcase: testRemove took 0 sec
+    [junit] Testcase: testGetOnEmptyattribute took 0 sec
+    [junit] Testcase: testBug1833952 took 0 sec
+    [junit] Running marauroa.common.game.BugAtApplyDifferencesTest
+    [junit] Testsuite: marauroa.common.game.BugAtApplyDifferencesTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 sec
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 sec
+    [junit] ------------- Standard Output ---------------
+    [junit] RPObject with Attributes of Class(): [a=1][b=1][c=2.0][d=string of text][zoneid=test][id=1] and RPSlots [marauroa.common.game.RPSlot@622aadb named(lhand) with capacity(-1)[]][marauroa.common.game.RPSlot@67737e1 named(rhand) with capacity(-1)[]]
+    [junit] RPObject with Attributes of Class(): [a=1][b=1][c=2.0][d=string of text][zoneid=test][id=1] and RPSlots [marauroa.common.game.RPSlot@622aadb named(lhand) with capacity(-1)[]][marauroa.common.game.RPSlot@67737e1 named(rhand) with capacity(-1)[]]
+    [junit] ------------- ---------------- ---------------
+    [junit] ------------- Standard Error -----------------
+    [junit] log4j:WARN No appenders could be found for logger (marauroa.common.net.message.MessageS2CPerception).
+    [junit] log4j:WARN Please initialize the log4j system properly.
+    [junit] log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: alongtest took 0.018 sec
+    [junit] Running marauroa.common.game.GetAndApplyDifferencesTest
+    [junit] Testsuite: marauroa.common.game.GetAndApplyDifferencesTest
+    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
+    [junit] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
+    [junit] 
+    [junit] Testcase: emptyRPObject took 0 sec
+    [junit] Testcase: addedAttributeRPObject took 0 sec
+    [junit] Testcase: removedEmptyRPSlotRPObject took 0.001 sec
+    [junit] Testcase: addedRPSlotWithTwoRPObjectOnRPObject took 0 sec
+    [junit] Testcase: addedRPSlotWithRPObjectOnRPObject took 0 sec
+    [junit] Testcase: removedRPSlotWithRPObjectOnRPObject took 0 sec
+    [junit] Testcase: removeAttributeRPObjectOnRPObject took 0.001 sec
+    [junit] Testcase: modifiedAttributeRPObject took 0 sec
+    [junit] Testcase: modifiedRPSlotWithRPObjectOnRPObject took 0 sec
+    [junit] Testcase: addedEmptyRPSlotRPObject took 0 sec
+    [junit] Testcase: removedAttributeRPObject took 0 sec
+    [junit] Running marauroa.common.game.RPClassTest
+    [junit] Testsuite: marauroa.common.game.RPClassTest
+    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] 
+    [junit] Testcase: testDefinitions took 0 sec
+    [junit] Testcase: testGetClass took 0 sec
+    [junit] Testcase: testSerialization took 0 sec
+    [junit] Testcase: testStaticAttributes took 0 sec
+    [junit] Testcase: testGlobalDefinitionBug took 0 sec
+    [junit] Testcase: testisAClass took 0 sec
+    [junit] Testcase: testHierachyBug took 0 sec
+    [junit] Testcase: testHasClass took 0 sec
+    [junit] Testcase: testDefinitionsMethods took 0 sec
+    [junit] Testcase: testEqualsNewObjectsName took 0 sec
+    [junit] Running marauroa.common.game.RPEventTest
+    [junit] Testsuite: marauroa.common.game.RPEventTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
+    [junit] 
+    [junit] Testcase: testSerialization took 0.001 sec
+    [junit] Testcase: testClone took 0 sec
+    [junit] Testcase: methods took 0 sec
+    [junit] Testcase: testSerializationWithRPClass took 0 sec
+    [junit] Running marauroa.common.game.RPObjectDelta2Test
+    [junit] Testsuite: marauroa.common.game.RPObjectDelta2Test
+    [junit] Tests run: 22, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.006 sec
+    [junit] Tests run: 22, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.006 sec
+    [junit] ------------- Standard Output ---------------
+    [junit] RPObject with Attributes of Class(): [a=1][b=1][c=2.0][d=string of text][zoneid=test][id=1] and RPSlots [marauroa.common.game.RPSlot@be32b085 named(lhand) with capacity(-1)[RPObject with Attributes of Class(): [size=1][id=0] and RPSlots [marauroa.common.game.RPSlot@f0299020 named(container) with capacity(-1)[RPObject with Attributes of Class(): [euro=100][id=1][value=100] and RPEvents [RPEvent tax with Attributes of Class(tax): [bill=10%]]]]]][marauroa.common.game.RPSlot@67737e1 named(rhand) with capacity(-1)[]]
+    [junit] RPObject with Attributes of Class(): [zoneid=test][id=1] and RPSlots [marauroa.common.game.RPSlot@be32b085 named(lhand) with capacity(-1)[RPObject with Attributes of Class(): [id=0] and RPSlots [marauroa.common.game.RPSlot@f0299020 named(container) with capacity(-1)[RPObject with Attributes of Class(): [id=1] and RPEvents [RPEvent tax with Attributes of Class(tax): [bill=10%]]]]]]
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: testRemoveObjectFromZoneAndModify took 0 sec
+    [junit] Testcase: testAddHiddenObjectToZone took 0 sec
+    [junit] Testcase: testVisibleApplyDifferencesBug took 0 sec
+    [junit] Testcase: testAddSlotEventAddition took 0 sec
+    [junit] Testcase: testSlotObjectAttributeAddition took 0 sec
+    [junit] Testcase: testSlotObjectAddition took 0 sec
+    [junit] Testcase: testSlotObjectRemoval took 0 sec
+    [junit] Testcase: testApplyDifferences2 took 0 sec
+    [junit] Testcase: testMapDeltaWithTwoMaps took 0 sec
+    [junit] Testcase: testSlotObjectAttributeModification took 0.001 sec
+    [junit] Testcase: testRPEvent took 0 sec
+    [junit] Testcase: testMapDeltaWithTwoMapsApplyDifferences took 0 sec
+    [junit] 	SKIPPED
+    [junit] Testcase: testAttributeRemoval took 0 sec
+    [junit] Testcase: testSlotObjectAttributeRemoval took 0 sec
+    [junit] Testcase: testAddObjectToZone took 0 sec
+    [junit] Testcase: testMapDelta took 0 sec
+    [junit] Testcase: testAttributeAddition took 0 sec
+    [junit] Testcase: testAttributeModification took 0 sec
+    [junit] Testcase: testRemoveObjectFromZone took 0 sec
+    [junit] Testcase: testAttributeRemoval2 took 0 sec
+    [junit] Testcase: testApplyDifferences took 0 sec
+    [junit] Testcase: testApplyDifferencesOnSlotObjectRemove took 0 sec
+    [junit] Running marauroa.common.game.RPObjectIDTest
+    [junit] Testsuite: marauroa.common.game.RPObjectIDTest
+    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] 
+    [junit] Testcase: testIDRPAction took 0 sec
+    [junit] Testcase: testToString took 0 sec
+    [junit] Testcase: testIDRPObject took 0 sec
+    [junit] Testcase: testEqualsObject took 0 sec
+    [junit] Testcase: testIDIntID took 0.001 sec
+    [junit] Testcase: testHashCode took 0 sec
+    [junit] Testcase: testIDIntString took 0 sec
+    [junit] Testcase: testGetObjectID took 0 sec
+    [junit] Testcase: testGetZoneID took 0 sec
+    [junit] Running marauroa.common.game.RPObjectTest
+    [junit] Testsuite: marauroa.common.game.RPObjectTest
+    [junit] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
+    [junit] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
+    [junit] ------------- Standard Output ---------------
+    [junit] RPObject with Attributes of Class(): 
+    [junit] RPObject with Attributes of Class(): 
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: testRPObject took 0.001 sec
+    [junit] Testcase: testPutInMapAttribute took 0 sec
+    [junit] Testcase: testClearVisibleDelta2 took 0 sec
+    [junit] Testcase: testSlotCapacity took 0 sec
+    [junit] Testcase: testSerialization took 0 sec
+    [junit] Testcase: testClearVisibleAttributes took 0 sec
+    [junit] Testcase: testhasSlot took 0 sec
+    [junit] Testcase: testClone took 0.001 sec
+    [junit] Testcase: testRPSlots took 0 sec
+    [junit] Testcase: testClearVisibleSlots took 0 sec
+    [junit] Testcase: testMapSerialization took 0 sec
+    [junit] Testcase: testPutInMapAttributeNotBeingMap took 0 sec
+    [junit] Testcase: testWriteToJson took 0.001 sec
+    [junit] Testcase: testHasAsParent took 0 sec
+    [junit] Testcase: testMapSerializationTwoMaps took 0 sec
+    [junit] Testcase: testBaseContainer took 0.001 sec
+    [junit] Testcase: testClearVisible took 0 sec
+    [junit] Testcase: testRPLink took 0 sec
+    [junit] Testcase: testGetObjectFromSlots took 0 sec
+    [junit] Running marauroa.common.game.RPSlotTest
+    [junit] Testsuite: marauroa.common.game.RPSlotTest
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
+    [junit] 
+    [junit] Testcase: testGetSetOwner took 0 sec
+    [junit] Testcase: testAddRPObject took 0 sec
+    [junit] Testcase: testHashCode took 0 sec
+    [junit] Testcase: testGetCapacity took 0 sec
+    [junit] Testcase: testIsFull took 0 sec
+    [junit] Testcase: testRemoveContained took 0 sec
+    [junit] Testcase: testRemove took 0 sec
+    [junit] Running marauroa.common.io.UnicodeSupportingInputStreamReaderTest
+    [junit] Testsuite: marauroa.common.io.UnicodeSupportingInputStreamReaderTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] 
+    [junit] Testcase: testWithUTF8 took 0.001 sec
+    [junit] Testcase: testWithUTF8WithBOM took 0 sec
+    [junit] Running marauroa.common.net.EncoderDecoderTest
+    [junit] Testsuite: marauroa.common.net.EncoderDecoderTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 sec
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 sec
+    [junit] ------------- Standard Output ---------------
+    [junit] Configuring Log4J using marauroa/server/log4j.properties
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: testEncoderDecoderMultiple took 0.024 sec
+    [junit] Testcase: testEncoderDecoderMultipleMessageInARead took 0 sec
+    [junit] Testcase: testEncoderDecoderSingle took 0 sec
+    [junit] Running marauroa.common.net.message.MessageTest
+    [junit] Testsuite: marauroa.common.net.message.MessageTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] 
+    [junit] Testcase: testGetAddress took 0 sec
+    [junit] Testcase: testInvalidClientId took 0 sec
+    [junit] Testcase: testGetType took 0.001 sec
+    [junit] Testcase: testReadWriteObject took 0 sec
+    [junit] Running marauroa.common.net.message.TransferContentTest
+    [junit] Testsuite: marauroa.common.net.message.TransferContentTest
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] 
+    [junit] Testcase: testTransferContent took 0.001 sec
+    [junit] Testcase: testTransferContentStringIntByteArray took 0 sec
+    [junit] Testcase: testReadWriteFULL took 0 sec
+    [junit] Testcase: testReadWriteACK took 0 sec
+    [junit] Testcase: testReadWriteREQ took 0 sec
+    [junit] Running marauroa.server.db.DBTransactionTest
+    [junit] Testsuite: marauroa.server.db.DBTransactionTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
+    [junit] ------------- Standard Error -----------------
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/SQLException.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.base/java.lang.Class.getDeclaredMethods0(Native Method)
+    [junit] 	at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3011)
+    [junit] 	at java.base/java.lang.Class.getMethodsRecursive(Class.java:3147)
+    [junit] 	at java.base/java.lang.Class.getMethod0(Class.java:3132)
+    [junit] 	at java.base/java.lang.Class.getMethod(Class.java:2164)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:402)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/SQLException.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 22 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 23 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/SQLWarning.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.sql/java.sql.SQLException.<init>(SQLException.java:124)
+    [junit] 	at marauroa.server.db.DBTransaction.subst(DBTransaction.java:142)
+    [junit] 	at marauroa.server.db.DBTransactionTest.testSubst(DBTransactionTest.java:56)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+    [junit] 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+    [junit] 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+    [junit] 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+    [junit] 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+    [junit] 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+    [junit] 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+    [junit] 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+    [junit] 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/SQLWarning.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 37 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 38 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/DriverManager.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.sql/java.sql.SQLException.<init>(SQLException.java:125)
+    [junit] 	at marauroa.server.db.DBTransaction.subst(DBTransaction.java:142)
+    [junit] 	at marauroa.server.db.DBTransactionTest.testSubst(DBTransactionTest.java:56)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+    [junit] 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+    [junit] 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+    [junit] 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+    [junit] 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+    [junit] 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+    [junit] 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+    [junit] 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+    [junit] 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/DriverManager.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 37 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 38 more
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: testSubst took 0.003 sec
+    [junit] Running marauroa.server.db.StringCheckerTest
+    [junit] Testsuite: marauroa.server.db.StringCheckerTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 sec
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 sec
+    [junit] 
+    [junit] Testcase: testTrimAndEscapeSQLString took 0 sec
+    [junit] Running marauroa.server.db.adapter.CreateIndexStatementParserTest
+    [junit] Testsuite: marauroa.server.db.adapter.CreateIndexStatementParserTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] 
+    [junit] Testcase: testToString[0] took 0.001 sec
+    [junit] Testcase: testToString[1] took 0 sec
+    [junit] Testcase: testToString[2] took 0 sec
+    [junit] Testcase: testToString[3] took 0 sec
+    [junit] Running marauroa.server.db.adapter.H2DatabaseAdapterTest
+    [junit] Testsuite: marauroa.server.db.adapter.H2DatabaseAdapterTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] 
+    [junit] Testcase: testRewriteSql took 0.002 sec
+    [junit] Running marauroa.server.db.adapter.MySQLDatabaseAdapterTest
+    [junit] Testsuite: marauroa.server.db.adapter.MySQLDatabaseAdapterTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec
+    [junit] 
+    [junit] Testcase: testRewriteSql took 0.001 sec
+    [junit] Running marauroa.server.game.container.CharacternameValidationTest
+    [junit] Testsuite: marauroa.server.game.container.CharacternameValidationTest
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
+    [junit] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
+    [junit] 
+    [junit] Testcase: checkImpersonation took 0.003 sec
+    [junit] Running marauroa.server.game.container.PlayerEntryContainerTest
+    [junit] Testsuite: marauroa.server.game.container.PlayerEntryContainerTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
+    [junit] 
+    [junit] Testcase: testAdd took 0.001 sec
+    [junit] Testcase: testGet took 0 sec
+    [junit] Testcase: testRemove took 0 sec
+    [junit] Running marauroa.server.game.container.SecureLoginTest
+    [junit] Testsuite: marauroa.server.game.container.SecureLoginTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.153 sec
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.153 sec
+    [junit] ------------- Standard Error -----------------
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Driver.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:974)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:145)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:776)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassOnClassPathOrNull(BuiltinClassLoader.java:691)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:620)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.base/java.lang.Class.forName0(Native Method)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:478)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:468)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:86)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Driver.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 53 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 54 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Connection.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.base/java.lang.Class.forName0(Native Method)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:478)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:468)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:86)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Connection.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 45 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 46 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Wrapper.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.base/java.lang.Class.forName0(Native Method)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:478)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:468)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:86)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Wrapper.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 54 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 55 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/DriverInfo.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.sql/java.sql.DriverManager.registerDriver(DriverManager.java:312)
+    [junit] 	at java.sql/java.sql.DriverManager.registerDriver(DriverManager.java:288)
+    [junit] 	at org.h2.Driver.load(Driver.java:124)
+    [junit] 	at org.h2.Driver.<clinit>(Driver.java:38)
+    [junit] 	at java.base/java.lang.Class.forName0(Native Method)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:478)
+    [junit] 	at java.base/java.lang.Class.forName(Class.java:468)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:86)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/DriverInfo.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 47 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 48 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/SQLFeatureNotSupportedException.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.Driver.connect(Driver.java:58)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:160)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:102)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/SQLFeatureNotSupportedException.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 43 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 44 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/SQLNonTransientException.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.Driver.connect(Driver.java:58)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:160)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:102)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/SQLNonTransientException.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 52 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 53 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Clob.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:974)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:145)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:776)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassOnClassPathOrNull(BuiltinClassLoader.java:691)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:620)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.Driver.connect(Driver.java:58)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:160)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:102)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Clob.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 53 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 54 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/PreparedStatement.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.Driver.connect(Driver.java:58)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:160)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:102)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/PreparedStatement.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 45 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 46 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Statement.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.Driver.connect(Driver.java:58)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:160)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:102)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Statement.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 54 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 55 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/ResultSet.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.Driver.connect(Driver.java:58)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:160)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:102)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/ResultSet.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 45 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 46 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Blob.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.Driver.connect(Driver.java:58)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:160)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:102)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Blob.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 45 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 46 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Savepoint.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.Driver.connect(Driver.java:58)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:160)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:102)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Savepoint.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 45 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 46 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/CallableStatement.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.Driver.connect(Driver.java:58)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:160)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:102)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/CallableStatement.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 45 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 46 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/DatabaseMetaData.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.Driver.connect(Driver.java:58)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:613)
+    [junit] 	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:160)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.createConnection(AbstractDatabaseAdapter.java:102)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.createConnection(H2DatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.<init>(AbstractDatabaseAdapter.java:54)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.<init>(H2DatabaseAdapter.java:40)
+    [junit] 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+    [junit] 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+    [junit] 	at marauroa.server.db.AdapterFactory.internalCreate(AdapterFactory.java:64)
+    [junit] 	at marauroa.server.db.AdapterFactory.create(AdapterFactory.java:79)
+    [junit] 	at marauroa.server.db.TransactionPool.createMinimumDBTransactions(TransactionPool.java:91)
+    [junit] 	at marauroa.server.db.TransactionPool.beginWork(TransactionPool.java:115)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:76)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/DatabaseMetaData.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 45 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 46 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/BatchUpdateException.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.jdbc.JdbcConnection.createStatement(JdbcConnection.java:165)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.execute(AbstractDatabaseAdapter.java:134)
+    [junit] 	at marauroa.server.db.DBTransaction.execute(DBTransaction.java:175)
+    [junit] 	at marauroa.server.db.JDBCSQLHelper.runDBScript(JDBCSQLHelper.java:69)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:78)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/BatchUpdateException.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 35 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 36 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Timestamp.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.command.Parser.readTerm(Parser.java:2366)
+    [junit] 	at org.h2.command.Parser.readFactor(Parser.java:1883)
+    [junit] 	at org.h2.command.Parser.readSum(Parser.java:1870)
+    [junit] 	at org.h2.command.Parser.readConcat(Parser.java:1843)
+    [junit] 	at org.h2.command.Parser.readCondition(Parser.java:1714)
+    [junit] 	at org.h2.command.Parser.readAnd(Parser.java:1695)
+    [junit] 	at org.h2.command.Parser.readExpression(Parser.java:1687)
+    [junit] 	at org.h2.command.Parser.parseColumnForTable(Parser.java:3277)
+    [junit] 	at org.h2.command.Parser.parseCreateTable(Parser.java:4728)
+    [junit] 	at org.h2.command.Parser.parseCreate(Parser.java:3517)
+    [junit] 	at org.h2.command.Parser.parsePrepared(Parser.java:328)
+    [junit] 	at org.h2.command.Parser.parse(Parser.java:292)
+    [junit] 	at org.h2.command.Parser.parse(Parser.java:264)
+    [junit] 	at org.h2.command.Parser.prepareCommand(Parser.java:236)
+    [junit] 	at org.h2.engine.Session.prepareLocal(Session.java:417)
+    [junit] 	at org.h2.engine.Session.prepareCommand(Session.java:378)
+    [junit] 	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1070)
+    [junit] 	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:163)
+    [junit] 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:151)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.execute(AbstractDatabaseAdapter.java:136)
+    [junit] 	at marauroa.server.db.DBTransaction.execute(DBTransaction.java:175)
+    [junit] 	at marauroa.server.db.JDBCSQLHelper.runDBScript(JDBCSQLHelper.java:69)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:78)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Timestamp.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 53 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 54 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Date.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.command.Parser.readTerm(Parser.java:2366)
+    [junit] 	at org.h2.command.Parser.readFactor(Parser.java:1883)
+    [junit] 	at org.h2.command.Parser.readSum(Parser.java:1870)
+    [junit] 	at org.h2.command.Parser.readConcat(Parser.java:1843)
+    [junit] 	at org.h2.command.Parser.readCondition(Parser.java:1714)
+    [junit] 	at org.h2.command.Parser.readAnd(Parser.java:1695)
+    [junit] 	at org.h2.command.Parser.readExpression(Parser.java:1687)
+    [junit] 	at org.h2.command.Parser.parseColumnForTable(Parser.java:3277)
+    [junit] 	at org.h2.command.Parser.parseCreateTable(Parser.java:4728)
+    [junit] 	at org.h2.command.Parser.parseCreate(Parser.java:3517)
+    [junit] 	at org.h2.command.Parser.parsePrepared(Parser.java:328)
+    [junit] 	at org.h2.command.Parser.parse(Parser.java:292)
+    [junit] 	at org.h2.command.Parser.parse(Parser.java:264)
+    [junit] 	at org.h2.command.Parser.prepareCommand(Parser.java:236)
+    [junit] 	at org.h2.engine.Session.prepareLocal(Session.java:417)
+    [junit] 	at org.h2.engine.Session.prepareCommand(Session.java:378)
+    [junit] 	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1070)
+    [junit] 	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:163)
+    [junit] 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:151)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.execute(AbstractDatabaseAdapter.java:136)
+    [junit] 	at marauroa.server.db.DBTransaction.execute(DBTransaction.java:175)
+    [junit] 	at marauroa.server.db.JDBCSQLHelper.runDBScript(JDBCSQLHelper.java:69)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:78)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Date.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 53 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 54 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/ParameterMetaData.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.jdbc.JdbcConnection.prepareAutoCloseStatement(JdbcConnection.java:254)
+    [junit] 	at org.h2.jdbc.JdbcDatabaseMetaData.getColumns(JdbcDatabaseMetaData.java:226)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.doesColumnExist(H2DatabaseAdapter.java:101)
+    [junit] 	at marauroa.server.db.DBTransaction.doesColumnExist(DBTransaction.java:295)
+    [junit] 	at marauroa.server.db.UpdateScript.update(UpdateScript.java:35)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:79)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/ParameterMetaData.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 36 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 37 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/ResultSetMetaData.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.jdbc.JdbcConnection.prepareAutoCloseStatement(JdbcConnection.java:254)
+    [junit] 	at org.h2.jdbc.JdbcDatabaseMetaData.getColumns(JdbcDatabaseMetaData.java:226)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.doesColumnExist(H2DatabaseAdapter.java:101)
+    [junit] 	at marauroa.server.db.DBTransaction.doesColumnExist(DBTransaction.java:295)
+    [junit] 	at marauroa.server.db.UpdateScript.update(UpdateScript.java:35)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:79)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/ResultSetMetaData.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 36 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 37 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Array.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.jdbc.JdbcPreparedStatement.executeQuery(JdbcPreparedStatement.java:103)
+    [junit] 	at org.h2.jdbc.JdbcDatabaseMetaData.getColumns(JdbcDatabaseMetaData.java:260)
+    [junit] 	at marauroa.server.db.adapter.H2DatabaseAdapter.doesColumnExist(H2DatabaseAdapter.java:101)
+    [junit] 	at marauroa.server.db.DBTransaction.doesColumnExist(DBTransaction.java:295)
+    [junit] 	at marauroa.server.db.UpdateScript.update(UpdateScript.java:35)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeDatabaseSchema(DatabaseFactory.java:79)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.internalInit(DatabaseFactory.java:65)
+    [junit] 	at marauroa.server.game.db.DatabaseFactory.initializeTestDatabase(DatabaseFactory.java:43)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.setUp(SecureLoginTest.java:54)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Array.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 36 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 37 more
+    [junit] java.lang.instrument.IllegalClassFormatException: Error while instrumenting java/sql/Time.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:94)
+    [junit] 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:257)
+    [junit] 	at java.instrument/sun.instrument.TransformerManager.transform(TransformerManager.java:188)
+    [junit] 	at java.instrument/sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:594)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass2(Native Method)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1080)
+    [junit] 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1064)
+    [junit] 	at java.base/java.security.SecureClassLoader.defineClass(SecureClassLoader.java:177)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.defineClass(BuiltinClassLoader.java:735)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.findClassInModuleOrNull(BuiltinClassLoader.java:678)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:604)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:639)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClassOrNull(BuiltinClassLoader.java:608)
+    [junit] 	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:578)
+    [junit] 	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:502)
+    [junit] 	at org.h2.value.ValueTimestamp.parseTimestamp(ValueTimestamp.java:73)
+    [junit] 	at org.h2.value.Value.convertTo(Value.java:751)
+    [junit] 	at org.h2.table.Column.convert(Column.java:148)
+    [junit] 	at org.h2.command.dml.Insert.insertRows(Insert.java:109)
+    [junit] 	at org.h2.command.dml.Insert.update(Insert.java:82)
+    [junit] 	at org.h2.command.CommandContainer.update(CommandContainer.java:71)
+    [junit] 	at org.h2.command.Command.executeUpdate(Command.java:199)
+    [junit] 	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:176)
+    [junit] 	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:151)
+    [junit] 	at marauroa.server.db.adapter.AbstractDatabaseAdapter.execute(AbstractDatabaseAdapter.java:136)
+    [junit] 	at marauroa.server.db.DBTransaction.execute(DBTransaction.java:175)
+    [junit] 	at marauroa.server.game.db.AccountDAO.addPlayer(AccountDAO.java:102)
+    [junit] 	at marauroa.server.game.container.SecureLoginTest.testLogin(SecureLoginTest.java:81)
+    [junit] 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+    [junit] 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+    [junit] 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+    [junit] 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+    [junit] 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+    [junit] 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+    [junit] 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+    [junit] 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+    [junit] 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+    [junit] 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+    [junit] 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+    [junit] 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+    [junit] 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+    [junit] 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+    [junit] 	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+    [junit] 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+    [junit] 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+    [junit] 	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:50)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:535)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1197)
+    [junit] 	at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:1015)
+    [junit] Caused by: java.io.IOException: Error while instrumenting java/sql/Time.
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrumentError(Instrumenter.java:159)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:109)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.CoverageTransformer.transform(CoverageTransformer.java:92)
+    [junit] 	... 50 more
+    [junit] Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 70
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:195)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:176)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.asm.ClassReader.<init>(ClassReader.java:162)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.internal.instr.InstrSupport.classReaderFor(InstrSupport.java:280)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:75)
+    [junit] 	at org.jacoco.agent.rt.internal_43f5073.core.instr.Instrumenter.instrument(Instrumenter.java:107)
+    [junit] 	... 51 more
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: testLogin took 0.04 sec
+    [junit] Testcase: testLoginFailure took 0.001 sec
+    [junit] Running marauroa.server.game.db.CharacterAccessTest
+    [junit] Testsuite: marauroa.server.game.db.CharacterAccessTest
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 sec
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 sec
+    [junit] 
+    [junit] Testcase: doubleAddedCharacter took 0.012 sec
+    [junit] Testcase: removePlayerCharacter took 0.005 sec
+    [junit] Testcase: removeCharacter took 0.003 sec
+    [junit] Testcase: changeCharacterStatus took 0.004 sec
+    [junit] Testcase: storeAndLoadCharacter took 0.003 sec
+    [junit] Testcase: getCharacters took 0.003 sec
+    [junit] Testcase: addCharacter took 0.002 sec
+    [junit] Running marauroa.server.game.db.PlayerAccessTest
+    [junit] Testsuite: marauroa.server.game.db.PlayerAccessTest
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 sec
+    [junit] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 sec
+    [junit] 
+    [junit] Testcase: removePlayer took 0.002 sec
+    [junit] Testcase: doubleAddedPlayer took 0.004 sec
+    [junit] Testcase: addPlayer took 0.002 sec
+    [junit] Testcase: setStatus took 0.002 sec
+    [junit] Testcase: getStatus took 0.002 sec
+    [junit] Testcase: blockAccountPlayer took 0.005 sec
+    [junit] Testcase: changePassword took 0.006 sec
+    [junit] Running marauroa.server.game.db.RPZoneAccessTest
+    [junit] Testsuite: marauroa.server.game.db.RPZoneAccessTest
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec
+    [junit] 
+    [junit] Testcase: storeAndStoreAndLoadObjects took 0.001 sec
+    [junit] Testcase: storeAndLoadObjects took 0 sec
+    [junit] Running marauroa.clientconnect.ClientConnectTest
+    [junit] Testsuite: marauroa.clientconnect.ClientConnectTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.953 sec
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.953 sec
+    [junit] ------------- Standard Output ---------------
+    [junit] Starting Marauroa https://arianne-project.org/engine/marauroa.html
+    [junit] Arianne's open source multiplayer online framework for game development
+    [junit] Marauroa is released under the GNU General Public License: LICENSE.txt
+    [junit] 
+    [junit] done
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: joinGame took 0.345 sec
+    [junit] Testcase: clientconnectTest took 0.172 sec
+    [junit] Testcase: wrongPwTest took 0.098 sec
+    [junit] Testcase: createCharacterTest took 0.208 sec
+[jacoco:report] Loading execution data file /Users/viktorzepeda/codesfu/marauroaTEST/build/jacoco.exec
+[jacoco:report] Writing bundle 'marauroa' with 226 classes
+
+BUILD SUCCESSFUL
+Total time: 4 seconds

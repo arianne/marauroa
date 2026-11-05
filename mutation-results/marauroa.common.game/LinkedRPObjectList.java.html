@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>LinkedRPObjectList.java</h1>
+
+<table class="src">
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/***************************************************************************</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *                   (C) Copyright 2003-2011 - Marauroa                    *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> ***************************************************************************</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> ***************************************************************************</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *                                                                         *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *   This program is free software; you can redistribute it and/or modify  *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *   it under the terms of the GNU General Public License as published by  *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *   the Free Software Foundation; either version 2 of the License, or     *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *   (at your option) any later version.                                   *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *                                                                         *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> ***************************************************************************/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package marauroa.common.game;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Iterator;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.LinkedList;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import marauroa.common.Log4J;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import marauroa.common.Logger;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * A linked list which some helper functions for managing RPObjects</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @author hendrik</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>// This class is not part of the Marauroa API but used internally.</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>class LinkedRPObjectList extends LinkedList&#60;RPObject&#62; {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;private static final long serialVersionUID = -7221795029536087812L;</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;private static final Logger logger = Log4J.getLogger(LinkedRPObjectList.class);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;/**</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * Gets the object from this list by its ID ignoring the zone.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * The zone is really irrelevant in a contained object.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * @param id the object id. Note that only the object_id field is relevant.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * @return the object or null if it is not found.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; */</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;public RPObject getByIDIgnoringZone(RPObject.ID id) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;int oid = id.getObjectID();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;for (RPObject object : this) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_40'/>
+40
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_40'>1</a>
+<span>
+1. getByIDIgnoringZone : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;&#9;if (object.getID().getObjectID() == oid) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_41'/>
+41
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_41'>1</a>
+<span>
+1. getByIDIgnoringZone : replaced return value with null for marauroa/common/game/LinkedRPObjectList::getByIDIgnoringZone &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;&#9;&#9;return object;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9;&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;return null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;/**</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * This method returns true if the slot has the object whose id is id</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * ignoring the zone. The zone is really irrelevant in a contained object.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * @param id the object id. Note that only object_id field is relevant.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * @return true if it is found or false otherwise.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_53'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; */</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;public boolean hasByIDIgnoringZone(RPObject.ID id) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_55'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;int oid = id.getObjectID();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;for (RPObject object : this) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_58'/>
+58
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_58'>1</a>
+<span>
+1. hasByIDIgnoringZone : negated conditional &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>&#9;&#9;&#9;if (oid == object.getID().getObjectID()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_59'/>
+59
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_59'>1</a>
+<span>
+1. hasByIDIgnoringZone : replaced boolean return with false for marauroa/common/game/LinkedRPObjectList::hasByIDIgnoringZone &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>&#9;&#9;&#9;&#9;return true;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9;&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_62'/>
+62
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_62'>1</a>
+<span>
+1. hasByIDIgnoringZone : replaced boolean return with true for marauroa/common/game/LinkedRPObjectList::hasByIDIgnoringZone &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;return false;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_63'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_65'/>
+65
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_65'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;/**</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_66'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * Removed the object from this list by its ID ignoring the zone.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_67'/>
+67
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_67'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * The zone is really irrelevant in a contained object.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_68'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_69'/>
+69
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_69'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * @param id the object id. Note that only the object_id field is relevant.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_70'/>
+70
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_70'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * @return the object or null if it is not found.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_71'/>
+71
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_71'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; */</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_72'/>
+72
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_72'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;public RPObject removeByIDIgnoringZone(RPObject.ID id) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_73'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;int oid = id.getObjectID();</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_74'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_75'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;Iterator&#60;RPObject&#62; itr = this.iterator();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_76'/>
+76
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_76'>1</a>
+<span>
+1. removeByIDIgnoringZone : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;while (itr.hasNext()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;&#9;RPObject rpobject = itr.next();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_78'/>
+78
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_78'>1</a>
+<span>
+1. removeByIDIgnoringZone : negated conditional &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>&#9;&#9;&#9;if (rpobject.getID().getObjectID() == oid) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_79'/>
+79
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_79'>1</a>
+<span>
+1. removeByIDIgnoringZone : removed call to java/util/Iterator::remove &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>&#9;&#9;&#9;&#9;itr.remove();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_80'/>
+80
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_80'>1</a>
+<span>
+1. removeByIDIgnoringZone : replaced return value with null for marauroa/common/game/LinkedRPObjectList::removeByIDIgnoringZone &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>&#9;&#9;&#9;&#9;return rpobject;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_81'/>
+81
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_81'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9;&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_82'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>&#9;&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_83'/>
+83
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_83'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_84'/>
+84
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_84'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;return null;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_85'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_86'/>
+86
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_86'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_87'/>
+87
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_87'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;@Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_88'/>
+88
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_88'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;public boolean add(RPObject object) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_89'/>
+89
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_89'>1</a>
+<span>
+1. add : removed call to marauroa/common/game/LinkedRPObjectList::checkObjectNotAllreadyInList &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;checkObjectNotAllreadyInList(object);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_90'/>
+90
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_90'>2</a>
+<span>
+1. add : replaced boolean return with true for marauroa/common/game/LinkedRPObjectList::add &rarr; SURVIVED<br/>
+2. add : replaced boolean return with false for marauroa/common/game/LinkedRPObjectList::add &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>&#9;&#9;return super.add(object);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_91'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_92'/>
+92
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_92'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_93'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;/**</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_94'/>
+94
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_94'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * adds an object without checking if it is already in the list.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_95'/>
+95
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_95'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * This is useful for cloning the list.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_96'/>
+96
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_96'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_97'/>
+97
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_97'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * @param object object to add</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_98'/>
+98
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_98'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * @return true</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_99'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; */</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_100'/>
+100
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_100'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;boolean addTrusted(RPObject object) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_101'/>
+101
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_101'>2</a>
+<span>
+1. addTrusted : replaced boolean return with true for marauroa/common/game/LinkedRPObjectList::addTrusted &rarr; SURVIVED<br/>
+2. addTrusted : replaced boolean return with false for marauroa/common/game/LinkedRPObjectList::addTrusted &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>&#9;&#9;return super.add(object);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_102'/>
+102
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_102'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_103'/>
+103
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_103'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_104'/>
+104
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_104'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;// TODO: Read RPSlot.java and decide whether assigning unique ids</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_105'/>
+105
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_105'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;// is within the responsibilities of Marauroa or the Application.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_106'/>
+106
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_106'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;// In the first case fix the bug; in the second case throw a</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_107'/>
+107
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_107'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;// specialized exception.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_108'/>
+108
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_108'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;private void checkObjectNotAllreadyInList(RPObject object) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_109'/>
+109
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_109'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;RPObject.ID id = object.getID();</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_110'/>
+110
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_110'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;RPObject oldObject = getByIDIgnoringZone(id);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_111'/>
+111
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_111'>1</a>
+<span>
+1. checkObjectNotAllreadyInList : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;if (oldObject != null) {</span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_112'/>
+112
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_112'>1</a>
+<span>
+1. checkObjectNotAllreadyInList : negated conditional &rarr; NO_COVERAGE<br/>
+
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>&#9;&#9;&#9;if (oldObject == object) {</span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_113'/>
+113
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_113'>1</a>
+<span>
+1. checkObjectNotAllreadyInList : removed call to marauroa/common/Logger::error &rarr; NO_COVERAGE<br/>
+
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>&#9;&#9;&#9;&#9;logger.error(&#34;Object cannot be added to list because it is already part of it: &#34; + object, new Throwable());</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_114'/>
+114
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_114'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9;&#9;} else {</span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_115'/>
+115
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_115'>1</a>
+<span>
+1. checkObjectNotAllreadyInList : removed call to marauroa/common/Logger::error &rarr; NO_COVERAGE<br/>
+
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>&#9;&#9;&#9;    logger.error(&#34;Object cannot be added to list because another object with the same ID is part of it. objectToAdd: &#34; + object + &#34; objectAlreadyInList: &#34; + oldObject, new Throwable());</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_116'/>
+116
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_116'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9;&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_117'/>
+117
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_117'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_118'/>
+118
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_118'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@e223594_119'/>
+119
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@e223594_119'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_40'>40</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_40'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getByIDIgnoringZone<br/><b>Killed by : </b>marauroa.common.game.RPSlotTest.testIsFull(marauroa.common.game.RPSlotTest)</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_41'>41</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_41'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getByIDIgnoringZone<br/><b>Killed by : </b>marauroa.common.game.GetAndApplyDifferencesTest.modifiedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</span></span> replaced return value with null for marauroa/common/game/LinkedRPObjectList::getByIDIgnoringZone &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_58'>58</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_58'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>hasByIDIgnoringZone<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=hasByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Z],-indexes=[26],-mutator=org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=hasByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Z],-indexes=[26],-mutator=org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=hasByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Z],-indexes=[26],-mutator=org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithTwoRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.modifiedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.removedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.removeAttributeRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAddition(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences(marauroa.common.game.RPObjectDelta2Test)</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_59'>59</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_59'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>hasByIDIgnoringZone<br/><b>Killed by : </b>none</span></span> replaced boolean return with false for marauroa/common/game/LinkedRPObjectList::hasByIDIgnoringZone &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=hasByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Z],-indexes=[30],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanFalseReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=hasByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Z],-indexes=[30],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanFalseReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=hasByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Z],-indexes=[30],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanFalseReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithTwoRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.modifiedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.removedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.removeAttributeRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAddition(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences(marauroa.common.game.RPObjectDelta2Test)</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_62'>62</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_62'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>hasByIDIgnoringZone<br/><b>Killed by : </b>marauroa.common.game.GetAndApplyDifferencesTest.modifiedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</span></span> replaced boolean return with true for marauroa/common/game/LinkedRPObjectList::hasByIDIgnoringZone &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_76'>76</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_76'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>removeByIDIgnoringZone<br/><b>Killed by : </b>marauroa.common.game.RPObjectTest.testClearVisible(marauroa.common.game.RPObjectTest)</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_78'>78</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_78'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>removeByIDIgnoringZone<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=removeByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Lmarauroa/common/game/RPObject;],-indexes=[29],-mutator=org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=removeByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Lmarauroa/common/game/RPObject;],-indexes=[29],-mutator=org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=removeByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Lmarauroa/common/game/RPObject;],-indexes=[29],-mutator=org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>marauroa.common.game.RPSlotTest.testRemove(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.RPSlotTest.testRemoveContained(marauroa.common.game.RPSlotTest)</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_79'>79</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_79'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>removeByIDIgnoringZone<br/><b>Killed by : </b>none</span></span> removed call to java/util/Iterator::remove &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=removeByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Lmarauroa/common/game/RPObject;],-indexes=[33],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=removeByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Lmarauroa/common/game/RPObject;],-indexes=[33],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=removeByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Lmarauroa/common/game/RPObject;],-indexes=[33],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>marauroa.common.game.RPSlotTest.testRemove(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.RPSlotTest.testRemoveContained(marauroa.common.game.RPSlotTest)</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_80'>80</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_80'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>removeByIDIgnoringZone<br/><b>Killed by : </b>none</span></span> replaced return value with null for marauroa/common/game/LinkedRPObjectList::removeByIDIgnoringZone &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=removeByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Lmarauroa/common/game/RPObject;],-indexes=[37],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=removeByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Lmarauroa/common/game/RPObject;],-indexes=[37],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=removeByIDIgnoringZone,-methodDesc=(Lmarauroa/common/game/RPObject$ID;)Lmarauroa/common/game/RPObject;],-indexes=[37],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>marauroa.common.game.RPSlotTest.testRemove(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.RPSlotTest.testRemoveContained(marauroa.common.game.RPSlotTest)</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_89'>89</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_89'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>add<br/><b>Killed by : </b>marauroa.common.game.RPSlotTest.testIsFull(marauroa.common.game.RPSlotTest)</span></span> removed call to marauroa/common/game/LinkedRPObjectList::checkObjectNotAllreadyInList &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_90'>90</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_90'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>add<br/><b>Killed by : </b>none</span></span> replaced boolean return with true for marauroa/common/game/LinkedRPObjectList::add &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=add,-methodDesc=(Lmarauroa/common/game/RPObject;)Z],-indexes=[11],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanTrueReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=add,-methodDesc=(Lmarauroa/common/game/RPObject;)Z],-indexes=[11],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanTrueReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=add,-methodDesc=(Lmarauroa/common/game/RPObject;)Z],-indexes=[11],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanTrueReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>marauroa.common.game.RPSlotTest.testAddRPObject(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.RPSlotTest.testRemove(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.RPSlotTest.testRemoveContained(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.RPSlotTest.testIsFull(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.RPObjectTest.testRPSlots(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testhasSlot(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testHasAsParent(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testBaseContainer(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAddHiddenObjectToZone(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testRPObject(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testGetObjectFromSlots(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testRPLink(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testPutInMapAttribute(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testPutInMapAttributeNotBeingMap(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testSlotCapacity(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAddObjectToZone(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testClearVisibleAttributes(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testRemoveObjectFromZoneAndModify(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testClone(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testRemoveObjectFromZone(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testClearVisibleSlots(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testWriteToJson(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testClearVisible(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testMapDeltaWithTwoMaps(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithTwoRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.modifiedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testMapDelta(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAttributeAddition(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAttributeModification(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testClearVisibleDelta2(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAttributeRemoval(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAttributeRemoval2(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.removedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.removeAttributeRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeModification(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeAddition(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeRemoval(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testRPEvent(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences2(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testMapSerialization(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testMapSerializationTwoMaps(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectRemoval(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAddition(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testVisibleApplyDifferencesBug(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAddSlotEventAddition(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferencesOnSlotObjectRemove(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testSerialization(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.BugAtApplyDifferencesTest.alongtest(marauroa.common.game.BugAtApplyDifferencesTest)</li> 
+</ul>
+</div></div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>add<br/><b>Killed by : </b>marauroa.common.game.RPSlotTest.testIsFull(marauroa.common.game.RPSlotTest)</span></span> replaced boolean return with false for marauroa/common/game/LinkedRPObjectList::add &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_101'>101</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_101'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>addTrusted<br/><b>Killed by : </b>none</span></span> replaced boolean return with true for marauroa/common/game/LinkedRPObjectList::addTrusted &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=addTrusted,-methodDesc=(Lmarauroa/common/game/RPObject;)Z],-indexes=[6],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanTrueReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=addTrusted,-methodDesc=(Lmarauroa/common/game/RPObject;)Z],-indexes=[6],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanTrueReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=addTrusted,-methodDesc=(Lmarauroa/common/game/RPObject;)Z],-indexes=[6],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanTrueReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>marauroa.common.game.RPObjectDelta2Test.testRPEvent(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences2(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testVisibleApplyDifferencesBug(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferencesOnSlotObjectRemove(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences(marauroa.common.game.RPObjectDelta2Test)</li> 
+</ul>
+</div></div> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>addTrusted<br/><b>Killed by : </b>none</span></span> replaced boolean return with false for marauroa/common/game/LinkedRPObjectList::addTrusted &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=addTrusted,-methodDesc=(Lmarauroa/common/game/RPObject;)Z],-indexes=[6],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanFalseReturnValsMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=addTrusted,-methodDesc=(Lmarauroa/common/game/RPObject;)Z],-indexes=[6],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanFalseReturnValsMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=marauroa.common.game.LinkedRPObjectList,-method=addTrusted,-methodDesc=(Lmarauroa/common/game/RPObject;)Z],-indexes=[6],-mutator=org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanFalseReturnValsMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>marauroa.common.game.RPObjectDelta2Test.testRPEvent(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences2(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testVisibleApplyDifferencesBug(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferencesOnSlotObjectRemove(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences(marauroa.common.game.RPObjectDelta2Test)</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_111'>111</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_111'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>checkObjectNotAllreadyInList<br/><b>Killed by : </b>marauroa.common.game.RPSlotTest.testIsFull(marauroa.common.game.RPSlotTest)</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_112'>112</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_112'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>checkObjectNotAllreadyInList<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; NO_COVERAGE</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_113'>113</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_113'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>checkObjectNotAllreadyInList<br/><b>Killed by : </b>none</span></span> removed call to marauroa/common/Logger::error &rarr; NO_COVERAGE</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@e223594_115'>115</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@e223594_115'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>checkObjectNotAllreadyInList<br/><b>Killed by : </b>none</span></span> removed call to marauroa/common/Logger::error &rarr; NO_COVERAGE</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>marauroa.common.game.GetAndApplyDifferencesTest.modifiedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.removeAttributeRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferencesOnSlotObjectRemove(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences(marauroa.common.game.RPObjectDelta2Test) (3 ms)</li><li>marauroa.common.game.RPSlotTest.testRemove(marauroa.common.game.RPSlotTest) (0 ms)</li><li>marauroa.common.game.RPSlotTest.testRemoveContained(marauroa.common.game.RPSlotTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testClearVisible(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testClearVisibleDelta2(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectRemoval(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testVisibleApplyDifferencesBug(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.BugAtApplyDifferencesTest.alongtest(marauroa.common.game.BugAtApplyDifferencesTest) (2 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithTwoRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.removedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAddition(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAttributeModification(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAttributeAddition(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAttributeRemoval2(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAttributeRemoval(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeAddition(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeModification(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeRemoval(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testRPEvent(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences2(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAddSlotEventAddition(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPSlotTest.testIsFull(marauroa.common.game.RPSlotTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testWriteToJson(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testSerialization(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPSlotTest.testAddRPObject(marauroa.common.game.RPSlotTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testRPSlots(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testhasSlot(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testHasAsParent(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testBaseContainer(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAddHiddenObjectToZone(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testRPObject(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testGetObjectFromSlots(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testRPLink(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testPutInMapAttribute(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testPutInMapAttributeNotBeingMap(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testSlotCapacity(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAddObjectToZone(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testClearVisibleAttributes(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testRemoveObjectFromZoneAndModify(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testClone(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testRemoveObjectFromZone(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testClearVisibleSlots(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testMapDeltaWithTwoMaps(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testMapDelta(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testMapSerialization(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testMapSerializationTwoMaps(marauroa.common.game.RPObjectTest) (0 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> dev-SNAPSHOT <a href='https://github.com/sponsors/hcoles'>support</a>
+
+</body>
+</html>

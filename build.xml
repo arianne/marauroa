@@ -25,6 +25,7 @@
 		<pathelement path="${junit_jar}"/>
 		<pathelement path="${jnlp_jar}"/>
 		<pathelement path="${jython_jar}"/>
+    <pathelement location="${hamcrest_jar}"/>
 		  <fileset dir="${libdir}">
 		    <include name="tomcat*.jar"/>
 		    <include name="json-simple*.jar"/>
@@ -39,10 +40,17 @@
 	<path id="run-tests-classpath">
 		<path refid="compile-tests-classpath" />
 		<pathelement location="${h2_jar}"/>
+    <pathelement location="${hamcrest_jar}"/>
 		<pathelement path="${build-tests}" />
 		<pathelement path="."/>
 	</path>
 
+  <path id="pit.path">
+    <pathelement location="${pitest_jar}"/>
+    <pathelement location="${pitest_ant_jar}"/>
+    <pathelement location="${pitest_entry_jar}"/>
+  </path>
+  <taskdef name="pitest" classname="org.pitest.ant.PitestTask" classpathref="pit.path" /> 
 	<!-- Clears the instalation -->
 	<target name="clean">
 		<delete dir="${build}"/>
@@ -295,6 +303,7 @@
 			<classpath path="buildtools/jacoco/jacocoant.jar"/>
 		</taskdef>
 
+
 		<jacoco:coverage destfile="build/jacoco.exec" append="false">
 			<junit printsummary="yes" fork="yes" forkmode="once" haltonerror="true" haltonfailure="true">
 				<jvmarg value="-Djava.awt.headless=true"/>
@@ -328,5 +337,26 @@
 	    	<xml destfile="${build-coverage}/jacoco.xml" />
 	    </jacoco:report>
 	</target>
+  <target name="pit" depends="compile-tests">
+    <pitest
+        pitClasspath="pit.path"
+        classPath="run-tests-classpath"
+        targetClasses="marauroa.*"
+        targetTests="marauroa.*"
+        excludedTestClasses="marauroa.clientconnect.*,marauroa.server.game.db.*,marauroa.server.game.container.SecureLoginTest"
+        reportDir="mutation-results"
+        sourceDir="${src}"
+        verbose="false"
+      />
+</target>
+<target name="pit-db" depends="compile-tests">
+  <pitest
+      pitClasspath="pit.path"
+      classPath="run-tests-classpath"
+      targetClasses="marauroa.server.game.db.*, marauroa.clientconnect.*, marauroa.common.game.RPObjectTest, marauroa.server.game.container.SecureLoginTest"
+      targetTests="marauroa.server.game.db.*, marauroa.clientconnect.*, marauroa.common.game.RPObjectTest, marauroa.server.game.container.SecureLoginTest"
+      reportDir="mutation-results-db"
+      sourceDir="${src}"/>
+</target>
 
 </project>

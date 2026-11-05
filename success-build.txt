@@ -1,0 +1,155 @@
+Buildfile: /Users/viktorzepeda/codesfu/marauroaTEST/build.xml
+
+init:
+
+compile:
+     [exec] 
+     [exec] up to date, audited 99 packages in 185ms
+     [exec] 
+     [exec] 6 packages are looking for funding
+     [exec]   run `npm fund` for details
+     [exec] 
+     [exec] 1 high severity vulnerability
+     [exec] 
+     [exec] To address all issues, run:
+     [exec]   npm audit fix
+     [exec] 
+     [exec] Run `npm audit` for details.
+     [exec] CLI Building entry: index.ts
+     [exec] CLI Using tsconfig: tsconfig.json
+     [exec] CLI tsup v8.5.1
+     [exec] CLI Target: es2022
+     [exec] CLI Cleaning output folder
+     [exec] CJS Build start
+     [exec] ESM Build start
+     [exec] CJS ../../build/classes/js/index.js 32.21 KB
+     [exec] CJS ⚡️ Build success in 13ms
+     [exec] ESM ../../build/classes/js/index.mjs 30.84 KB
+     [exec] ESM ⚡️ Build success in 13ms
+     [exec] DTS Build start
+     [exec] DTS ⚡️ Build success in 286ms
+     [exec] DTS ../../build/classes/js/index.d.ts  24.08 KB
+     [exec] DTS ../../build/classes/js/index.d.mts 24.08 KB
+     [copy] Copying 9 files to /Users/viktorzepeda/codesfu/marauroaTEST/build/classes/js
+
+compile-tests:
+
+pit:
+   [pitest] 1:08:45 a.m. PIT >> INFO : Verbose logging is disabled. If you encounter a problem, please enable it before reporting an issue.
+   [pitest] 1:08:46 a.m. PIT >> INFO : Created 238 mutation test units in pre scan
+   [pitest] 1:08:46 a.m. PIT >> INFO : Sending 260 test classes to minion
+   [pitest] 1:08:46 a.m. PIT >> INFO : Sent tests to minion
+   [pitest] 1:08:46 a.m. PIT >> INFO : MINION : log4j:WARN No appenders could be found for logger (marauroa.common.net.message.MessageS2CPerception).
+   [pitest] 1:08:46 a.m. PIT >> INFO : MINION : log4j:WARN Please initialize the log4j system properly.
+   [pitest] 1:08:46 a.m. PIT >> INFO : MINION : log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+   [pitest] 1:08:46 a.m. PIT >> INFO : Calculated coverage in 0 seconds.
+   [pitest] 1:08:46 a.m. PIT >> INFO : 0 tests took longer than 2000 ms
+   [pitest] 1:08:46 a.m. PIT >> INFO : Slowest test (marauroa.common.net.EncoderDecoderTest) took 32 ms
+   [pitest] 1:08:46 a.m. PIT >> INFO : Largest test (alongtest(marauroa.common.game.BugAtApplyDifferencesTest)) covered 1739 blocks
+   [pitest] 1:08:46 a.m. PIT >> INFO : Created 232 mutation test units
+   [pitest] 1:08:59 a.m. PIT >> WARNING : Minion exited abnormally due to TIMED_OUT
+   [pitest] 1:09:03 a.m. PIT >> WARNING : Minion exited abnormally due to TIMED_OUT
+   [pitest] 1:09:07 a.m. PIT >> WARNING : Minion exited abnormally due to TIMED_OUT
+   [pitest] 1:09:12 a.m. PIT >> WARNING : Minion exited abnormally due to TIMED_OUT
+   [pitest] 1:09:16 a.m. PIT >> WARNING : Minion exited abnormally due to TIMED_OUT
+   [pitest] 1:09:26 a.m. PIT >> WARNING : Minion exited abnormally due to TIMED_OUT
+   [pitest] 1:09:31 a.m. PIT >> WARNING : Minion exited abnormally due to TIMED_OUT
+   [pitest] 1:09:37 a.m. PIT >> WARNING : Minion exited abnormally due to TIMED_OUT
+   [pitest] 1:09:43 a.m. PIT >> WARNING : Minion exited abnormally due to TIMED_OUT
+   [pitest] 1:09:48 a.m. PIT >> WARNING : Minion exited abnormally due to TIMED_OUT
+   [pitest] 1:09:54 a.m. PIT >> INFO : Completed in 68 seconds
+   [pitest] /-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|//-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|================================================================================
+   [pitest] - Mutators
+   [pitest] ================================================================================
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator
+   [pitest] >> Generated 211 Killed 49 (23%)
+   [pitest] > KILLED 44 SURVIVED 25 TIMED_OUT 5 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 137 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.returns.PrimitiveReturnsMutator
+   [pitest] >> Generated 117 Killed 25 (21%)
+   [pitest] > KILLED 24 SURVIVED 10 TIMED_OUT 1 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 82 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.IncrementsMutator
+   [pitest] >> Generated 29 Killed 7 (24%)
+   [pitest] > KILLED 7 SURVIVED 0 TIMED_OUT 0 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 22 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator
+   [pitest] >> Generated 3072 Killed 677 (22%)
+   [pitest] > KILLED 677 SURVIVED 563 TIMED_OUT 0 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 1832 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanTrueReturnValsMutator
+   [pitest] >> Generated 225 Killed 42 (19%)
+   [pitest] > KILLED 41 SURVIVED 7 TIMED_OUT 1 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 176 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.InvertNegsMutator
+   [pitest] >> Generated 1 Killed 0 (0%)
+   [pitest] > KILLED 0 SURVIVED 0 TIMED_OUT 0 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 1 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator
+   [pitest] >> Generated 303 Killed 74 (24%)
+   [pitest] > KILLED 74 SURVIVED 8 TIMED_OUT 0 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 221 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.MathMutator
+   [pitest] >> Generated 331 Killed 92 (28%)
+   [pitest] > KILLED 92 SURVIVED 13 TIMED_OUT 0 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 226 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanFalseReturnValsMutator
+   [pitest] >> Generated 159 Killed 30 (19%)
+   [pitest] > KILLED 30 SURVIVED 4 TIMED_OUT 0 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 125 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator
+   [pitest] >> Generated 280 Killed 44 (16%)
+   [pitest] > KILLED 44 SURVIVED 9 TIMED_OUT 0 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 227 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator
+   [pitest] >> Generated 1560 Killed 493 (32%)
+   [pitest] > KILLED 490 SURVIVED 46 TIMED_OUT 3 NON_VIABLE 0 
+   [pitest] > MEMORY_ERROR 0 NOT_STARTED 0 STARTED 0 RUN_ERROR 0 
+   [pitest] > NO_COVERAGE 1021 EQUIVALENT 0 
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] ================================================================================
+   [pitest] - Timings
+   [pitest] ================================================================================
+   [pitest] > pre-scan for mutations : < 1 second
+   [pitest] > scan classpath : < 1 second
+   [pitest] > coverage and dependency analysis : < 1 second
+   [pitest] > build mutation tests : < 1 second
+   [pitest] > run mutation analysis : 1 minutes and 7 seconds
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > Total  : 1 minutes and 8 seconds
+   [pitest] --------------------------------------------------------------------------------
+   [pitest] > 0 tests took longer than 2000 ms
+   [pitest] > Slowest test (marauroa.common.net.EncoderDecoderTest) took 32 ms
+   [pitest] > Largest test (alongtest(marauroa.common.game.BugAtApplyDifferencesTest)) covered 1739 blocks
+   [pitest] ================================================================================
+   [pitest] - Statistics
+   [pitest] ================================================================================
+   [pitest] >> Line Coverage (for mutated classes only): 3979/12624 (32%)
+   [pitest] >> 260 tests examined
+   [pitest] >> Generated 6288 mutations Killed 1533 (24%)
+   [pitest] >> Mutations with no coverage 4070. Test strength 69%
+   [pitest] >> Ran 3947 tests (0.63 tests per mutation)
+   [pitest] Enhanced functionality available at https://www.arcmutate.com/
+
+BUILD SUCCESSFUL
+Total time: 1 minute 10 seconds

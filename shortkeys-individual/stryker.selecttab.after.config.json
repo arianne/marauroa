@@ -1,0 +1,8 @@
+{
+  "testRunner": "vitest",
+  "mutate": ["src/actions/action-handlers.ts:20-54"],
+  "coverageAnalysis": "perTest",
+  "reporters": ["html", "json", "clear-text"],
+  "htmlReporter": { "fileName": "reports/individual/after.html" },
+  "jsonReporter": { "fileName": "reports/individual/after.json" }
+}

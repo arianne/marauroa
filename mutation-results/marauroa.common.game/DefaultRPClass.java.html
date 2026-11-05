@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>DefaultRPClass.java</h1>
+
+<table class="src">
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/***************************************************************************</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *                   (C) Copyright 2003-2010 - Marauroa                    *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> ***************************************************************************</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> ***************************************************************************</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *                                                                         *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *   This program is free software; you can redistribute it and/or modify  *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *   it under the terms of the GNU General Public License as published by  *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *   the Free Software Foundation; either version 2 of the License, or     *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *   (at your option) any later version.                                   *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *                                                                         *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> ***************************************************************************/</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package marauroa.common.game;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import marauroa.common.game.Definition.Type;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * the default RPClass for lazy developers. You won&#39;t get any</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * advantages on the engine by using it.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @author migel, hendrik</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>class DefaultRPClass extends RPClass {</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;/**</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; * generates the default RPClass</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9; */</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;DefaultRPClass() {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;super(&#34;&#34;);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;@Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;public short getCode(Definition.DefinitionClass clazz, String name) {</span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_33'/>
+33
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_33'>1</a>
+<span>
+1. getCode : replaced short return with 0 for marauroa/common/game/DefaultRPClass::getCode &rarr; NO_COVERAGE<br/>
+
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>&#9;&#9;return -1;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;@Override</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;public Definition getDefinition(Definition.DefinitionClass clazz, String name) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>&#9;&#9;Definition def = new Definition(clazz);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_40'/>
+40
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_40'>1</a>
+<span>
+1. getDefinition : removed call to marauroa/common/game/Definition::setCode &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;def.setCode((short) -1);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_41'/>
+41
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_41'>1</a>
+<span>
+1. getDefinition : removed call to marauroa/common/game/Definition::setName &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;def.setName(name);</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_42'/>
+42
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_42'>1</a>
+<span>
+1. getDefinition : removed call to marauroa/common/game/Definition::setType &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;def.setType(Type.VERY_LONG_STRING);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9;/*</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9; * On Default RPClass we assume that strings that start with #</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9; * are hidden.</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9; */</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_47'/>
+47
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_47'>1</a>
+<span>
+1. getDefinition : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;if (name.startsWith(&#34;#&#34;)) {</span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_48'/>
+48
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_48'>1</a>
+<span>
+1. getDefinition : removed call to marauroa/common/game/Definition::setFlags &rarr; NO_COVERAGE<br/>
+
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>&#9;&#9;&#9;def.setFlags(Definition.HIDDEN);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9;} else {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_50'/>
+50
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_50'>1</a>
+<span>
+1. getDefinition : removed call to marauroa/common/game/Definition::setFlags &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>&#9;&#9;&#9;def.setFlags(Definition.STANDARD);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_53'/>
+53
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_53'>1</a>
+<span>
+1. getDefinition : removed call to marauroa/common/game/Definition::setCapacity &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;def.setCapacity((byte) -1);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_55'/>
+55
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_55'>1</a>
+<span>
+1. getDefinition : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;if (name.startsWith(&#34;!&#34;)) {</span></pre></td></tr>
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_56'/>
+56
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_56'>1</a>
+<span>
+1. getDefinition : removed call to marauroa/common/game/Definition::setFlags &rarr; NO_COVERAGE<br/>
+
+</span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>&#9;&#9;&#9;def.setFlags(Definition.PRIVATE);</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_59'/>
+59
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_59'>1</a>
+<span>
+1. getDefinition : replaced return value with null for marauroa/common/game/DefaultRPClass::getDefinition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>&#9;&#9;return def;</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>&#9;}</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_62'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_33'>33</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_33'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getCode<br/><b>Killed by : </b>none</span></span> replaced short return with 0 for marauroa/common/game/DefaultRPClass::getCode &rarr; NO_COVERAGE</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_40'>40</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_40'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getDefinition<br/><b>Killed by : </b>marauroa.common.game.RPSlotTest.testIsFull(marauroa.common.game.RPSlotTest)</span></span> removed call to marauroa/common/game/Definition::setCode &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_41'>41</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_41'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getDefinition<br/><b>Killed by : </b>marauroa.common.game.AttributesTest.testSerializationOfClasslessAttributesWithALongString(marauroa.common.game.AttributesTest)</span></span> removed call to marauroa/common/game/Definition::setName &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_42'>42</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_42'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getDefinition<br/><b>Killed by : </b>marauroa.common.game.AttributesTest.testEquals(marauroa.common.game.AttributesTest)</span></span> removed call to marauroa/common/game/Definition::setType &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_47'>47</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_47'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getDefinition<br/><b>Killed by : </b>marauroa.common.game.AttributesTest.testSerialization(marauroa.common.game.AttributesTest)</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_48'>48</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_48'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getDefinition<br/><b>Killed by : </b>none</span></span> removed call to marauroa/common/game/Definition::setFlags &rarr; NO_COVERAGE</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_50'>50</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_50'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getDefinition<br/><b>Killed by : </b>none</span></span> removed call to marauroa/common/game/Definition::setFlags &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.DefaultRPClass,-method=getDefinition,-methodDesc=(Lmarauroa/common/game/Definition$DefinitionClass;Ljava/lang/String;)Lmarauroa/common/game/Definition;],-indexes=[40],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=marauroa.common.game.DefaultRPClass,-method=getDefinition,-methodDesc=(Lmarauroa/common/game/Definition$DefinitionClass;Ljava/lang/String;)Lmarauroa/common/game/Definition;],-indexes=[40],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=marauroa.common.game.DefaultRPClass,-method=getDefinition,-methodDesc=(Lmarauroa/common/game/Definition$DefinitionClass;Ljava/lang/String;)Lmarauroa/common/game/Definition;],-indexes=[40],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>marauroa.common.game.AttributesTest.testGetOnEmptyattribute(marauroa.common.game.AttributesTest)</li> <li>marauroa.common.game.AttributesTest.testEquals(marauroa.common.game.AttributesTest)</li> <li>marauroa.common.game.RPObjectIDTest.testIDRPAction(marauroa.common.game.RPObjectIDTest)</li> <li>marauroa.common.game.RPObjectIDTest.testIDRPObject(marauroa.common.game.RPObjectIDTest)</li> <li>marauroa.common.game.AttributesTest.testToString(marauroa.common.game.AttributesTest)</li> <li>marauroa.common.game.AttributesTest.testBug1833952(marauroa.common.game.AttributesTest)</li> <li>marauroa.common.game.RPSlotTest.testGetSetOwner(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.AttributesTest.testSerializationOfClasslessAttributesWithALongString(marauroa.common.game.AttributesTest)</li> <li>marauroa.common.game.RPSlotTest.testAddRPObject(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.emptyRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.addedAttributeRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.modifiedAttributeRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.AttributesTest.testSerialization(marauroa.common.game.AttributesTest)</li> <li>marauroa.common.game.RPSlotTest.testRemove(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.RPSlotTest.testRemoveContained(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.removedAttributeRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPSlotTest.testIsFull(marauroa.common.game.RPSlotTest)</li> <li>marauroa.common.game.RPEventTest.testSerialization(marauroa.common.game.RPEventTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.addedEmptyRPSlotRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPObjectTest.testRPSlots(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testhasSlot(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testHasAsParent(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testBaseContainer(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAddHiddenObjectToZone(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testRPObject(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testGetObjectFromSlots(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testRPLink(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testPutInMapAttribute(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testPutInMapAttributeNotBeingMap(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testSlotCapacity(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAddObjectToZone(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testClearVisibleAttributes(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.removedEmptyRPSlotRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testRemoveObjectFromZoneAndModify(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testClone(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testRemoveObjectFromZone(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testClearVisibleSlots(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testWriteToJson(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testClearVisible(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testMapDeltaWithTwoMaps(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithTwoRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.modifiedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testMapDelta(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAttributeAddition(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAttributeModification(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testClearVisibleDelta2(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAttributeRemoval(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testAttributeRemoval2(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.removedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.GetAndApplyDifferencesTest.removeAttributeRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeModification(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeAddition(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeRemoval(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testRPEvent(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences2(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testMapSerialization(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectTest.testMapSerializationTwoMaps(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectRemoval(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAddition(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testVisibleApplyDifferencesBug(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.net.EncoderDecoderTest</li> <li>marauroa.common.game.RPObjectDelta2Test.testAddSlotEventAddition(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferencesOnSlotObjectRemove(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.RPObjectTest.testSerialization(marauroa.common.game.RPObjectTest)</li> <li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences(marauroa.common.game.RPObjectDelta2Test)</li> <li>marauroa.common.game.BugAtApplyDifferencesTest.alongtest(marauroa.common.game.BugAtApplyDifferencesTest)</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_53'>53</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_53'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getDefinition<br/><b>Killed by : </b>marauroa.common.game.RPSlotTest.testAddRPObject(marauroa.common.game.RPSlotTest)</span></span> removed call to marauroa/common/game/Definition::setCapacity &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_55'>55</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_55'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getDefinition<br/><b>Killed by : </b>marauroa.common.game.AttributesTest.testSerialization(marauroa.common.game.AttributesTest)</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_56'>56</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_56'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getDefinition<br/><b>Killed by : </b>none</span></span> removed call to marauroa/common/game/Definition::setFlags &rarr; NO_COVERAGE</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7ac0f19d_59'>59</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7ac0f19d_59'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getDefinition<br/><b>Killed by : </b>marauroa.common.game.AttributesTest.testSerializationOfClasslessAttributesWithALongString(marauroa.common.game.AttributesTest)</span></span> replaced return value with null for marauroa/common/game/DefaultRPClass::getDefinition &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>marauroa.common.game.AttributesTest.testGetOnEmptyattribute(marauroa.common.game.AttributesTest) (0 ms)</li><li>marauroa.common.game.AttributesTest.testEquals(marauroa.common.game.AttributesTest) (0 ms)</li><li>marauroa.common.game.RPObjectIDTest.testIDRPAction(marauroa.common.game.RPObjectIDTest) (0 ms)</li><li>marauroa.common.game.RPObjectIDTest.testIDRPObject(marauroa.common.game.RPObjectIDTest) (0 ms)</li><li>marauroa.common.game.AttributesTest.testToString(marauroa.common.game.AttributesTest) (0 ms)</li><li>marauroa.common.game.AttributesTest.testBug1833952(marauroa.common.game.AttributesTest) (0 ms)</li><li>marauroa.common.game.RPSlotTest.testGetSetOwner(marauroa.common.game.RPSlotTest) (0 ms)</li><li>marauroa.common.game.AttributesTest.testSerializationOfClasslessAttributesWithALongString(marauroa.common.game.AttributesTest) (0 ms)</li><li>marauroa.common.game.RPSlotTest.testAddRPObject(marauroa.common.game.RPSlotTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.emptyRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.addedAttributeRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.modifiedAttributeRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.AttributesTest.testSerialization(marauroa.common.game.AttributesTest) (0 ms)</li><li>marauroa.common.game.RPSlotTest.testRemove(marauroa.common.game.RPSlotTest) (0 ms)</li><li>marauroa.common.game.RPSlotTest.testRemoveContained(marauroa.common.game.RPSlotTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.removedAttributeRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.RPSlotTest.testIsFull(marauroa.common.game.RPSlotTest) (0 ms)</li><li>marauroa.common.game.RPEventTest.testSerialization(marauroa.common.game.RPEventTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.addedEmptyRPSlotRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testRPSlots(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testhasSlot(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testHasAsParent(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testBaseContainer(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAddHiddenObjectToZone(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testRPObject(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testGetObjectFromSlots(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testRPLink(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testPutInMapAttribute(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testPutInMapAttributeNotBeingMap(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testSlotCapacity(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAddObjectToZone(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testClearVisibleAttributes(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.removedEmptyRPSlotRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testRemoveObjectFromZoneAndModify(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testClone(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testRemoveObjectFromZone(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testClearVisibleSlots(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testWriteToJson(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testClearVisible(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testMapDeltaWithTwoMaps(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.addedRPSlotWithTwoRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.modifiedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testMapDelta(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAttributeAddition(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAttributeModification(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testClearVisibleDelta2(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAttributeRemoval(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAttributeRemoval2(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.removedRPSlotWithRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.GetAndApplyDifferencesTest.removeAttributeRPObjectOnRPObject(marauroa.common.game.GetAndApplyDifferencesTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeModification(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeAddition(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAttributeRemoval(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testRPEvent(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences2(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testMapSerialization(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testMapSerializationTwoMaps(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectRemoval(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testSlotObjectAddition(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testVisibleApplyDifferencesBug(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.net.EncoderDecoderTest (32 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testAddSlotEventAddition(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferencesOnSlotObjectRemove(marauroa.common.game.RPObjectDelta2Test) (0 ms)</li><li>marauroa.common.game.RPObjectTest.testSerialization(marauroa.common.game.RPObjectTest) (0 ms)</li><li>marauroa.common.game.RPObjectDelta2Test.testApplyDifferences(marauroa.common.game.RPObjectDelta2Test) (3 ms)</li><li>marauroa.common.game.BugAtApplyDifferencesTest.alongtest(marauroa.common.game.BugAtApplyDifferencesTest) (2 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> dev-SNAPSHOT <a href='https://github.com/sponsors/hcoles'>support</a>
+
+</body>
+</html>

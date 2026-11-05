@@ -1,0 +1,70 @@
+Buildfile: /Users/viktorzepeda/codesfu/marauroaTEST/build.xml
+
+init:
+
+compile:
+     [exec] 
+     [exec] up to date, audited 99 packages in 321ms
+     [exec] 
+     [exec] 6 packages are looking for funding
+     [exec]   run `npm fund` for details
+     [exec] 
+     [exec] 1 high severity vulnerability
+     [exec] 
+     [exec] To address all issues, run:
+     [exec]   npm audit fix
+     [exec] 
+     [exec] Run `npm audit` for details.
+     [exec] CLI Building entry: index.ts
+     [exec] CLI Using tsconfig: tsconfig.json
+     [exec] CLI tsup v8.5.1
+     [exec] CLI Target: es2022
+     [exec] CLI Cleaning output folder
+     [exec] CJS Build start
+     [exec] ESM Build start
+     [exec] CJS ../../build/classes/js/index.js 32.21 KB
+     [exec] CJS ⚡️ Build success in 36ms
+     [exec] ESM ../../build/classes/js/index.mjs 30.84 KB
+     [exec] ESM ⚡️ Build success in 36ms
+     [exec] DTS Build start
+     [exec] DTS ⚡️ Build success in 292ms
+     [exec] DTS ../../build/classes/js/index.d.ts  24.08 KB
+     [exec] DTS ../../build/classes/js/index.d.mts 24.08 KB
+     [copy] Copying 9 files to /Users/viktorzepeda/codesfu/marauroaTEST/build/classes/js
+
+compile-tests:
+
+pit:
+   [pitest] 4:13:34 p.m. PIT >> INFO : Verbose logging is disabled. If you encounter a problem, please enable it before reporting an issue.
+   [pitest] 4:13:34 p.m. PIT >> INFO : Created 238 mutation test units in pre scan
+   [pitest] 4:13:35 p.m. PIT >> INFO : Sending 280 test classes to minion
+   [pitest] 4:13:35 p.m. PIT >> INFO : Sent tests to minion
+   [pitest] 4:13:36 p.m. PIT >> SEVERE : Description [testClass=marauroa.clientconnect.ClientConnectTest, name=marauroa.clientconnect.ClientConnectTest] did not pass without mutation.
+   [pitest] 4:13:36 p.m. PIT >> SEVERE : Description [testClass=marauroa.common.game.RPObjectTest, name=testWriteToJson(marauroa.common.game.RPObjectTest)] did not pass without mutation.
+   [pitest] 4:13:36 p.m. PIT >> SEVERE : Description [testClass=marauroa.server.game.container.SecureLoginTest, name=marauroa.server.game.container.SecureLoginTest] did not pass without mutation.
+   [pitest] 4:13:36 p.m. PIT >> SEVERE : Description [testClass=marauroa.server.game.db.CharacterAccessTest, name=marauroa.server.game.db.CharacterAccessTest] did not pass without mutation.
+   [pitest] 4:13:36 p.m. PIT >> SEVERE : Description [testClass=marauroa.server.game.db.PlayerAccessTest, name=marauroa.server.game.db.PlayerAccessTest] did not pass without mutation.
+   [pitest] 4:13:36 p.m. PIT >> SEVERE : Description [testClass=marauroa.server.game.db.RPZoneAccessTest, name=marauroa.server.game.db.RPZoneAccessTest] did not pass without mutation.
+   [pitest] 4:13:36 p.m. PIT >> INFO : Calculated coverage in 1 seconds.
+   [pitest] 4:13:36 p.m. PIT >> INFO : 0 tests took longer than 2000 ms
+   [pitest] 4:13:36 p.m. PIT >> INFO : Slowest test (marauroa.clientconnect.ClientConnectTest) took 1316 ms
+   [pitest] 4:13:36 p.m. PIT >> INFO : Largest test (marauroa.clientconnect.ClientConnectTest) covered 2507 blocks
+   [pitest] 4:13:36 p.m. PIT >> SEVERE : Tests failing without mutation: 
+   [pitest] Description [testClass=marauroa.clientconnect.ClientConnectTest, name=marauroa.clientconnect.ClientConnectTest]
+   [pitest] Description [testClass=marauroa.common.game.RPObjectTest, name=testWriteToJson(marauroa.common.game.RPObjectTest)]
+   [pitest] Description [testClass=marauroa.server.game.container.SecureLoginTest, name=marauroa.server.game.container.SecureLoginTest]
+   [pitest] Description [testClass=marauroa.server.game.db.CharacterAccessTest, name=marauroa.server.game.db.CharacterAccessTest]
+   [pitest] Description [testClass=marauroa.server.game.db.PlayerAccessTest, name=marauroa.server.game.db.PlayerAccessTest]
+   [pitest] Description [testClass=marauroa.server.game.db.RPZoneAccessTest, name=marauroa.server.game.db.RPZoneAccessTest]
+   [pitest] Exception in thread "main" org.pitest.help.PitHelpError: 6 tests did not pass without mutation when calculating line coverage. Mutation testing requires a green suite.
+   [pitest] See https://pitest.org for more details.
+   [pitest] 	at org.pitest.coverage.execute.DefaultCoverageGenerator.verifyBuildSuitableForMutationTesting(DefaultCoverageGenerator.java:138)
+   [pitest] 	at org.pitest.coverage.execute.DefaultCoverageGenerator.calculateCoverage(DefaultCoverageGenerator.java:120)
+   [pitest] 	at org.pitest.coverage.execute.DefaultCoverageGenerator.calculateCoverage(DefaultCoverageGenerator.java:54)
+   [pitest] 	at org.pitest.mutationtest.tooling.MutationCoverage.runAnalysis(MutationCoverage.java:162)
+   [pitest] 	at org.pitest.mutationtest.tooling.MutationCoverage.runReport(MutationCoverage.java:149)
+   [pitest] 	at org.pitest.mutationtest.tooling.EntryPoint.execute(EntryPoint.java:139)
+   [pitest] 	at org.pitest.mutationtest.tooling.EntryPoint.execute(EntryPoint.java:65)
+   [pitest] 	at org.pitest.mutationtest.commandline.MutationCoverageReport.runReport(MutationCoverageReport.java:109)
+   [pitest] 	at org.pitest.mutationtest.commandline.MutationCoverageReport.main(MutationCoverageReport.java:46)
+   [pitest] /-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-\|/-

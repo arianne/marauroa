@@ -1,0 +1,79 @@
+diff --git a/tests/action-handlers.test.ts b/tests/action-handlers.test.ts
+index 53c882f..848eec0 100644
+--- a/tests/action-handlers.test.ts
++++ b/tests/action-handlers.test.ts
+@@ -219,7 +219,7 @@ describe('handleAction', () => {
+         .mockResolvedValueOnce([{ id: 1, index: 0 }, { id: 2, index: 1 }, { id: 3, index: 2 }])
+         .mockResolvedValueOnce([{ id: 2, index: 1 }])
+       await handleAction('nexttab')
+-      expect(mockTabsUpdate).toHaveBeenCalled()
++      expect(mockTabsUpdate).toHaveBeenCalledWith(3, { active: true })
+     })
+ 
+     it('switches to previous tab', async () => {
+@@ -227,7 +227,64 @@ describe('handleAction', () => {
+         .mockResolvedValueOnce([{ id: 1, index: 0 }, { id: 2, index: 1 }, { id: 3, index: 2 }])
+         .mockResolvedValueOnce([{ id: 2, index: 1 }])
+       await handleAction('prevtab')
+-      expect(mockTabsUpdate).toHaveBeenCalled()
++      expect(mockTabsUpdate).toHaveBeenCalledWith(1, { active: true })
++    })
++
++    const threeTabs = [{ id: 1, index: 0 }, { id: 2, index: 1 }, { id: 3, index: 2 }]
++    function activeTab(id: number) {
++      mockTabsQuery.mockResolvedValueOnce(threeTabs).mockResolvedValueOnce([{ id }])
++    }
++
++    it('only looks at tabs in the current window', async () => {
++      activeTab(2)
++      await handleAction('nexttab')
++      expect(mockTabsQuery).toHaveBeenNthCalledWith(1, { currentWindow: true })
++      expect(mockTabsQuery).toHaveBeenNthCalledWith(2, { currentWindow: true, active: true })
++    })
++
++    it('wraps from the last tab to the first', async () => {
++      activeTab(3)
++      await handleAction('nexttab')
++      expect(mockTabsUpdate).toHaveBeenCalledWith(1, { active: true })
++    })
++
++    it('wraps from the first tab to the last', async () => {
++      activeTab(1)
++      await handleAction('prevtab')
++      expect(mockTabsUpdate).toHaveBeenCalledWith(3, { active: true })
++    })
++
++    it('switches to the first and last tab', async () => {
++      activeTab(2)
++      await handleAction('firsttab')
++      expect(mockTabsUpdate).toHaveBeenLastCalledWith(1, { active: true })
++      activeTab(2)
++      await handleAction('lasttab')
++      expect(mockTabsUpdate).toHaveBeenLastCalledWith(3, { active: true })
++    })
++
++    it('switches to a tab by its 1-based position', async () => {
++      activeTab(2)
++      await handleAction('gototabbyindex', { action: 'gototabbyindex', matchindex: '1' } as any)
++      expect(mockTabsUpdate).toHaveBeenLastCalledWith(1, { active: true })
++      activeTab(1)
++      await handleAction('gototabbyindex', { action: 'gototabbyindex', matchindex: '2' } as any)
++      expect(mockTabsUpdate).toHaveBeenCalledWith(2, { active: true })
++      activeTab(1)
++      await handleAction('gototabbyindex', { action: 'gototabbyindex', matchindex: '3' } as any)
++      expect(mockTabsUpdate).toHaveBeenLastCalledWith(3, { active: true })
++    })
++
++    it.each(['0', '4', 'abc'])('ignores an out-of-range position %s', async (matchindex) => {
++      activeTab(1)
++      await expect(handleAction('gototabbyindex', { action: 'gototabbyindex', matchindex } as any)).resolves.toBe(true)
++      expect(mockTabsUpdate).not.toHaveBeenCalled()
++    })
++
++    it('does nothing when the window has one tab', async () => {
++      mockTabsQuery.mockResolvedValue([{ id: 1, index: 0 }])
++      await handleAction('nexttab')
++      expect(mockTabsUpdate).not.toHaveBeenCalled()
+     })
+   })
+ 
