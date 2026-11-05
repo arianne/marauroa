@@ -1,46 +1,114 @@
-# Group Analysis and Results
+# Group Analysis and Results: Marauora with PIT
 ## Identification of the open-source project.
 We are testing the [Maraurora](https://arianne-project.org/engine/marauroa.html) project. It is a multiplayer engine written in Java using a TCP oriented network protocol and an SQL based persistence engine. The project spans 26,000 lines of code and builds in 5 seconds from source code using `ant`. 
 ## Test suite infrastructure
-Maraurora uses `JUnit` for its suite of 143 tests, across 2648 lines of code and takes 7 seconds to execute on a dry run, 4 seconds on subsequent runs.
+Maraurora uses JUnit for its suite of 143 tests, across 2648 lines of code and takes 7 seconds to execute on a dry run, 4 seconds on subsequent runs.
 ## Results
-
 | Metric | Numerator / denominator | Result |
 |---|---|---|
 | Line coverage | 3979 / 12624 | **32%** |
 | Mutation score (killed + timeout) | 1533 / 6288 | **24%** |
 
-## The output coverage reports that provide clear evidence of usage
+## Output coverage reports
 ![PIT Report](mutation-results/PIT-report.png)
+
+# Group Analysis and Results: Shortkeys with StrykerJS
+## Identification of the open-source project.
+[Shortkeys](https://github.com/crittermike/shortkeys) is a TypeScript and Vue 3 browser extension that enables custom keyboard shortcuts for the browser. It spans 13,700 lines of code and takes 8.8 seconds to build from source (806 ms) including the required `npm` packages installation (8 s). 
+## Test suite infrastructure
+Shortkeys uses Vitest as its testing framework. The unit test suite has 841 passing tests in 34 files and takes 1.26 s to run. The e2e tests are not included.
+## Results
+
+| Metric | Result |
+|---|---|
+| Line coverage | 1369 / 3079 = 44.46% |
+| Mutation score (killed + timeout) | 2811 / 7825 = 35.92% |
+| Mutation score on covered code | 2811 / 4211 = 66.75% |
+
+Of the 7825 mutants, 2791 were killed, 20 timed out, 1400 survived and 3614 had no coverage. Both tools cover every `.ts` and `.vue` file under `src/`.
+
+| Directory | Line coverage | Mutation score |
+|---|---|---|
+| `src/utils` | 598 / 777 (77.0%) | 1772 / 2853 (62.1%) |
+| `src/actions` | 568 / 728 (78.0%) | 845 / 2128 (39.7%) |
+| `src/composables` | 202 / 586 (34.5%) | 194 / 1163 (16.7%) |
+| `src/components` | 0 / 489 | 0 / 729 |
+| `src/entrypoints` | 0 / 498 | 0 / 952 |
+## Output coverage reports
+### Test report
+![Stryker-tests](stryker-report/stryker-tests.jpg)
+
+### Mutant report
+![Stryker-mutants](stryker-report/stryker-mutants.png)
+
 ## How do your results from PIT and Stryker compare?
 TODO
 ## What do the results tell you about your test suite?
 **DRAFT**
-
 The report shows that the most tested aspects of the project are `marauora.common.[game\net]` because they have the most amount of coverage.
 ## Which system did you find easier to use (both integrate and interpret) and why?
-(melody) Stryker, setup is confined within the project. It doesn't need additional dependencies on the machine unlike with PIT where you need OpenJDK etc. Stryker is project specific
+**Stryker**, setup is confined within the project. It doesn't need additional dependencies on the machine unlike with PIT where you need OpenJDK etc. Stryker is project specific
 ## Do the test suites exhibit weaknesses? How can they be improved?
+### PIT
 The overall PIT report shows 32% line coverage and a 24% mutation score, so many paths are either untested or insufficiently checked. The database package's separate report located in `mutation-results-db/index.html` is somewhat better at 46% line coverage, but its mutation score is only 22% (141 of 651 mutants), indicating that many behavioral changes still go undetected. The networking results are also uneven. Although `marauroa.common.net` has 73% line coverage and a 58% mutation score, the client and server network packages have 0% line and mutation coverage in the main report.
 
 These gaps could be improved by adding deterministic database integration tests such as tests to verify persistence, transaction, and error-handling behavior. For networking, it could be improved by adding focused tests for client/server connection lifecycles, timeouts, disconnects, malformed input etc. Across both areas, the improved tests should assert observable outcomes rather than only execute code.
+### Stryker
+
+About a third of the code, the Vue components and the entrypoints, is never run by a unit test.
+
+Some tests check copies of the code instead of the code itself. injected-functions.test.ts and shortcut-recorder.test.ts import nothing from src/, and groups.test.ts uses its own grouping helpers, so useGroups.ts has 1.28% line coverage.
+
+Many tests run code without checking the result. action-handlers.ts has 80.2% line coverage but a 39.2% mutation score, and 611 of the 1400 survivors. Its tests often only check that something was called or that the handler returned true, and the browser mocks ignore their arguments.
+
+To improve the suite, the copied functions should be tested directly, assertions should check exact values, mocks should check their arguments, and the untested composables need tests. Not every survivor is worth fixing: 607 are changed string or boolean literals, many of them UI labels.
+
 ## Do the test suites exhibit strengths? How do you recognize them?
+### PIT
 The strengths of the test suite can be seen in `marauroa.common.game` with 80% line coverage, 58% mutation coverage and a test strength of 71%. Its 58% mutation coverage also shows that the tests detect many meaningful behavioral changes. Another strong area is a part of the network code in `marauroa.common.net`, with 73% line coverage, 60% mutation score, and 80% test strength. In its class breakdown, `Encoder` and `EncoderDecoderTest` each show 100% line and mutation coverage, suggesting the encoder behavior and its tested round-trip cases are checked thoroughly. 
 
 These strengths are easy to recognize with the strong amount of coverage by the tests conducted, compared to the rest of the test coverage report, where most of the line and mutation coverage is at 0%.
+### Stryker
+
+Small modules with pure logic are tested well, for example useViewDensity.ts (100%), content-logic.ts (96.8%) and useUndoRedo.ts (93.2%). The suite is strong where code is easy to isolate and weak where it touches the browser or the UI.
+
 ## Contrast the costs and benefits of mutation analysis and testing versus what you might expect from other techniques.
+### PIT
 **Costs**: Mutation testing with PIT took about 1 minute 10 seconds for the run excluding the database tests and 88 seconds for the run including the database and connection tests. This is more time than a normal test run ex. `ant test` because PIT repeatedly modifies the program and runs tests against those modified versions. The reports also take time to interpret as surviving mutants need reviewing since they can indicate missing assertions and also be equivalent to the original code.
 
 **Benefits**: Mutation testing provides more insight as it reveals whether tests detect small behavioral changes as compared to line coverage which only shows whether some code ran. Additionally, compared with a regular JUnit run, PIT helps identify tests that pass without checking outcomes effectively. Its results also help prioritize areas for improvement such as showing stronger coverage in marauroa.common.game from other weaker less tested areas. 
+### Stryker
+**Costs and benefits**
+
+The full Stryker run took 13 min 16 s, compared with about 5 seconds for the tests with coverage. Checking 1400 survivors by hand was not practical, so we did not remove equivalent mutants, and 35.92% is a lower bound.
+
+Mutation testing shows whether the tests would catch a fault, not just whether code ran, and each survivor points to a specific missing check. Coverage is much cheaper and is the better first step, since it already finds the 3614 mutants in code that never runs.
+
 ## What was easy and what was difficult about applying the tools to the projects you chose?
+### PIT
 The easy part was compiling and testing the project once we got PIT setup. The hard part was getting PIT to work on our machines. Since Marauora uses `ant` to build, we had to get the correct `pitest` jars from the GitHub repo. Which meant we needed to compile `pittest` itself and move the jars to the `libs/` directory in Marauora. Then we had to downgrade some libraries used by Marauora after reading all the error logs. We also encountered issues where the build for PIT testing would fail since we didn't have a compatible environment for it and it was difficult to locate the root cause. We had to go through different possibilities on what might be failing such as looking into incompatible Java versions or missing packages such as OpenJDK since the build failure messages were hard to interpret with the sheer amount of information printed out.
+### Stryker
+Setup was easy because Stryker supports Vitest directly. The hard parts were that Stryker does not report line coverage, so we needed a second tool, and that the project-wide numbers had to be broken down by file before we could act on them.
+
+
 ## What obstacles did you face in applying mutation analysis to a real world project, and how did you overcome them?
+### PIT
 We encountered compatibility issues because the project used an older JUnit version than the one expected by our PIT setup. Additionally, some database tests also failed under PIT even though the regular test run worked. We discovered that the tests share a static singleton state, including `TransactionPool` and `DAORegister`, and PIT can run tests in a different order or rerun them while analyzing mutants. This shared state made the database tests sensitive to execution order. To work around this, we had to create a separate PIT target for the database tests and generated a dedicated report for them.
+### Stryker
+
+Our first coverage run gave 66.23% (1367 / 2064). Vitest had left out the .vue files, because the project's test config has no Vue plugin, and it also excluded the entrypoints. 
+
+We added `vitest.coverage.config.js`, which uses the Vue plugin and the same files as Stryker. This brought the result to 44.46%.
+
+Stryker also only mutates the script part of Vue files, so template bugs are not covered.
+
 ## Did you have any other interesting insights or opinions on the experience?
-Each of us can say whatever ig. <br>
-IMO (Viktor) it was interesting running the tests on this project which is an online game server, so as a user I wouldn't suspect how many interactions between components make the multiplayer game run. The fact that the mutation coverage is low may be a sign that the tests haven't been updated too often or they didn't take this approach into consideration when they were writing them.
-**We should add our raw opinion first and then make it sound "academic" later**
-(melody) it was interesting to see just how weak the test coverage for smaller areas of the program is with what looks like half being 0% line and mutation coverage. even though the main areas are well tested, it would definitely help with having some deterministic tests on networking and database as they are still an important area of the project overall
+(Viktor) It was interesting running the tests on this project which is an online game server, so as a user I wouldn't suspect how many interactions between components make the multiplayer game run. The fact that the mutation coverage is low may be a sign that the tests haven't been updated too often or they didn't take this approach into consideration when they were writing them.
+
+(Melody) It was interesting to see just how weak the test coverage for smaller areas of the program is with what looks like half being 0% line and mutation coverage. even though the main areas are well tested, it would definitely help with having some deterministic tests on networking and database as they are still an important area of the project overall
+
+(Oliver) Two Stryker runs on the same code gave slightly different scores (35.88% and 35.92%), because the number of timeouts in link-hints.ts changed. We used the second run. With 841 passing tests the project looks well tested, but only about a third of the mutants are killed.
+
 
 # Individual Analysis and Results
 Choose a complex routine that you think is likely to have errors. If fewer than 10 mutants were generated for the method, then either select a different method or select additional methods until you have 10 mutants to consider.
@@ -233,4 +301,3 @@ For the ten selected mutants, there were no duplicate mutants so the mutation sc
 The score suggests the tests cover several important chooseEnemyAction branches, but there are still areas to improve on. The existing test suite doesn't completely test all the gaps in the method, such as the boundary conditions and in less common scenarios. The tests didn't distinguish zero HP from negative HP, didn't exercise selection among multiple heals, and didn't make the random attack differ from the best attack. Adding those cases would improve the test suite and the mutation score.
 
 ## Viktor Analysis
-TODO
